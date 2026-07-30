@@ -1,0 +1,45 @@
+{
+    "managers": [
+        {
+            "adminId": "admin001",
+            "adminNm": "김철수",
+            "emailAdr": "kim@example.com",
+            "telNo": "010-1111-2222",
+            "useYn": "Y",
+            "regDt": "2024-01-15T09:30:00"
+        },
+        {
+            "adminId": "admin002",
+            "adminNm": "이영희",
+            "emailAdr": "lee@example.com",
+            "telNo": "010-3333-4444",
+            "useYn": "N",
+            "regDt": "2024-02-20T14:15:00"
+        },
+        {
+            "adminId": "admin003",
+            "adminNm": "강수호",
+            "emailAdr": "kang@example.com",
+            "telNo": "010-5555-6666",
+            "useYn": "Y",
+            "regDt": "2024-03-10T11:45:00"
+        },
+        {
+            "adminId": "admin004",
+            "adminNm": "염성화",
+            "emailAdr": "yeom@example.com",
+            "telNo": "010-9999-0000",
+            "useYn": "Y",
+            "regDt": "2024-05-12T10:00:00"
+        },
+        {
+            "adminId": "admin005",
+            "adminNm": "신귀도",
+            "emailAdr": "shin@example.com",
+            "telNo": "010-7777-8888",
+            "useYn": "N",
+            "regDt": "2024-04-05T16:20:00"
+        }
+        
+    ]
+}

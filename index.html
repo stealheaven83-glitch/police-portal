@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--
+      CSS 레이어 순서 선언.
+      Vite 가 주입하는 번들 CSS 보다 반드시 먼저 평가되어야 하므로 head 최상단에 인라인으로 둔다.
+      (레이어 순서는 '처음 등장한 시점'으로 확정되기 때문)
+    -->
+    <style>
+      @layer properties, theme, base, police, components, utilities;
+    </style>
+
+    <link rel="shortcut icon" type="image/x-icon" href="/portal/asset/images/favicon.ico" />
+    <link rel="stylesheet" href="/portal/police-entry.css" />
+    <script src="/portal/asset/js/common/swiper-bundle.min.js" defer></script>
+
+    <title>지역 경찰 포털</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,230 @@
+@import "tailwindcss";
+
+@import "tw-animate-css";
+@import "../fonts/fonts.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * police reset 의 html { font-size: 62.5% } (1rem = 10px) 보정.
+ * 보정하지 않으면 Tailwind / shadcn 의 rem 기반 값이 모두 62.5% 크기로 렌더된다.
+ * 기본 스케일에 1.6 을 곱해 원래 픽셀 크기를 복원한다.
+ *
+ * --breakpoint-* 는 의도적으로 제외한다.
+ * 미디어쿼리의 rem 은 루트 요소가 아닌 초기값(16px) 기준이라 영향을 받지 않는다.
+ */
+@theme {
+  --spacing: 0.4rem;
+
+  --text-xs: 1.2rem;
+  --text-sm: 1.4rem;
+  --text-base: 1.6rem;
+  --text-lg: 1.8rem;
+  --text-xl: 2rem;
+  --text-2xl: 2.4rem;
+  --text-3xl: 3rem;
+  --text-4xl: 3.6rem;
+  --text-5xl: 4.8rem;
+  --text-6xl: 6rem;
+  --text-7xl: 7.2rem;
+  --text-8xl: 9.6rem;
+  --text-9xl: 12.8rem;
+
+  /* --radius-sm/md/lg/xl 은 아래 @theme inline 에서 --radius 로부터 파생된다 */
+  --radius-xs: 0.2rem;
+  --radius-2xl: 1.6rem;
+  --radius-3xl: 2.4rem;
+  --radius-4xl: 3.2rem;
+
+  --container-3xs: 25.6rem;
+  --container-2xs: 28.8rem;
+  --container-xs: 32rem;
+  --container-sm: 38.4rem;
+  --container-md: 44.8rem;
+  --container-lg: 51.2rem;
+  --container-xl: 57.6rem;
+  --container-2xl: 67.2rem;
+  --container-3xl: 76.8rem;
+  --container-4xl: 89.6rem;
+  --container-5xl: 102.4rem;
+  --container-6xl: 115.2rem;
+  --container-7xl: 128rem;
+}
+
+/*
+ * 포털 마크업의 <div class="container main"> 과 Tailwind 의 container 유틸리티가 이름이 겹친다.
+ * utilities 레이어가 police 레이어보다 우선하므로, 그대로 두면 Tailwind 가
+ * width:100% / max-width:96rem 을 걸어 본문 폭(.inner 의 1200px)이 깨진다.
+ * 포털이 container 를 레이아웃 훅으로만 쓰고 Tailwind container 는 쓰지 않으므로 비워둔다.
+ * (max-w-* 유틸리티는 영향받지 않는다)
+ */
+@utility container {
+  width: auto;
+  max-width: none;
+}
+
+/*
+ * Tailwind preflight 의 img,svg,video,… { display: block } 보정.
+ *
+ * 퍼블리싱 CSS 는 <img> 가 UA 기본값인 inline 인 것을 전제로 하고 있어서
+ * (예: .service-bnr .title i { text-align: right } 로 아이콘을 우측 정렬)
+ * img 가 block 이 되면 text-align 기반 정렬이 전부 무력화된다.
+ * police reset 은 img 의 max-width / vertical-align 만 선언하고 display 는 건드리지 않기 때문에
+ * 레이어 우선순위와 무관하게 preflight 의 display:block 이 그대로 적용된다.
+ *
+ * 포털 레이아웃 루트(.wrap) 안에서만 inline 로 되돌려 원본 렌더링을 재현한다.
+ * svg 는 제외한다 — 포털 마크업은 <img> 만 쓰고, lucide 아이콘 등 shadcn 쪽은
+ * preflight 의 display:block 을 그대로 두는 편이 맞다.
+ * 개별적으로 block 이 필요하면 Tailwind block 유틸리티로 덮으면 된다(utilities > police).
+ */
+@layer police {
+  .wrap img {
+    display: inline;
+  }
+}
+
+/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ( IE, 파이어폭스 ) 동작 */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  /* IE, Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/*
+ * police-style.css(layer: police)가 html/body 의 font-family·color 를 지정한다.
+ * :root 는 레이어에 속하지 않아 police 레이어보다 항상 우선하므로,
+ * Vite 템플릿 잔재였던 font-family / color / background-color 3줄은 제거한다.
+ * shadcn 이 사용하는 --* 토큰, @theme inline, .dark, @layer base 는 그대로 유지.
+ */
+:root {
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* police reset 의 html { font-size: 62.5% } 기준에 맞춰 0.625rem → 1rem (=10px) */
+  --radius: 1rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
