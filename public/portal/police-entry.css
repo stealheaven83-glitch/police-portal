@@ -1,0 +1,20 @@
+@charset "UTF-8";
+
+/*
+ * 퍼블리싱 원본(reference-publisher/police-portal) CSS 진입점.
+ *
+ * 원본 파일은 한 글자도 수정하지 않고, 여기서 layer(police) 로 감싸서만 불러온다.
+ * 레이어 순서는 index.html 최상단에서 아래와 같이 선언한다.
+ *
+ *   properties → theme → base → police → components → utilities
+ *
+ * - police > base   : police reset 이 Tailwind preflight 를 덮는다 (포털 화면 정상)
+ * - utilities > police : shadcn 유틸리티가 police reset 을 덮는다 (shadcn 정상)
+ *
+ * 이 파일은 public/ 에 있으므로 Vite CSS 파이프라인을 타지 않는다.
+ * 덕분에 police-style.css 안의 상대경로(../../images, ../../fonts)가 그대로 동작하고,
+ * 원본에 존재하는 오타 경로(url(../..fonts/...))로 인한 빌드 실패도 발생하지 않는다.
+ */
+
+@import url("./asset/css/common/police-style.css") layer(police);
+@import url("./asset/css/common/swiper-bundle.min.css") layer(police);

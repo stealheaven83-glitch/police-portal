@@ -1,0 +1,191 @@
+import { createRouter, createWebHistory } from 'vue-router'
+import Error404 from '../views/error/error404.vue'
+
+const router = createRouter({
+    history: createWebHistory(),
+    routes: [
+        {
+            path: '/login',
+            name: 'login',
+            component: () => import('../views/Login.vue'),
+        },
+        {
+            path: '/',
+            name: 'home',
+            component: () => import('../views/Main.vue'),
+            meta: {
+                layout: 'PortalLayout',
+                title: '지역 경찰 포털'
+            }
+        },
+        {
+            path: '/lpo/notebook',
+            name: 'lpo-notebook',
+            component: () => import('../views/lpo/notebook/NotebookMain.vue'),
+            meta: {
+                layout: 'PortalLayout',
+                title: '개인수첩'
+            }
+        },
+        {
+            path: '/sample',
+            name: 'sample-home',
+            component: () => import('../views/SampleHome.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: '홈 (Scaffolding)'
+            }
+        },
+        {
+            path: '/layout-sample',
+            name: 'layout-sample',
+            component: () => import('../views/layout-sample/LayoutSample.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: '데이터 샘플'
+            }
+        },
+        {
+            path: '/single-layout',
+            name: 'single-layout',
+            component: () => import('../views/layout-sample/SingleLayout.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: '싱글 레이아웃 샘플'
+            }
+        },
+        {
+            path: '/double-layout',
+            name: 'double-layout',
+            component: () => import('../views/layout-sample/DoubleLayout.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: '더블 레이아웃 샘플'
+            }
+        },
+        {
+            path: '/component/table',
+            name: 'tablewrapper',
+            component: () => import('../views/component-sample/Tablewrapper.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Tablewrapper'
+            }
+        },
+        {
+            path: '/component/autoform',
+            name: 'autoform',
+            component: () => import('../views/component-sample/Autoform.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Autoform'
+            }
+        },
+        {
+            path: '/component/dialog-select',
+            name: 'dialog-select',
+            component: () => import('../views/component-sample/DialogSelect.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Dialog & Select'
+            }
+        },
+        {
+            path: '/component/buttons',
+            name: 'buttons',
+            component: () => import('../views/component-sample/Buttons.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Buttons'
+            }
+        },
+        {
+            path: '/component/icons',
+            name: 'icons',
+            component: () => import('../views/component-sample/Icons.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Icons'
+            }
+        },
+        {
+            path: '/component/chart',
+            name: 'chart',
+            component: () => import('../views/component-sample/Chart.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Chart'
+            }
+        },
+        {
+            path: '/component/date-picker',
+            name: 'date-picker',
+            component: () => import('../views/component-sample/DatePicker.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Date Picker'
+            }
+        },
+        {
+            path: '/component/tabulator',
+            name: 'tabulator',
+            component: () => import('../views/component-sample/Tabulator.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Tabulator'
+            }
+        },
+        {
+            path: '/component/bottom-sheet',
+            name: 'bottom-sheet',
+            component: () => import('../views/component-sample/BottomSheet.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Bottom Sheet'
+            }
+        },
+        {
+            path: '/component/editor',
+            name: 'editor',
+            component: () => import('../views/component-sample/Editor.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Editor'
+            }
+        },
+        {
+            path: '/component/tree',
+            name: 'tree',
+            component: () => import('../views/component-sample/Tree.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Tree'
+            }
+        },
+        {
+            path: '/component/input',
+            name: 'input',
+            component: () => import('../views/component-sample/InputSample.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Text Input'
+            }
+        },
+        {
+            path: '/component/tooltip',
+            name: 'tooltip',
+            component: () => import('../views/component-sample/TooltipSample.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Tooltip'
+            }
+        },
+        {
+            path: '/:pathMatch(.*)*',
+            name: 'notFound',
+            component: Error404
+        }
+    ]
+})
+
+export default router 
