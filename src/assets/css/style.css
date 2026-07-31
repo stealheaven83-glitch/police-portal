@@ -228,3 +228,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+html.theme-dark body{
+  background:#000;
+}
