@@ -1,0 +1,13 @@
+.dp--instance-calendar{
+  background:#D6E0EB;
+}
+.dp--cell-inner{
+  color:#1E2124;
+  font-size: 1.7rem;
+}
+.dp--cell-inner.dp--today{
+  background:var(--Base-secondary);
+  color:#fff;
+  border-radius:50%;
+  border:none;
+}

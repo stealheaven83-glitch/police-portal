@@ -17,12 +17,12 @@
         <h2 class="text-2xl font-semibold">년월일 선택</h2>
         <div class="text-gray-500">년, 월, 일까지 선택하는 기본 Date Picker 입니다.</div>
         <div class="flex flex-col gap-2">
-          <div class="w-[280px]">
+          <div class="w-[280px] box">
+            <div class="style"><!-- module.css형태로 할경우 :class="style.class" 스타일 지정 -->
             <VueDatePicker
               v-model="fullDate"
               :enable-time-picker="false"
               :teleport="true"
-              :locale="ko"
               format="yyyy년 MM월 dd일"
               :week-start="0"
               auto-apply
@@ -31,6 +31,7 @@
               cancel-text="취소"
               now-button-label="오늘"
             />
+            </div>
           </div>
           <p v-if="fullDate" class="text-sm text-muted-foreground">
             선택된 날짜: {{ formatDate(fullDate) }}
@@ -44,7 +45,7 @@
         <div class="text-gray-500">년도와 월만 선택하는 Month Picker 입니다.</div>
         <div class="flex flex-col gap-2">
           <div class="w-[280px]">
-            <VueDatePicker
+            <VueDatePicker 
               v-model="monthYear"
               month-picker
               :teleport="true"
@@ -124,6 +125,7 @@
 import { ref } from 'vue'
 import { VueDatePicker } from '@vuepic/vue-datepicker'
 import { ko } from 'date-fns/locale/ko'
+import  './DatePicker.css'
 import '@vuepic/vue-datepicker/dist/main.css'
   const date = ref();
 /**

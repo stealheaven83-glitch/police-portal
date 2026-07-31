@@ -120,7 +120,7 @@ const router = createRouter({
         {
             path: '/component/date-picker',
             name: 'date-picker',
-            component: () => import('../views/component-sample/DatePicker.vue'),
+            component: () => import('../components/ui/date-picker/DatePicker.vue'),
             meta: {
                 layout: 'MainLayout',
                 title: 'Date Picker'
