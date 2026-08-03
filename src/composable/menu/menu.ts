@@ -23,7 +23,8 @@ import {
   PenSquareIcon,
   FolderTreeIcon,
   TextCursorInputIcon,
-  MessageCircleQuestionIcon
+  MessageCircleQuestionIcon,
+  Check
 } from 'lucide-vue-next';
 import { useAuthStore } from '@/stores/auth/useAuth';
 import { toast } from 'vue-sonner';
@@ -145,6 +146,11 @@ export const mainLayoutConfig: LayoutConfig = {
           path: '/component/input',
           title: 'Text Input',
           icon: TextCursorInputIcon,
+        },
+        {
+          path: '/component/checkbox',
+          title: 'Checkbox',
+          icon: Check,
         },
         {
           path: '/component/tooltip',
