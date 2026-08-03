@@ -35,6 +35,13 @@ import {
             <Button variant="ghost">Ghost</Button>
             <Button variant="link">Link</Button>
           </div>
+          <div class="flex flex-wrap gap-4">
+            <Button variant="primary">Primary</Button>
+            <Button variant="secondary">secondary</Button>
+            <Button variant="tertiary">tertiary</Button>
+            <Button variant="tertiary2">tertiary2</Button>
+            <Button variant="text">tertiary2</Button>
+          </div>
         </section>
 
         <section class="space-y-4">
@@ -43,6 +50,13 @@ import {
             <Button size="sm">Small</Button>
             <Button size="default">Default</Button>
             <Button size="lg">Large</Button>
+          </div>
+          <div class="flex flex-wrap items-center gap-4">
+            <Button variant="primary" size="xxs">xxs</Button>
+            <Button variant="primary" size="xs">xs</Button>
+            <Button variant="primary" size="sm">sm</Button>
+            <Button variant="primary" size="md">md</Button>
+            <Button variant="primary" size="lg">lg</Button>
           </div>
         </section>
 
