@@ -172,6 +172,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/component/checkbox',
+            name: 'checkbox',
+            component: () => import('../views/component-sample/Checkbox.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Checkbox'
+            }
+        },
+        {
             path: '/component/tooltip',
             name: 'tooltip',
             component: () => import('../views/component-sample/TooltipSample.vue'),

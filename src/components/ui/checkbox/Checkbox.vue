@@ -2,34 +2,59 @@
 import type { CheckboxRootEmits, CheckboxRootProps } from "reka-ui"
 import type { HTMLAttributes } from "vue"
 import { reactiveOmit } from "@vueuse/core"
-import { Check } from "lucide-vue-next"
+import { Check, Minus } from "lucide-vue-next"
 import { CheckboxIndicator, CheckboxRoot, useForwardPropsEmits } from "reka-ui"
 import { cn } from "@/lib/utils"
+import { checkboxVariants, type CheckboxVariants } from "./index"
 
-const props = defineProps<CheckboxRootProps & { class?: HTMLAttributes["class"] }>()
+interface Props extends CheckboxRootProps {
+  class?: HTMLAttributes["class"]
+  value?: string
+  variant?: CheckboxVariants["variant"]
+  size?: CheckboxVariants["size"]
+  label?: string
+  labelClass?: HTMLAttributes["class"]
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  variant: "default",
+  value: undefined,
+  size: "default",
+  label: undefined,
+  labelClass: undefined,
+})
+
 const emits = defineEmits<CheckboxRootEmits>()
 
-const delegatedProps = reactiveOmit(props, "class")
-
+const delegatedProps = reactiveOmit(props, "class", "variant", "size")
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 </script>
 
 <template>
   <CheckboxRoot
-    v-slot="slotProps"
-    data-slot="checkbox"
-    v-bind="forwarded"
-    :class="
-      cn('peer border-input data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50',
-         props.class)"
-  >
-    <CheckboxIndicator
-      data-slot="checkbox-indicator"
-      class="grid place-content-center text-current transition-none"
+      v-slot="slotProps"
+      data-slot="checkbox"
+      v-bind="forwarded"
+      :class="cn(checkboxVariants({ variant, size }), props.class)"
     >
-      <slot v-bind="slotProps">
-        <Check class="size-3.5" />
-      </slot>
-    </CheckboxIndicator>
-  </CheckboxRoot>
+      <CheckboxIndicator
+        data-slot="checkbox-indicator"
+        class="grid place-content-center text-current transition-none"
+      >
+        <slot v-bind="slotProps">
+          <Minus v-if="variant === 'minus'" class="size-3.5 stroke-[3]" />
+          <Check v-else class="size-3.5  stroke-[3]" />
+        </slot>
+      </CheckboxIndicator>
+    </CheckboxRoot>
+    <span
+      v-if="label"
+      :class="cn(
+        'select-none leading-none text-[#1E2124] group-has-[[disabled]]:text-[#8A949E]',
+          props.size === 'lg' ? 'text-[19px]' : 'text-[15px]',
+          props.labelClass
+      )"
+    >
+      {{ label }}
+    </span>
 </template>
