@@ -87,9 +87,13 @@
   --Border_gray01: #b1b8be;
   --Border_gray02: #cdd1d5;
   --Border_gray03: #e6e8ea;
+  --Border_input01:#8A949E;
+
   /* Common */
   --white: #fff;
   --black: #000;
+
+  
 }
 
 /* reset */

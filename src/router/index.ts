@@ -27,15 +27,15 @@ const router = createRouter({
                 title: '개인수첩'
             }
         },
-        {
-            path: '/sample',
-            name: 'sample-home',
-            component: () => import('../views/SampleHome.vue'),
-            meta: {
-                layout: 'MainLayout',
-                title: '홈 (Scaffolding)'
-            }
-        },
+        // {
+        //     path: '/sample',
+        //     name: 'sample-home',
+        //     component: () => import('../views/SampleHome.vue'),
+        //     meta: {
+        //         layout: 'MainLayout',
+        //         title: '홈 (Scaffolding)'
+        //     }
+        // },
         {
             path: '/layout-sample',
             name: 'layout-sample',
@@ -194,6 +194,7 @@ const router = createRouter({
             name: 'notFound',
             component: Error404
         }
+
     ]
 })
 
