@@ -181,6 +181,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/component/radiogroup',
+            name: 'Radio-group',
+            component: () => import('../views/component-sample/RadioGroup.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Radio Group'
+            }
+        },
+        {
             path: '/component/tooltip',
             name: 'tooltip',
             component: () => import('../views/component-sample/TooltipSample.vue'),

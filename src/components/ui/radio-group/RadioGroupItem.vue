@@ -2,39 +2,66 @@
 import type { RadioGroupItemProps } from "reka-ui"
 import type { HTMLAttributes } from "vue"
 import { reactiveOmit } from "@vueuse/core"
-import { CircleIcon } from "lucide-vue-next"
+import { Circle } from "lucide-vue-next"
 import {
   RadioGroupIndicator,
   RadioGroupItem,
   useForwardProps,
 } from "reka-ui"
 import { cn } from "@/lib/utils"
+import { radioItemVariants, type RadioItemVariants } from "./index"
 
-const props = defineProps<RadioGroupItemProps & { class?: HTMLAttributes["class"] }>()
+interface Props extends RadioGroupItemProps {
+  class?: HTMLAttributes["class"]
+  variant?: RadioItemVariants["variant"]
+  size?: RadioItemVariants["size"]
+  label?: string
+  labelClass?: HTMLAttributes["class"]
+}
 
-const delegatedProps = reactiveOmit(props, "class")
+const props = withDefaults(defineProps<Props>(), {
+  variant: "default",
+  size: "default",
+  label: undefined,
+  labelClass: undefined,
+})
 
+const delegatedProps = reactiveOmit(props, "class", "variant", "size", "label", "labelClass")
 const forwardedProps = useForwardProps(delegatedProps)
 </script>
 
 <template>
+<label 
+  :class="cn(
+    'group inline-flex items-center has-[[disabled]]:cursor-not-allowed',
+    label ? 'gap-2' : 'gap-0 align-top',
+    props.class
+  )">
   <RadioGroupItem
     data-slot="radio-group-item"
     v-bind="forwardedProps"
     :class="
-      cn(
-        'border-input text-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 aspect-square size-4 shrink-0 rounded-full border shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50',
-        props.class,
-      )
+      cn(radioItemVariants({ variant, size }), props.class)
     "
   >
     <RadioGroupIndicator
       data-slot="radio-group-indicator"
       class="relative flex items-center justify-center"
     >
-      <slot>
-        <CircleIcon class="fill-primary absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2" />
-      </slot>
+      <Circle
+        :class="cn('fill-current dark:fill-[#0069CB] border-none', 'size-3')"
+      />
     </RadioGroupIndicator>
   </RadioGroupItem>
+  <span
+    v-if="label"
+    :class="cn(
+      'select-none leading-none text-[#1E2124] group-has-[[disabled]]:text-[#8A949E] group-has-[[disabled]]:cursor-not-allowed',
+      props.size === 'lg' ? 'text-[19px]' : 'text-[15px]',
+      props.labelClass
+    )"
+  >
+    {{  label }}
+  </span>
+</label>
 </template>
