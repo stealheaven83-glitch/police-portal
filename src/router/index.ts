@@ -66,7 +66,7 @@ const router = createRouter({
         {
             path: '/component/table',
             name: 'tablewrapper',
-            component: () => import('../views/component-sample/Tablewrapper.vue'),
+            component: () => import('../components/ui/TableWrapper/Tablewrapper.vue'),
             meta: {
                 layout: 'MainLayout',
                 title: 'Tablewrapper'
@@ -202,7 +202,7 @@ const router = createRouter({
             path: '/:pathMatch(.*)*',
             name: 'notFound',
             component: Error404
-        }
+        },
 
     ]
 })

@@ -66,7 +66,7 @@ const emit = defineEmits<{
 
     <!-- Section 1: 년월일 선택 -->
     <section>
-      <div class="w-[280px] box date-calendar">
+      <div class="w-[160px] box date-calendar">
         <div class="style"><!-- module.css형태로 할경우 :class="style.class" 스타일 지정 -->
         <VueDatePicker
           v-model="fullDate"
@@ -83,7 +83,6 @@ const emit = defineEmits<{
           :locale="ko"
           :clearable="false"
           :time-config="{ enableTimePicker: false }">
-
           <template #input-icon>
             <img src="../../../../public/portal/asset/images/icon/ico_calendar.svg" alt="달력" />
           </template>
@@ -107,8 +106,8 @@ const emit = defineEmits<{
               :teleport="true"
               :locale="ko"
               format="yyyy년 MM월 dd일"
-            select-text="선택"
-          cancel-text="취소"
+              select-text="선택"
+              cancel-text="취소"
               placeholder="시작일 선택"
               prevent-min-max-navigation
               :clearable="false"
@@ -132,8 +131,8 @@ const emit = defineEmits<{
               :teleport="true"
               :locale="ko"
               format="yyyy년 MM월 dd일"
-          select-text="선택"
-          cancel-text="취소"
+              select-text="선택"
+              cancel-text="취소"
               placeholder="종료일 선택"
               prevent-min-max-navigation
               year-first
