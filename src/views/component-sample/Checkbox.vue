@@ -21,12 +21,8 @@ import { Checkbox } from "@/components/ui/checkbox"
           <h2 class="text-xl font-semibold border-b pb-2">Variants</h2>
           <div class="flex flex-wrap gap-4">
             <div class="flex flex-start gap-4 p-4">
-              <label class="group flex items-center gap-2">
-                <Checkbox variant="default" :default-value="true" />
-              </label>
-              <label class="group flex items-center gap-2">
-                <Checkbox variant="minus" label="minus" :default-value="true" />
-              </label>
+              <Checkbox variant="default" :default-value="true" />
+              <Checkbox variant="minus" label="minus" :default-value="true" />
             </div>
           </div>
         </section>
@@ -35,15 +31,9 @@ import { Checkbox } from "@/components/ui/checkbox"
           <h2 class="text-xl font-semibold border-b pb-2">Sizes</h2>
           <div class="flex flex-wrap gap-4">
             <div class="grid grid-cols-3 items-start gap-4 p-4">
-              <label class="group flex items-center gap-2">
-                <Checkbox variant="default" size="default" label="Default 폰트사이즈 15px" />
-              </label>
-              <label class="group flex items-center gap-2">
-                <Checkbox variant="default" size="lg" label="Large 폰트사이즈 19px" />
-              </label>
-              <label class="group flex items-center gap-2">
-                <Checkbox variant="default" size="lg" label="폰트 사이즈 커스텀" labelClass="text-[10px]" />
-              </label>
+              <Checkbox variant="default" size="default" label="Default 폰트사이즈 15px" />
+              <Checkbox variant="default" size="lg" label="Large 폰트사이즈 19px" />
+              <Checkbox variant="default" size="lg" label="폰트 사이즈 커스텀" labelClass="text-[10px]" />
             </div>
           </div>
         </section>
@@ -52,18 +42,10 @@ import { Checkbox } from "@/components/ui/checkbox"
           <h2 class="text-xl font-semibold border-b pb-2">States</h2>
           <div class="flex flex-wrap gap-4">
             <div class="flex flex-start gap-8 p-4">
-              <label class="group flex items-center gap-2">
-                <Checkbox variant="default" label="Default" />
-              </label>
-              <label class="group flex items-center gap-2">
-                <Checkbox variant="default" label="checked" :default-value="true" />
-              </label>
-              <label class="group flex items-center gap-2">
-                <Checkbox variant="default" label="disabled" disabled />
-              </label>
-              <label class="group flex items-center gap-2">
-                <Checkbox variant="default" label="checked + disabled" :default-value="true" disabled />
-              </label>
+              <Checkbox variant="default" label="Default" />
+              <Checkbox variant="default" label="checked" :default-value="true" />
+              <Checkbox variant="default" label="disabled" disabled />
+              <Checkbox variant="default" label="checked + disabled" :default-value="true" disabled />
             </div>
           </div>
         </section>
@@ -72,17 +54,13 @@ import { Checkbox } from "@/components/ui/checkbox"
           <h2 class="text-xl font-semibold border-b pb-2">Help Text</h2>
           <div class="flex items-start flex-wrap gap-8">
             <div class="group flex flex-col gap-1">
-              <label class="group flex items-center gap-2">
-                <Checkbox variant="default" size="default" label="Help text" />
-              </label>
+              <Checkbox variant="default" size="default" label="Help text" />
               <p class="pl-7 text-[1.3rem] text-[#464C53] group-has-[[disabled]]:text-[#8A949E]">
                 다크모드 컬러 필요.<br/>dark:text-[white] dark:group-has-[[disabled]]:text-[white]
               </p>
             </div>
             <div class="flex flex-col gap-1">
-              <label class="group flex items-center gap-2">
-                <Checkbox variant="default" size="default" label="Help text" disabled />
-              </label>
+              <Checkbox variant="default" size="default" label="Help text" disabled />
               <p class="pl-7 text-[1.3rem] text-[#464C53] group-has-[[disabled]]:text-[#8A949E]">
                 상위 group 클래스를 넣어줘야 컬러가 같이 적용됩니다.
               </p>

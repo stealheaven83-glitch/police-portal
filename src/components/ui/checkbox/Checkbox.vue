@@ -31,6 +31,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 </script>
 
 <template>
+<label class="group flex item-center gap-2">
   <CheckboxRoot
       v-slot="slotProps"
       data-slot="checkbox"
@@ -50,11 +51,12 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     <span
       v-if="label"
       :class="cn(
-        'select-none leading-none text-[#1E2124] group-has-[[disabled]]:text-[#8A949E]',
+        'self-center select-none leading-none text-[#1E2124] group-has-[[disabled]]:text-[#8A949E]',
           props.size === 'lg' ? 'text-[19px]' : 'text-[15px]',
           props.labelClass
       )"
     >
       {{ label }}
     </span>
+  </label>
 </template>
