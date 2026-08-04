@@ -24,7 +24,8 @@ import {
   FolderTreeIcon,
   TextCursorInputIcon,
   MessageCircleQuestionIcon,
-  Check
+  Check,
+  CircleDot
 } from 'lucide-vue-next';
 import { useAuthStore } from '@/stores/auth/useAuth';
 import { toast } from 'vue-sonner';
@@ -151,6 +152,11 @@ export const mainLayoutConfig: LayoutConfig = {
           path: '/component/checkbox',
           title: 'Checkbox',
           icon: Check,
+        },
+        {
+          path: '/component/radiogroup',
+          title: 'Radio Group',
+          icon: CircleDot,
         },
         {
           path: '/component/tooltip',
