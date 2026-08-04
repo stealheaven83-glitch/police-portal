@@ -31,7 +31,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 </script>
 
 <template>
-<label class="group flex item-center gap-2">
+<label class="group flex items-center gap-2">
   <CheckboxRoot
       v-slot="slotProps"
       data-slot="checkbox"
