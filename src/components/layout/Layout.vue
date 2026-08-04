@@ -14,6 +14,7 @@ import { computed } from 'vue'
 import MainLayout from './layouts/MainLayout.vue'
 import DefaultLayout from './layouts/DefaultLayout.vue'
 import PortalLayout from './layouts/PortalLayout.vue'
+import WorkLayout from './layouts/WorkLayout.vue'
 import { useRoute } from 'vue-router'
 import { getMenuConfig } from '@/composable/menu/menu'
 
@@ -21,13 +22,14 @@ import { getMenuConfig } from '@/composable/menu/menu'
 const route = useRoute()
 
 // 사용 가능한 레이아웃 타입 정의
-type LayoutType = 'DefaultLayout' | 'MainLayout' | 'PortalLayout'
+type LayoutType = 'DefaultLayout' | 'MainLayout' | 'PortalLayout' | 'WorkLayout'
 
 // 레이아웃 컴포넌트 매핑
-const components: Record<LayoutType, typeof DefaultLayout | typeof MainLayout | typeof PortalLayout> = {
+const components: Record<LayoutType, typeof DefaultLayout | typeof MainLayout | typeof WorkLayout | typeof PortalLayout> = {
   DefaultLayout,
   MainLayout,
-  PortalLayout
+  PortalLayout,
+  WorkLayout
 }
 
 // 라우트 메타 정보에 따라 레이아웃 결정

@@ -5,6 +5,15 @@ const router = createRouter({
     history: createWebHistory(),
     routes: [
         {
+            path: '/samplework',
+            name: 'samplework',
+            component: () => import('../views/SampleWork.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '지역 경찰 포털',
+            }
+        },
+        {
             path: '/login',
             name: 'login',
             component: () => import('../views/Login.vue'),
