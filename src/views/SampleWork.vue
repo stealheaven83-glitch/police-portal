@@ -37,7 +37,7 @@ const features = [
 </script>
 
 <template>
-  <h1>잉</h1>
+  <h1>컨텐츠</h1>
 </template>
 
 <style scoped>
