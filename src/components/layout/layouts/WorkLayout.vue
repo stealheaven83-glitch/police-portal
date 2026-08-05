@@ -5,11 +5,12 @@
 -->
 <template>
   <div class="wrap">
-    <PortalHeader />
+    <PortalHeader/>
     <main class="work-main flex pb-9 relative flex-1">
       <SideMenu :items="leftMenuDummyData" />
       <div class="flex-1 relative">
          <slot name="main" />
+         <!-- 컴포넌트화 작업중 -->
          <div class="absolute bottom-0 left-0 z-1" style="transform: translateY(100%)">
             <ul class="flex tab-ul">
               <li>1</li>
@@ -18,6 +19,7 @@
               <li>4</li>
             </ul>
          </div>
+         <!--// 컴포넌트화 작업중 -->
       </div>
         
     </main>

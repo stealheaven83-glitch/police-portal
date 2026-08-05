@@ -89,7 +89,9 @@
   --Border_gray02: #cdd1d5;
   --Border_gray03: #e6e8ea;
   --Border_input01:#8A949E;
-
+  
+  --Border-grid-header:#1E2124;
+  --Border-grid-body:var(--Border_gray03);
   /* Common */
   --white: #fff;
   --black: #000;

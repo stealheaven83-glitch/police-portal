@@ -279,7 +279,6 @@ function buildMainColumns() {
       formatter: (cell: any) => {
         const v = Number(cell.getValue() ?? 0)
         const el = cell.getElement()
-        el.style.color = v >= 7000 ? '#16a34a' : v < 5000 ? '#9ca3af' : ''
         el.style.fontWeight = v >= 7000 ? '600' : ''
         return v.toLocaleString()
       },
@@ -296,7 +295,6 @@ function buildMainColumns() {
       formatter: (cell: any) => {
         const v = Number(cell.getValue() ?? 0)
         const el = cell.getElement()
-        el.style.backgroundColor = v >= 85 ? '#dcfce7' : v < 60 ? '#fee2e2' : '#fef9c3'
         return String(v)
       },
       responsive: 5,
@@ -389,6 +387,7 @@ onMounted(() => {
     resizableRows: true, // 행 높이 드래그 조절
     movableColumns: true, // 컬럼 순서 이동
     selectableRows: true, // 행 선택(일괄 선택)
+    columnDefaults: { headerSort: false }, // 컬럼 정렬 기능 비활성화
     tooltip: true, // 기본 셀 툴팁
     height: '420px',
     // CSS 로 행 높이를 조절하므로 가상 렌더링 대신 기본 렌더링 사용(행 겹침 방지)
@@ -494,15 +493,63 @@ onBeforeUnmount(() => {
   --row-h: v-bind(rowHeightPx);
 }
 
-/* 편집된 셀 표시 (Tabulator 내부 DOM 이므로 :deep 필요) */
-:deep(.tabulator-cell.cell-dirty) {
-  background-color: #fef08a !important;
-  box-shadow: inset 0 0 0 1px #eab308;
+/* 그리드 배경색 (종합 그리드 한정) */
+:deep(.main-grid.tabulator) {
+  background-color: #f8fafc;
+  border:0;
 }
+:deep(.tabulator .tabulator-header){
+  background:none;
+  border-top:1px solid
 
-/* 평가점수 미달 행 하이라이트 */
-:deep(.tabulator-row.row-warn) {
-  background-color: #fff1f2 !important;
+}
+:deep(.tabulator .tabulator-header .tabulator-col) {
+
+  min-height:39px;
+  box-sizing: border-box;
+  font-size: 15px;
+  text-align: center;
+  color:var(--Text-body_1); 
+  border-right:0;
+  border-top:none;
+  background-color: #fff;
+}
+:deep(.tabulator .tabulator-header .tabulator-col .tabulator-col-content){
+  min-height:39px;
+  padding:0;
+}
+:deep(.tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title){
+  font-size: 15px;
+  min-height: 39px;
+  align-content: center;
+}
+:deep(.tabulator-row .tabulator-cell.tabulator-frozen.tabulator-frozen-left){
+  border-left:0
+}
+:deep(.tabulator-row .tabulator-cell){
+  border-right:1px solid var(--Border-grid-body);
+  border-bottom:1px solid  var(--Border-grid-body);
+  font-size: 14px;
+  color: var(--Text-body_1);
+  text-align: center;
+}
+:deep(.tabulator-row){
+  background-color: #fff;
+}
+:deep(.tabulator-row:hover){
+  background-color: var(--Surface-primary);
+}
+:deep(.tabulator-row:hover .tabulator-cell){
+  color: var(--Base-primary);
+  font-weight: bold;
+}
+:deep(.tabulator-row.tabulator-selected){
+  background-color: #fff;
+  box-shadow: inset 3px 0 0 var(--Base-primary);
+}
+:deep(.tabulator-row.tabulator-selected .tabulator-cell){
+  color: var(--Base-primary);
+  font-weight: 600;
 }
 
 /*
@@ -516,5 +563,9 @@ onBeforeUnmount(() => {
 :deep(.main-grid .tabulator-row .tabulator-cell) {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+}
+.tabulator .tabulator-header{
+  background:#fff;
 }
 </style>
