@@ -1,22 +1,22 @@
 <template>
   <div>
-    <div class="rounded-md border w-full overflow-hidden">
+    <div class="w-full overflow-hidden border-[#1E2124] border-t">
       <Table class="w-full">
         <TableCaption v-if="caption">{{ caption }}</TableCaption>
-        <TableHeader class="bg-black">
-          <TableRow>
-            <TableHead v-for="column in columns" :key="column.key" :class="`text-center text-white`"
+        <TableHeader class="bg-transparent">
+          <TableRow class="" >
+            <TableHead v-for="column in columns" :key="column.key" :class="`text-center text-white text-[#464C53] font-bold border-b border-[#8A949E `"
               :style="{ width: column.width || 'auto' }">
               {{ column.label }}
             </TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
-          <TableRow v-for="(item, index) in paginatedItems" :key="index" class="hover:bg-muted/50" :class="{
+        <TableBody class="[&_tr:last-child]:!border-b">
+          <TableRow v-for="(item, index) in paginatedItems" :key="index" class="hover:bg-[#F0F7FF]  hover:text-[#0054A6] hover:font-bold" :class="{
             'cursor-pointer': selectable,
             'bg-muted': selectedIndex === index
           }" @click="selectable ? selectRow(index, item) : undefined">
-            <TableCell v-for="column in columns" :key="column.key" class="text-center" :class="column.cellClass || ''">
+            <TableCell v-for="column in columns" :key="column.key" class="text-center border-l border-[#E6E8EA] first:border-l-0 " :class="column.cellClass || ''">
               <slot :name="`cell-${column.key}`" :item="item" :column="column">
                 <template v-if="column.type === 'status'">
                   <span :class="{
@@ -38,23 +38,10 @@
             </TableCell>
           </TableRow>
         </TableBody>
-        <TableFooter v-if="showPagination">
-          <TableRow>
-            <TableCell :colSpan="columns.length" class="py-2">
-              <div class="flex items-center justify-between px-2">
-                <div class="text-sm text-gray-700">
-                  총 {{ totalElements }}개 항목 중 {{ (currentPageComputed - 1) * itemsPerPage + 1 }}-{{
-                    Math.min(currentPageComputed
-                      * itemsPerPage, totalElements) }}개 표시
-                </div>
-              </div>
-            </TableCell>
-          </TableRow>
-        </TableFooter>
       </Table>
     </div>
 
-    <div class="mt-8" v-if="paginatedItems.length === 0">
+    <div v-if="paginatedItems.length === 0">
       <TableEmpty>
         <template #icon>
           <div class="rounded-full bg-muted p-2">
@@ -72,33 +59,48 @@
       </TableEmpty>
     </div>
 
-    <div class="mt-8 flex justify-center items-center" v-if="showPagination && totalPages > 1">
-      <Pagination class="flex items-center" :page="currentPageComputed" :itemsPerPage="itemsPerPage"
+    <div class="grid grid-cols-[1fr_auto_1fr] items-center w-full mt-[20px]" v-if="showPagination && totalPages > 1">
+      <div class="justify-self-start text-sm">
+        총 <span class="font-bold">{{ totalElements }}</span>건 / 현재 {{ (currentPageComputed - 1) * itemsPerPage + 1 }}-{{
+          Math.min(currentPageComputed
+            * itemsPerPage, totalElements) }}
+      </div>
+      <Pagination class="flex items-center justify-self-center" :page="currentPageComputed" :itemsPerPage="itemsPerPage"
         :total="totalElements" @update:page="goToPage">
         <PaginationList class="flex items-center">
-          <PaginationFirst class="p-0 mx-1 bg-transparent flex items-center" @click="goToPage(1)"
+          <PaginationFirst class="p-0 mx-1 bg-transparent flex items-center border-0 shadow-none" @click="goToPage(1)"
             :disabled="currentPageComputed === 1" />
-          <PaginationPrev class="p-0 mx-1 bg-transparent flex items-center" @click="goToPreviousPage"
+          <PaginationPrev class="p-0 mx-1 bg-transparent flex items-center border-0 shadow-none" @click="goToPreviousPage"
             :disabled="currentPageComputed === 1" />
           <PaginationListItem v-for="page in totalPages" :key="page" :value="page"
             class="p-0 mx-1 bg-transparent flex items-center">
             <Button
               class="w-9 h-9 flex items-center justify-center rounded-md text-sm outline outline-1 bg-white text-black py-0 hover:text-white"
-              :class="currentPageComputed === page ? 'bg-black text-white outline-black' : ''" @click="goToPage(page)">
+              :class="currentPageComputed === page ? 'bg-[#023F88] text-white rounded-full' : ''" @click="goToPage(page)">
               {{ page }}
             </Button>
           </PaginationListItem>
-          <PaginationNext class="p-0 mx-1 bg-transparent flex items-center" @click="goToNextPage"
+          <PaginationNext class="p-0 mx-1 bg-transparent flex items-center border-0 shadow-none" @click="goToNextPage"
             :disabled="currentPageComputed === totalPages" />
-          <PaginationLast class="p-0 mx-1 bg-transparent flex items-center" @click="goToPage(totalPages)"
+          <PaginationLast class="p-0 mx-1 bg-transparent flex items-center border-0 shadow-none" @click="goToPage(totalPages)"
             :disabled="currentPageComputed === totalPages" />
         </PaginationList>
       </Pagination>
+      <div class="justify-self-end">      
+        <section class="space-y-4">
+        <div class="flex gap-4">
+          <BaseSelect v-model="selectedValue" :options="sampleFruitOptions" placeholder=""
+            width-class="" class="border-0 shadow-none
+            "/>
+        </div>
+      </section>
+      </div>    
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import BaseSelect from '@/components/select/BaseSelect.vue';
 import { ref, computed } from 'vue'
 import {
   Table,
@@ -106,7 +108,6 @@ import {
   TableCaption,
   TableCell,
   TableEmpty,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow
@@ -208,7 +209,20 @@ const selectRow = (index: number, item: any) => {
   selectedIndex.value = selectedIndex.value === index ? null : index
   emit('select-row', { index, item })
 }
+
+
+//select box
+const sampleFruitOptions = [
+  { label: '10건', value: '10' },
+  { label: '20건', value: '20' },
+  { label: '30건', value: '30' },
+]
+
+const selectedValue = ref<string>(sampleFruitOptions[0].value)
+
 </script>
+
+
 
 <style scoped>
 /* 추가 스타일이 필요한 경우 여기에 작성 */

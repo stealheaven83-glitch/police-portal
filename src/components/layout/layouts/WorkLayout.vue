@@ -24,8 +24,8 @@
                 @click="item.children && toggleDepth1(index)"
               >
                 {{ item.name }}
-              </button>
-              <ul v-if="item.children" class="depth2">
+              </button> 
+              <ul class="depth2">
                 <li
                   v-for="child in item.children"
                   :key="child.name"
@@ -163,7 +163,7 @@ const leftMenuDummyData = [
 .left-menu .lnb .depth1 .depth1-item {
   border-bottom: 1px solid var(--Border_gray03);
 }
-.left-menu .lnb .depth1 .depth1-item.is-open .depth1-btn {
+.left-menu .lnb .depth1 .depth1-item .depth1-btn.is-open {
   border-bottom: 2px solid var(--Border_primary);
 }
 .left-menu .lnb .depth1 .depth1-item .depth1-btn {

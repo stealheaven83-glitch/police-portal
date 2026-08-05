@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { 
+import type { HTMLAttributes } from 'vue'
+import { cn } from '@/lib/utils'
+import {
     Select,
     SelectTrigger,
     SelectValue,
@@ -12,6 +14,7 @@ defineProps<{
   options: { label: string; value: any }[]
   placeholder?: string
   widthClass?: string
+  class?: HTMLAttributes['class']
 }>()
 
 const emit = defineEmits(['update:modelValue'])
@@ -20,7 +23,7 @@ const emit = defineEmits(['update:modelValue'])
 
 <template>
   <Select :model-value="modelValue" @update:model-value="emit('update:modelValue', $event)">
-    <SelectTrigger :class="widthClass ?? 'w-[auto]'">
+    <SelectTrigger :class="cn(widthClass ?? 'w-[auto]', $props.class)">
       <SelectValue :placeholder="placeholder" />
     </SelectTrigger>
 

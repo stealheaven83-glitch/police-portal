@@ -107,7 +107,7 @@ import { toast } from 'vue-sonner';
 import { useDialog } from '@/composable/dialog/dialog'
 import { z } from 'zod'
 import type { Config } from '@/components/ui/auto-form'
-import BaseSelect from '@/components/custom/select/BaseSelect.vue';
+import BaseSelect from '@/components/select/BaseSelect.vue';
 import GenericDialog from '@/components/custom/dialog/GenericDialog.vue';
 
 const dialog = useDialog()

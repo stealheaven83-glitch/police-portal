@@ -3,8 +3,9 @@ import { ref } from 'vue'
 import { VueDatePicker } from '@vuepic/vue-datepicker'
 import { ko } from 'date-fns/locale'
 import '@vuepic/vue-datepicker/dist/main.css'
-import  './DatePicker.css'
+import './DatePicker.css'
 const date = ref();
+
 /*년월일 선택 - Date 객체를 v-model로 사용*/
 const fullDate = ref<Date | null>(null)
 

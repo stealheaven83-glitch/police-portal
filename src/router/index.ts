@@ -213,6 +213,7 @@ const router = createRouter({
             component: Error404
         },
 
+
     ]
 })
 
