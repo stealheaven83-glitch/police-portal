@@ -160,6 +160,29 @@
           </div>
         </div>
       </section>
+
+
+      <section class="space-y-4 pt-10">
+        <h2 class="text-2xl font-semibold">커스텀</h2>
+        <div class="text-gray-500">InputField2</div>
+        <div>
+          <div class="w-[480px] mb-3">
+            <label for="input11">개별 라벨</label>
+            <InputField2 id="input11" placeholder="플레이스홀더" clearable></InputField2>
+          </div>
+          <div class="w-[480px] mb-3">
+            <InputField2 label="사이즈 md" placeholder="플레이스홀더" size="md" label-position="left"></InputField2>
+          </div>
+          <div class="w-[480px] mb-3">
+            <InputField2 label="사이즈 sm" placeholder="플레이스홀더" size="sm" clearable></InputField2>
+          </div>
+          <div class="w-[480px] mb-3">
+            <InputField2 label="설명버튼" description="안녕?"></InputField2>
+          </div>
+          <div class="w-[480px]">
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 </template>
@@ -167,6 +190,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
 import InputField from '@/components/custom/input/InputField.vue'
+import InputField2 from '@/components/custom/input/InputField2.vue'
 import { Label } from '@/components/ui/label'
 
 /**
