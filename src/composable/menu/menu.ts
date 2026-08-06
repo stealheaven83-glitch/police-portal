@@ -25,7 +25,8 @@ import {
   TextCursorInputIcon,
   MessageCircleQuestionIcon,
   Check,
-  CircleDot
+  CircleDot,
+  ToggleLeft
 } from 'lucide-vue-next';
 import { useAuthStore } from '@/stores/auth/useAuth';
 import { toast } from 'vue-sonner';
@@ -157,6 +158,11 @@ export const mainLayoutConfig: LayoutConfig = {
           path: '/component/radiogroup',
           title: 'Radio Group',
           icon: CircleDot,
+        },
+        {
+          path: '/component/switch',
+          title: 'Switch',
+          icon: ToggleLeft,
         },
         {
           path: '/component/tooltip',
