@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
+import { Button as CustomBtn } from '@/components/custom/button'
 import {
   ChevronRight,
   Mail,
@@ -36,11 +37,11 @@ import {
             <Button variant="link">Link</Button>
           </div>
           <div class="flex flex-wrap gap-4">
-            <Button variant="primary">Primary</Button>
-            <Button variant="secondary">secondary</Button>
-            <Button variant="tertiary">tertiary</Button>
-            <Button variant="tertiary2">tertiary2</Button>
-            <Button variant="text">tertiary2</Button>
+            <CustomBtn variant="primary">Primary</CustomBtn>
+            <CustomBtn variant="secondary">secondary</CustomBtn>
+            <CustomBtn variant="tertiary">tertiary</CustomBtn>
+            <CustomBtn variant="tertiary2">tertiary2</CustomBtn>
+            <CustomBtn variant="text">tertiary2</CustomBtn>
           </div>
         </section>
 
@@ -52,11 +53,11 @@ import {
             <Button size="lg">Large</Button>
           </div>
           <div class="flex flex-wrap items-center gap-4">
-            <Button variant="primary" size="xxs">xxs</Button>
-            <Button variant="primary" size="xs">xs</Button>
-            <Button variant="primary" size="sm">sm</Button>
-            <Button variant="primary" size="md">md</Button>
-            <Button variant="primary" size="lg">lg</Button>
+            <CustomBtn variant="primary" size="xxs">xxs</CustomBtn>
+            <CustomBtn variant="primary" size="xs">xs</CustomBtn>
+            <CustomBtn variant="primary" size="sm">sm</CustomBtn>
+            <CustomBtn variant="primary" size="md">md</CustomBtn>
+            <CustomBtn variant="primary" size="lg">lg</CustomBtn>
           </div>
         </section>
 
