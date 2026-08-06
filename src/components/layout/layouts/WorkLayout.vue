@@ -5,7 +5,7 @@
 -->
 <template>
   <div class="wrap">
-    <PortalHeader/>
+    <PortalHeader />
     <main class="work-main flex pb-9 relative flex-1">
       <SideMenu :items="leftMenuDummyData" />
       <div class="flex-1 relative">
@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import PortalHeader from '../portal/PortalHeader.vue'
-import { SideMenu } from '@/components/ui/sidemenu'
+import { SideMenu } from '@/components/custom/sidemenu/index.ts'
 
 defineSlots<{
   main: () => any

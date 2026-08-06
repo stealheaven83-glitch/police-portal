@@ -524,7 +524,8 @@ onBeforeUnmount(() => {
   align-content: center;
 }
 :deep(.tabulator-row .tabulator-cell.tabulator-frozen.tabulator-frozen-left){
-  border-left:0
+  border-left:0;
+  border-right:1px solid var(--Border-grid-body);
 }
 :deep(.tabulator-row .tabulator-cell){
   border-right:1px solid var(--Border-grid-body);
