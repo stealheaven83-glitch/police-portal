@@ -26,12 +26,12 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emits = defineEmits<CheckboxRootEmits>()
 
-const delegatedProps = reactiveOmit(props, "class", "variant", "size")
+const delegatedProps = reactiveOmit(props, "class", "variant", "size", "label", "labelClass")
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 </script>
 
 <template>
-<label class="group flex items-center gap-2">
+<label class="group flex items-center gap-2 has-[[disabled]]:cursor-not-allowed">
   <CheckboxRoot
       v-slot="slotProps"
       data-slot="checkbox"
@@ -51,7 +51,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     <span
       v-if="label"
       :class="cn(
-        'self-center select-none leading-none text-[#1E2124] group-has-[[disabled]]:text-[#8A949E]',
+        'self-center select-none leading-none text-[#1E2124] peer-disabled:text-[#8A949E]',
           props.size === 'lg' ? 'text-[19px]' : 'text-[15px]',
           props.labelClass
       )"

@@ -59,11 +59,13 @@ import { Checkbox } from "@/components/ui/checkbox"
                 다크모드 컬러 필요.<br/>dark:text-[white] dark:group-has-[[disabled]]:text-[white]
               </p>
             </div>
-            <div class="flex flex-col gap-1">
-              <Checkbox variant="default" size="default" label="Help text" disabled />
-              <p class="pl-7 text-[1.3rem] text-[#464C53] group-has-[[disabled]]:text-[#8A949E]">
-                상위 group 클래스를 넣어줘야 컬러가 같이 적용됩니다.
-              </p>
+            <div class="group flex flex-col gap-1">
+              <div class="flex flex-col gap-1">
+                <Checkbox variant="default" size="default" label="Help text" disabled />
+                <p class="pl-7 text-[1.3rem] text-[#464C53] group-has-[[disabled]]:text-[#8A949E]">
+                  상위 group 클래스를 넣어줘야 컬러가 같이 적용됩니다.
+                </p>
+              </div>
             </div>
           </div>
         </section>
