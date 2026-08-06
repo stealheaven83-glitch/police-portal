@@ -190,6 +190,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/component/switch',
+            name: 'switch',
+            component: () => import('../views/component-sample/Switch.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Switch'
+            }
+        },
+        {
             path: '/component/radiogroup',
             name: 'Radio-group',
             component: () => import('../views/component-sample/RadioGroup.vue'),
