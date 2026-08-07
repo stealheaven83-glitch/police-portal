@@ -26,7 +26,8 @@ import {
   MessageCircleQuestionIcon,
   Check,
   CircleDot,
-  ToggleLeft
+  ToggleLeft,
+  PanelTop
 } from 'lucide-vue-next';
 import { useAuthStore } from '@/stores/auth/useAuth';
 import { toast } from 'vue-sonner';
@@ -163,6 +164,11 @@ export const mainLayoutConfig: LayoutConfig = {
           path: '/component/switch',
           title: 'Switch',
           icon: ToggleLeft,
+        },
+        {
+          path: '/component/tabs',
+          title: 'Tabs',
+          icon: PanelTop,
         },
         {
           path: '/component/tooltip',
