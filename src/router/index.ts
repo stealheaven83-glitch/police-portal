@@ -190,23 +190,32 @@ const router = createRouter({
             }
         },
         {
-            path: '/component/switch',
-            name: 'switch',
-            component: () => import('../views/component-sample/Switch.vue'),
+          path: '/component/radiogroup',
+          name: 'Radio-group',
+          component: () => import('../views/component-sample/RadioGroup.vue'),
             meta: {
-                layout: 'MainLayout',
-                title: 'Switch'
+              layout: 'MainLayout',
+              title: 'Radio Group'
             }
-        },
-        {
-            path: '/component/radiogroup',
-            name: 'Radio-group',
-            component: () => import('../views/component-sample/RadioGroup.vue'),
-            meta: {
-                layout: 'MainLayout',
-                title: 'Radio Group'
-            }
-        },
+          },
+          {
+              path: '/component/switch',
+              name: 'switch',
+              component: () => import('../views/component-sample/Switch.vue'),
+              meta: {
+                  layout: 'MainLayout',
+                  title: 'Switch'
+              }
+          },
+          {
+              path: '/component/tabs',
+              name: 'tabs',
+              component: () => import('../views/component-sample/Tabs.vue'),
+              meta: {
+                  layout: 'MainLayout',
+                  title: 'Tabs'
+              }
+          },
         {
             path: '/component/PageHeader',
             name: 'pageheader',
