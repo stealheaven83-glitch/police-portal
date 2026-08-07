@@ -217,6 +217,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/component/PageHeader',
+            name: 'pageheader',
+            component: () => import('../components/custom/title/Title.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Title'
+            }
+        },        
+        {
             path: '/:pathMatch(.*)*',
             name: 'notFound',
             component: Error404
