@@ -208,6 +208,24 @@ const router = createRouter({
             }
         },
         {
+            path: '/component/pagination',
+            name: 'Pagination',
+            component: () => import('../views/component-sample/Pagination.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Pagination'
+            }
+        },
+        {
+            path: '/component/icon',
+            name: 'Icon',
+            component: () => import('../views/component-sample/Icons.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Icon'
+            }
+        },
+        {
             path: '/:pathMatch(.*)*',
             name: 'notFound',
             component: Error404

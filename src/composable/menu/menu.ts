@@ -163,6 +163,11 @@ export const mainLayoutConfig: LayoutConfig = {
           title: 'Tooltip',
           icon: MessageCircleQuestionIcon,
         },
+        {
+          path: '/component/pagination',
+          title: 'Pagination',
+          icon: MessageCircleQuestionIcon,
+        },
       ]
     }
   ],
