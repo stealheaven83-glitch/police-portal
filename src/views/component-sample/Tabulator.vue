@@ -60,11 +60,11 @@
 
         <!-- 툴바 -->
         <div class="flex flex-wrap gap-2 items-center">
-          <button class="btn" @click="addRow">행 추가</button>
-          <button class="btn" @click="deleteSelected">선택 행 삭제</button>
-          <button class="btn" @click="selectAll">전체 선택</button>
-          <button class="btn" @click="deselectAll">전체 해제</button>
-          <button class="btn" @click="resetChanges">변경 초기화</button>
+          <CustomBtn variant="primary" size="sm" @click="addRow">행 추가</CustomBtn>
+          <CustomBtn variant="secondary" size="sm" @click="deleteSelected">선택 행 삭제</CustomBtn>
+          <CustomBtn variant="tertiary" size="sm" @click="selectAll">전체 선택</CustomBtn>
+          <CustomBtn variant="tertiary" size="sm" @click="deselectAll">전체 해제</CustomBtn>
+          <CustomBtn variant="text" size="sm" @click="resetChanges">변경 초기화</CustomBtn>
 
           <span class="mx-1 h-5 w-px bg-gray-300" />
 
@@ -112,7 +112,7 @@
           왼쪽 행의 <b>핸들(⣿)</b> 을 잡아 오른쪽 그리드로 끌어다 놓으면 항목이 복사됩니다
           (<code>movableRows</code> + <code>movableRowsConnectedTables</code>). 원본은 유지됩니다.
           <br />
-          <span class="text-amber-600">
+          <span class="text-amber-600">ㅋ
             ※ "셀 범위"를 드래그해 다른 그리드로 옮기는 것은 Tabulator 네이티브 기능이 아니며, 행 단위 이동 또는
             범위 선택 후 클립보드(복사/붙여넣기) 방식으로 대체합니다.
           </span>
@@ -147,6 +147,7 @@
 import { ref, reactive, onMounted, onBeforeUnmount, computed } from 'vue'
 import { TabulatorFull as Tabulator } from 'tabulator-tables'
 import 'tabulator-tables/dist/css/tabulator.min.css'
+import { Button as CustomBtn } from '@/components/custom/button'
 
 /* ------------------------------------------------------------------ *
  * 기능 지원 요약 매트릭스
@@ -159,7 +160,7 @@ const supportMatrix = [
   { feature: '행 높이 조정', level: 'ok', badge: '지원', how: 'rowHeight / CSS / resizableRows' },
   { feature: '항목 정렬(행 순서 이동)', level: 'ok', badge: '지원', how: 'movableRows(드래그 재정렬)' },
   { feature: '일괄 선택(해제)', level: 'ok', badge: '지원', how: 'selectableRows + 헤더 체크박스' },
-  { feature: '컬럼 정렬', level: 'ok', badge: '지원', how: '헤더 클릭 sorter(다중 정렬)' },
+  { feature: '컬럼 정렬', level: 'no', badge: '미지원', how: 'headerSort: false 로 비활성화(의도적으로 제외)' },
   { feature: '컬럼 숨김', level: 'ok', badge: '지원', how: 'toggleColumn / hideColumn / showColumn' },
   { feature: '셀 데이터 직접 수정(인라인)', level: 'ok', badge: '지원', how: 'editor(input/number/list...) 셀 내부 편집' },
   { feature: '행 추가 및 삭제', level: 'ok', badge: '지원', how: 'addRow / row.delete API' },
@@ -183,15 +184,16 @@ type Employee = {
   score: number
   joinDate: string
   active: boolean
+  memo: string
 }
 
 const initialData: Employee[] = [
-  { id: 1, name: '김철수', dept: '개발', position: '팀장', salary: 8200, score: 92, joinDate: '2016-03-02', active: true },
-  { id: 2, name: '이영희', dept: '디자인', position: '선임', salary: 6100, score: 78, joinDate: '2019-07-15', active: true },
-  { id: 3, name: '박민준', dept: '개발', position: '주임', salary: 4800, score: 55, joinDate: '2022-01-10', active: true },
-  { id: 4, name: '최지우', dept: '기획', position: '책임', salary: 7000, score: 84, joinDate: '2018-11-20', active: false },
-  { id: 5, name: '정해인', dept: '개발', position: '사원', salary: 4200, score: 48, joinDate: '2023-05-02', active: true },
-  { id: 6, name: '한소희', dept: '마케팅', position: '선임', salary: 5900, score: 88, joinDate: '2020-09-01', active: true },
+  { id: 1, name: '김철수', dept: '개발', position: '팀장', salary: 8200, score: 92, joinDate: '2016-03-02', active: true, memo: '' },
+  { id: 2, name: '이영희', dept: '디자인', position: '선임', salary: 6100, score: 78, joinDate: '2019-07-15', active: true, memo: '' },
+  { id: 3, name: '박민준', dept: '개발', position: '주임', salary: 4800, score: 55, joinDate: '2022-01-10', active: true, memo: '' },
+  { id: 4, name: '최지우', dept: '기획', position: '책임', salary: 7000, score: 84, joinDate: '2018-11-20', active: false, memo: '' },
+  { id: 5, name: '정해인', dept: '개발', position: '사원', salary: 4200, score: 48, joinDate: '2023-05-02', active: true, memo: '' },
+  { id: 6, name: '한소희', dept: '마케팅', position: '선임', salary: 5900, score: 88, joinDate: '2020-09-01', active: true, memo: '' },
 ]
 
 const deptValues = ['개발', '디자인', '기획', '마케팅', '영업']
@@ -200,7 +202,7 @@ const deptValues = ['개발', '디자인', '기획', '마케팅', '영업']
  * 반응형 상태
  * ------------------------------------------------------------------ */
 const layoutMode = ref<'fitColumns' | 'fitData' | 'fitDataStretch'>('fitColumns')
-const rowHeight = ref(40)
+const rowHeight = ref(48)
 const rowHeightPx = computed(() => `${rowHeight.value}px`)
 
 const toggleableColumns = [
@@ -230,6 +232,33 @@ let mainTable: any = null
 let leftTable: any = null
 let rightTable: any = null
 let groupTable: any = null
+
+/* ------------------------------------------------------------------ *
+ * 세로 스크롤 여부에 따른 하단 경계선(.tabulator.has-vscroll) 토글
+ * - tabulator-tableholder 의 scrollHeight 가 clientHeight 를 넘을 때만 표시
+ * - 행 높이 슬라이더, 행 추가/삭제, 컬럼 숨김 등으로 콘텐츠 높이가 바뀌어도
+ *   ResizeObserver 가 감지해 자동으로 갱신됨
+ * ------------------------------------------------------------------ */
+const scrollBorderObservers: ResizeObserver[] = []
+
+function watchVScrollBorder(hostEl: HTMLElement | null) {
+  if (!hostEl) return
+  // Tabulator 는 래퍼를 새로 만들지 않고 host 엘리먼트 자체에 'tabulator' 클래스를 붙인다
+  const root = hostEl
+  const holder = hostEl.querySelector('.tabulator-tableholder') as HTMLElement | null
+  const content = hostEl.querySelector('.tabulator-table') as HTMLElement | null
+  if (!holder || !content) return
+
+  const check = () => {
+    root.classList.toggle('has-vscroll', holder.scrollHeight > holder.clientHeight + 1)
+  }
+  check()
+
+  const ro = new ResizeObserver(check)
+  ro.observe(holder)
+  ro.observe(content)
+  scrollBorderObservers.push(ro)
+}
 
 /* 다음 추가될 행의 id */
 let nextId = initialData.length + 1
@@ -304,7 +333,7 @@ function buildMainColumns() {
       field: 'joinDate',
       minWidth: 110,
       hozAlign: 'center',
-      editor: 'input',
+      editor: dateEditor,
       // 툴팁 콜백 예시
       tooltip: (_e: any, cell: any) => `입사일: ${cell.getValue()}`,
       responsive: 6,
@@ -318,7 +347,66 @@ function buildMainColumns() {
       editor: 'tickCross',
       responsive: 1,
     },
+    {
+      title: '비고',
+      field: 'memo',
+      minWidth: 140,
+      hozAlign: 'center',
+      // editor 대신 formatter 에서 직접 <input> 을 그려서, 클릭 없이 항상 입력창이 보이도록 함
+      formatter: memoInputFormatter,
+      responsive: 7,
+    },
   ]
+}
+
+/* '비고' 컬럼용: 편집 모드 진입 없이 셀 안에 항상 텍스트 input 을 표시 */
+function memoInputFormatter(cell: any) {
+  const input = document.createElement('input')
+  input.type = 'text'
+  input.classList.add('input-grid')
+  input.value = cell.getValue() ?? ''
+  input.style.width = '100%'
+  input.style.height = '100%'
+  input.style.boxSizing = 'border-box'
+  input.style.background = 'transparent'
+  input.style.textAlign = 'center'
+
+  // 그리드의 행 선택/드래그 등 다른 클릭 핸들러로 이벤트가 새는 것을 방지
+  input.addEventListener('click', (e) => e.stopPropagation())
+  input.addEventListener('change', () => {
+    cell.setValue(input.value) // 값 반영 + cellEdited 이벤트 발생
+  })
+
+  return input
+}
+
+/* 날짜 컬럼용 커스텀 에디터: 브라우저 기본 달력(input[type=date])을 셀 안에 띄움 */
+function dateEditor(cell: any, onRendered: any, success: any, cancel: any) {
+  const input = document.createElement('input')
+  input.type = 'date'
+  input.value = cell.getValue() || ''
+  input.style.width = '100%'
+  input.style.height = '100%'
+  input.style.boxSizing = 'border-box'
+  input.style.border = 'none'
+  input.style.padding = '0 8px'
+  input.style.outline = 'none'
+
+  onRendered(() => {
+    input.focus()
+  })
+
+  function submit() {
+    success(input.value)
+  }
+
+  input.addEventListener('change', submit)
+  input.addEventListener('blur', submit)
+  input.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key === 'Escape') cancel()
+  })
+
+  return input
 }
 
 /* 편집된(변경된) 셀에 dirty 클래스를 부여 */
@@ -345,6 +433,7 @@ function addRow() {
       score: 70,
       joinDate: '2026-07-14',
       active: true,
+      memo: '',
     },
     true, // 맨 위에 추가
   )
@@ -381,7 +470,7 @@ onMounted(() => {
   mainTable = new Tabulator(mainTableEl.value, {
     data: JSON.parse(JSON.stringify(initialData)),
     reactiveData: false,
-    layout: layoutMode.value,
+    layout: 'fitColumns',
     responsiveLayout: 'collapse', // 모바일 대응: 폭이 좁으면 컬럼 접기
     resizableColumns: true, // 컬럼 너비 드래그 조절
     resizableRows: true, // 행 높이 드래그 조절
@@ -405,6 +494,7 @@ onMounted(() => {
   mainTable.on('cellEdited', (cell: any) => {
     markDirty(cell)
   })
+  mainTable.on('tableBuilt', () => watchVScrollBorder(mainTableEl.value))
 
   /* 2) & 3) 그리드 간 드래그 복사 (원본 → 대상) */
   const connectColumns = [
@@ -423,8 +513,10 @@ onMounted(() => {
     movableRowsConnectedTables: '#right-connected-table',
     movableRowsReceiver: 'add',
     movableRowsSender: false, // 원본 유지(복사)
+    columnDefaults: { headerSort: false }, // 컬럼 정렬 기능 비활성화
     columns: connectColumns,
   })
+  leftTable.on('tableBuilt', () => watchVScrollBorder(leftTableEl.value))
 
   rightTable = new Tabulator(rightTableEl.value, {
     data: [],
@@ -432,14 +524,17 @@ onMounted(() => {
     height: '300px',
     movableRows: true,
     placeholder: '왼쪽 그리드에서 행을 드래그해 놓으세요',
+    columnDefaults: { headerSort: false }, // 컬럼 정렬 기능 비활성화
     columns: connectColumns,
   })
+  rightTable.on('tableBuilt', () => watchVScrollBorder(rightTableEl.value))
 
   /* 4) 헤더 그룹핑(셀 병합 대체) 그리드 */
   groupTable = new Tabulator(groupTableEl.value, {
     data: JSON.parse(JSON.stringify(initialData)),
     layout: 'fitColumns',
     height: '260px',
+    columnDefaults: { headerSort: false }, // 컬럼 정렬 기능 비활성화
     columns: [
       { title: '사번', field: 'id', width: 70, hozAlign: 'center' },
       {
@@ -459,6 +554,7 @@ onMounted(() => {
       },
     ],
   })
+  groupTable.on('tableBuilt', () => watchVScrollBorder(groupTableEl.value))
 })
 
 onBeforeUnmount(() => {
@@ -466,6 +562,7 @@ onBeforeUnmount(() => {
   leftTable?.destroy()
   rightTable?.destroy()
   groupTable?.destroy()
+  scrollBorderObservers.forEach((ro) => ro.disconnect())
 })
 </script>
 
@@ -494,9 +591,20 @@ onBeforeUnmount(() => {
 }
 
 /* 그리드 배경색 (종합 그리드 한정) */
-:deep(.main-grid.tabulator) {
-  background-color: #f8fafc;
+:deep(.tabulator){
+  background:#fff;
   border:0;
+}
+:deep(.main-grid.tabulator) {
+  background-color: #fff;
+  border:0;
+}
+/* tabulator-tableholder 에 세로 스크롤이 생길 때만 하단 경계선 표시 */
+:deep(.tabulator) {
+  border-bottom: 1px solid transparent;
+}
+:deep(.tabulator.has-vscroll) {
+  border-bottom-color: var(--Border_gray03);
 }
 :deep(.tabulator .tabulator-header){
   background:none;
@@ -531,8 +639,11 @@ onBeforeUnmount(() => {
   border-right:1px solid var(--Border-grid-body);
   border-bottom:1px solid  var(--Border-grid-body);
   font-size: 14px;
-  color: var(--Text-body_1);
+  color: var(--Text-body_0);
   text-align: center;
+  padding:0.4rem 1.2rem;
+  height: 4.8rem;
+  align-content: center;
 }
 :deep(.tabulator-row){
   background-color: #fff;
@@ -552,6 +663,16 @@ onBeforeUnmount(() => {
   color: var(--Base-primary);
   font-weight: 600;
 }
+:deep(.tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title){
+  border:1px sold 
+}
+:deep(.tabulator-row .tabulator-cell.tabulator-frozen.tabulator-frozen-left input[type="checkbox"]),
+:deep(.tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title input[type="checkbox"]){
+  border: 1px solid #58616A;
+  border-radius: 0.4rem;
+  width: 2rem;
+  height: 2rem;
+}
 
 /*
  * 행 높이 슬라이더 반영 (종합 그리드 한정)
@@ -565,8 +686,17 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  height:4.8rem;
+}
+:deep(.tabulator-row.tabulator-selected .tabulator-cell){
+  color:var(--Text-body_0);
+  font-weight: 400;
 }
 .tabulator .tabulator-header{
   background:#fff;
 }
+:deep(.main-grid .tabulator-cell .input-grid){
+  border:1px solid var(--Border_input01);
+  border-radius:0.6rem;
+  }
 </style>
