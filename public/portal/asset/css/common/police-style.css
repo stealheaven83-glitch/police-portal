@@ -96,6 +96,10 @@
   --white: #fff;
   --black: #000;
 
+  --disabled-input-bg: #E6E8EA;
+  --disabled-input-border: #B1B8BE;
+  --disabled-input-text-color: #6D7882;
+
   
 }
 
