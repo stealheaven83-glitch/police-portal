@@ -26,7 +26,8 @@ import {
   MessageCircleQuestionIcon,
   Check,
   CircleDot,
-  ToggleLeft
+  ToggleLeft,
+  Heading
 } from 'lucide-vue-next';
 import { useAuthStore } from '@/stores/auth/useAuth';
 import { toast } from 'vue-sonner';
@@ -168,6 +169,11 @@ export const mainLayoutConfig: LayoutConfig = {
           path: '/component/tooltip',
           title: 'Tooltip',
           icon: MessageCircleQuestionIcon,
+        },
+        {
+          path: '/component/PageHeader',
+          title: 'Title',
+          icon: Heading,
         },
         {
           path: '/component/pagination',

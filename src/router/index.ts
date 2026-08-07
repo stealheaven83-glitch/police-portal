@@ -138,7 +138,7 @@ const router = createRouter({
         {
             path: '/component/tabulator',
             name: 'tabulator',
-            component: () => import('../views/component-sample/Tabulator.vue'),
+            component: () => import('../components/custom/Tabulator/Tabulator.vue'),
             meta: {
                 layout: 'MainLayout',
                 title: 'Tabulator'
@@ -208,6 +208,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/component/PageHeader',
+            name: 'pageheader',
+            component: () => import('../components/custom/title/Title.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Title'
+            }
+        },         
+        {
             path: '/component/tooltip',
             name: 'tooltip',
             component: () => import('../views/component-sample/TooltipSample.vue'),
@@ -215,7 +224,7 @@ const router = createRouter({
                 layout: 'MainLayout',
                 title: 'Tooltip'
             }
-        },
+        },      
         {
             path: '/component/pagination',
             name: 'Pagination',

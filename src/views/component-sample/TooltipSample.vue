@@ -166,7 +166,7 @@
 
 <script setup lang="ts">
 import { CircleHelpIcon } from 'lucide-vue-next'
-import { AppTooltip } from '@/components/custom/tooltip'
+import { AppTooltip } from '@/components/custom/table/tooltip'
 import { Button } from '@/components/ui/button'
 
 /**
