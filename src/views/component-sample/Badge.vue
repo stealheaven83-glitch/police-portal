@@ -79,6 +79,9 @@ const colors = ["primary", "secondary", "tertiary", "point", "danger", "warning"
             <Badge shape="sm">4px</Badge>
           </div>
         </section>
+        <section class="space-y-4">
+           <Badge shape="full" size="lg" color="grayLighter">Full</Badge>
+        </section>
       </div>
     </div>
   </div>

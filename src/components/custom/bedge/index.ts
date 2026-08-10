@@ -19,6 +19,7 @@ export const badgeVariants = cva(
         warning: "",
         success: "",
         info: "",
+        grayLighter: "",
       },
       variant: {
         solid: "",
@@ -41,8 +42,8 @@ export const badgeVariants = cva(
       { color: "danger", variant: "solid", class: "bg-[var(--danger)] border-[var(--danger)] text-white" },
       { color: "warning", variant: "solid", class: "bg-[var(--warning)] border-[var(--warning)] text-[var(--Text-body_0)]" },
       { color: "success", variant: "solid", class: "bg-[var(--success)] border-[var(--success)] text-white" },
-      { color: "info", variant: "solid", class: "bg-[var(--info)] border-[var(--info)] text-white" },
-
+      { color: "info", variant: "solid", class: "bg-[var(--info)] border-[var(--info)] text-white" },  
+      { color: "grayLighter", variant: "solid", class: "bg-[var(--Base-secondary-lighter)] border-[var(--Base-secondary-lighter)] --Text-body_0" },
       { color: "primary", variant: "outline", class: "border-[var(--Base-primary)] text-[var(--Base-primary)]" },
       { color: "secondary", variant: "outline", class: "border-[var(--Base-secondary)] text-[var(--Base-secondary)]" },
       { color: "tertiary", variant: "outline", class: "border-[var(--Border_gray01)] text-[var(--Text-body_2)]" },
