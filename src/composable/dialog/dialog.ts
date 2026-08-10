@@ -2,6 +2,7 @@ import { createApp, h, getCurrentInstance } from 'vue'
 import type { VNode, App } from 'vue'
 import ConfirmDialog from '../../components/custom/dialog/ConfirmDialog.vue'
 import AlertDialog from '../../components/custom/dialog/AlertDialog.vue'
+import AlertDialog2 from '../../components/custom/dialog/AlertDialog2.vue'
 import FormDialog from '../../components/custom/dialog/FormDialog.vue'
 
 interface ConfirmOptions {
@@ -120,7 +121,7 @@ function showAlertDialog(options: AlertOptions): Promise<void> {
     // 다이얼로그 앱 생성
     const dialogApp = createApp({
       render() {
-        return h(AlertDialog, {
+        return h(AlertDialog2, {
           ...dialogInfo,
           ref: 'dialog',
           onVnodeMounted: (vnode: VNode) => {
