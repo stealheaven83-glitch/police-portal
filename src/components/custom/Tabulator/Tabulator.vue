@@ -23,7 +23,7 @@
           <table class="w-full text-sm border-collapse">
             <thead>
               <tr class="bg-gray-50 text-left">
-                <th class="border px-3 py-2 w-10">#</th>
+                <th class="border px-3 py-2 w-20">#</th>
                 <th class="border px-3 py-2">기능</th>
                 <th class="border px-3 py-2 w-24 text-center">지원</th>
                 <th class="border px-3 py-2">구현 방식</th>
@@ -72,7 +72,16 @@
         </div>
 
         <!-- 그리드 마운트 지점 -->
-        <div ref="mainTableEl" class="tabulator-host main-grid" />
+        <div ref="mainTableEl" class="tabulator-host main-grid" style="height:500px"/>
+
+        <!-- 페이지네이션: Tabulator 내장 로컬 페이징을 custom/pagination 컴포넌트로 제어 -->
+        <Pagination
+          :currentPage="currentPage"
+          :totalPages="totalPages"
+          :itemsPerPage="itemsPerPage"
+          :totalElements="totalElements"
+          @update:page="goToPage"
+        />
 
         <p class="text-xs text-gray-400">
           · 셀을 클릭하면 셀 안에서 바로 편집됩니다(별도 폼 없음). · 평가점수가 60 미만인 행은 붉게 하이라이트됩니다.
@@ -88,7 +97,7 @@
           왼쪽 행의 <b>핸들(⣿)</b> 을 잡아 오른쪽 그리드로 끌어다 놓으면 항목이 복사됩니다
           (<code>movableRows</code> + <code>movableRowsConnectedTables</code>). 원본은 유지됩니다.
           <br />
-          <span class="text-amber-600">ㅋ
+          <span class="text-amber-600">
             ※ "셀 범위"를 드래그해 다른 그리드로 옮기는 것은 Tabulator 네이티브 기능이 아니며, 행 단위 이동 또는
             범위 선택 후 클립보드(복사/붙여넣기) 방식으로 대체합니다.
           </span>
@@ -115,6 +124,15 @@
         </div>
         <div ref="groupTableEl" class="tabulator-host" />
       </section>
+
+      <!-- ============ 빈 데이터(No Data) 상태 ============ -->
+      <section class="space-y-4 pt-12 pb-6">
+        <h2 class="text-2xl font-semibold">빈 데이터 상태</h2>
+        <div class="text-gray-500">
+          데이터가 0건일 때 <code>placeholder</code> 옵션으로 표시되는 안내 문구입니다.
+        </div>
+        <div ref="emptyTableEl" class="tabulator-host" />
+      </section>
     </div>
   </div>
 </template>
@@ -125,7 +143,12 @@ import { TabulatorFull as Tabulator } from 'tabulator-tables'
 import 'tabulator-tables/dist/css/tabulator.min.css'
 import { Button as CustomBtn, buttonVariants } from '@/components/custom/button'
 import { Checkbox as CustomCheckbox } from '@/components/custom/checkbox'
+import { Pagination } from '@/components/custom/pagination'
 import { cn } from '@/lib/utils'
+import { VueDatePicker } from '@vuepic/vue-datepicker'
+import { ko } from 'date-fns/locale'
+import '@vuepic/vue-datepicker/dist/main.css'
+import '@/components/custom/date-picker/DatePicker.css'
 
 /* ------------------------------------------------------------------ *
  * 기능 지원 요약 매트릭스
@@ -172,6 +195,18 @@ const initialData: Employee[] = [
   { id: 4, name: '최지우', dept: '기획', position: '책임', salary: 7000, score: 84, joinDate: '2018-11-20', active: false, memo: '' },
   { id: 5, name: '정해인', dept: '개발', position: '사원', salary: 4200, score: 48, joinDate: '2023-05-02', active: true, memo: '' },
   { id: 6, name: '한소희', dept: '마케팅', position: '선임', salary: 5900, score: 88, joinDate: '2020-09-01', active: true, memo: '' },
+  { id: 7, name: '한소희', dept: '마케팅', position: '선임', salary: 5900, score: 88, joinDate: '2020-09-01', active: true, memo: '' },
+  { id: 8, name: '한소희', dept: '마케팅', position: '선임', salary: 5900, score: 88, joinDate: '2020-09-01', active: true, memo: '' },
+  { id: 9, name: '한소희', dept: '마케팅', position: '선임', salary: 5900, score: 88, joinDate: '2020-09-01', active: true, memo: '' },
+  { id: 10, name: '김철수', dept: '개발', position: '팀장', salary: 8200, score: 92, joinDate: '2016-03-02', active: true, memo: '' },
+  { id: 12, name: '이영희', dept: '디자인', position: '선임', salary: 6100, score: 78, joinDate: '2019-07-15', active: true, memo: '' },
+  { id: 13, name: '박민준', dept: '개발', position: '주임', salary: 4800, score: 55, joinDate: '2022-01-10', active: true, memo: '' },
+  { id: 14, name: '최지우', dept: '기획', position: '책임', salary: 7000, score: 84, joinDate: '2018-11-20', active: false, memo: '' },
+  { id: 15, name: '정해인', dept: '개발', position: '사원', salary: 4200, score: 48, joinDate: '2023-05-02', active: true, memo: '' },
+  { id: 16, name: '한소희', dept: '마케팅', position: '선임', salary: 5900, score: 88, joinDate: '2020-09-01', active: true, memo: '' },
+  { id: 17, name: '한소희', dept: '마케팅', position: '선임', salary: 5900, score: 88, joinDate: '2020-09-01', active: true, memo: '' },
+  { id: 18, name: '한소희', dept: '마케팅', position: '선임', salary: 5900, score: 88, joinDate: '2020-09-01', active: true, memo: '' },
+  { id: 19, name: '한소희', dept: '마케팅', position: '선임', salary: 5900, score: 88, joinDate: '2020-09-01', active: true, memo: '' },
 ]
 
 const deptValues = ['개발', '디자인', '기획', '마케팅', '영업']
@@ -199,17 +234,31 @@ const columnVisible = reactive<Record<string, boolean>>({
 })
 
 /* ------------------------------------------------------------------ *
+ * 페이지네이션 (Tabulator 내장 로컬 페이징 + custom/pagination UI)
+ * ------------------------------------------------------------------ */
+const currentPage = ref(1)
+const itemsPerPage = ref(5)
+const totalElements = ref(initialData.length)
+const totalPages = computed(() => Math.max(1, Math.ceil(totalElements.value / itemsPerPage.value)))
+
+function goToPage(page: number) {
+  mainTable?.setPage(page)
+}
+
+/* ------------------------------------------------------------------ *
  * Tabulator 인스턴스 및 DOM refs
  * ------------------------------------------------------------------ */
 const mainTableEl = ref<HTMLElement | null>(null)
 const leftTableEl = ref<HTMLElement | null>(null)
 const rightTableEl = ref<HTMLElement | null>(null)
 const groupTableEl = ref<HTMLElement | null>(null)
+const emptyTableEl = ref<HTMLElement | null>(null)
 
 let mainTable: any = null
 let leftTable: any = null
 let rightTable: any = null
 let groupTable: any = null
+let emptyTable: any = null
 
 /* ------------------------------------------------------------------ *
  * 세로 스크롤 여부에 따른 하단 경계선(.tabulator.has-vscroll) 토글
@@ -324,6 +373,71 @@ function unmountRowCheckbox(row: any) {
 }
 
 /* ------------------------------------------------------------------ *
+ * 입사일 셀: custom/date-picker 와 동일한 VueDatePicker 를 셀에 직접 마운트
+ * - '비고' 컬럼(memoInputFormatter)처럼 클릭해서 편집 모드로 들어가는 대신,
+ *   셀에 항상 달력 아이콘 + 선택된 날짜 텍스트가 보이는 형태로 구성한다.
+ * - 체크박스와 마찬가지로 상호작용 컴포넌트를 마운트하므로 행(row) 기준으로
+ *   추적해 행이 삭제/재구성될 때 app.unmount() 로 정리한다.
+ * ------------------------------------------------------------------ */
+const dateCellRegistry = new Map<any, App>()
+
+function toDate(value: string | null | undefined): Date | null {
+  return value ? new Date(value) : null
+}
+
+function toIsoDate(date: Date | null): string {
+  if (!date) return ''
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
+}
+
+function dateCellFormatter(cell: any) {
+  const row = cell.getRow()
+  const container = document.createElement('div')
+  container.classList.add('grid-date-cell')
+  container.addEventListener('click', (e) => e.stopPropagation())
+
+  const dateValue = ref<Date | null>(toDate(cell.getValue()))
+
+  const app = createApp({
+    render: () =>
+      h(
+        VueDatePicker,
+        {
+          modelValue: dateValue.value,
+          'onUpdate:modelValue': (val: Date | null) => {
+            dateValue.value = val
+            cell.setValue(toIsoDate(val)) // 값 반영 + cellEdited 이벤트 발생
+          },
+          teleport: true,
+          timeConfig: { enableTimePicker: false },
+          formats: { input: (date: Date) => toIsoDate(date) },
+          locale: ko,
+          autoApply: true,
+          clearable: false,
+        },
+        {
+          'input-icon': () => h('img', { src: '../../../../public/portal/asset/images/icon/ico_calendar.svg', alt: '달력' }),
+        },
+      ),
+  })
+  app.mount(container)
+  dateCellRegistry.set(row, app)
+
+  return container
+}
+
+function unmountDateCell(row: any) {
+  const app = dateCellRegistry.get(row)
+  if (app) {
+    app.unmount()
+    dateCellRegistry.delete(row)
+  }
+}
+
+/* ------------------------------------------------------------------ *
  * 메인 그리드 컬럼 정의
  * ------------------------------------------------------------------ */
 function buildMainColumns() {
@@ -391,9 +505,10 @@ function buildMainColumns() {
     {
       title: '입사일',
       field: 'joinDate',
-      minWidth: 110,
+      minWidth: 160,
       hozAlign: 'center',
-      editor: dateEditor,
+      // 클릭 시 편집모드로 들어가는 대신, 셀에 항상 달력 컴포넌트를 표시
+      formatter: dateCellFormatter,
       // 툴팁 콜백 예시
       tooltip: (_e: any, cell: any) => `입사일: ${cell.getValue()}`,
       responsive: 6,
@@ -462,35 +577,6 @@ function memoInputFormatter(cell: any) {
   input.addEventListener('click', (e) => e.stopPropagation())
   input.addEventListener('change', () => {
     cell.setValue(input.value) // 값 반영 + cellEdited 이벤트 발생
-  })
-
-  return input
-}
-
-/* 날짜 컬럼용 커스텀 에디터: 브라우저 기본 달력(input[type=date])을 셀 안에 띄움 */
-function dateEditor(cell: any, onRendered: any, success: any, cancel: any) {
-  const input = document.createElement('input')
-  input.type = 'date'
-  input.value = cell.getValue() || ''
-  input.style.width = '100%'
-  input.style.height = '100%'
-  input.style.boxSizing = 'border-box'
-  input.style.border = 'none'
-  input.style.padding = '0 8px'
-  input.style.outline = 'none'
-
-  onRendered(() => {
-    input.focus()
-  })
-
-  function submit() {
-    success(input.value)
-  }
-
-  input.addEventListener('change', submit)
-  input.addEventListener('blur', submit)
-  input.addEventListener('keydown', (e: KeyboardEvent) => {
-    if (e.key === 'Escape') cancel()
   })
 
   return input
@@ -565,7 +651,13 @@ onMounted(() => {
     selectableRows: true, // 행 선택(일괄 선택)
     columnDefaults: { headerSort: false }, // 컬럼 정렬 기능 비활성화
     tooltip: true, // 기본 셀 툴팁
-    height: '420px',
+    height: '220px',
+    placeholder: '데이터가 없습니다', // 데이터 0건일 때 표시할 문구
+    // 페이지네이션: 내장 nav UI는 숨기고(.tabulator-footer) custom/pagination 컴포넌트로 페이지 이동을 제어
+    pagination: true,
+    paginationMode: 'local',
+    paginationSize: itemsPerPage.value,
+    paginationSizeSelector: false,
     // CSS 로 행 높이를 조절하므로 가상 렌더링 대신 기본 렌더링 사용(행 겹침 방지)
     renderVertical: 'basic',
     columns: buildMainColumns(),
@@ -583,6 +675,14 @@ onMounted(() => {
   })
   mainTable.on('tableBuilt', () => watchVScrollBorder(mainTableEl.value))
 
+  // 페이지네이션 동기화: 페이지 이동/데이터 변경 시 custom/pagination 컴포넌트에 표시할 상태 갱신
+  mainTable.on('pageLoaded', (pageno: number) => {
+    currentPage.value = pageno
+  })
+  mainTable.on('dataProcessed', () => {
+    totalElements.value = mainTable.getDataCount()
+  })
+
   // 선택 상태 동기화: 행 체크박스 클릭/selectAll/deselectAll 등으로 선택이 바뀔 때마다
   // 모든 행 체크박스 + 헤더 체크박스(indeterminate 포함)를 다시 계산
   mainTable.on('rowSelectionChanged', () => {
@@ -591,11 +691,14 @@ onMounted(() => {
   // 행 추가 시 헤더 체크박스의 전체 개수 기준이 바뀌므로 함께 재계산
   mainTable.on('rowAdded', () => {
     syncSelectionCheckboxes()
+    totalElements.value = mainTable.getDataCount()
   })
-  // 행 삭제 시 해당 행에 마운트된 체크박스 Vue 앱을 정리(unmount)
+  // 행 삭제 시 해당 행에 마운트된 체크박스/날짜 Vue 앱을 정리(unmount)
   mainTable.on('rowDeleted', (row: any) => {
     unmountRowCheckbox(row)
+    unmountDateCell(row)
     syncSelectionCheckboxes()
+    totalElements.value = mainTable.getDataCount()
   })
 
   /* 2) & 3) 그리드 간 드래그 복사 (원본 → 대상) */
@@ -657,6 +760,22 @@ onMounted(() => {
     ],
   })
   groupTable.on('tableBuilt', () => watchVScrollBorder(groupTableEl.value))
+
+  /* 5) 빈 데이터(No Data) 상태 그리드 */
+  emptyTable = new Tabulator(emptyTableEl.value, {
+    data: [],
+    layout: 'fitColumns',
+    height: '200px',
+    placeholder: '데이터가 없습니다',
+    columnDefaults: { headerSort: false }, // 컬럼 정렬 기능 비활성화
+    columns: [
+      { title: '사번', field: 'id', width: 70, hozAlign: 'center' },
+      { title: '이름', field: 'name', minWidth: 100 },
+      { title: '부서', field: 'dept', minWidth: 100 },
+      { title: '직급', field: 'position', minWidth: 90 },
+    ],
+  })
+  emptyTable.on('tableBuilt', () => watchVScrollBorder(emptyTableEl.value))
 })
 
 onBeforeUnmount(() => {
@@ -664,12 +783,16 @@ onBeforeUnmount(() => {
   leftTable?.destroy()
   rightTable?.destroy()
   groupTable?.destroy()
+  emptyTable?.destroy()
   scrollBorderObservers.forEach((ro) => ro.disconnect())
 
   rowCheckboxRegistry.forEach((entry) => entry.app.unmount())
   rowCheckboxRegistry.clear()
   headerCheckboxApp?.app.unmount()
   headerCheckboxApp = null
+
+  dateCellRegistry.forEach((app) => app.unmount())
+  dateCellRegistry.clear()
 })
 </script>
 
@@ -706,6 +829,10 @@ onBeforeUnmount(() => {
   background-color: #fff;
   border:0;
 }
+/* 내장 페이지네이션 nav UI는 숨기고 custom/pagination 컴포넌트로 대체 */
+:deep(.main-grid .tabulator-footer) {
+  display: none;
+}
 /* tabulator-tableholder 에 세로 스크롤이 생길 때만 하단 경계선 표시 */
 :deep(.tabulator) {
   border-bottom: 1px solid transparent;
@@ -737,6 +864,10 @@ onBeforeUnmount(() => {
   font-size: 15px;
   min-height: 39px;
   align-content: center;
+}
+
+:deep(.tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title .grid-checkbox-cell label){
+  justify-content: center;
 }
 :deep(.tabulator-row .tabulator-cell.tabulator-frozen.tabulator-frozen-left){
   border-left:0;
@@ -770,9 +901,7 @@ onBeforeUnmount(() => {
   color: var(--Base-primary);
   font-weight: 600;
 }
-:deep(.tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title){
-  border:1px sold 
-}
+
 :deep(.tabulator-row .tabulator-cell.tabulator-frozen.tabulator-frozen-left input[type="checkbox"]),
 :deep(.tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title input[type="checkbox"]){
   border: 1px solid #58616A;
@@ -780,7 +909,9 @@ onBeforeUnmount(() => {
   width: 2rem;
   height: 2rem;
 }
-
+:deep(.tabulator-row .tabulator-cell.tabulator-editing){
+  border:1px solid var(--Base-primary);
+}
 :deep(.tabulator-row .tabulator-cell.tabulator-frozen.tabulator-frozen-left input[type="checkbox"]:checked){
 
 }
@@ -812,5 +943,46 @@ onBeforeUnmount(() => {
   }
 :deep(.grid-checkbox-cell){
   text-align: center;
-}  
+}
+
+/* 입사일 셀에 마운트된 VueDatePicker: 셀 안에 딱 맞는 컴팩트한 입력 박스 */
+:deep(.grid-date-cell) {
+  width: 100%;
+}
+:deep(.grid-date-cell .dp--main) {
+  width: 100%;
+}
+:deep(.grid-date-cell .dp--input) {
+  height: 3.6rem;
+  border: 1px solid var(--Border_input01);
+  border-radius: 0.6rem;
+  font-size: 14px;
+  text-align: center;
+  padding-inline-start: 1.2rem;
+  font-family: "Pretendard GOV", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  font-size: 1.5rem;
+}
+:deep(.tabulator .tabulator-tableholder .tabulator-placeholder){
+  display: flex;
+  align-items: center;
+}
+:deep(.tabulator .tabulator-tableholder .tabulator-placeholder .tabulator-placeholder-contents){
+  position: relative;
+
+  text-align: center;
+  padding-top:4.8rem;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color:var(--Text-body_disable);
+}
+:deep(.tabulator-placeholder-contents:after){
+  position: absolute;
+  top:0;
+  left:calc(50% - 1.5rem);
+  content:"";
+  display: inline-block;
+  width: 3.3rem;
+  height: 3.3rem;
+  background: url(/portal/asset/images/icon/ico_nodata.svg) no-repeat center / 3.3rem auto;
+}
 </style>
