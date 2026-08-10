@@ -66,10 +66,13 @@
   /* Base */
   --Base-primary: #0054a6;
   --Base-primary-dark: #0a87ed;
+  --Base-primary-lighter:#F0F7FF;
   --Base-secondary: #023f88;
+  --Base-secondary-lighter:#EEF2F7;
   --Base-secondary-dark: #307dda;
   --Base--point: #b02a30;
   --Base--point-dark: #e15258;
+
   /* Surface */
   --Surface-primary: #f0f7ff;
   --Surface-primary-dark: #07264a;

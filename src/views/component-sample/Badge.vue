@@ -41,16 +41,27 @@ const colors = ["primary", "secondary", "tertiary", "point", "danger", "warning"
             <Badge v-for="color in colors" :key="`solid-${color}`" :color="color" variant="solid">
               {{ color }}
             </Badge>
+   
           </div>
+          <div class="flex flex-wrap items-center gap-3 p-4">
+            <Badge v-for="color in colors" :key="`solid-${color}`" :color="color" variant="solid" shape="sm" size="lg">
+              {{ color }}
+            </Badge>    
+          </div>                
         </section>
 
         <section class="space-y-4">
           <h2 class="text-xl font-semibold border-b pb-2">Badge - Color (Outline)</h2>
           <div class="flex flex-wrap items-center gap-3 p-4">
-            <Badge v-for="color in colors" :key="`outline-${color}`" :color="color" variant="outline">
+            <Badge v-for="color in colors" :key="`outline-${color}`" :color="color" variant="outline" shape="sm">
               {{ color }}
             </Badge>
           </div>
+          <div class="flex flex-wrap items-center gap-3 p-4">
+            <Badge v-for="color in colors" :key="`outline-${color}`" :color="color" variant="outline" size="lg" shape="sm">
+              {{ color }}
+            </Badge>
+          </div>          
         </section>
 
         <section class="space-y-4">
