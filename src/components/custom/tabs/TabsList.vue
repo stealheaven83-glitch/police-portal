@@ -24,8 +24,8 @@ const delegatedProps = computed(() => {
   return delegated
 })
 
-const { variant, grow, size } = toRefs(props)
-provide("tabsContext", { variant, grow, size })
+const { variant, scrollable, grow, size } = toRefs(props)
+provide("tabsContext", { variant, scrollable, grow, size })
 </script>
 
 <template>

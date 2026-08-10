@@ -43,7 +43,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/custom/ta
             <TabsContent value="tab2">탭내용2</TabsContent>
           </Tabs>
 
-          <Tabs default-value="tab2">
+          <Tabs default-value="tab1">
             <TabsList variant="line" :grow="false">
               <TabsTrigger value="tab1">Line탭1</TabsTrigger>
               <TabsTrigger value="tab2">Line탭2</TabsTrigger>
@@ -55,15 +55,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/custom/ta
         </section>
         
         <section class="space-y-4 w-[400px]">
-          <Tabs default-value="tab2">
+          <Tabs default-value="tab1">
             <TabsList variant="line" :grow="false" :scrollable="true">
-              <TabsTrigger value="tab1">Line탭1 Line탭1 Line탭1 Line탭1 Line탭1</TabsTrigger>
-              <TabsTrigger value="tab2">Line탭2 Line탭2 Line탭2</TabsTrigger>
-              <TabsTrigger value="tab3">Line탭3 Line탭3 Line탭3 Line탭3 Line탭3 Line탭3</TabsTrigger>
+              <TabsTrigger value="tab1">Line탭1</TabsTrigger>
+              <TabsTrigger value="tab2">Line탭2</TabsTrigger>
+              <TabsTrigger value="tab3">Line탭3</TabsTrigger>
+              <TabsTrigger value="tab4">Line탭4</TabsTrigger>
+              <TabsTrigger value="tab5">Line탭5</TabsTrigger>
+              <TabsTrigger value="tab6">Line탭6</TabsTrigger>
+              <TabsTrigger value="tab7">Line탭7</TabsTrigger>
             </TabsList>
             <TabsContent value="tab1">Line탭내용1</TabsContent>
             <TabsContent value="tab2">Line탭내용2</TabsContent>
             <TabsContent value="tab3">Line탭내용3</TabsContent>
+            <TabsContent value="tab4">Line탭내용4</TabsContent>
+            <TabsContent value="tab5">Line탭내용5</TabsContent>
+            <TabsContent value="tab7">Line탭내용6</TabsContent>
+            <TabsContent value="tab7">Line탭내용7</TabsContent>
           </Tabs>
 
         </section>

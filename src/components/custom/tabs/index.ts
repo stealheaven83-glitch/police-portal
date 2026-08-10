@@ -6,22 +6,34 @@ export { default as TabsList } from "./TabsList.vue"
 export { default as TabsTrigger } from "./TabsTrigger.vue"
 
 export const tabsListVariants = cva(
-  "flex items-center justify-start transition-all",
+  "flex items-center justify-start transition-all scrollbar-thumb-slate-900 scrollbar-track-slate-200 md:scrollbar-thumb-sky-700",
   {
     variants: {
       variant: {
         fill: "gap-2",
-        line: "border-[#B1B8BE] border-b",
+        line: "",
       },
       scrollable: {
         false: "w-full",
-        true: "w-full justify-start overflow-x-auto whitespace-nowrap scrollbar-none flex-nowrap scrollTest"
+        true: "w-full justify-start overflow-x-auto whitespace-nowrap scrollbar-none flex-nowrap scroll-wrap scrollbar-thin scrollbar-track-[#0054A6] border-none"
       },
     },
+    compoundVariants: [
+      {
+        variant: "line",
+        scrollable: false,
+        class: "border-[#B1B8BE] border-b"
+      },
+      {
+        variant: "line",
+        scrollable: true,
+        class: ""
+      },
+    ],
     defaultVariants: {
       variant: "fill",
       scrollable: false
-    }
+    },
   }
 )
 
@@ -34,8 +46,12 @@ export const tabsTriggerVariants = cva(
       variant: {
         fill: "border border-[#CDD1D5] rounded-[6px] text-[#464C53] hover:bg-[#EEF2F7] " +
         "data-[state=active]:bg-[#023F88] data-[state=active]:text-white data-[state=active]:border-[#023F88] data-[state=active]:shadow-xs", 
-        line: "rounded-none border-b-2 border-transparent text-[#464C53] hover:text-slate-900 " +
-        "data-[state=active]:border-[#0054A6] data-[state=active]:text-[#0054A6] ",
+        line: "rounded-none text-[#464C53] hover:text-slate-900 " +
+        "data-[state=active]:border-[#0054A6] data-[state=active]:border-b-2 data-[state=active]:text-[#0054A6] ",
+      },
+      scrollable: {
+        true: "",
+        false: "",
       },
       grow: {
         true: "flex-1 w-0 min-w-0",
@@ -47,6 +63,18 @@ export const tabsTriggerVariants = cva(
         lg: "h-[50px] px-5 text-base",
       }
     },
+     compoundVariants: [
+      {
+        variant: "line",
+        scrollable: false,
+        class: ""
+      },
+      {
+        variant: "line",
+        scrollable: true,
+        class: "border-[#B1B8BE] border-b"
+      },
+    ],
     defaultVariants: {
       variant: "fill",
       grow: true,
