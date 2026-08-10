@@ -1,0 +1,105 @@
+import type { VariantProps } from "class-variance-authority"
+import { cva } from "class-variance-authority"
+
+export { default as Badge } from "./Badge.vue"
+export { default as BadgeDot } from "./BadgeDot.vue"
+export { default as BadgeNumber } from "./BadgeNumber.vue"
+
+// 색상의 우선순위 또는 사용처에 따라 사용
+export const badgeVariants = cva(
+  "inline-flex items-center justify-center gap-1 border font-medium whitespace-nowrap shrink-0 leading-none",
+  {
+    variants: {
+      color: {
+        primary: "",
+        secondary: "",
+        tertiary: "",
+        point: "",
+        danger: "",
+        warning: "",
+        success: "",
+        info: "",
+      },
+      variant: {
+        solid: "",
+        outline: "bg-white",
+      },
+      size: {
+        lg: "h-8 px-3 text-[15px]",
+        md: "h-6 px-2 text-[13px]",
+      },
+      shape: {
+        full: "rounded-full",
+        sm: "rounded-[4px]",
+      },
+    },
+    compoundVariants: [
+      { color: "primary", variant: "solid", class: "bg-[var(--Base-primary)] border-[var(--Base-primary)] text-white" },
+      { color: "secondary", variant: "solid", class: "bg-[var(--Base-secondary)] border-[var(--Base-secondary)] text-white" },
+      { color: "tertiary", variant: "solid", class: "bg-[var(--Text-body_2)] border-[var(--Text-body_2)] text-white" },
+      { color: "point", variant: "solid", class: "bg-[var(--Base--point)] border-[var(--Base--point)] text-white" },
+      { color: "danger", variant: "solid", class: "bg-[var(--danger)] border-[var(--danger)] text-white" },
+      { color: "warning", variant: "solid", class: "bg-[var(--warning)] border-[var(--warning)] text-[var(--Text-body_0)]" },
+      { color: "success", variant: "solid", class: "bg-[var(--success)] border-[var(--success)] text-white" },
+      { color: "info", variant: "solid", class: "bg-[var(--info)] border-[var(--info)] text-white" },
+
+      { color: "primary", variant: "outline", class: "border-[var(--Base-primary)] text-[var(--Base-primary)]" },
+      { color: "secondary", variant: "outline", class: "border-[var(--Base-secondary)] text-[var(--Base-secondary)]" },
+      { color: "tertiary", variant: "outline", class: "border-[var(--Border_gray01)] text-[var(--Text-body_2)]" },
+      { color: "point", variant: "outline", class: "border-[var(--Base--point)] text-[var(--Base--point)]" },
+      { color: "danger", variant: "outline", class: "border-[var(--danger)] text-[var(--danger)]" },
+      { color: "warning", variant: "outline", class: "border-[var(--warning)] text-[var(--warning)]" },
+      { color: "success", variant: "outline", class: "border-[var(--success)] text-[var(--success)]" },
+      { color: "info", variant: "outline", class: "border-[var(--info)] text-[var(--info)]" },
+    ],
+    defaultVariants: {
+      color: "primary",
+      variant: "solid",
+      size: "md",
+      shape: "full",
+    },
+  },
+)
+export type BadgeVariants = VariantProps<typeof badgeVariants>
+
+// 중요한 정보나 상태 변경사항 또는 새로운 정보를 강조할때 사용 (점 표시)
+export const badgeDotVariants = cva(
+  "inline-block rounded-full shrink-0",
+  {
+    variants: {
+      type: {
+        primary: "bg-[var(--Base-primary)]",
+        new: "bg-[var(--Base--point)]",
+      },
+      size: {
+        default: "size-2",
+      },
+    },
+    defaultVariants: {
+      type: "primary",
+      size: "default",
+    },
+  },
+)
+export type BadgeDotVariants = VariantProps<typeof badgeDotVariants>
+
+// 중요한 정보나 상태 변경사항 또는 새로운 정보를 강조할때 사용 (숫자 표시)
+export const badgeNumberVariants = cva(
+  "inline-flex items-center justify-center rounded-full px-1.5 text-white font-medium leading-none whitespace-nowrap tabular-nums",
+  {
+    variants: {
+      type: {
+        primary: "bg-[var(--Base-primary)]",
+        new: "bg-[var(--Base--point)]",
+      },
+      size: {
+        default: "h-5 min-w-5 text-[12px]",
+      },
+    },
+    defaultVariants: {
+      type: "primary",
+      size: "default",
+    },
+  },
+)
+export type BadgeNumberVariants = VariantProps<typeof badgeNumberVariants>

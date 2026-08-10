@@ -28,7 +28,8 @@ import {
   CircleDot,
   ToggleLeft,
   Heading,
-  PanelTop
+  PanelTop,
+  Tag
 } from 'lucide-vue-next';
 import { useAuthStore } from '@/stores/auth/useAuth';
 import { toast } from 'vue-sonner';
@@ -170,6 +171,11 @@ export const mainLayoutConfig: LayoutConfig = {
           path: '/component/tabs',
           title: 'Tabs',
           icon: PanelTop,
+        },
+        {
+          path: '/component/badge',
+          title: 'Badge',
+          icon: Tag,
         },
         {
           path: '/component/tooltip',

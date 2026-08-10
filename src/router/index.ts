@@ -216,6 +216,15 @@ const router = createRouter({
                   title: 'Tabs'
               }
           },
+          {
+              path: '/component/badge',
+              name: 'badge',
+              component: () => import('../views/component-sample/Badge.vue'),
+              meta: {
+                  layout: 'MainLayout',
+                  title: 'Badge'
+              }
+          },
         {
             path: '/component/PageHeader',
             name: 'pageheader',
