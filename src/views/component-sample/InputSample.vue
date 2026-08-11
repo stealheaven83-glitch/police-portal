@@ -183,16 +183,16 @@
             <InputField2 label="아이콘 있을 때" :icon="sampleIcon" iconClass="size-8" clearable></InputField2>
           </div>
           <div class="w-[480px] mb-3">
-            <InputField2 label="비활성화" value="123" :icon="sampleIcon" iconClass="size-8" clearable disabled></InputField2>
+            <InputField2 label="비활성화" :icon="sampleIcon" iconClass="size-8" clearable disabled></InputField2>
           </div>
           <div class="w-[480px] mb-3">
-            <InputField2 label="메시지 있는 input" value="123" message="complete메시지" iconClass="size-8" clearable></InputField2>
+            <InputField2 label="메시지 있는 input" message="complete메시지" iconClass="size-8" clearable></InputField2>
           </div>
           <div class="w-[480px] mb-3">
-            <InputField2 label="메시지 있는 input(error)" value="123" borderStyle="error" message="error메시지" message-type="error" iconClass="size-8" clearable></InputField2>
+            <InputField2 label="메시지 있는 input(error)" borderStyle="error" message="error메시지" message-type="error" iconClass="size-8" clearable></InputField2>
           </div>
           <div class="w-[480px] mb-3">
-            <InputField2 description="안녕" label="메시지 있는 input(error)" value="123" borderStyle="error" message="error메시지" message-type="error" iconClass="size-8" clearable></InputField2>
+            <InputField2 description="안녕" label="메시지 있는 input(error)" borderStyle="error" message="error메시지" message-type="error" iconClass="size-8" clearable></InputField2>
           </div>
         </div>
       </section>

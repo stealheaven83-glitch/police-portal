@@ -4,8 +4,6 @@ import { ref } from 'vue'
 import { VisuallyHidden } from 'reka-ui'
 import {
   AlertDialog,
-  AlertDialogAction,
-  // AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -58,7 +56,7 @@ function handleCancel() {
         </button>
       </AlertDialogHeader>
       <div class="min-h-[84px] text-center flex flex-col justify-center">
-        <AlertDialogTitle class="text-[2.4rem] font-[700]`">
+        <AlertDialogTitle class="text-[2.4rem] font-[700]">
             {{ title ?? '알림' }}
         </AlertDialogTitle>
         <div class="max-h-[120px] min-h-[84px] overflow-y-auto bg-[#F4F5F6] mt-4 mb-2 rounded-[8px]">
@@ -72,9 +70,6 @@ function handleCancel() {
         <Button type="button" variant="primary" size="md" class="w-25" @click="handleCancel">
           {{ btnCancel ?? '확인2' }}
         </Button>
-        <!-- <AlertDialogAction @click="handleCancel" class="w-25" variant="primary">
-          {{ btnCancel ?? '확인' }}
-        </AlertDialogAction> -->
       </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>

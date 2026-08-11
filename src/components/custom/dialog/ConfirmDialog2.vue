@@ -8,8 +8,6 @@
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogAction,
-    AlertDialogCancel,
   } from '@/components/ui/alert-dialog'
 
   import closeIcon from '@/assets/icon/icon_popup_x.svg'
@@ -18,9 +16,9 @@
   // Props 정의
   defineProps<{
     title: string
-    description: string
-    btnOk: string
-    btnCancel: string
+    description?: string
+    btnOk?: string
+    btnCancel?: string
   }>()
 
   const open = ref(false)
@@ -75,7 +73,7 @@
         </button>
       </AlertDialogHeader>
       <div class="min-h-[84px] text-center flex flex-col justify-center">
-        <AlertDialogTitle class="text-[2.4rem] font-[700]`">{{ title }}</AlertDialogTitle>
+        <AlertDialogTitle class="text-[2.4rem] font-[700]">{{ title }}</AlertDialogTitle>
         <div class="max-h-[120px] min-h-[84px] overflow-y-auto bg-[#F4F5F6] mt-4 mb-2 rounded-[8px]">
           <AlertDialogDescription v-if="description" class="flex items-center justify-center text-[1.7rem]/[150%] p-4 min-h-[84px] text-[var(--Text-body_0)]">
             {{ description }}

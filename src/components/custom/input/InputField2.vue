@@ -11,8 +11,8 @@ import completeIcon from '@/assets/icon/icon_complete_message.svg'
 import errorIcon from '@/assets/icon/icon_error_message.svg'
 
 /**
- * 레이블 · 입력 필드 · 도움말 · 에러 메시지를 하나로 묶은 입력 필드 컴포넌트.
- * - 기본 사용: label / placeholder / description / error 등을 props 로 전달
+ * 레이블 · 입력 필드 · 도움말 · 알림 메시지를 하나로 묶은 입력 필드 컴포넌트.
+ * - 기본 사용: label / placeholder / description / message+messageType 등을 props 로 전달
  * - 복합 입력(전화번호, 이메일 등): #input 슬롯으로 입력 영역을 직접 구성
  * - Input 에 없는 native 속성(type, inputmode 등)은 그대로 전달됩니다.
  * - class 는 래퍼(필드 컨테이너), inputClass 는 입력 요소에 적용됩니다.
@@ -32,8 +32,6 @@ interface Props {
   placeholder?: string
   /** 도움말 [선택] */
   description?: string
-  /** 에러 메시지 (값이 있으면 에러 상태로 표시) */
-  error?: string
   /** 최대 입력 글자수 */
   maxlength?: number | string
   /** 글자수 카운터 표시 여부 */
@@ -87,13 +85,16 @@ const modelValue = useVModel(props, 'modelValue', emits, { passive: true })
 const uid = useId()
 const fieldId = computed(() => props.id ?? `field-${uid}`)
 
-/** aria-describedby: 도움말/에러 요소와 연결 */
+/** aria-describedby: 도움말/알림 메시지 요소와 연결 */
 const describedBy = computed(() => {
   const ids: string[] = []
   if (props.description) ids.push(`${fieldId.value}-desc`)
-  if (props.error) ids.push(`${fieldId.value}-error`)
+  if (props.message) ids.push(`${fieldId.value}-message`)
   return ids.length ? ids.join(' ') : undefined
 })
+
+/** borderStyle이 error일 때 실제 유효성 상태로 취급 */
+const isInvalid = computed(() => props.borderStyle === 'error')
 
 /** 입력값 지우기 */
 function clear() {
@@ -110,10 +111,11 @@ const inputPaddingRight = computed(() => {
   return iconAreaWidth.value + rightOffset + 8 // 텍스트와의 여유 간격
 })
 
+
 /** 현재 입력 글자수 */
 const currentLength = computed(() => String(modelValue.value ?? '').length)
 
-const messageStyleCss = () => {
+const messageStyleCss = computed(() => {
   let css = 'text-[1.3rem] font-normal';
   if(props.messageType === 'complete'){
     css += ' text-[#00880B]'
@@ -122,7 +124,7 @@ const messageStyleCss = () => {
   }
 
   return css;
-}
+})
 
 const borderStyleCss = computed(() => {
   if (props.borderStyle === 'complete') return 'border-[#00880B]'
@@ -146,44 +148,48 @@ const borderStyleCss = computed(() => {
       </Label>
 
       <!-- 도움말 [선택] -->
-      <p v-if="description && labelPosition !== 'left'" class="mb-2 text-[var(--Text-body_1)] text-[1.3rem] font-normal">
+      <p v-if="description && labelPosition !== 'left'" :id="`${fieldId}-desc`" class="mb-2 text-[var(--Text-body_1)] text-[1.3rem] font-normal">
         {{ description }}
       </p>
 
       <!-- 입력 필드 (기본 Input 또는 #input 슬롯으로 대체) -->
-      <slot name="input" :id="fieldId" :invalid="!!error">
-        <div class="relative" :class="labelPosition === 'left' ? 'flex-1' : undefined">
-          <Input
-            :id="fieldId"
-            v-model="modelValue"
-            :class="cn(borderStyleCss, inputClass)"
-            :style="inputPaddingRight ? { paddingRight: `${inputPaddingRight}px` } : undefined"
-            :placeholder="placeholder"
-            :maxlength="maxlength"
-            :disabled="disabled"
-            :readonly="readonly"
-            :aria-invalid="!!error || undefined"
-            :aria-describedby="describedBy"
-            v-bind="$attrs"
-          />
-          <div
-            ref="iconAreaRef"
-            class="flex items-center absolute top-1/2 -translate-y-1/2 gap-2"
-            :class="size === 'lg' ? 'right-4' : 'right-3'"
-          >
-            <button
-              v-if="clearable && modelValue"
-              type="button"
-              class="flex flex-shrink"
-              :class="size === 'lg' ? 'size-6' : 'size-5'"
-              aria-label="입력값 지우기"
-              @click="clear"
+      <slot name="input" :id="fieldId" :invalid="isInvalid" :class="labelPosition === 'left' ? 'flex-1' : undefined">
+        <!-- <div> -->
+        <div :class="labelPosition === 'left' ? 'flex-1' : undefined">
+          <div class="relative">
+            <Input
+              :id="fieldId"
+              v-model="modelValue"
+              :class="cn(borderStyleCss, inputClass)"
+              :style="inputPaddingRight ? { paddingRight: `${inputPaddingRight}px` } : undefined"
+              :placeholder="placeholder"
+              :maxlength="maxlength"
+              :disabled="disabled"
+              :readonly="readonly"
+              :aria-invalid="isInvalid || undefined"
+              :aria-describedby="describedBy"
+              v-bind="$attrs"
+              :size="size"
+            />
+            <div
+              ref="iconAreaRef"
+              class="flex items-center absolute top-1/2 -translate-y-1/2 gap-2"
+              :class="size === 'lg' ? 'right-4' : 'right-3'"
             >
-              <img :src="iconClear" alt="" class="size-full" />
-            </button>
-            <img v-if="icon" :src="icon" alt="" :class="iconClass" />
+              <button
+                v-if="clearable && modelValue"
+                type="button"
+                class="flex flex-shrink"
+                :class="size === 'lg' ? 'size-6' : 'size-5'"
+                aria-label="입력값 지우기"
+                @click="clear"
+              >
+                <img :src="iconClear" alt="" class="size-full" />
+              </button>
+              <img v-if="icon" :src="icon" alt="" :class="iconClass" />
+            </div>
           </div>
-          <div v-if="message" class="flex mt-2 gap-1 items-center" :class="messageStyleCss()">
+          <div v-if="message" :id="`${fieldId}-message`" class="flex mt-2 gap-1 items-center" :class="messageStyleCss">
             <img :src="messageType === 'complete' ? completeIcon : errorIcon" alt="" class="" />
             <p>{{message}}</p>
           </div>
@@ -191,16 +197,9 @@ const borderStyleCss = computed(() => {
       </slot>
     </div>
 
-    <!-- 하단 영역: 에러 메시지 + 글자수 카운터 -->
-    <div
-      v-if="error || showCount"
-      class="flex items-start gap-2"
-      :class="error ? 'justify-between' : 'justify-end'"
-    >
-      <p v-if="error" :id="`${fieldId}-error`" class="text-sm text-destructive">
-        {{ error }}
-      </p>
-      <span v-if="showCount" class="shrink-0 text-xs text-muted-foreground">
+    <!-- 하단 영역: 글자수 카운터 -->
+    <div v-if="showCount" class="flex items-start gap-2 justify-end">
+      <span class="shrink-0 text-xs text-muted-foreground">
         {{ currentLength }}<template v-if="maxlength"> / {{ maxlength }}</template>
       </span>
     </div>
