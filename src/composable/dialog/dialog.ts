@@ -1,6 +1,7 @@
 import { createApp, h, getCurrentInstance } from 'vue'
 import type { VNode, App } from 'vue'
 import ConfirmDialog from '../../components/custom/dialog/ConfirmDialog.vue'
+import ConfirmDialog2 from '../../components/custom/dialog/ConfirmDialog2.vue'
 import AlertDialog from '../../components/custom/dialog/AlertDialog.vue'
 import AlertDialog2 from '../../components/custom/dialog/AlertDialog2.vue'
 import FormDialog from '../../components/custom/dialog/FormDialog.vue'
@@ -62,7 +63,7 @@ function showConfirmDialog(options: ConfirmOptions): Promise<DialogResult> {
     // 다이얼로그 앱 생성
     const dialogApp = createApp({
       render() {
-        return h(ConfirmDialog, {
+        return h(ConfirmDialog2, {
           ...dialogOptions,
           ref: 'dialog',
           onVnodeMounted: (vnode: VNode) => {
@@ -115,8 +116,6 @@ function showAlertDialog(options: AlertOptions): Promise<void> {
       description: options.description || '',
       btnCancel: options.btnCancel || '확인'
     }
-
-    console.log('2222', dialogInfo)
 
     // 다이얼로그 앱 생성
     const dialogApp = createApp({

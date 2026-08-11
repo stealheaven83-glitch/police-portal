@@ -64,15 +64,20 @@ const emit = defineEmits<{
   (e: 'cancel'): void
 }>()
 
-// 가이드 기준 PC SIZE (대/중/소)
-const sizeClass = computed(
-  () =>
-    ({
-      sm: 'sm:max-w-md',
-      md: 'sm:max-w-lg',
-      lg: 'sm:max-w-3xl',
-    })[props.size],
-)
+// 가이드 기준 PC SIZE (대/중/소) — 프리셋은 기존 클래스 그대로, 숫자일 때만 style로 max-width 지정
+const sizeClass = computed(() => {
+  if (typeof props.size === 'number') return undefined
+  return {
+    sm: 'sm:max-w-md',
+    md: 'sm:max-w-lg',
+    lg: 'sm:max-w-3xl',
+  }[props.size]
+})
+
+const sizeStyle = computed(() => {
+  if (typeof props.size !== 'number') return undefined
+  return { width: 'calc(100% - 20px)', maxWidth: `${props.size}px` }
+})
 
 function handleOpenChange(value: boolean) {
   if (!value && props.persistent) return
@@ -95,6 +100,8 @@ function handleCancel() {
     <DialogContent
       :show-close-button="showCloseButton"
       class="px-10 py-6"
+      :class="sizeClass"
+      :style="sizeStyle"
       @pointer-down-outside="(e: Event) => persistent && e.preventDefault()"
       @escape-key-down="(e: Event) => persistent && e.preventDefault()"
       >

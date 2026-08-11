@@ -103,7 +103,7 @@
     <GenericDialog2
       v-model:open="customDialogOpen"
       title="커스텀 Footer 팝업"
-      size="md"
+      :size="800"
     >
       <p class="text-sm text-gray-600">
         footer 슬롯을 이용해 하단 버튼 영역을 자유롭게 구성할 수 있습니다.
@@ -198,6 +198,7 @@ const handleConfirmDialog = async () => {
  */
 const handleAlertDialog = async () => {
   await dialog.alert({
+    title: 'Alert 메인 문구',
     description: 'Alert Dialog 관련 설명을 작성합니다.',
     btnCancel: '확인'
   })
