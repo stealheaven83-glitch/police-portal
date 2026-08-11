@@ -27,7 +27,10 @@ import {
   Check,
   CircleDot,
   ToggleLeft,
-  ChevronDownIcon
+  ChevronDownIcon,
+  Heading,
+  PanelTop,
+  Tag
 } from 'lucide-vue-next';
 import { useAuthStore } from '@/stores/auth/useAuth';
 import { toast } from 'vue-sonner';
