@@ -181,6 +181,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/component/select',
+            name: 'select',
+            component: () => import('../views/component-sample/SelectSample.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Select'
+            }
+        },
+        {
             path: '/component/checkbox',
             name: 'checkbox',
             component: () => import('../views/component-sample/Checkbox.vue'),

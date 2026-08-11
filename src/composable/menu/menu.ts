@@ -27,9 +27,7 @@ import {
   Check,
   CircleDot,
   ToggleLeft,
-  Heading,
-  PanelTop,
-  Tag
+  ChevronDownIcon
 } from 'lucide-vue-next';
 import { useAuthStore } from '@/stores/auth/useAuth';
 import { toast } from 'vue-sonner';
@@ -151,6 +149,11 @@ export const mainLayoutConfig: LayoutConfig = {
           path: '/component/input',
           title: 'Text Input',
           icon: TextCursorInputIcon,
+        },
+        {
+          path: '/component/select',
+          title: 'Select',
+          icon: ChevronDownIcon,
         },
         {
           path: '/component/checkbox',

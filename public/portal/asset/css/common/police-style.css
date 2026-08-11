@@ -95,6 +95,10 @@
   
   --Border-grid-header:#1E2124;
   --Border-grid-body:var(--Border_gray03);
+ 
+  /* icon */
+  --icon-gray : #33363D;
+
   /* Common */
   --white: #fff;
   --black: #000;
