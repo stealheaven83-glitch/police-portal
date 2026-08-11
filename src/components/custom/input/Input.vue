@@ -35,7 +35,7 @@ const setSizeClass = (size:string = 'lg') => {
     v-model="modelValue"
     data-slot="input"
     :class="cn(
-      'border border-[var(--Border_input01)] font-normal w-full pl-4',
+      'border border-[var(--Border_input01)] font-normal w-full pl-4 bg-white',
       'focus-visible:border-[var(--Border_primary)] focus-visible:border-2',
       'placeholder:text-[var(--Text-body_disable)]',
       'disabled:pointer-events-none disabled:cursor-not-allowed disabled:border-[var(--disabled-input-border)] disabled:bg-[var(--disabled-input-bg)] disabled:text-[var(--disabled-input-text-color)]',

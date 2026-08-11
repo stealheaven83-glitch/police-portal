@@ -67,7 +67,7 @@ function handleCancel() {
       </div>
 
       <AlertDialogFooter class="justify-center sm:justify-center mt-4">
-        <Button type="button" variant="primary" size="md" class="w-25" @click="handleCancel">
+        <Button variant="primary" size="md" class="w-25" @click="handleCancel">
           {{ btnCancel ?? '확인2' }}
         </Button>
       </AlertDialogFooter>

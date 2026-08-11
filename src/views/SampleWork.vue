@@ -34,10 +34,30 @@ const features = [
     icon: Zap
   }
 ]
+
+import SearchWrapper from '@/components/custom/search/searchWrapper.vue'
+import { Button } from '@/components/custom/button'
+import InputField2 from '@/components/custom/input/inputField2.vue'
 </script>
 
 <template>
-  <h1>컨텐츠</h1>
+  <SearchWrapper>
+    <template #form>
+      <div class="flex mb-4 gap-9">
+        <InputField2 label="레이블" size="sm" label-position="left"></InputField2>
+        <InputField2 label="레이블" size="sm" label-position="left"></InputField2>
+        <InputField2 label="레이블" size="sm" label-position="left"></InputField2>
+      </div>
+      <div class="flex gap-9">
+        <InputField2 label="레이블" size="sm" label-position="left"></InputField2>
+        <InputField2 label="레이블" size="sm" label-position="left"></InputField2>
+        <InputField2 label="레이블" size="sm" label-position="left"></InputField2>
+      </div>
+    </template>
+    <template #btns>
+      <Button variant="secondary" size="sm" class="w-25">검색</Button>
+    </template>
+  </SearchWrapper>
 </template>
 
 <style scoped>

@@ -8,7 +8,7 @@
     <PortalHeader />
     <main class="work-main flex pb-9 relative flex-1">
       <SideMenu :items="leftMenuDummyData" />
-      <div class="flex-1 relative">
+      <div class="flex-1 relative pr-10">
          <slot name="main" />
          <!-- 컴포넌트화 작업중 -->
          <div class="absolute bottom-0 left-0 z-1" style="transform: translateY(100%)">
