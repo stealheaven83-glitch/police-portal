@@ -81,6 +81,7 @@
           :itemsPerPage="itemsPerPage"
           :totalElements="totalElements"
           @update:page="goToPage"
+          @update:itemsPerPage="changePageSize"
         />
 
         <p class="text-xs text-gray-400">
@@ -243,6 +244,11 @@ const totalPages = computed(() => Math.max(1, Math.ceil(totalElements.value / it
 
 function goToPage(page: number) {
   mainTable?.setPage(page)
+}
+
+function changePageSize(size: number) {
+  itemsPerPage.value = size
+  mainTable?.setPageSize(size)
 }
 
 /* ------------------------------------------------------------------ *
@@ -911,9 +917,6 @@ onBeforeUnmount(() => {
 }
 :deep(.tabulator-row .tabulator-cell.tabulator-editing){
   border:1px solid var(--Base-primary);
-}
-:deep(.tabulator-row .tabulator-cell.tabulator-frozen.tabulator-frozen-left input[type="checkbox"]:checked){
-
 }
 
 /*

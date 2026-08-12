@@ -159,6 +159,11 @@ export const mainLayoutConfig: LayoutConfig = {
           icon: ChevronDownIcon,
         },
         {
+          path: '/component/textarea',
+          title: 'Textarea',
+          icon: MessageCircleQuestionIcon,
+        },        
+        {
           path: '/component/checkbox',
           title: 'Checkbox',
           icon: Check,
