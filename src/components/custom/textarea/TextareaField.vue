@@ -49,9 +49,6 @@ interface Props {
   height?: string | number
   /** 레이블 옆에 표시할 날짜 텍스트 */
   date?: string
-  //아이콘 관련
-  icon?: string
-  iconClass?: string
 
   //메세지 관련(textarea 아래)
   message?: string
@@ -144,7 +141,7 @@ const computedHeight = computed(() => {
             :id="fieldId"
             v-model="modelValue"
             :style="{ height: computedHeight }"
-            :class="cn(borderStyleCss, icon ? 'pr-10' : undefined, textareaClass)"
+            :class="cn(borderStyleCss, textareaClass)"
             :placeholder="placeholder"
             :maxlength="maxlength"
             :disabled="disabled"
@@ -153,12 +150,6 @@ const computedHeight = computed(() => {
             :aria-describedby="describedBy"
             v-bind="$attrs"
           />
-          <div
-            v-if="icon"
-            class="flex items-center absolute top-3 right-4 gap-2"
-          >
-            <img :src="icon" alt="" :class="iconClass" />
-          </div>
           <div v-if="message" class="flex mt-2 gap-1 items-center" :class="messageStyleCss()">
             <img :src="messageType === 'complete' ? completeIcon : errorIcon" alt="" class="" />
             <p>{{message}}</p>

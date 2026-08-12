@@ -89,16 +89,13 @@
         </div>
       </section>
 
-      <!-- Section 5: 높이 / 아이콘 / 메시지 -->
+      <!-- Section 5: 높이 / 메시지 -->
       <section class="space-y-4 pt-10">
         <h2 class="text-2xl font-semibold">커스텀(TextareaField 옵션)</h2>
-        <div class="text-gray-500">높이, 아이콘, 메시지, 테두리 스타일 등 옵션 예시입니다.</div>
+        <div class="text-gray-500">높이, 메시지, 테두리 스타일 등 옵션 예시입니다.</div>
         <div>
           <div class="w-[480px] mb-3">
             <TextareaField label="높이 지정(200px)" placeholder="플레이스홀더" :height="200"  date="YYYY-MM-DD (HH:MM)"/>
-          </div>
-          <div class="w-[480px] mb-3">
-            <TextareaField label="아이콘 있을 때" placeholder="플레이스홀더" :icon="sampleIcon" iconClass="size-8" />
           </div>
           <div class="w-[480px] mb-3">
             <TextareaField label="설명버튼" description="안녕?" placeholder="플레이스홀더" />
@@ -118,7 +115,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
-import sampleIcon from '@/assets/icon/icon_sample.svg'
 
 /**
  * 기본 구조 예시용 값
