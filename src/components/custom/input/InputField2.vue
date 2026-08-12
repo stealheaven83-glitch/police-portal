@@ -49,6 +49,8 @@ interface Props {
   /** 입력 요소에 적용할 클래스 */
   inputClass?: HTMLAttributes['class']
 
+  labelClass?: HTMLAttributes['class']
+
   size?: 'lg' | 'md' | 'sm'
 
 
@@ -140,8 +142,7 @@ const borderStyleCss = computed(() => {
       <Label
         v-if="label || $slots.label"
         :for="fieldId"
-        class="font-normal text-[1.5rem]"
-        :class="labelPosition === 'left' ? 'shrink-0 mr-3' : 'mb-2'"
+        :class="cn('font-normal text-[1.5rem]', labelPosition === 'left' ? 'shrink-0 mr-3' : 'mb-2', labelClass)"
       >
         <slot name="label">{{ label }}</slot>
         <span v-if="required" class="text-destructive">*</span>
