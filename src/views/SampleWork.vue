@@ -18,7 +18,7 @@ import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue';
 import Breadcrumb from '@/components/custom/Bread-crumb/Breadcrumb.vue';
 import SelectField from '@/components/custom/select/SelectField.vue'
-import { VueDatePicker } from '@vuepic/vue-datepicker'
+import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 
 const techStack = [
   { name: 'Vue 3', version: '^3.5.24', category: 'Framework' },
@@ -105,23 +105,7 @@ const features = [
       <div class="flex gap-9">
         <section>
           <div class="w-[160px] box date-calendar">
-            <VueDatePicker
-              :enable-time-picker="false"
-              :teleport="true"
-              format="yyyy년 MM월 dd일"
-              now-button-label="오늘"
-              :week-start="0"
-              auto: true,
-              placeholder="YYYY.MM.DD"
-              select-text="선택"
-              cancel-text="취소"
-              year-suffix="년"
-              :clearable="false"
-              :time-config="{ enableTimePicker: false }">
-              <template #input-icon>
-                <img src="../../../../public/portal/asset/images/icon/ico_calendar.svg" alt="달력" />
-              </template>
-            </VueDatePicker>
+            <DatePicker></DatePicker>
           </div>
           <p v-if="fullDate" class="text-sm text-muted-foreground">
             선택된 날짜: {{ formatDate(fullDate) }}
