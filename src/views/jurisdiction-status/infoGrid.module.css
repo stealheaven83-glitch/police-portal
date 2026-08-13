@@ -1,0 +1,186 @@
+/*
+ * 부서정보 / 관내정보 섹션이 공유하는 "라벨-값" 그리드.
+ * 실제 데이터 테이블이 아니라 폼이므로 <table> 대신 label/input 을 갖는 시맨틱 마크업에
+ * CSS Grid 로 표(2열 x N행, 각 셀은 라벨 14rem + 값 1fr)처럼 보이도록 스타일만 입힌다.
+ * 1rem = 10px 기준 (전역 리셋).
+ */
+
+.section {
+  margin-top: 2.4rem;
+}
+
+.sectionHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  padding: 1rem 0;
+}
+
+.sectionTitle {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--Text-body_0, #1e2124);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  border-top: 0.2rem solid var(--Text-body_0, #1e2124);
+  border-left: 1px solid var(--Border_gray03, #e6e8ea);
+}
+
+.field {
+  display: grid;
+  grid-template-columns: 14rem 1fr;
+  align-items: stretch;
+  border-right: 1px solid var(--Border_gray03, #e6e8ea);
+  border-bottom: 1px solid var(--Border_gray03, #e6e8ea);
+}
+
+.fieldFull {
+  grid-column: 1 / -1;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.6rem;
+  background: var(--Background-gray01, #f5f6f8);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--Text-body_0, #1e2124);
+}
+
+.control {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem 1.6rem;
+  background: #fff;
+  min-width: 0;
+}
+
+.controlColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 1.2rem 1.6rem;
+  background: #fff;
+  min-width: 0;
+}
+
+.hint {
+  font-size: 1.4rem;
+  color: var(--Text-body_2, #58616a);
+  white-space: nowrap;
+}
+
+.previewText {
+  font-size: 1.4rem;
+  color: var(--Text-body_2, #58616a);
+}
+
+.staticValue {
+  font-size: 1.5rem;
+  color: var(--Text-body_0, #1e2124);
+}
+
+.readonlyText {
+  width: 100%;
+  min-height: 6rem;
+  padding: 1rem 0;
+  font-size: 1.5rem;
+  line-height: 1.6;
+  color: var(--Text-body_1, #33363d);
+  white-space: pre-line;
+}
+
+.flexGroupRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.6rem 2.4rem;
+  width: 100%;
+}
+
+.miniField {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.miniField .miniInput {
+  width: 8rem;
+}
+
+.miniLabel {
+  font-size: 1.4rem;
+  color: var(--Text-body_1, #33363d);
+  white-space: nowrap;
+}
+
+.list {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.listRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1.6rem;
+  font-size: 1.5rem;
+  color: var(--Text-body_1, #33363d);
+}
+
+.listRowCode {
+  min-width: 8rem;
+  font-weight: 600;
+  color: var(--Text-body_0, #1e2124);
+}
+
+.listRowArea {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.flexiblePostGroup {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.flexiblePostSelect {
+  width: 22rem;
+  max-width: 100%;
+}
+
+/* -------------------------------------------------------------- 반응형 */
+@media (max-width: 62.5rem) {
+  /* 900px: 2단 -> 1단 */
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 40rem) {
+  /* 640px: 라벨/값도 세로로 쌓기 */
+  .field {
+    grid-template-columns: 1fr;
+  }
+
+  .label {
+    border-bottom: 1px solid var(--Border_gray03, #e6e8ea);
+  }
+
+  .flexiblePostSelect {
+    width: 100%;
+  }
+}

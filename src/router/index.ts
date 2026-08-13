@@ -19,6 +19,15 @@ const router = createRouter({
             component: () => import('../views/Login.vue'),
         },
         {
+            path: '/lpo/jurisdiction-status',
+            name: 'lpo-jurisdiction-status',
+            component: () => import('../views/JurisdictionStatus.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '관내현황',
+            }
+        },
+        {
             path: '/',
             name: 'home',
             component: () => import('../views/Main.vue'),

@@ -56,6 +56,14 @@ function toggleDepth1(index: number) {
 .left-menu {
   padding: 2.4rem 3.6rem;
   width: 31.6rem;
+  flex-shrink: 0;
+}
+
+/* 사이드바 폭(31.6rem) 확보가 어려운 좁은 화면에서는 본문 폭을 우선한다. */
+@media (max-width: 82rem) {
+  .left-menu {
+    display: none;
+  }
 }
 .left-menu .lnb {
   overflow: hidden;
