@@ -280,6 +280,15 @@ const router = createRouter({
             }
         },        
         {
+            path: '/component/layout-splite',
+            name: 'layoutSplit',
+            component: () => import('../components/custom/content-layout/layoutSplit.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'layoutSplit'
+            }
+        },         
+        {
             path: '/:pathMatch(.*)*',
             name: 'notFound',
             component: Error404

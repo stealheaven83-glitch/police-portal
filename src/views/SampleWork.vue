@@ -19,6 +19,7 @@ import PageTitle from '@/components/custom/title/PageTitle.vue';
 import Breadcrumb from '@/components/custom/Bread-crumb/Breadcrumb.vue';
 import SelectField from '@/components/custom/select/SelectField.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
 
 const techStack = [
   { name: 'Vue 3', version: '^3.5.24', category: 'Framework' },
@@ -75,6 +76,12 @@ const features = [
 
 
   </PageHeader>
+  <div class="flex justify-start">
+    <select></select>
+    <select></select>
+    <select></select>
+    <buton>자세히보기</buton>
+  </div>
   <SearchWrapper>
     <template #form>
       <div class="flex mb-4 gap-9">
@@ -126,6 +133,7 @@ const features = [
       <Button variant="secondary" size="sm" class="w-25">검색</Button>
     </template>
   </SearchWrapper>
+  <LayoutSplite />
 </template>
 
 <style scoped>
