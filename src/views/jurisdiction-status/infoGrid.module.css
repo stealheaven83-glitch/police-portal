@@ -25,14 +25,16 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  /* 1fr 단독으로 쓰면 minmax(auto, 1fr) 로 취급되어 내용이 넓을 때 트랙이 줄어들지 않고
+     그리드 밖으로 넘쳐 옆 필드와 겹친다 — minmax(0, 1fr) 로 명시해 항상 줄어들 수 있게 한다. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   border-top: 0.2rem solid var(--Text-body_0, #1e2124);
   border-left: 1px solid var(--Border_gray03, #e6e8ea);
 }
 
 .field {
   display: grid;
-  grid-template-columns: 14rem 1fr;
+  grid-template-columns: 14rem minmax(0, 1fr);
   align-items: stretch;
   border-right: 1px solid var(--Border_gray03, #e6e8ea);
   border-bottom: 1px solid var(--Border_gray03, #e6e8ea);
