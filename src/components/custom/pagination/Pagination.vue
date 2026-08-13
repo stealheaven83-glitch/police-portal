@@ -1,6 +1,11 @@
 <template>
-  <div class="flex justify-center items-center" v-if="totalPages > 1">
-    <Pagination
+  <div class="grid grid-cols-[1fr_auto_1fr] items-center w-full">
+    <div class="justify-self-start text-sm">
+      총 <span class="font-bold">{{ totalElements }}</span>건 / 현재 {{ (currentPage - 1) * itemsPerPage + 1 }}-{{
+        Math.min(currentPage
+          * itemsPerPage, totalElements) }}
+    </div>
+    <Pagination class="justify-self-center"
       :page="currentPage"
       :itemsPerPage="itemsPerPage"
       :total="totalElements"
@@ -64,10 +69,21 @@
         </PaginationLast>
       </PaginationList>
     </Pagination>
+    <div class="justify-self-end">
+      <section class="space-y-4">
+        <div class="flex gap-4">
+          <BaseSelect v-model="selectedValue" :options="samplePageOptions" placeholder=""
+            width-class="" class="border-0 shadow-none
+            "/>
+        </div>
+      </section>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from 'vue'
+import BaseSelect from '@/components/select/BaseSelect.vue'
 import {
   Pagination,
   PaginationList,
@@ -98,6 +114,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   (e: 'update:page', page: number): void
+  (e: 'update:itemsPerPage', itemsPerPage: number): void
 }>()
 
 const goToPage = (page: number) => {
@@ -117,6 +134,20 @@ const goToNextPage = () => {
     emit('update:page', props.currentPage + 1)
   }
 }
+
+//select box
+const samplePageOptions = [
+  { label: '10건', value: '10' },
+  { label: '20건', value: '20' },
+  { label: '30건', value: '30' },
+]
+
+const selectedValue = ref<string>(samplePageOptions[0].value)
+
+watch(selectedValue, (value) => {
+  emit('update:itemsPerPage', Number(value))
+  emit('update:page', 1)
+})
 </script>
 
 <style scoped>

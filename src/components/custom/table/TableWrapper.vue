@@ -59,7 +59,7 @@
       </TableEmpty>
     </div>
 
-    <div class="grid grid-cols-[1fr_auto_1fr] items-center w-full mt-[20px]" v-if="showPagination && totalPages > 1">
+    <div class="grid grid-cols-[1fr_auto_1fr] items-center w-full mt-[20px]" v-if="showPagination">
       <div class="justify-self-start text-sm">
         총 <span class="font-bold">{{ totalElements }}</span>건 / 현재 {{ (currentPageComputed - 1) * itemsPerPage + 1 }}-{{
           Math.min(currentPageComputed
@@ -88,12 +88,12 @@
       </Pagination>
       <div class="justify-self-end">      
         <section class="space-y-4">
-        <div class="flex gap-4">
-          <BaseSelect v-model="selectedValue" :options="sampleFruitOptions" placeholder=""
-            width-class="" class="border-0 shadow-none
-            "/>
-        </div>
-      </section>
+          <div class="flex gap-4">
+            <BaseSelect v-model="selectedValue" :options="samplePageOptions" placeholder=""
+              width-class="" class="border-0 shadow-none
+              "/>
+          </div>
+        </section>
       </div>    
     </div>
   </div>
@@ -212,13 +212,12 @@ const selectRow = (index: number, item: any) => {
 
 
 //select box
-const sampleFruitOptions = [
+const samplePageOptions = [
   { label: '10건', value: '10' },
   { label: '20건', value: '20' },
-  { label: '30건', value: '30' },
 ]
 
-const selectedValue = ref<string>(sampleFruitOptions[0].value)
+const selectedValue = ref<string>(samplePageOptions[0].value)
 
 </script>
 

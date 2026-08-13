@@ -253,15 +253,15 @@ const router = createRouter({
             }
         },      
         {
-            path: '/component/pagination',
-            name: 'Pagination',
-            component: () => import('../views/component-sample/Pagination.vue'),
+            path: '/component/textarea',
+            name: 'Textarea',
+            component: () => import('../views/component-sample/TextareaSample.vue'),
             meta: {
                 layout: 'MainLayout',
-                title: 'Pagination'
+                title: 'Textarea'
             }
-            },
-            {
+        },
+        {
             path: '/component/icon',
             name: 'Icon',
             component: () => import('../views/component-sample/Icons.vue'),
@@ -270,6 +270,15 @@ const router = createRouter({
                 title: 'Icon'
             }
         },
+        {
+            path: '/component/pagination',
+            name: 'Pagination',
+            component: () => import('../views/component-sample/Pagination.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Pagination'
+            }
+        },        
         {
             path: '/:pathMatch(.*)*',
             name: 'notFound',

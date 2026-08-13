@@ -6,9 +6,13 @@ import { cn } from '@/lib/utils'
 import iconClear from '@/assets/icon/_delete.svg'
 import Input from '@/components/custom/input/Input.vue'
 import { Label } from '@/components/ui/label'
+import { VueDatePicker } from '@vuepic/vue-datepicker'
 
 import completeIcon from '@/assets/icon/icon_complete_message.svg'
 import errorIcon from '@/assets/icon/icon_error_message.svg'
+
+import './DatePicker.css'
+import '@vuepic/vue-datepicker/dist/main.css'
 
 /**
  * 레이블 · 입력 필드 · 도움말 · 알림 메시지를 하나로 묶은 입력 필드 컴포넌트.
@@ -28,8 +32,7 @@ interface Props {
   labelPosition?: 'top' | 'left'
   /** 필수 여부 (레이블에 * 표시) */
   required?: boolean
-  /** 플레이스홀더 */
-  placeholder?: string
+  
   /** 도움말 [선택] */
   description?: string
   /** 최대 입력 글자수 */
@@ -64,6 +67,11 @@ interface Props {
 
   //테두리 스타일 관련
   borderStyle?: 'complete' | 'error'
+
+
+  //datepicker쪽
+  format?: string
+  placeholder?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -158,7 +166,28 @@ const borderStyleCss = computed(() => {
         <!-- <div> -->
         <div :class="labelPosition === 'left' ? 'flex-1' : undefined">
           <div class="relative">
-            <Input
+
+            <VueDatePicker
+              :enable-time-picker="false"
+              :teleport="true"
+              :format="format || 'yyyy년 MM월 dd일'"
+              now-button-label="오늘"
+              :week-start="0"
+              auto: true,
+              :placeholder="placeholder || 'YYYY.MM.DD'"
+              select-text="선택"
+              cancel-text="취소"
+              year-suffix="년"
+              :locale="ko"
+              :clearable="false"
+              :time-config="{ enableTimePicker: false }">
+              <template #input-icon>
+                <img src="../../../../public/portal/asset/images/icon/ico_calendar.svg" alt="달력" />
+              </template>
+            </VueDatePicker>
+
+
+            <!-- <Input
               :id="fieldId"
               v-model="modelValue"
               :class="cn(borderStyleCss, inputClass)"
@@ -171,7 +200,8 @@ const borderStyleCss = computed(() => {
               :aria-describedby="describedBy"
               v-bind="$attrs"
               :size="size"
-            />
+            /> -->
+
             <div
               ref="iconAreaRef"
               class="flex items-center absolute top-1/2 -translate-y-1/2 gap-2"
