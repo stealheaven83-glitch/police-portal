@@ -101,7 +101,7 @@ const messageStyleCss = () => {
 
 const borderStyleCss = computed(() => {
   if (props.borderStyle === 'complete') return 'border-[#00880B]'
-  if (props.borderStyle === 'error') return 'border-[#BD2C0F] border-2'
+  if (props.borderStyle === 'error') return 'border-[var(--danger)] border-2'
   return undefined
 })
 
@@ -166,7 +166,7 @@ const iconSizeClass = computed(() => {
           >
             <SelectValue :placeholder="placeholder" />
             <SelectIcon as-child>
-              <ChevronDown :class="cn('text-[var(--icon-gray)] shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180', iconSizeClass, 'size-5')" />
+              <ChevronDown :class="cn('text-[var(--icon-gray)] group-disabled:text-[var(--icon-disabled)] shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180', iconSizeClass, 'size-5')" />
             </SelectIcon>
           </SelectTriggerPrimitive>
 
