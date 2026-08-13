@@ -1,12 +1,17 @@
 <template>
   <!-- class="default-theme"와 높이 지정(height)이 필수입니다 -->
-  <splitpanes class="default-theme" style="height:900px" :class="cn(defaultClass, props.class)">
-    <pane min-size="20">
-      <div>왼쪽 영역</div>
-    </pane>
-    <pane>
-      <div>오른쪽 영역</div>
-    </pane>
+  <splitpanes class="default-theme mt-[20px]" style="height:900px" :class="cn(defaultClass, props.class)">
+    <slot>
+      <pane v-if="$slots['layout-first']" min-size="20">
+       <slot name="layout-first" />
+      </pane>
+      <pane v-if="$slots['layout-second']">
+        <slot name="layout-second" />
+      </pane>
+      <pane v-if="$slots['layout-third']">
+        <slot name="layout-third" />
+      </pane>
+    </slot>
   </splitpanes>
 </template>
 
@@ -32,7 +37,7 @@ const props = defineProps<Props>()
 }
 
 :deep(.splitpanes__splitter) {
-  border-left:0;
+  border-left:1px solid var(--Border_gray0)!important;
   border: 1px solid var(--Border_gray0);
 }
 </style>

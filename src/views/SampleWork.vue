@@ -133,7 +133,10 @@ const features = [
       <Button variant="secondary" size="sm" class="w-25">검색</Button>
     </template>
   </SearchWrapper>
-  <LayoutSplite />
+  <LayoutSplite>
+    <template #layout-first>왼쪽</template>
+    <template #layout-second>오른쪽</template>
+  </LayoutSplite>
 </template>
 
 <style scoped>
