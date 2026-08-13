@@ -20,6 +20,7 @@ import Breadcrumb from '@/components/custom/Bread-crumb/Breadcrumb.vue';
 import SelectField from '@/components/custom/select/SelectField.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
+import LayoutHeader from '@/components/custom/content-layout/layoutHeader.vue'
 
 const techStack = [
   { name: 'Vue 3', version: '^3.5.24', category: 'Framework' },
@@ -133,9 +134,22 @@ let vIf = false;
   </SearchWrapper>
   <button @click="vIf = true">클릭</button>
   <LayoutSplite>
-    <template #layout-first>왼쪽</template>
-    <template #layout-second v-if="vIf">중간</template>
-    <template #layout-third>오른쪽</template>
+    <template #layout-first>
+      <LayoutHeader title="왼쪽" >
+        <template #right>
+        <div class="flex items-center gap-3">
+          <Button size="sm">Small</Button>
+          <Button size="sm" variant="outline">Small</Button>
+        </div>
+        </template>
+      </LayoutHeader>
+    </template>
+    <template #layout-second v-if="vIf">
+      <LayoutHeader title="중간" />
+    </template>
+    <template #layout-third>
+      <LayoutHeader title="오른쪽" />
+    </template>
   </LayoutSplite>
 </template>
 
