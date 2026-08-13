@@ -62,6 +62,7 @@ const features = [
   }
 ]
 
+let vIf = false;
 
 </script>
 
@@ -110,14 +111,11 @@ const features = [
           />
       </div>
       <div class="flex gap-9">
-        <section>
-          <div class="w-[160px] box date-calendar">
-            <DatePicker></DatePicker>
-          </div>
-          <p v-if="fullDate" class="text-sm text-muted-foreground">
-            선택된 날짜: {{ formatDate(fullDate) }}
-          </p>
-        </section>
+        <div class="flex items-center">
+          <DatePicker label="조회일자" labelPosition="left" size="sm" inputClass="w-[160px]"></DatePicker>
+          <span>~</span>
+          <DatePicker size="sm"></DatePicker>
+        </div>
         <InputField2 label="진단일자" size="sm" label-position="left"></InputField2>
         <SelectField
             label="진단사유"
@@ -133,9 +131,11 @@ const features = [
       <Button variant="secondary" size="sm" class="w-25">검색</Button>
     </template>
   </SearchWrapper>
+  <button @click="vIf = true">클릭</button>
   <LayoutSplite>
     <template #layout-first>왼쪽</template>
-    <template #layout-second>오른쪽</template>
+    <template #layout-second v-if="vIf">중간</template>
+    <template #layout-third>오른쪽</template>
   </LayoutSplite>
 </template>
 
