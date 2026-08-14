@@ -103,43 +103,52 @@ function pad(n) {
   return String(n).padStart(2, '0')
 }
 
-/** 목데이터: 이번 달을 기준으로 카테고리별 일정을 흩뿌려 생성 */
+/** 월별로 날짜/카테고리를 다르게 흩뿌리기 위한 템플릿 (day 는 이 템플릿 안에서의 상대 위치일 뿐) */
+const MOCK_EVENT_TEMPLATE = [
+  { day: 1, start: '11:30', end: '12:30', title: '피해자 조사', category: 'request' },
+  { day: 9, start: '17:00', end: '18:00', title: '조사', category: 'assigned' },
+  { day: 16, start: '12:00', end: '13:00', title: '피해자 조사', category: 'request' },
+  { day: 16, start: '14:00', end: '16:00', title: '피해자 조사', category: 'assigned' },
+  { day: 16, start: '16:30', end: '17:30', title: '아동학대', category: 'approved' },
+  { day: 18, start: '12:00', end: '13:00', title: '아동학대', category: 'request' },
+  { day: 18, start: '12:00', end: '13:00', title: '조사', category: 'approved' },
+  { day: 22, start: '12:00', end: '13:00', title: '강간', category: 'rejected' },
+  { day: 22, start: '12:00', end: '13:00', title: '살인', category: 'rejected' },
+  { day: 22, start: '12:00', end: '13:00', title: '성폭행', category: 'rejected' },
+  { day: 24, start: '12:00', end: '13:00', title: '조사', category: 'request' },
+  { day: 24, start: '13:00', end: '14:00', title: '아동학대', category: 'approved' },
+  { day: 29, start: '12:00', end: '13:00', title: '피해자 조사', category: 'request' },
+  { day: 30, start: '12:00', end: '13:00', title: '아동학대', category: 'approved' },
+  { day: 31, start: '12:00', end: '13:00', title: '살인', category: 'assigned' },
+  { day: 31, start: '12:00', end: '13:00', title: '절도', category: 'assigned' },
+  { day: 31, start: '12:00', end: '13:00', title: '사기', category: 'assigned' },
+  { day: 31, start: '12:00', end: '13:00', title: '아동학대', category: 'approved' },
+]
+
+const CATEGORY_ORDER = ['request', 'approved', 'rejected', 'assigned']
+
+/** 목데이터: year/month 로 만든 시드값만큼 날짜·카테고리를 밀어서 달마다 다른 모양으로 흩뿌려 생성 */
 function buildMockEvents(year, month) {
   const day = (d) => `${year}-${pad(month)}-${pad(d)}`
-  const entries = [
-    { day: 1, start: '11:30', end: '12:30', title: '피해자 조사', category: 'request' },
-    { day: 9, start: '17:00', end: '18:00', title: '조사', category: 'assigned' },
-    { day: 16, start: '12:00', end: '13:00', title: '피해자 조사', category: 'request' },
-    { day: 16, start: '14:00', end: '16:00', title: '피해자 조사', category: 'assigned' },
-    { day: 16, start: '16:30', end: '17:30', title: '아동학대', category: 'approved' },
-    { day: 18, start: '12:00', end: '13:00', title: '아동학대', category: 'request' },
-    { day: 18, start: '12:00', end: '13:00', title: '조사', category: 'approved' },
-    { day: 22, start: '12:00', end: '13:00', title: '강간', category: 'rejected' },
-    { day: 22, start: '12:00', end: '13:00', title: '살인', category: 'rejected' },
-    { day: 22, start: '12:00', end: '13:00', title: '성폭행', category: 'rejected' },
-    { day: 24, start: '12:00', end: '13:00', title: '조사', category: 'request' },
-    { day: 24, start: '13:00', end: '14:00', title: '아동학대', category: 'approved' },
-    { day: 29, start: '12:00', end: '13:00', title: '피해자 조사', category: 'request' },
-    { day: 30, start: '12:00', end: '13:00', title: '아동학대', category: 'approved' },
-    { day: 31, start: '12:00', end: '13:00', title: '살인', category: 'assigned' },
-    { day: 31, start: '12:00', end: '13:00', title: '절도', category: 'assigned' },
-    { day: 31, start: '12:00', end: '13:00', title: '사기', category: 'assigned' },
-    { day: 31, start: '12:00', end: '13:00', title: '아동학대', category: 'approved' },
-  ]
+  const daysInMonth = new Date(year, month, 0).getDate()
+  const seed = year * 12 + month
+  const dayShift = seed % daysInMonth
+  const categoryShift = seed % CATEGORY_ORDER.length
 
-  return entries
-    .filter((e) => e.day <= new Date(year, month, 0).getDate())
-    .map((e) => {
-      const cat = categories[e.category]
-      return {
-        title: e.title,
-        start: `${day(e.day)}T${e.start}:00`,
-        end: `${day(e.day)}T${e.end}:00`,
-        backgroundColor: cat.bg,
-        textColor: cat.text,
-        dot: cat.dot,
-      }
-    })
+  return MOCK_EVENT_TEMPLATE.map((e) => {
+    const shiftedDay = ((e.day - 1 + dayShift) % daysInMonth) + 1
+    const originalIndex = CATEGORY_ORDER.indexOf(e.category)
+    const category = CATEGORY_ORDER[(originalIndex + categoryShift) % CATEGORY_ORDER.length]
+    const cat = categories[category]
+    return {
+      title: e.title,
+      start: `${day(shiftedDay)}T${e.start}:00`,
+      end: `${day(shiftedDay)}T${e.end}:00`,
+      backgroundColor: cat.bg,
+      textColor: cat.text,
+      dot: cat.dot,
+    }
+  })
 }
 
 const calendarOptions = reactive({
