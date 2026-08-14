@@ -19,6 +19,8 @@ import PageTitle from '@/components/custom/title/PageTitle.vue';
 import Breadcrumb from '@/components/custom/Bread-crumb/Breadcrumb.vue';
 import SelectField from '@/components/custom/select/SelectField.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
+import LayoutHeader from '@/components/custom/content-layout/layoutHeader.vue'
 
 const techStack = [
   { name: 'Vue 3', version: '^3.5.24', category: 'Framework' },
@@ -61,6 +63,7 @@ const features = [
   }
 ]
 
+let vIf = false;
 
 </script>
 
@@ -75,6 +78,12 @@ const features = [
 
 
   </PageHeader>
+  <div class="flex justify-start">
+    <select></select>
+    <select></select>
+    <select></select>
+    <buton>자세히보기</buton>
+  </div>
   <SearchWrapper>
     <template #form>
       <div class="flex mb-4 gap-9">
@@ -103,14 +112,11 @@ const features = [
           />
       </div>
       <div class="flex gap-9">
-        <section>
-          <div class="w-[160px] box date-calendar">
-            <DatePicker></DatePicker>
-          </div>
-          <p v-if="fullDate" class="text-sm text-muted-foreground">
-            선택된 날짜: {{ formatDate(fullDate) }}
-          </p>
-        </section>
+        <div class="flex items-center">
+          <DatePicker label="조회일자" labelPosition="left" size="sm" inputClass="w-[160px]"></DatePicker>
+          <span>~</span>
+          <DatePicker size="sm"></DatePicker>
+        </div>
         <InputField2 label="진단일자" size="sm" label-position="left"></InputField2>
         <SelectField
             label="진단사유"
@@ -126,6 +132,25 @@ const features = [
       <Button variant="secondary" size="sm" class="w-25">검색</Button>
     </template>
   </SearchWrapper>
+  <button @click="vIf = true">클릭</button>
+  <LayoutSplite>
+    <template #layout-first>
+      <LayoutHeader title="왼쪽" >
+        <template #right>
+        <div class="flex items-center gap-3">
+          <Button size="sm">Small</Button>
+          <Button size="sm" variant="outline">Small</Button>
+        </div>
+        </template>
+      </LayoutHeader>
+    </template>
+    <template #layout-second v-if="vIf">
+      <LayoutHeader title="중간" />
+    </template>
+    <template #layout-third>
+      <LayoutHeader title="오른쪽" />
+    </template>
+  </LayoutSplite>
 </template>
 
 <style scoped>

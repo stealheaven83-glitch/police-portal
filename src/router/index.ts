@@ -19,6 +19,24 @@ const router = createRouter({
             component: () => import('../views/Login.vue'),
         },
         {
+            path: '/lpo/personnel-management',
+            name: 'lpo-personnel-management',
+            component: () => import('../views/PersonnelManagement.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '인사관리',
+            }
+        },
+        {
+            path: '/lpo/jurisdiction-status',
+            name: 'lpo-jurisdiction-status',
+            component: () => import('../views/JurisdictionStatus.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '관내현황',
+            }
+        },
+        {
             path: '/',
             name: 'home',
             component: () => import('../views/Main.vue'),
@@ -279,6 +297,15 @@ const router = createRouter({
                 title: 'Pagination'
             }
         },        
+        {
+            path: '/component/layout-splite',
+            name: 'layoutSplit',
+            component: () => import('../components/custom/content-layout/layoutSplit.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'layoutSplit'
+            }
+        },         
         {
             path: '/:pathMatch(.*)*',
             name: 'notFound',
