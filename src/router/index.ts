@@ -55,6 +55,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/lpo/work-assignment-schedule',
+            name: 'lpo-work-assignment-schedule',
+            component: () => import('../views/WorkAssignmentSchedule.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '근무지정표작성',
+            }
+        },
+        {
             path: '/',
             name: 'home',
             component: () => import('../views/Main.vue'),
