@@ -19,6 +19,15 @@ const router = createRouter({
             component: () => import('../views/Login.vue'),
         },
         {
+            path: '/lpo/memo',
+            name: 'lpo-memo',
+            component: () => import('../views/Memo.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '메모',
+            }
+        },
+        {
             path: '/lpo/personnel-management',
             name: 'lpo-personnel-management',
             component: () => import('../views/PersonnelManagement.vue'),
