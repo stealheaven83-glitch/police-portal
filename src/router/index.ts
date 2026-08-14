@@ -348,7 +348,15 @@ const router = createRouter({
                 title: '근무자 추가관리 팝업'
             }
         },      
-
+        {
+            path: '/component/calendar',
+            name: 'calendar',
+            component: () => import('../components/custom/calendar/calendar.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: '근무자 추가관리 팝업'
+            }
+        }, 
 
     ]
 })
