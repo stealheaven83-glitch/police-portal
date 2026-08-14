@@ -46,6 +46,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/lpo/request-management',
+            name: 'lpo-request-management',
+            component: () => import('../views/RequestManagement.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '요청관리',
+            }
+        },
+        {
             path: '/',
             name: 'home',
             component: () => import('../views/Main.vue'),

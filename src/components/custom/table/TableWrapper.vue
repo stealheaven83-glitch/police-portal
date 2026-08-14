@@ -86,15 +86,15 @@
             :disabled="currentPageComputed === totalPages" />
         </PaginationList>
       </Pagination>
-      <div class="justify-self-end">      
+      <div class="justify-self-end">
         <section class="space-y-4">
           <div class="flex gap-4">
-            <BaseSelect v-model="selectedValue" :options="samplePageOptions" placeholder=""
-              width-class="" class="border-0 shadow-none
-              "/>
+            <BaseSelect :model-value="String(itemsPerPage)" :options="itemsPerPageOptions" placeholder=""
+              width-class="" class="border-0 shadow-none"
+              @update:model-value="onItemsPerPageSelect" />
           </div>
         </section>
-      </div>    
+      </div>
     </div>
   </div>
 </template>
@@ -133,11 +133,17 @@ interface Column {
   cellClass?: string;
 }
 
+interface PageSizeOption {
+  label: string;
+  value: string;
+}
+
 interface Props {
   columns: Column[];
   items: any[];
   caption?: string;
   itemsPerPage?: number;
+  itemsPerPageOptions?: PageSizeOption[];
   showPagination?: boolean;
   emptyTitle?: string;
   emptyDescription?: string;
@@ -149,6 +155,10 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   itemsPerPage: 10,
+  itemsPerPageOptions: () => [
+    { label: '10건', value: '10' },
+    { label: '20건', value: '20' },
+  ],
   showPagination: true,
   caption: '',
   emptyTitle: '데이터가 없습니다',
@@ -160,7 +170,12 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 // Emits 정의
-const emit = defineEmits(['page-change', 'select-row'])
+const emit = defineEmits(['page-change', 'select-row', 'update:itemsPerPage'])
+
+// 페이지당 표시건수 select 변경 핸들러 (부모가 update:itemsPerPage 를 안 듣는 기존 사용처는 그대로 무동작)
+const onItemsPerPageSelect = (value: unknown) => {
+  emit('update:itemsPerPage', Number(value))
+}
 
 // 선택된 행 추적을 위한 상태
 const selectedIndex = ref<number | null>(null)
@@ -209,15 +224,6 @@ const selectRow = (index: number, item: any) => {
   selectedIndex.value = selectedIndex.value === index ? null : index
   emit('select-row', { index, item })
 }
-
-
-//select box
-const samplePageOptions = [
-  { label: '10건', value: '10' },
-  { label: '20건', value: '20' },
-]
-
-const selectedValue = ref<string>(samplePageOptions[0].value)
 
 </script>
 
