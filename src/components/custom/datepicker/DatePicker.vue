@@ -60,7 +60,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  labelPosition: 'top',
+  labelPosition: 'left',
   required: false,
   disabled: false,
   readonly: false,

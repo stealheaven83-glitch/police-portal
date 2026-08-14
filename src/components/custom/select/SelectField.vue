@@ -64,7 +64,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],
-  labelPosition: 'top',
+  labelPosition: 'left',
   required: false,
   disabled: false,
   size: 'lg',
