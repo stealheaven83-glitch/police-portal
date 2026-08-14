@@ -320,6 +320,16 @@ const router = createRouter({
             name: 'notFound',
             component: Error404
         },
+        /* LPO */
+        {
+            path: '/view/lpo/PC-LPO-0204.vue',
+            name: 'PC-LPO-0204',
+            component: () => import('../views/lpo/PC-LPO-0204.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: '근무자 추가관리 팝업'
+            }
+        },      
 
 
     ]

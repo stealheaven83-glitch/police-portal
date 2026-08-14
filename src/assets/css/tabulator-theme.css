@@ -1,0 +1,183 @@
+/* 그리드 배경색 (종합 그리드 한정) */
+.tabulator {
+  background: #fff;
+  border: 0;
+}
+
+.tabulator {
+  background-color: #fff;
+  border: 0;
+}
+
+/* 내장 페이지네이션 nav UI는 숨기고 custom/pagination 컴포넌트로 대체 */
+.tabulator .tabulator-footer {
+  display: none;
+}
+
+/* tabulator-tableholder 에 세로 스크롤이 생길 때만 하단 경계선 표시 */
+.tabulator {
+  border-bottom: 1px solid transparent;
+}
+
+.tabulator.has-vscroll {
+  border-bottom-color: var(--Border_gray03);
+}
+
+.tabulator .tabulator-header {
+  background: none;
+  border-top: 1px solid;
+}
+
+.tabulator .tabulator-header .tabulator-col {
+  min-height: 39px;
+  box-sizing: border-box;
+  font-size: 15px;
+  text-align: center;
+  color: var(--Text-body_1);
+  border-right: 0;
+  border-top: none;
+  background-color: #fff;
+}
+
+.tabulator .tabulator-header .tabulator-col .tabulator-col-content {
+  min-height: 39px;
+  padding: 0;
+}
+
+.tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title {
+  font-size: 15px;
+  min-height: 39px;
+  align-content: center;
+}
+
+.tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title .grid-checkbox-cell label {
+  justify-content: center;
+}
+
+.tabulator-row .tabulator-cell.tabulator-frozen.tabulator-frozen-left {
+  border-left: 0;
+  border-right: 1px solid var(--Border-grid-body);
+}
+
+.tabulator-row .tabulator-cell {
+  border-right: 1px solid var(--Border-grid-body);
+  border-bottom: 1px solid var(--Border-grid-body);
+  font-size: 14px;
+  color: var(--Text-body_0);
+  text-align: center;
+  padding: 0.4rem 1.2rem;
+  height: 4.8rem;
+  align-content: center;
+}
+
+.tabulator-row {
+  background-color: #fff;
+}
+
+.tabulator-row:hover {
+  background-color: var(--Surface-primary);
+}
+
+.tabulator-row:hover .tabulator-cell {
+  color: var(--Base-primary);
+  font-weight: bold;
+}
+
+.tabulator-row.tabulator-selected {
+  background-color: #fff;
+  box-shadow: inset 3px 0 0 var(--Base-primary);
+}
+
+.tabulator-row.tabulator-selected .tabulator-cell {
+  color: var(--Base-primary);
+  font-weight: 600;
+}
+
+.tabulator-row .tabulator-cell.tabulator-frozen.tabulator-frozen-left input[type="checkbox"],
+.tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title input[type="checkbox"] {
+  border: 1px solid #58616A;
+  border-radius: 0.4rem;
+  width: 2rem;
+  height: 2rem;
+}
+
+.tabulator-row .tabulator-cell.tabulator-editing {
+  border: 1px solid var(--Base-primary);
+}
+
+/* 행 높이 슬라이더 반영 (종합 그리드 한정) */
+/* - 셀은 inline-flex 로 세로 중앙 정렬(가로 배치는 유지) */
+/* - block 레벨 flex 를 쓰면 셀이 세로로 쌓여 그리드가 깨지므로 inline-flex 사용 */
+.tabulator .tabulator-row {
+  min-height: var(--row-h);
+}
+
+.tabulator .tabulator-row .tabulator-cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 4.8rem;
+}
+
+.tabulator-row.tabulator-selected .tabulator-cell {
+  color: var(--Text-body_0);
+  font-weight: 400;
+}
+
+.tabulator .tabulator-header {
+  background: #fff;
+}
+
+.tabulator .tabulator-cell .input-grid {
+  border: 1px solid var(--Border_input01);
+  border-radius: 0.6rem;
+}
+
+.tabulator .grid-checkbox-cell {
+  text-align: center;
+}
+
+/* 입사일 셀에 마운트된 VueDatePicker: 셀 안에 딱 맞는 컴팩트한 입력 박스 */
+.tabulator .grid-date-cell {
+  width: 100%;
+}
+
+.tabulator .grid-date-cell .dp--main {
+  width: 100%;
+}
+
+.tabulator .grid-date-cell .dp--input {
+  height: 3.6rem;
+  border: 1px solid var(--Border_input01);
+  border-radius: 0.6rem;
+  font-size: 14px;
+  text-align: center;
+  padding-inline-start: 1.2rem;
+  font-family: "Pretendard GOV", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  font-size: 1.5rem;
+}
+
+.tabulator .tabulator-tableholder .tabulator-placeholder {
+  display: flex;
+  align-items: center;
+}
+
+.tabulator .tabulator-tableholder .tabulator-placeholder .tabulator-placeholder-contents {
+  position: relative;
+  text-align: center;
+  padding-top: 4.8rem;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--Text-body_disable);
+}
+
+.tabulator-placeholder-contents:after {
+  position: absolute;
+  top: 0;
+  left: calc(50% - 1.5rem);
+  content: "";
+  display: inline-block;
+  width: 3.3rem;
+  height: 3.3rem;
+  background: url(/portal/asset/images/icon/ico_nodata.svg) no-repeat center / 3.3rem auto;
+}
