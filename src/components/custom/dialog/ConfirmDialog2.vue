@@ -16,6 +16,7 @@
   // Props 정의
   defineProps<{
     title: string
+    subtitle?: string
     description?: string
     btnOk?: string
     btnCancel?: string
@@ -74,8 +75,11 @@
       </AlertDialogHeader>
       <div class="min-h-[84px] text-center flex flex-col justify-center">
         <AlertDialogTitle class="text-[2.4rem] font-[700]">{{ title }}</AlertDialogTitle>
-        <div class="max-h-[120px] min-h-[84px] overflow-y-auto bg-[#F4F5F6] mt-4 mb-2 rounded-[8px]">
-          <AlertDialogDescription v-if="description" class="flex items-center justify-center text-[1.7rem]/[150%] p-4 min-h-[84px] text-[var(--Text-body_0)]">
+         <p v-if="subtitle" class="mt-2 text-[1.5rem] text-[var(--Text-body_2)]">
+          {{ subtitle }}
+        </p>
+        <div v-if="description" class="max-h-[120px] min-h-[84px] overflow-y-auto bg-[#F4F5F6] mt-4 mb-2 rounded-[8px]">
+          <AlertDialogDescription class="flex items-center justify-center text-[1.7rem]/[150%] p-4 min-h-[84px] text-[var(--Text-body_0)]">
             {{ description }}
           </AlertDialogDescription>
         </div>
