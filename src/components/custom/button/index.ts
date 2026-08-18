@@ -2,6 +2,8 @@ import type { VariantProps } from "class-variance-authority"
 import { cva } from "class-variance-authority"
 
 export { default as Button } from "./Button.vue"
+export { default as ButtonGroup } from "./ButtonGroup.vue"
+export type { ButtonCaseItem } from "./ButtonGroup.vue"
 
 
 export const buttonVariants = cva(

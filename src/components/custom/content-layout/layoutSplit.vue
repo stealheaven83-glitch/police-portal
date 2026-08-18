@@ -2,15 +2,11 @@
   <!-- class="default-theme"와 높이 지정(height)이 필수입니다 -->
   <splitpanes class="default-theme mt-[20px] rounded-t-2xl overflow-hidden border border-b-0 border-[var(--Border_gray0)]" style="height:900px" :class="cn(defaultClass, props.class)">
     <slot>
-      <pane v-if="$slots['layout-first']" min-size="20">
-       <slot name="layout-first" />
-      </pane>
-      <pane v-if="$slots['layout-second']">
-        <slot name="layout-second" />
-      </pane>
-      <pane v-if="$slots['layout-third']">
-        <slot name="layout-third" />
-      </pane>
+      <template v-for="i in props.count" :key="i">
+        <pane v-if="$slots[`layout-${i}`]" :size="props.widths?.[i - 1]" :min-size="i === 1 ? 20 : undefined">
+          <slot :name="`layout-${i}`" />
+        </pane>
+      </template>
     </slot>
   </splitpanes>
 </template>
@@ -25,8 +21,12 @@ const defaultClass = 'w-full p-0'
 interface Props {
   /** 래퍼 전체에 적용할 클래스 (기본 스타일을 덮어쓰고 싶을 때) */
   class?: HTMLAttributes['class']
+  /** pane 개수. 각 pane은 layout-1, layout-2 ... layout-{count} 슬롯으로 채웁니다 */
+  count?: number
+  /** 각 pane의 처음 로드시 기본 width(%). 인덱스는 pane 순서(0 = layout-1)와 대응하며, 값이 없으면 기존과 동일하게 자동 분배됩니다 */
+  widths?: number[]
 }
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), { count: 1 })
 </script>
 
 <style scoped>

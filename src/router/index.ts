@@ -366,7 +366,15 @@ const router = createRouter({
                 title: '근무자 추가관리 팝업'
             }
         }, 
-
+        {
+            path: '/component/PC-COM-2201',
+            name: 'calendar',
+            component: () => import('../views/com/PC-COM-2201.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '근무자 추가관리 팝업'
+            }
+        }, 
     ]
 })
 

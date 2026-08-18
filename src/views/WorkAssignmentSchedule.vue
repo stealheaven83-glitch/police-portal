@@ -166,8 +166,8 @@ function openAssignCell(rowLabel: string, slot: string) {
     </div>
   </div>
 
-  <LayoutSplite>
-    <template #layout-first>
+  <LayoutSplite :count="2">
+    <template #layout-1>
       <LayoutHeader title="근무자" />
       <div class="px-6 py-5">
         <!-- 일반근무자 -->
@@ -311,7 +311,7 @@ function openAssignCell(rowLabel: string, slot: string) {
       </div>
       
     </template>
-    <template #layout-second>
+    <template #layout-2>
       <LayoutHeader title="근무지정표">
         <template #right>
           <div class="flex items-center gap-3">

@@ -58,6 +58,9 @@
           조건부 색상 · 행 하이라이트 · 툴팁 · 행 추가/삭제 기능을 한 그리드에서 확인합니다.
         </div>
 
+        <!-- 툴바: 공용 ButtonGroup에 이 페이지만의 버튼 케이스(variant 조합)를 넘겨 구성 -->
+        <ButtonGroup :items="mainToolbarButtons" />
+
         <!-- 컬럼 숨김 토글 -->
         <div class="flex flex-wrap gap-3 items-center text-sm">
           <span class="text-gray-600">컬럼 표시:</span>
@@ -86,9 +89,19 @@
 
         <p class="text-xs text-gray-400">
           · 셀을 클릭하면 셀 안에서 바로 편집됩니다(별도 폼 없음). · 평가점수가 60 미만인 행은 붉게 하이라이트됩니다.
-          · 편집된 셀은 노란색으로 표시되고, 유효성 실패 셀은 붉은 테두리로 표시됩니다. · 화면 폭을 줄이면 우선순위가
-          낮은 컬럼이 접힙니다(반응형).
+          · 편집된 셀은 노란색으로 표시되고, 유효성 실패 셀은 붉은 테두리로 표시됩니다. · 전체 컬럼 너비가 화면보다
+          넓어지면 컬럼을 숨기지 않고 가로 스크롤이 생깁니다.
         </p>
+      </section>
+
+      <!-- ============ 버튼 컴포넌트 케이스 그리드 ============ -->
+      <section class="space-y-4 pt-12">
+        <h2 class="text-2xl font-semibold">버튼 컴포넌트 케이스 그리드</h2>
+        <div class="text-gray-500">
+          공용 <code>Button</code> 컴포넌트의 variant × size 조합(각 케이스)을 그리드 셀에 실제 버튼으로
+          렌더링해 한눈에 비교합니다.
+        </div>
+        <div ref="buttonCaseTableEl" class="tabulator-host" />
       </section>
 
       <!-- ============ 그리드 간 드래그 복사 ============ -->
@@ -143,7 +156,7 @@ import { ref, reactive, onMounted, onBeforeUnmount, computed, createApp, h, type
 import { TabulatorFull as Tabulator } from 'tabulator-tables'
 import 'tabulator-tables/dist/css/tabulator.min.css'
 import '@/assets/css/tabulator-theme.css'
-import { Button as CustomBtn, buttonVariants } from '@/components/custom/button'
+import { buttonVariants, ButtonGroup, type ButtonCaseItem, type ButtonVariants } from '@/components/custom/button'
 import { Checkbox as CustomCheckbox } from '@/components/custom/checkbox'
 import { Pagination } from '@/components/custom/pagination'
 import { cn } from '@/lib/utils'
@@ -216,7 +229,7 @@ const deptValues = ['개발', '디자인', '기획', '마케팅', '영업']
 /* ------------------------------------------------------------------ *
  * 반응형 상태
  * ------------------------------------------------------------------ */
-const layoutMode = ref<'fitColumns' | 'fitData' | 'fitDataStretch'>('fitColumns')
+const layoutMode = ref<'fitColumns' | 'fitData' | 'fitDataStretch'>('fitDataStretch')
 const rowHeight = ref(48)
 const rowHeightPx = computed(() => `${rowHeight.value}px`)
 
@@ -256,12 +269,14 @@ function changePageSize(size: number) {
  * Tabulator 인스턴스 및 DOM refs
  * ------------------------------------------------------------------ */
 const mainTableEl = ref<HTMLElement | null>(null)
+const buttonCaseTableEl = ref<HTMLElement | null>(null)
 const leftTableEl = ref<HTMLElement | null>(null)
 const rightTableEl = ref<HTMLElement | null>(null)
 const groupTableEl = ref<HTMLElement | null>(null)
 const emptyTableEl = ref<HTMLElement | null>(null)
 
 let mainTable: any = null
+let buttonCaseTable: any = null
 let leftTable: any = null
 let rightTable: any = null
 let groupTable: any = null
@@ -512,7 +527,7 @@ function buildMainColumns() {
     {
       title: '입사일',
       field: 'joinDate',
-      minWidth: 160,
+      width: 160, // 달력 아이콘 + 날짜 텍스트가 항상 딱 맞게 보이도록 고정 너비
       hozAlign: 'center',
       // 클릭 시 편집모드로 들어가는 대신, 셀에 항상 달력 컴포넌트를 표시
       formatter: dateCellFormatter,
@@ -532,7 +547,7 @@ function buildMainColumns() {
     {
       title: '비고',
       field: 'memo',
-      minWidth: 140,
+      minWidth: 80,
       hozAlign: 'center',
       // editor 대신 formatter 에서 직접 <input> 을 그려서, 클릭 없이 항상 입력창이 보이도록 함
       formatter: memoInputFormatter,
@@ -637,21 +652,95 @@ function applyLayout() {
   mainTable.redraw(true)
 }
 
+function setLayout(mode: typeof layoutMode.value) {
+  layoutMode.value = mode
+  applyLayout()
+}
+
 function toggleColumn(field: string) {
   if (!mainTable) return
   columnVisible[field] ? mainTable.showColumn(field) : mainTable.hideColumn(field)
 }
 
+function resetColumns() {
+  toggleableColumns.forEach((col) => {
+    columnVisible[col.field] = true
+    toggleColumn(col.field)
+  })
+}
+
 /* ------------------------------------------------------------------ *
- * 마운트: 그리드 4개 생성
+ * 버튼 컴포넌트 케이스 그리드
+ * - variant × size 조합(케이스) 마다 실제 <button>(buttonVariants 클래스)을
+ *   셀에 그려 넣어, 케이스별 렌더링 결과를 그리드로 한눈에 비교한다.
+ * ------------------------------------------------------------------ */
+const buttonCaseVariants: NonNullable<ButtonVariants['variant']>[] = [
+  'default',
+  'primary',
+  'secondary',
+  'tertiary',
+  'tertiary2',
+  'destructive',
+  'outline',
+  'ghost',
+  'link',
+  'text',
+]
+const buttonCaseSizes: NonNullable<ButtonVariants['size']>[] = ['xxs', 'xs', 'sm', 'md', 'lg', 'default']
+
+function buttonCaseFormatter(size: NonNullable<ButtonVariants['size']>) {
+  return (cell: any) => {
+    const variant = cell.getRow().getData().variant as NonNullable<ButtonVariants['variant']>
+    const btn = document.createElement('button')
+    btn.type = 'button'
+    btn.className = cn(buttonVariants({ variant, size }))
+    btn.textContent = '버튼'
+    // 케이스 미리보기 용도이므로 클릭이 행 선택 등으로 전파되지 않도록 차단
+    btn.addEventListener('click', (e) => e.stopPropagation())
+    return btn
+  }
+}
+
+function buildButtonCaseColumns() {
+  return [
+    { title: 'variant', field: 'variant', width: 110, hozAlign: 'center', headerSort: false, frozen: true },
+    ...buttonCaseSizes.map((size) => ({
+      title: `size: ${size}`,
+      field: `size_${size}`,
+      hozAlign: 'center',
+      headerSort: false,
+      formatter: buttonCaseFormatter(size),
+    })),
+  ]
+}
+
+/* ------------------------------------------------------------------ *
+ * 종합 그리드 툴바에 쓸 버튼 케이스
+ * - 공용 ButtonGroup에 이 배열만 넘기면 되고, 다른 페이지는 각자 다른
+ *   조합(variant/size/액션)의 배열을 만들어 쓰면 된다.
+ * ------------------------------------------------------------------ */
+const mainToolbarButtons: ButtonCaseItem[] = [
+  { key: 'add-row', label: '행 추가', variant: 'default', size: 'sm', onClick: addRow },
+  { key: 'select-all', label: '전체 선택', variant: 'primary', size: 'sm', onClick: selectAll },
+  { key: 'deselect-all', label: '선택 해제', variant: 'secondary', size: 'sm', onClick: deselectAll },
+  { key: 'delete-selected', label: '선택 삭제', variant: 'destructive', size: 'sm', onClick: deleteSelected },
+  { key: 'reset-changes', label: '변경사항 초기화', variant: 'tertiary2', size: 'sm', onClick: resetChanges },
+  { key: 'reset-columns', label: '컬럼 초기화', variant: 'text', size: 'sm', onClick: resetColumns },
+  { key: 'layout-fit-columns', label: '컬럼 맞춤', variant: 'outline', size: 'sm', onClick: () => setLayout('fitColumns') },
+  { key: 'layout-fit-data', label: '데이터 맞춤', variant: 'ghost', size: 'sm', onClick: () => setLayout('fitData') },
+  { key: 'layout-fit-data-stretch', label: '데이터 확장', variant: 'link', size: 'sm', onClick: () => setLayout('fitDataStretch') },
+]
+
+/* ------------------------------------------------------------------ *
+ * 마운트: 그리드 6개 생성
  * ------------------------------------------------------------------ */
 onMounted(() => {
   /* 1) 종합 그리드 */
   mainTable = new Tabulator(mainTableEl.value, {
     data: JSON.parse(JSON.stringify(initialData)),
     reactiveData: false,
-    layout: 'fitColumns',
-    responsiveLayout: 'collapse', // 모바일 대응: 폭이 좁으면 컬럼 접기
+    layout: layoutMode.value, // 'fitDataStretch': 컬럼 고유 너비 유지 + 빈 공간은 채워서 초기엔 100% 꽉 채우고, 넘치면 가로 스크롤
+    // 컬럼을 숨기는 대신(반응형 접힘) 항상 모든 컬럼을 유지하고, 넘치는 너비는 가로 스크롤로 처리
     resizableColumns: true, // 컬럼 너비 드래그 조절
     resizableRows: true, // 행 높이 드래그 조절
     movableColumns: true, // 컬럼 순서 이동
@@ -708,7 +797,17 @@ onMounted(() => {
     totalElements.value = mainTable.getDataCount()
   })
 
-  /* 2) & 3) 그리드 간 드래그 복사 (원본 → 대상) */
+  /* 2) 버튼 컴포넌트 케이스 그리드 (variant × size) */
+  buttonCaseTable = new Tabulator(buttonCaseTableEl.value, {
+    data: buttonCaseVariants.map((variant) => ({ variant })),
+    layout: 'fitDataFill',
+    height: 'auto',
+    columnDefaults: { headerSort: false },
+    columns: buildButtonCaseColumns(),
+  })
+  buttonCaseTable.on('tableBuilt', () => watchVScrollBorder(buttonCaseTableEl.value))
+
+  /* 3) & 4) 그리드 간 드래그 복사 (원본 → 대상) */
   const connectColumns = [
     { rowHandle: true, formatter: 'handle', headerSort: false, width: 40, frozen: true },
     { title: '사번', field: 'id', width: 70, hozAlign: 'center' },
@@ -741,7 +840,7 @@ onMounted(() => {
   })
   rightTable.on('tableBuilt', () => watchVScrollBorder(rightTableEl.value))
 
-  /* 4) 헤더 그룹핑(셀 병합 대체) 그리드 */
+  /* 5) 헤더 그룹핑(셀 병합 대체) 그리드 */
   groupTable = new Tabulator(groupTableEl.value, {
     data: JSON.parse(JSON.stringify(initialData)),
     layout: 'fitColumns',
@@ -768,7 +867,7 @@ onMounted(() => {
   })
   groupTable.on('tableBuilt', () => watchVScrollBorder(groupTableEl.value))
 
-  /* 5) 빈 데이터(No Data) 상태 그리드 */
+  /* 6) 빈 데이터(No Data) 상태 그리드 */
   emptyTable = new Tabulator(emptyTableEl.value, {
     data: [],
     layout: 'fitColumns',
@@ -787,6 +886,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   mainTable?.destroy()
+  buttonCaseTable?.destroy()
   leftTable?.destroy()
   rightTable?.destroy()
   groupTable?.destroy()

@@ -78,6 +78,14 @@
   background-color: var(--Surface-primary);
 }
 
+.tabulator-row.tabulator-selectable:hover {
+  background-color: #F0F7FF;
+}
+
+.tabulator-row.tabulator-row-even {
+  background-color: transparent;
+}
+
 .tabulator-row:hover .tabulator-cell {
   color: var(--Base-primary);
   font-weight: bold;

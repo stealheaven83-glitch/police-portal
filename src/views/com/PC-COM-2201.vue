@@ -133,25 +133,25 @@ let vIf = false;
     </template>
   </SearchWrapper>
   <button @click="vIf = true">클릭</button>
-  <LayoutSplite :count="3">
+  <LayoutSplite :count="3" :widths="[10, 70, 20]">
     <template #layout-1>
-      <LayoutHeader title="왼쪽" >
+      <LayoutHeader title="부서" >
         <template #right>
-        <div class="flex items-center gap-3">
-          <Button size="sm">Small</Button>
-          <Button size="sm" variant="outline">Small</Button>
-        </div>
+          <SelectField
+            label=""
+            :options="selectItem"
+            label-position="left"
+            size="sm"
+            triggerClass="w-30"
+          />
         </template>
       </LayoutHeader>
     </template>
     <template #layout-2>
-      <LayoutHeader title="중간" />
+      <LayoutHeader title="사용자목록" />
     </template>
     <template #layout-3>
-      <LayoutHeader title="오른쪽" />
-    </template>
-    <template #layout-4>
-      <LayoutHeader title="오른쪽" />
+      <LayoutHeader title="권한목록" />
     </template>
   </LayoutSplite>
 </template>
