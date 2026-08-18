@@ -1,26 +1,57 @@
 <template>
-  <div :class="cn(defaultClass, props.class)">
-    <div class="flex flex-col justify-center">
-      <slot name="form" />
+    <div class="flex flex-col gap-3 flex-1 min-w-0">
+      <div v-if="$slots.department || collapsible" class="flex items-center justify-between gap-4 ">
+        <div :class="cn('flex items-center gap-4', props.departmentClass)">
+          <slot name="department" />
+        </div>
+        <button
+          v-if="collapsible"
+          type="button"
+          class="inline-flex items-center gap-1 shrink-0 text-sm font-semibold text-[var(--Text-body_1)]"
+          :aria-expanded="expanded"
+          @click="toggle"
+        >
+          상세조회 {{ expanded ? '닫기' : '열기' }}
+          <ChevronDown :size="14" class="transition-transform duration-200" :class="expanded ? 'rotate-180' : ''" />
+        </button>
+      </div>
+      <div v-show="!collapsible || expanded" :class="cn(defaultClass, props.class)">
+          <div class="flex flex-col justify-center py-5 px-6 ">
+            <slot name="form" />
+          </div>
+          <div class="flex items-end py-5 px-6">
+            <slot name="btns" />
+          </div>
+        </div>
     </div>
-    <div class="flex items-end">
-      <slot name="btns" />
-    </div>
-  </div>
 </template>
 
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
+import { ChevronDown } from 'lucide-vue-next'
 import { cn } from '@/lib/utils'
 
 interface Props {
   /** 래퍼 전체에 적용할 클래스 (기본 스타일을 덮어쓰고 싶을 때) */
   class?: HTMLAttributes['class']
+  /** true면 부서 선택 행 옆에 '상세조회 열기/닫기' 토글 버튼을 표시하고 form 슬롯을 접었다 펼 수 있게 함 */
+  collapsible?: boolean
+  /** department 슬롯을 감싸는 div에 적용할 클래스 (기본 'flex items-center gap-4' 를 덮어쓰고 싶을 때) */
+  departmentClass?: HTMLAttributes['class']
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  collapsible: false,
+})
 
-const defaultClass = 'w-full flex justify-between items-stretch bg-[var(--Background-gray01)] py-5 px-6 rounded-[12px]'
+/** form 슬롯(상세조회 영역) 펼침 상태. v-model:expanded 로 상위에서 제어 가능 */
+const expanded = defineModel<boolean>('expanded', { default: true })
+
+function toggle() {
+  expanded.value = !expanded.value
+}
+
+const defaultClass = 'w-full flex justify-between items-stretch bg-[var(--Background-gray01)] rounded-[12px]'
 </script>
 
 

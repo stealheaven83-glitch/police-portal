@@ -368,11 +368,11 @@ const router = createRouter({
         }, 
         {
             path: '/component/PC-COM-2201',
-            name: 'calendar',
+            name: 'layout-sample',
             component: () => import('../views/com/PC-COM-2201.vue'),
             meta: {
                 layout: 'WorkLayout',
-                title: '근무자 추가관리 팝업'
+                title: '사용자 권한관리'
             }
         }, 
     ]
