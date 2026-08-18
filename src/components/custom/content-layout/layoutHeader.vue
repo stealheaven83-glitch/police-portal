@@ -25,5 +25,6 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const defaultClass = 'bg-[var(--Background-gray01)] flex items-center justify-between py-[1rem] px-[1.5rem] border-b border-solid h-[60px] border-[var(--Border_gray02)]'
+const defaultClass = 'bg-[var(--Background-gray01)] flex items-center justify-between py-[1rem] px-[1.5rem] px-[2.4rem] border-b border-solid h-[60px] border-[var(--Border_gray02)]'
+
 </script>

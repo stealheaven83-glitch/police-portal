@@ -203,6 +203,11 @@ export const mainLayoutConfig: LayoutConfig = {
           title: 'Pagination',
           icon: MessageCircleQuestionIcon,
         },
+        {
+          path: '/component/calendar',
+          title: 'Calendar',
+          icon: MessageCircleQuestionIcon,
+        },
       ]
     }
   ],

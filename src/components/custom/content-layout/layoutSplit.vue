@@ -1,6 +1,6 @@
 <template>
   <!-- class="default-theme"와 높이 지정(height)이 필수입니다 -->
-  <splitpanes class="default-theme mt-[20px]" style="height:900px" :class="cn(defaultClass, props.class)">
+  <splitpanes class="default-theme mt-[20px] rounded-t-2xl overflow-hidden border border-b-0 border-[var(--Border_gray0)]" style="height:900px" :class="cn(defaultClass, props.class)">
     <slot>
       <pane v-if="$slots['layout-first']" min-size="20">
        <slot name="layout-first" />

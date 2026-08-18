@@ -323,7 +323,16 @@ const router = createRouter({
                 layout: 'MainLayout',
                 title: 'Pagination'
             }
-        },        
+        },   
+        {
+            path: '/component/calendar',
+            name: 'calendar',
+            component: () => import('../components/custom/calendar/calendar.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Pagination'
+            }
+        },         
         {
             path: '/component/layout-splite',
             name: 'layoutSplit',
