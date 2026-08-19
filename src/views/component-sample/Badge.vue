@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Badge, BadgeDot, BadgeNumber } from "@/components/custom/bedge"
+import { Badge, BadgeDot, BadgeNumber } from "@/components/custom/badge"
 
 const colors = ["primary", "secondary", "tertiary", "point", "danger", "warning", "success", "info"] as const
 </script>
