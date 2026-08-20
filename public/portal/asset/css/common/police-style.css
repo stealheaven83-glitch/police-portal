@@ -150,8 +150,8 @@ body {
 }
 
 *:focus {
-  outline: 0.2rem solid var(--Base-seconday-dark);
-  outline-offset: 0;
+  outline: 0.2rem solid var(--Base-secondary-dark);
+  outline-offset: 0.2rem;
   transition: outline 0s, box-shadow 0s !important;
 }
 

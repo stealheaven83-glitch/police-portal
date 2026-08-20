@@ -431,12 +431,13 @@ const onCreate = () => {
  * 포커스 링
  * police reset 의 *:focus 는 존재하지 않는 변수(--Base-seconday-dark, 오타)를 참조해
  * 아웃라인이 무효화된다. 원본 CSS 는 수정하지 않고 이 페이지에서만 보완한다.
+ * police-style.css 이 파일을 수정했으니 이 라인은 삭제하겠습니다
  * -------------------------------------------------------------------------- */
-.notebook a:focus-visible,
+/* .notebook a:focus-visible,
 .notebook button:focus-visible {
   outline: 0.2rem solid var(--Base-primary);
   outline-offset: 0.2rem;
-}
+} */
 
 /* ---------------------------------------------------------------- 반응형 */
 @media (max-width: 1200px) {
