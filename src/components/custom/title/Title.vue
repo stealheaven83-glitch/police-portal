@@ -1,7 +1,7 @@
 <script setup>
 import PageHeader from '@/components/custom/title/PageHeader.vue';
 import PageTitle from '@/components/custom/title/PageTitle.vue';
-import Breadcrumb from '@/components/custom/Bread-crumb/Breadcrumb.vue';
+import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue';
 
 const navItems = [
   { label: '홈', path: '/' },

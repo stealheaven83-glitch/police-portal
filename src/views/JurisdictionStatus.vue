@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
-import Breadcrumb from '@/components/custom/Bread-crumb/Breadcrumb.vue'
+import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import DepartmentToolbar from './jurisdiction-status/DepartmentToolbar.vue'
 import DepartmentInfoSection from './jurisdiction-status/DepartmentInfoSection.vue'
 import DistrictInfoSection from './jurisdiction-status/DistrictInfoSection.vue'

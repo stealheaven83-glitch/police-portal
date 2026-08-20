@@ -17,7 +17,7 @@ import { Button } from '@/components/custom/button'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue';
-import Breadcrumb from '@/components/custom/Bread-crumb/Breadcrumb.vue';
+import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue';
 import SelectField from '@/components/custom/select/SelectField.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'

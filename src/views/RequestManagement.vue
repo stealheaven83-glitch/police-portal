@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
-import Breadcrumb from '@/components/custom/Bread-crumb/Breadcrumb.vue'
+import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
