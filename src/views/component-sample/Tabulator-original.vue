@@ -23,7 +23,7 @@
           <table class="w-full text-sm border-collapse">
             <thead>
               <tr class="bg-gray-50 text-left">
-                <th class="border px-3 py-2 w-20">#</th>
+                <th class="border px-3 py-2 w-10">#</th>
                 <th class="border px-3 py-2">기능</th>
                 <th class="border px-3 py-2 w-24 text-center">지원</th>
                 <th class="border px-3 py-2">구현 방식</th>
@@ -58,8 +58,29 @@
           조건부 색상 · 행 하이라이트 · 툴팁 · 행 추가/삭제 기능을 한 그리드에서 확인합니다.
         </div>
 
-        <!-- 툴바: 공용 ButtonGroup에 이 페이지만의 버튼 케이스(variant 조합)를 넘겨 구성 -->
-        <ButtonGroup :items="mainToolbarButtons" />
+        <!-- 툴바 -->
+        <div class="flex flex-wrap gap-2 items-center">
+          <CustomBtn variant="primary" size="sm" @click="addRow">행 추가</CustomBtn>
+          <CustomBtn variant="secondary" size="sm" @click="deleteSelected">선택 행 삭제</CustomBtn>
+          <CustomBtn variant="tertiary" size="sm" @click="selectAll">전체 선택</CustomBtn>
+          <CustomBtn variant="tertiary" size="sm" @click="deselectAll">전체 해제</CustomBtn>
+          <CustomBtn variant="text" size="sm" @click="resetChanges">변경 초기화</CustomBtn>
+
+          <span class="mx-1 h-5 w-px bg-gray-300" />
+
+          <label class="text-sm text-gray-600">자동 맞춤:</label>
+          <select class="border rounded px-2 py-1 text-sm" v-model="layoutMode" @change="applyLayout">
+            <option value="fitColumns">표 전체(fitColumns)</option>
+            <option value="fitData">내용 맞춤(fitData)</option>
+            <option value="fitDataStretch">내용+확장(fitDataStretch)</option>
+          </select>
+
+          <span class="mx-1 h-5 w-px bg-gray-300" />
+
+          <label class="text-sm text-gray-600">행 높이:</label>
+          <input type="range" min="32" max="72" step="4" v-model.number="rowHeight" />
+          <span class="text-sm text-gray-500 w-10">{{ rowHeight }}px</span>
+        </div>
 
         <!-- 컬럼 숨김 토글 -->
         <div class="flex flex-wrap gap-3 items-center text-sm">
@@ -75,33 +96,13 @@
         </div>
 
         <!-- 그리드 마운트 지점 -->
-        <div ref="mainTableEl" class="tabulator-host main-grid" style="height:500px"/>
-
-        <!-- 페이지네이션: Tabulator 내장 로컬 페이징을 custom/pagination 컴포넌트로 제어 -->
-        <Pagination
-          :currentPage="currentPage"
-          :totalPages="totalPages"
-          :itemsPerPage="itemsPerPage"
-          :totalElements="totalElements"
-          @update:page="goToPage"
-          @update:itemsPerPage="changePageSize"
-        />
+        <div ref="mainTableEl" class="tabulator-host main-grid" />
 
         <p class="text-xs text-gray-400">
           · 셀을 클릭하면 셀 안에서 바로 편집됩니다(별도 폼 없음). · 평가점수가 60 미만인 행은 붉게 하이라이트됩니다.
-          · 편집된 셀은 노란색으로 표시되고, 유효성 실패 셀은 붉은 테두리로 표시됩니다. · 전체 컬럼 너비가 화면보다
-          넓어지면 컬럼을 숨기지 않고 가로 스크롤이 생깁니다.
+          · 편집된 셀은 노란색으로 표시되고, 유효성 실패 셀은 붉은 테두리로 표시됩니다. · 화면 폭을 줄이면 우선순위가
+          낮은 컬럼이 접힙니다(반응형).
         </p>
-      </section>
-
-      <!-- ============ 버튼 컴포넌트 케이스 그리드 ============ -->
-      <section class="space-y-4 pt-12">
-        <h2 class="text-2xl font-semibold">버튼 컴포넌트 케이스 그리드</h2>
-        <div class="text-gray-500">
-          공용 <code>Button</code> 컴포넌트의 variant × size 조합(각 케이스)을 그리드 셀에 실제 버튼으로
-          렌더링해 한눈에 비교합니다.
-        </div>
-        <div ref="buttonCaseTableEl" class="tabulator-host" />
       </section>
 
       <!-- ============ 그리드 간 드래그 복사 ============ -->
@@ -111,7 +112,7 @@
           왼쪽 행의 <b>핸들(⣿)</b> 을 잡아 오른쪽 그리드로 끌어다 놓으면 항목이 복사됩니다
           (<code>movableRows</code> + <code>movableRowsConnectedTables</code>). 원본은 유지됩니다.
           <br />
-          <span class="text-amber-600">
+          <span class="text-amber-600">ㅋ
             ※ "셀 범위"를 드래그해 다른 그리드로 옮기는 것은 Tabulator 네이티브 기능이 아니며, 행 단위 이동 또는
             범위 선택 후 클립보드(복사/붙여넣기) 방식으로 대체합니다.
           </span>
@@ -138,32 +139,16 @@
         </div>
         <div ref="groupTableEl" class="tabulator-host" />
       </section>
-
-      <!-- ============ 빈 데이터(No Data) 상태 ============ -->
-      <section class="space-y-4 pt-12 pb-6">
-        <h2 class="text-2xl font-semibold">빈 데이터 상태</h2>
-        <div class="text-gray-500">
-          데이터가 0건일 때 <code>placeholder</code> 옵션으로 표시되는 안내 문구입니다.
-        </div>
-        <div ref="emptyTableEl" class="tabulator-host" />
-      </section>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, onBeforeUnmount, computed, createApp, h, type App, type Ref } from 'vue'
+import { ref, reactive, onMounted, onBeforeUnmount, computed } from 'vue'
 import { TabulatorFull as Tabulator } from 'tabulator-tables'
 import 'tabulator-tables/dist/css/tabulator.min.css'
 import '@/assets/css/tabulator-theme.css'
-import { buttonVariants, ButtonGroup, type ButtonCaseItem, type ButtonVariants } from '@/components/custom/button'
-import { Checkbox as CustomCheckbox } from '@/components/custom/checkbox'
-import { Pagination } from '@/components/custom/pagination'
-import { cn } from '@/lib/utils'
-import { VueDatePicker } from '@vuepic/vue-datepicker'
-import { ko } from 'date-fns/locale'
-import '@vuepic/vue-datepicker/dist/main.css'
-import '@/components/custom/date-picker/DatePicker.css'
+import { Button as CustomBtn } from '@/components/custom/button'
 
 /* ------------------------------------------------------------------ *
  * 기능 지원 요약 매트릭스
@@ -210,18 +195,6 @@ const initialData: Employee[] = [
   { id: 4, name: '최지우', dept: '기획', position: '책임', salary: 7000, score: 84, joinDate: '2018-11-20', active: false, memo: '' },
   { id: 5, name: '정해인', dept: '개발', position: '사원', salary: 4200, score: 48, joinDate: '2023-05-02', active: true, memo: '' },
   { id: 6, name: '한소희', dept: '마케팅', position: '선임', salary: 5900, score: 88, joinDate: '2020-09-01', active: true, memo: '' },
-  { id: 7, name: '한소희', dept: '마케팅', position: '선임', salary: 5900, score: 88, joinDate: '2020-09-01', active: true, memo: '' },
-  { id: 8, name: '한소희', dept: '마케팅', position: '선임', salary: 5900, score: 88, joinDate: '2020-09-01', active: true, memo: '' },
-  { id: 9, name: '한소희', dept: '마케팅', position: '선임', salary: 5900, score: 88, joinDate: '2020-09-01', active: true, memo: '' },
-  { id: 10, name: '김철수', dept: '개발', position: '팀장', salary: 8200, score: 92, joinDate: '2016-03-02', active: true, memo: '' },
-  { id: 12, name: '이영희', dept: '디자인', position: '선임', salary: 6100, score: 78, joinDate: '2019-07-15', active: true, memo: '' },
-  { id: 13, name: '박민준', dept: '개발', position: '주임', salary: 4800, score: 55, joinDate: '2022-01-10', active: true, memo: '' },
-  { id: 14, name: '최지우', dept: '기획', position: '책임', salary: 7000, score: 84, joinDate: '2018-11-20', active: false, memo: '' },
-  { id: 15, name: '정해인', dept: '개발', position: '사원', salary: 4200, score: 48, joinDate: '2023-05-02', active: true, memo: '' },
-  { id: 16, name: '한소희', dept: '마케팅', position: '선임', salary: 5900, score: 88, joinDate: '2020-09-01', active: true, memo: '' },
-  { id: 17, name: '한소희', dept: '마케팅', position: '선임', salary: 5900, score: 88, joinDate: '2020-09-01', active: true, memo: '' },
-  { id: 18, name: '한소희', dept: '마케팅', position: '선임', salary: 5900, score: 88, joinDate: '2020-09-01', active: true, memo: '' },
-  { id: 19, name: '한소희', dept: '마케팅', position: '선임', salary: 5900, score: 88, joinDate: '2020-09-01', active: true, memo: '' },
 ]
 
 const deptValues = ['개발', '디자인', '기획', '마케팅', '영업']
@@ -229,7 +202,7 @@ const deptValues = ['개발', '디자인', '기획', '마케팅', '영업']
 /* ------------------------------------------------------------------ *
  * 반응형 상태
  * ------------------------------------------------------------------ */
-const layoutMode = ref<'fitColumns' | 'fitData' | 'fitDataStretch'>('fitDataStretch')
+const layoutMode = ref<'fitColumns' | 'fitData' | 'fitDataStretch'>('fitColumns')
 const rowHeight = ref(48)
 const rowHeightPx = computed(() => `${rowHeight.value}px`)
 
@@ -249,38 +222,17 @@ const columnVisible = reactive<Record<string, boolean>>({
 })
 
 /* ------------------------------------------------------------------ *
- * 페이지네이션 (Tabulator 내장 로컬 페이징 + custom/pagination UI)
- * ------------------------------------------------------------------ */
-const currentPage = ref(1)
-const itemsPerPage = ref(5)
-const totalElements = ref(initialData.length)
-const totalPages = computed(() => Math.max(1, Math.ceil(totalElements.value / itemsPerPage.value)))
-
-function goToPage(page: number) {
-  mainTable?.setPage(page)
-}
-
-function changePageSize(size: number) {
-  itemsPerPage.value = size
-  mainTable?.setPageSize(size)
-}
-
-/* ------------------------------------------------------------------ *
  * Tabulator 인스턴스 및 DOM refs
  * ------------------------------------------------------------------ */
 const mainTableEl = ref<HTMLElement | null>(null)
-const buttonCaseTableEl = ref<HTMLElement | null>(null)
 const leftTableEl = ref<HTMLElement | null>(null)
 const rightTableEl = ref<HTMLElement | null>(null)
 const groupTableEl = ref<HTMLElement | null>(null)
-const emptyTableEl = ref<HTMLElement | null>(null)
 
 let mainTable: any = null
-let buttonCaseTable: any = null
 let leftTable: any = null
 let rightTable: any = null
 let groupTable: any = null
-let emptyTable: any = null
 
 /* ------------------------------------------------------------------ *
  * 세로 스크롤 여부에 따른 하단 경계선(.tabulator.has-vscroll) 토글
@@ -313,161 +265,14 @@ function watchVScrollBorder(hostEl: HTMLElement | null) {
 let nextId = initialData.length + 1
 
 /* ------------------------------------------------------------------ *
- * 일괄 선택 체크박스: custom/checkbox(Checkbox.vue)를 셀/헤더에 마운트
- * - Checkbox.vue 는 상태(선택/해제/부분선택)를 갖는 상호작용 컴포넌트라
- *   단순 클래스 복사가 아니라 createApp 으로 실제 마운트해 Tabulator 의
- *   행 선택 상태와 양방향으로 동기화한다.
- * - 셀/헤더가 파괴될 때 app.unmount() 가 필요하므로 행(row) 기준으로 추적한다.
- * ------------------------------------------------------------------ */
-const rowCheckboxRegistry = new Map<any, { app: App; state: Ref<boolean> }>()
-let headerCheckboxApp: { app: App; state: Ref<'checked' | 'unchecked' | 'indeterminate'> } | null = null
-
-function rowCheckboxFormatter(cell: any) {
-  const row = cell.getRow()
-  const container = document.createElement('div')
-  container.classList.add('grid-checkbox-cell')
-  container.addEventListener('click', (e) => e.stopPropagation())
-
-  const state = ref(row.isSelected())
-
-  const app = createApp({
-    render: () =>
-      h(CustomCheckbox, {
-        modelValue: state.value,
-        'onUpdate:modelValue': (val: boolean | 'indeterminate') => {
-          const next = val === true
-          state.value = next
-          next ? row.select() : row.deselect()
-        },
-      }),
-  })
-  app.mount(container)
-  rowCheckboxRegistry.set(row, { app, state })
-
-  return container
-}
-
-function headerCheckboxFormatter() {
-  const container = document.createElement('div')
-  container.classList.add('grid-checkbox-cell')
-  container.addEventListener('click', (e) => e.stopPropagation())
-
-  const state = ref<'checked' | 'unchecked' | 'indeterminate'>('unchecked')
-
-  const app = createApp({
-    render: () =>
-      h(CustomCheckbox, {
-        variant: state.value === 'indeterminate' ? 'minus' : 'default',
-        modelValue: state.value !== 'unchecked',
-        'onUpdate:modelValue': () => {
-          state.value === 'unchecked' ? mainTable?.selectRow() : mainTable?.deselectRow()
-        },
-      }),
-  })
-  app.mount(container)
-  headerCheckboxApp = { app, state }
-
-  return container
-}
-
-/* 행 선택 여부가 바뀔 때마다(선택/해제/추가/삭제 등) 모든 체크박스 상태를 동기화 */
-function syncSelectionCheckboxes() {
-  if (!mainTable) return
-
-  rowCheckboxRegistry.forEach((entry, row) => {
-    entry.state.value = row.isSelected()
-  })
-
-  if (headerCheckboxApp) {
-    const totalCount = mainTable.getRows().length
-    const selectedCount = mainTable.getSelectedRows().length
-    headerCheckboxApp.state.value =
-      selectedCount === 0 ? 'unchecked' : selectedCount === totalCount ? 'checked' : 'indeterminate'
-  }
-}
-
-function unmountRowCheckbox(row: any) {
-  const entry = rowCheckboxRegistry.get(row)
-  if (entry) {
-    entry.app.unmount()
-    rowCheckboxRegistry.delete(row)
-  }
-}
-
-/* ------------------------------------------------------------------ *
- * 입사일 셀: custom/date-picker 와 동일한 VueDatePicker 를 셀에 직접 마운트
- * - '비고' 컬럼(memoInputFormatter)처럼 클릭해서 편집 모드로 들어가는 대신,
- *   셀에 항상 달력 아이콘 + 선택된 날짜 텍스트가 보이는 형태로 구성한다.
- * - 체크박스와 마찬가지로 상호작용 컴포넌트를 마운트하므로 행(row) 기준으로
- *   추적해 행이 삭제/재구성될 때 app.unmount() 로 정리한다.
- * ------------------------------------------------------------------ */
-const dateCellRegistry = new Map<any, App>()
-
-function toDate(value: string | null | undefined): Date | null {
-  return value ? new Date(value) : null
-}
-
-function toIsoDate(date: Date | null): string {
-  if (!date) return ''
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  const d = String(date.getDate()).padStart(2, '0')
-  return `${y}-${m}-${d}`
-}
-
-function dateCellFormatter(cell: any) {
-  const row = cell.getRow()
-  const container = document.createElement('div')
-  container.classList.add('grid-date-cell')
-  container.addEventListener('click', (e) => e.stopPropagation())
-
-  const dateValue = ref<Date | null>(toDate(cell.getValue()))
-
-  const app = createApp({
-    render: () =>
-      h(
-        VueDatePicker,
-        {
-          modelValue: dateValue.value,
-          'onUpdate:modelValue': (val: Date | null) => {
-            dateValue.value = val
-            cell.setValue(toIsoDate(val)) // 값 반영 + cellEdited 이벤트 발생
-          },
-          teleport: true,
-          timeConfig: { enableTimePicker: false },
-          formats: { input: (date: Date) => toIsoDate(date) },
-          locale: ko,
-          autoApply: true,
-          clearable: false,
-        },
-        {
-          'input-icon': () => h('img', { src: '../../../../public/portal/asset/images/icon/ico_calendar.svg', alt: '달력' }),
-        },
-      ),
-  })
-  app.mount(container)
-  dateCellRegistry.set(row, app)
-
-  return container
-}
-
-function unmountDateCell(row: any) {
-  const app = dateCellRegistry.get(row)
-  if (app) {
-    app.unmount()
-    dateCellRegistry.delete(row)
-  }
-}
-
-/* ------------------------------------------------------------------ *
  * 메인 그리드 컬럼 정의
  * ------------------------------------------------------------------ */
 function buildMainColumns() {
   return [
-    // 일괄 선택 체크박스 (헤더 체크박스로 전체 선택/해제) — custom/checkbox 컴포넌트 사용
+    // 일괄 선택 체크박스 (헤더 체크박스로 전체 선택/해제)
     {
-      formatter: rowCheckboxFormatter,
-      titleFormatter: headerCheckboxFormatter,
+      formatter: 'rowSelection',
+      titleFormatter: 'rowSelection',
       hozAlign: 'center',
       headerSort: false,
       width: 44,
@@ -527,10 +332,9 @@ function buildMainColumns() {
     {
       title: '입사일',
       field: 'joinDate',
-      width: 160, // 달력 아이콘 + 날짜 텍스트가 항상 딱 맞게 보이도록 고정 너비
+      minWidth: 110,
       hozAlign: 'center',
-      // 클릭 시 편집모드로 들어가는 대신, 셀에 항상 달력 컴포넌트를 표시
-      formatter: dateCellFormatter,
+      editor: dateEditor,
       // 툴팁 콜백 예시
       tooltip: (_e: any, cell: any) => `입사일: ${cell.getValue()}`,
       responsive: 6,
@@ -547,40 +351,13 @@ function buildMainColumns() {
     {
       title: '비고',
       field: 'memo',
-      minWidth: 80,
+      minWidth: 140,
       hozAlign: 'center',
       // editor 대신 formatter 에서 직접 <input> 을 그려서, 클릭 없이 항상 입력창이 보이도록 함
       formatter: memoInputFormatter,
       responsive: 7,
     },
-    // 버튼 컬럼: Button.vue(tertiary)와 동일한 클래스를 적용한 실제 <button> 삽입
-    {
-      title: '관리',
-      hozAlign: 'center',
-      headerSort: false,
-      editor: false,
-      formatter: detailButtonFormatter,
-      width: 120,
-    },
   ]
-}
-
-/* '관리' 컬럼용: Button.vue 가 만드는 것과 동일한 클래스 조합(cva)을 그대로 사용해
- * 진짜 버튼 엘리먼트를 그려 넣는다. (컴포넌트를 마운트하지 않고 클래스만 재사용) */
-function detailButtonFormatter(cell: any) {
-  const btn = document.createElement('button')
-  btn.type = 'button'
-  btn.className = cn(buttonVariants({ variant: 'tertiary' }))
-  btn.textContent = '상세보기'
-
-  // 버튼 클릭이 행 선택 등 그리드 기본 동작으로 전파되지 않도록 차단
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation()
-    const data = cell.getRow().getData()
-    console.log('상세보기 클릭:', data)
-  })
-
-  return btn
 }
 
 /* '비고' 컬럼용: 편집 모드 진입 없이 셀 안에 항상 텍스트 input 을 표시 */
@@ -599,6 +376,35 @@ function memoInputFormatter(cell: any) {
   input.addEventListener('click', (e) => e.stopPropagation())
   input.addEventListener('change', () => {
     cell.setValue(input.value) // 값 반영 + cellEdited 이벤트 발생
+  })
+
+  return input
+}
+
+/* 날짜 컬럼용 커스텀 에디터: 브라우저 기본 달력(input[type=date])을 셀 안에 띄움 */
+function dateEditor(cell: any, onRendered: any, success: any, cancel: any) {
+  const input = document.createElement('input')
+  input.type = 'date'
+  input.value = cell.getValue() || ''
+  input.style.width = '100%'
+  input.style.height = '100%'
+  input.style.boxSizing = 'border-box'
+  input.style.border = 'none'
+  input.style.padding = '0 8px'
+  input.style.outline = 'none'
+
+  onRendered(() => {
+    input.focus()
+  })
+
+  function submit() {
+    success(input.value)
+  }
+
+  input.addEventListener('change', submit)
+  input.addEventListener('blur', submit)
+  input.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key === 'Escape') cancel()
   })
 
   return input
@@ -652,108 +458,28 @@ function applyLayout() {
   mainTable.redraw(true)
 }
 
-function setLayout(mode: typeof layoutMode.value) {
-  layoutMode.value = mode
-  applyLayout()
-}
-
 function toggleColumn(field: string) {
   if (!mainTable) return
   columnVisible[field] ? mainTable.showColumn(field) : mainTable.hideColumn(field)
 }
 
-function resetColumns() {
-  toggleableColumns.forEach((col) => {
-    columnVisible[col.field] = true
-    toggleColumn(col.field)
-  })
-}
-
 /* ------------------------------------------------------------------ *
- * 버튼 컴포넌트 케이스 그리드
- * - variant × size 조합(케이스) 마다 실제 <button>(buttonVariants 클래스)을
- *   셀에 그려 넣어, 케이스별 렌더링 결과를 그리드로 한눈에 비교한다.
- * ------------------------------------------------------------------ */
-const buttonCaseVariants: NonNullable<ButtonVariants['variant']>[] = [
-  'default',
-  'primary',
-  'secondary',
-  'tertiary',
-  'tertiary2',
-  'destructive',
-  'outline',
-  'ghost',
-  'link',
-  'text',
-]
-const buttonCaseSizes: NonNullable<ButtonVariants['size']>[] = ['xxs', 'xs', 'sm', 'md', 'lg', 'default']
-
-function buttonCaseFormatter(size: NonNullable<ButtonVariants['size']>) {
-  return (cell: any) => {
-    const variant = cell.getRow().getData().variant as NonNullable<ButtonVariants['variant']>
-    const btn = document.createElement('button')
-    btn.type = 'button'
-    btn.className = cn(buttonVariants({ variant, size }))
-    btn.textContent = '버튼'
-    // 케이스 미리보기 용도이므로 클릭이 행 선택 등으로 전파되지 않도록 차단
-    btn.addEventListener('click', (e) => e.stopPropagation())
-    return btn
-  }
-}
-
-function buildButtonCaseColumns() {
-  return [
-    { title: 'variant', field: 'variant', width: 110, hozAlign: 'center', headerSort: false, frozen: true },
-    ...buttonCaseSizes.map((size) => ({
-      title: `size: ${size}`,
-      field: `size_${size}`,
-      hozAlign: 'center',
-      headerSort: false,
-      formatter: buttonCaseFormatter(size),
-    })),
-  ]
-}
-
-/* ------------------------------------------------------------------ *
- * 종합 그리드 툴바에 쓸 버튼 케이스
- * - 공용 ButtonGroup에 이 배열만 넘기면 되고, 다른 페이지는 각자 다른
- *   조합(variant/size/액션)의 배열을 만들어 쓰면 된다.
- * ------------------------------------------------------------------ */
-const mainToolbarButtons: ButtonCaseItem[] = [
-  { key: 'add-row', label: '행 추가', variant: 'default', size: 'sm', onClick: addRow },
-  { key: 'select-all', label: '전체 선택', variant: 'primary', size: 'sm', onClick: selectAll },
-  { key: 'deselect-all', label: '선택 해제', variant: 'secondary', size: 'sm', onClick: deselectAll },
-  { key: 'delete-selected', label: '선택 삭제', variant: 'destructive', size: 'sm', onClick: deleteSelected },
-  { key: 'reset-changes', label: '변경사항 초기화', variant: 'tertiary2', size: 'sm', onClick: resetChanges },
-  { key: 'reset-columns', label: '컬럼 초기화', variant: 'text', size: 'sm', onClick: resetColumns },
-  { key: 'layout-fit-columns', label: '컬럼 맞춤', variant: 'outline', size: 'sm', onClick: () => setLayout('fitColumns') },
-  { key: 'layout-fit-data', label: '데이터 맞춤', variant: 'ghost', size: 'sm', onClick: () => setLayout('fitData') },
-  { key: 'layout-fit-data-stretch', label: '데이터 확장', variant: 'link', size: 'sm', onClick: () => setLayout('fitDataStretch') },
-]
-
-/* ------------------------------------------------------------------ *
- * 마운트: 그리드 6개 생성
+ * 마운트: 그리드 4개 생성
  * ------------------------------------------------------------------ */
 onMounted(() => {
   /* 1) 종합 그리드 */
   mainTable = new Tabulator(mainTableEl.value, {
     data: JSON.parse(JSON.stringify(initialData)),
     reactiveData: false,
-    layout: layoutMode.value, // 'fitDataStretch': 컬럼 고유 너비 유지 + 빈 공간은 채워서 초기엔 100% 꽉 채우고, 넘치면 가로 스크롤
-    // 컬럼을 숨기는 대신(반응형 접힘) 항상 모든 컬럼을 유지하고, 넘치는 너비는 가로 스크롤로 처리
+    layout: 'fitColumns',
+    responsiveLayout: 'collapse', // 모바일 대응: 폭이 좁으면 컬럼 접기
     resizableColumns: true, // 컬럼 너비 드래그 조절
     resizableRows: true, // 행 높이 드래그 조절
     movableColumns: true, // 컬럼 순서 이동
     selectableRows: true, // 행 선택(일괄 선택)
     columnDefaults: { headerSort: false }, // 컬럼 정렬 기능 비활성화
     tooltip: true, // 기본 셀 툴팁
-    height: '220px',
-    placeholder: '데이터가 없습니다', // 데이터 0건일 때 표시할 문구
-    // 페이지네이션: 내장 nav UI는 숨기고(.tabulator-footer) custom/pagination 컴포넌트로 페이지 이동을 제어
-    pagination: true,
-    paginationMode: 'local',
-    paginationSize: itemsPerPage.value,
-    paginationSizeSelector: false,
+    height: '420px',
     // CSS 로 행 높이를 조절하므로 가상 렌더링 대신 기본 렌더링 사용(행 겹침 방지)
     renderVertical: 'basic',
     columns: buildMainColumns(),
@@ -771,43 +497,7 @@ onMounted(() => {
   })
   mainTable.on('tableBuilt', () => watchVScrollBorder(mainTableEl.value))
 
-  // 페이지네이션 동기화: 페이지 이동/데이터 변경 시 custom/pagination 컴포넌트에 표시할 상태 갱신
-  mainTable.on('pageLoaded', (pageno: number) => {
-    currentPage.value = pageno
-  })
-  mainTable.on('dataProcessed', () => {
-    totalElements.value = mainTable.getDataCount()
-  })
-
-  // 선택 상태 동기화: 행 체크박스 클릭/selectAll/deselectAll 등으로 선택이 바뀔 때마다
-  // 모든 행 체크박스 + 헤더 체크박스(indeterminate 포함)를 다시 계산
-  mainTable.on('rowSelectionChanged', () => {
-    syncSelectionCheckboxes()
-  })
-  // 행 추가 시 헤더 체크박스의 전체 개수 기준이 바뀌므로 함께 재계산
-  mainTable.on('rowAdded', () => {
-    syncSelectionCheckboxes()
-    totalElements.value = mainTable.getDataCount()
-  })
-  // 행 삭제 시 해당 행에 마운트된 체크박스/날짜 Vue 앱을 정리(unmount)
-  mainTable.on('rowDeleted', (row: any) => {
-    unmountRowCheckbox(row)
-    unmountDateCell(row)
-    syncSelectionCheckboxes()
-    totalElements.value = mainTable.getDataCount()
-  })
-
-  /* 2) 버튼 컴포넌트 케이스 그리드 (variant × size) */
-  buttonCaseTable = new Tabulator(buttonCaseTableEl.value, {
-    data: buttonCaseVariants.map((variant) => ({ variant })),
-    layout: 'fitDataFill',
-    height: 'auto',
-    columnDefaults: { headerSort: false },
-    columns: buildButtonCaseColumns(),
-  })
-  buttonCaseTable.on('tableBuilt', () => watchVScrollBorder(buttonCaseTableEl.value))
-
-  /* 3) & 4) 그리드 간 드래그 복사 (원본 → 대상) */
+  /* 2) & 3) 그리드 간 드래그 복사 (원본 → 대상) */
   const connectColumns = [
     { rowHandle: true, formatter: 'handle', headerSort: false, width: 40, frozen: true },
     { title: '사번', field: 'id', width: 70, hozAlign: 'center' },
@@ -840,7 +530,7 @@ onMounted(() => {
   })
   rightTable.on('tableBuilt', () => watchVScrollBorder(rightTableEl.value))
 
-  /* 5) 헤더 그룹핑(셀 병합 대체) 그리드 */
+  /* 4) 헤더 그룹핑(셀 병합 대체) 그리드 */
   groupTable = new Tabulator(groupTableEl.value, {
     data: JSON.parse(JSON.stringify(initialData)),
     layout: 'fitColumns',
@@ -866,40 +556,14 @@ onMounted(() => {
     ],
   })
   groupTable.on('tableBuilt', () => watchVScrollBorder(groupTableEl.value))
-
-  /* 6) 빈 데이터(No Data) 상태 그리드 */
-  emptyTable = new Tabulator(emptyTableEl.value, {
-    data: [],
-    layout: 'fitColumns',
-    height: '200px',
-    placeholder: '데이터가 없습니다',
-    columnDefaults: { headerSort: false }, // 컬럼 정렬 기능 비활성화
-    columns: [
-      { title: '사번', field: 'id', width: 70, hozAlign: 'center' },
-      { title: '이름', field: 'name', minWidth: 100 },
-      { title: '부서', field: 'dept', minWidth: 100 },
-      { title: '직급', field: 'position', minWidth: 90 },
-    ],
-  })
-  emptyTable.on('tableBuilt', () => watchVScrollBorder(emptyTableEl.value))
 })
 
 onBeforeUnmount(() => {
   mainTable?.destroy()
-  buttonCaseTable?.destroy()
   leftTable?.destroy()
   rightTable?.destroy()
   groupTable?.destroy()
-  emptyTable?.destroy()
   scrollBorderObservers.forEach((ro) => ro.disconnect())
-
-  rowCheckboxRegistry.forEach((entry) => entry.app.unmount())
-  rowCheckboxRegistry.clear()
-  headerCheckboxApp?.app.unmount()
-  headerCheckboxApp = null
-
-  dateCellRegistry.forEach((app) => app.unmount())
-  dateCellRegistry.clear()
 })
 </script>
 

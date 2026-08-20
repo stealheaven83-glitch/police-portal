@@ -183,7 +183,7 @@ const router = createRouter({
         {
             path: '/component/tabulator',
             name: 'tabulator',
-            component: () => import('../components/custom/Tabulator/Tabulator.vue'),
+            component: () => import('../views/component-sample/Tabulator.vue'),
             meta: {
                 layout: 'MainLayout',
                 title: 'Tabulator'
