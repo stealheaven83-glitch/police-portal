@@ -31,11 +31,10 @@ const forwardedProps = useForwardProps(delegatedProps)
 </script>
 
 <template>
-<label 
+<label
   :class="cn(
     'group inline-flex items-center has-[[disabled]]:cursor-not-allowed',
-    label ? 'gap-2' : 'gap-0 align-top',
-    props.class
+    label ? 'gap-2' : 'gap-0 align-top'
   )">
   <RadioGroupItem
     data-slot="radio-group-item"

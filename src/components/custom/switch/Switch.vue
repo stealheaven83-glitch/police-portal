@@ -32,7 +32,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 </script>
 
 <template>
-<label class="group inline-flex items-center gap-2 has-[disabled]:cursor-not-allowed">
+<label class="group inline-flex items-center gap-2 has-[[disabled]]:cursor-not-allowed">
   <SwitchRoot
     v-slot="{ modelValue }"
     data-slot="switch"

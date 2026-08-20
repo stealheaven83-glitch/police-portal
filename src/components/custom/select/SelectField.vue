@@ -166,7 +166,7 @@ const iconSizeClass = computed(() => {
           >
             <SelectValue :placeholder="placeholder" />
             <SelectIcon as-child>
-              <ChevronDown :class="cn('text-[var(--icon-gray)] group-disabled:text-[var(--icon-disabled)] shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180', iconSizeClass, 'size-5')" />
+              <ChevronDown :class="cn('text-[var(--icon-gray)] group-disabled:text-[var(--icon-disabled)] shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180', iconSizeClass)" />
             </SelectIcon>
           </SelectTriggerPrimitive>
 
