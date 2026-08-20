@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-import { VisuallyHidden } from 'reka-ui'
 import {
   AlertDialog,
   AlertDialogContent,

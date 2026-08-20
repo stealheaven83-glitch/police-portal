@@ -3,14 +3,13 @@ import { computed } from 'vue'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
 import { DialogClose } from "reka-ui"
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+// import { cn } from '@/lib/utils'
 
 import closeIcon from '@/assets/icon/icon_popup_x.svg'
 

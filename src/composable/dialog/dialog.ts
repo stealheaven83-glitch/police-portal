@@ -1,8 +1,6 @@
 import { createApp, h, getCurrentInstance } from 'vue'
 import type { VNode, App } from 'vue'
-import ConfirmDialog from '../../components/custom/dialog/ConfirmDialog.vue'
 import ConfirmDialog2 from '../../components/custom/dialog/ConfirmDialog2.vue'
-import AlertDialog from '../../components/custom/dialog/AlertDialog.vue'
 import AlertDialog2 from '../../components/custom/dialog/AlertDialog2.vue'
 import FormDialog from '../../components/custom/dialog/FormDialog.vue'
 import WorkerSelectDialog from '../../components/custom/dialog/WorkerSelectDialog.vue'

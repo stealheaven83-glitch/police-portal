@@ -2,9 +2,8 @@
 import type { DialogContentEmits, DialogContentProps } from "reka-ui"
 import type { HTMLAttributes } from "vue"
 import { reactiveOmit } from "@vueuse/core"
-import { X } from "lucide-vue-next"
 import {
-  DialogClose,
+  // DialogClose,
   DialogContent,
   DialogPortal,
   useForwardPropsEmits,
@@ -12,7 +11,7 @@ import {
 import { cn } from "@/lib/utils"
 import DialogOverlay from "./DialogOverlay.vue"
 
-import closeIcon from '@/assets/icon/icon_popup_x.svg'
+// import closeIcon from '@/assets/icon/icon_popup_x.svg'
 
 defineOptions({
   inheritAttrs: false,

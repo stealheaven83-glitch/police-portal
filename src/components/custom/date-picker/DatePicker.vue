@@ -4,19 +4,19 @@ import { VueDatePicker } from '@vuepic/vue-datepicker'
 import { ko } from 'date-fns/locale'
 import '@vuepic/vue-datepicker/dist/main.css'
 import './DatePicker.css'
-const date = ref();
+// const date = ref();
 
 /*년월일 선택 - Date 객체를 v-model로 사용*/
 const fullDate = ref<Date | null>(null)
 
-/* 년월 선택 - { month: 0~11, year } 형태를 v-model로 사용 */
-const monthYear = ref<{ month: number; year: number } | null>(null)
+// /* 년월 선택 - { month: 0~11, year } 형태를 v-model로 사용 */
+// const monthYear = ref<{ month: number; year: number } | null>(null)
 
-/* 년 선택 - 년도(number)를 v-model로 사용 */
-const yearValue = ref<number | null>(null)
+// /* 년 선택 - 년도(number)를 v-model로 사용 */
+// const yearValue = ref<number | null>(null)
 
-/* 기간 선택 - [시작일, 종료일] 형태의 Date 배열을 v-model로 사용 */
-const dateRange = ref<[Date, Date] | null>(null)
+// /* 기간 선택 - [시작일, 종료일] 형태의 Date 배열을 v-model로 사용 */
+// const dateRange = ref<[Date, Date] | null>(null)
 
 /* 선택된 날짜를 대한민국 표기(2026년 7월 14일)로 변환 */
 const df = new Intl.DateTimeFormat('ko-KR', {

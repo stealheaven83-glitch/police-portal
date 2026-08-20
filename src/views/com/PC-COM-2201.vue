@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import {
-  Layout,
-  Database,
-  Zap,
-  Files,
-  Cpu,
-  Package
-} from 'lucide-vue-next'
+// import {
+//   Layout,
+//   Database,
+//   Zap,
+//   Files,
+//   Cpu,
+//   Package
+// } from 'lucide-vue-next'
 
 import '@vuepic/vue-datepicker/dist/main.css'
 // import '../DatePicker.css'
 
-import SearchWrapper from '@/components/custom/search/searchWrapper.vue'
+import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import { Button } from '@/components/custom/button'
-import InputField2 from '@/components/custom/input/inputField2.vue'
+import InputField2 from '@/components/custom/input/InputField2.vue'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue';
 import Breadcrumb from '@/components/custom/Bread-crumb/Breadcrumb.vue';
@@ -23,14 +23,14 @@ import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutHeader from '@/components/custom/content-layout/layoutHeader.vue'
 
-const techStack = [
-  { name: 'Vue 3', version: '^3.5.24', category: 'Framework' },
-  { name: 'TypeScript', version: '~5.9.3', category: 'Language' },
-  { name: 'Vite', version: '^7.2.4', category: 'Build Tool' },
-  { name: 'Tailwind CSS', version: '^4.1.18', category: 'Styling' },
-  { name: 'Pinia', version: '^3.0.4', category: 'State' },
-  { name: 'shadcn-vue', version: '-', category: 'UI' },
-]
+// const techStack = [
+//   { name: 'Vue 3', version: '^3.5.24', category: 'Framework' },
+//   { name: 'TypeScript', version: '~5.9.3', category: 'Language' },
+//   { name: 'Vite', version: '^7.2.4', category: 'Build Tool' },
+//   { name: 'Tailwind CSS', version: '^4.1.18', category: 'Styling' },
+//   { name: 'Pinia', version: '^3.0.4', category: 'State' },
+//   { name: 'shadcn-vue', version: '-', category: 'UI' },
+// ]
 
 const navItems = [
   { label: '홈', path: '/' },
@@ -46,25 +46,25 @@ const selectItem = [
   { label: 'select3', value: 'select3' },
 ]
 
-const features = [
-  {
-    title: 'State Management',
-    description: 'Pinia 기반 글로벌 상태 및 데이터 영속화',
-    icon: Database
-  },
-  {
-    title: 'UI Components',
-    description: 'shadcn-vue 기반의 일관된 UI 구성 요소',
-    icon: Layout
-  },
-  {
-    title: 'API Integration',
-    description: 'Axios Helper를 통한 표준화된 통신 구조',
-    icon: Zap
-  }
-]
+// const features = [
+//   {
+//     title: 'State Management',
+//     description: 'Pinia 기반 글로벌 상태 및 데이터 영속화',
+//     icon: Database
+//   },
+//   {
+//     title: 'UI Components',
+//     description: 'shadcn-vue 기반의 일관된 UI 구성 요소',
+//     icon: Layout
+//   },
+//   {
+//     title: 'API Integration',
+//     description: 'Axios Helper를 통한 표준화된 통신 구조',
+//     icon: Zap
+//   }
+// ]
 
-let vIf = false;
+const vIf = ref(false);
 const advancedSearchOpen = ref(true);
 
 </script>

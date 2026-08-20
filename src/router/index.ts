@@ -330,9 +330,9 @@ const router = createRouter({
             component: () => import('../components/custom/calendar/calendar.vue'),
             meta: {
                 layout: 'MainLayout',
-                title: 'Pagination'
+                title: '캘린더'
             }
-        },         
+        },
         {
             path: '/component/layout-splite',
             name: 'layoutSplit',
@@ -342,11 +342,6 @@ const router = createRouter({
                 title: 'layoutSplit'
             }
         },         
-        {
-            path: '/:pathMatch(.*)*',
-            name: 'notFound',
-            component: Error404
-        },
         /* LPO */
         {
             path: '/view/lpo/PC-LPO-0204.vue',
@@ -356,25 +351,21 @@ const router = createRouter({
                 layout: 'MainLayout',
                 title: '근무자 추가관리 팝업'
             }
-        },      
-        {
-            path: '/component/calendar',
-            name: 'calendar',
-            component: () => import('../components/custom/calendar/calendar.vue'),
-            meta: {
-                layout: 'MainLayout',
-                title: '근무자 추가관리 팝업'
-            }
-        }, 
+        },
         {
             path: '/component/PC-COM-2201',
-            name: 'layout-sample',
+            name: 'pc-com-2201',
             component: () => import('../views/com/PC-COM-2201.vue'),
             meta: {
                 layout: 'WorkLayout',
                 title: '사용자 권한관리'
             }
-        }, 
+        },
+        {
+            path: '/:pathMatch(.*)*',
+            name: 'notFound',
+            component: Error404
+        },
     ]
 })
 
