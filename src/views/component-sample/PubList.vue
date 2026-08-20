@@ -59,6 +59,8 @@
                 <RouterLink
                   v-if="item.route"
                   :to="item.route"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   class="text-primary underline underline-offset-4 hover:opacity-80"
                 >
                   {{ item.name }}
