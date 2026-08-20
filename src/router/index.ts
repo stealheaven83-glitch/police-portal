@@ -28,6 +28,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/lpo/equipment-management',
+            name: 'lpo-equipment-management',
+            component: () => import('../views/EquipmentManagement.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '장비관리',
+            }
+        },
+        {
             path: '/lpo/personnel-management',
             name: 'lpo-personnel-management',
             component: () => import('../views/PersonnelManagement.vue'),

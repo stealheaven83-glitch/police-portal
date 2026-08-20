@@ -7,6 +7,7 @@ import DepartmentToolbar from './jurisdiction-status/DepartmentToolbar.vue'
 import DepartmentInfoSection from './jurisdiction-status/DepartmentInfoSection.vue'
 import DistrictInfoSection from './jurisdiction-status/DistrictInfoSection.vue'
 import { useJurisdictionStatusForm } from './jurisdiction-status/useJurisdictionStatusForm'
+import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 
 const navItems = [
   { label: '홈', path: '/' },
@@ -14,9 +15,7 @@ const navItems = [
   { label: '관내현황' },
 ]
 
-const headquarters = ref('hq')
-const division = ref('central-report')
-const unit = ref('eulji')
+const department = ref<DepartmentValue>({ level1: 'hq', level2: 'central-report', level3: 'eulji' })
 const updatedAt = '2024-09-01'
 const updatedBy = '홍길동'
 
@@ -35,9 +34,7 @@ const { departmentInfo, districtInfo, patrolZones, workTypeOptions, regionOption
   </PageHeader>
 
   <DepartmentToolbar
-    v-model:headquarters="headquarters"
-    v-model:division="division"
-    v-model:unit="unit"
+    v-model:department="department"
     :updated-at="updatedAt"
     :updated-by="updatedBy"
   />

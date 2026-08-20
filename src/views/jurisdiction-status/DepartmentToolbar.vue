@@ -1,28 +1,30 @@
 <script setup lang="ts">
 import { toast } from 'vue-sonner'
-import SelectField from '@/components/custom/select/SelectField.vue'
+import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
+import type { DepartmentNode, DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import { Button } from '@/components/custom/button'
-import type { SelectOption } from './useJurisdictionStatusForm'
 import styles from './toolbar.module.css'
 
 interface Props {
-  headquarters: string
-  division: string
-  unit: string
+  department: DepartmentValue
   updatedAt: string
   updatedBy: string
 }
 
-const headquartersOptions: SelectOption[] = [{ label: '본청', value: 'hq' }]
-const divisionOptions: SelectOption[] = [{ label: '중앙보고', value: 'central-report' }]
-const unitOptions: SelectOption[] = [{ label: '을지지구대', value: 'eulji' }]
+const departmentTree: DepartmentNode[] = [
+  {
+    label: '본청',
+    value: 'hq',
+    children: [
+      { label: '중앙보고', value: 'central-report', children: [{ label: '을지지구대', value: 'eulji' }] },
+    ],
+  },
+]
 
 defineProps<Props>()
 
 const emit = defineEmits<{
-  (e: 'update:headquarters', value: string): void
-  (e: 'update:division', value: string): void
-  (e: 'update:unit', value: string): void
+  (e: 'update:department', value: DepartmentValue): void
 }>()
 
 function onPrint() {
@@ -36,31 +38,14 @@ function onSave() {
 
 <template>
   <div :class="styles.toolbar">
-    <div :class="styles.deptSelects" role="group" aria-label="부서 선택">
+    <div :class="styles.deptSelects">
       <span :class="styles.deptLabel">부서</span>
-      <SelectField
-        :model-value="headquarters"
-        :options="headquartersOptions"
+      <DepartmentCascadeSelect
+        :model-value="department"
+        :tree="departmentTree"
         size="sm"
-        :trigger-class="styles.deptSelect"
-        class="!space-y-0"
-        @update:model-value="(v) => emit('update:headquarters', String(v))"
-      />
-      <SelectField
-        :model-value="division"
-        :options="divisionOptions"
-        size="sm"
-        :trigger-class="styles.deptSelect"
-        class="!space-y-0"
-        @update:model-value="(v) => emit('update:division', String(v))"
-      />
-      <SelectField
-        :model-value="unit"
-        :options="unitOptions"
-        size="sm"
-        :trigger-class="styles.deptSelect"
-        class="!space-y-0"
-        @update:model-value="(v) => emit('update:unit', String(v))"
+        :select-class="styles.deptSelect"
+        @update:model-value="(v) => emit('update:department', v)"
       />
     </div>
 

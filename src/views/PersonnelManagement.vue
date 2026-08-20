@@ -7,6 +7,8 @@ import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
+import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
+import type { DepartmentNode, DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
@@ -31,6 +33,17 @@ const navItems = [
   { label: '지역경찰', path: '/lpo' },
   { label: '인사관리' },
 ]
+
+const departmentTree: DepartmentNode[] = [
+  {
+    label: '본청',
+    value: 'hq',
+    children: [
+      { label: '중앙보고', value: 'central-report', children: [{ label: '일선부서', value: 'front-line' }] },
+    ],
+  },
+]
+const department = ref<DepartmentValue>({ level1: 'hq', level2: 'central-report', level3: 'front-line' })
 
 const listColumns = [
   { key: 'no', label: '번호', width: '7rem' },
@@ -104,29 +117,9 @@ function removeSelectedTransfers() {
 
   <div :class="styles.toolbar">
     <div :class="styles.toolbarTop">
-      <div :class="styles.searchRow" role="group" aria-label="부서 선택">
+      <div :class="styles.searchRow">
         <span :class="styles.searchLabel">부서</span>
-        <SelectField
-          model-value="hq"
-          :options="[{ label: '본청', value: 'hq' }]"
-          size="sm"
-          :trigger-class="styles.select"
-          class="!space-y-0"
-        />
-        <SelectField
-          model-value="central-report"
-          :options="[{ label: '중앙보고', value: 'central-report' }]"
-          size="sm"
-          :trigger-class="styles.select"
-          class="!space-y-0"
-        />
-        <SelectField
-          model-value="front-line"
-          :options="[{ label: '일선부서', value: 'front-line' }]"
-          size="sm"
-          :trigger-class="styles.select"
-          class="!space-y-0"
-        />
+        <DepartmentCascadeSelect v-model="department" :tree="departmentTree" size="sm" :select-class="styles.select" />
       </div>
       <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
     </div>

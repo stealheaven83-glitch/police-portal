@@ -1,0 +1,132 @@
+/* 장비관리 페이지 전용 레이아웃. 1rem = 10px 기준 (전역 리셋). */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+}
+
+.deptGroup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+.toggleButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--Text-body_1, #33363d);
+}
+
+.listActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin-top: 1.6rem;
+}
+
+.tableSection {
+  margin-top: 1.2rem;
+}
+
+/* -------------------------------------------------------------- 상세 모달 */
+.requiredDot {
+  margin-left: 0.2rem;
+  color: var(--Base--point, #d32f2f);
+}
+
+.requiredDot::before {
+  content: '•';
+}
+
+.legend {
+  margin-bottom: 1.2rem;
+  font-size: 1.3rem;
+  color: var(--Base--point, #d32f2f);
+}
+
+.hint {
+  font-size: 1.3rem;
+  color: var(--Base--point, #d32f2f);
+  white-space: nowrap;
+}
+
+.tempVehicleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+/* -------------------------------------------------------------- 112차량 조회 팝업 */
+.searchRow {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.6rem;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+}
+
+.vehicleTableWrap {
+  max-height: 32rem;
+  overflow-y: auto;
+  border-top: 2px solid var(--Text-body_0, #1e2124);
+}
+
+.vehicleTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.vehicleTable th,
+.vehicleTable td {
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid var(--Border_gray03, #e6e8ea);
+  font-size: 1.4rem;
+  text-align: center;
+  color: var(--Text-body_1, #33363d);
+}
+
+.vehicleTable th {
+  position: sticky;
+  top: 0;
+  background: var(--Background-gray01, #f5f6f8);
+  color: var(--Text-body_0, #1e2124);
+  font-weight: 600;
+}
+
+.vehicleRow {
+  cursor: pointer;
+}
+
+.vehicleRow:hover {
+  background: var(--Surface-primary, #eef4fb);
+}
+
+.vehicleRowSelected {
+  background: var(--Surface-primary, #eef4fb);
+  color: var(--Base-primary, #0054a6);
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------- 반응형 */
+@media (max-width: 48rem) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .listActions {
+    justify-content: flex-start;
+  }
+}

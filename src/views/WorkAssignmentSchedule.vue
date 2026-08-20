@@ -6,6 +6,8 @@ import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
+import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
+import type { DepartmentNode, DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
@@ -43,9 +45,16 @@ const {
   shiftWorkDate,
 } = useWorkSchedule()
 
-const headquarters = ref('hq')
-const division = ref('central-report')
-const unit = ref('all')
+const departmentTree: DepartmentNode[] = [
+  {
+    label: '본청',
+    value: 'hq',
+    children: [
+      { label: '중앙보고', value: 'central-report', children: [{ label: '전체', value: 'all' }] },
+    ],
+  },
+]
+const department = ref<DepartmentValue>({ level1: 'hq', level2: 'central-report', level3: 'all' })
 
 const volunteerSelection = ref<Set<number>>(new Set())
 function toggleVolunteerSelection(id: number, checked: boolean) {
@@ -110,26 +119,9 @@ function openAssignCell(rowLabel: string, slot: string) {
   </PageHeader>
 
   <div class="flex items-center justify-between mb-5">
-    <div  class="flex items-center gap-2" role="group" aria-label="부서 선택">
-      <SelectField
-        :model-value="headquarters"
-        :options="[{ label: '본청', value: 'hq' }]"
-        size="sm"
-        trigger-class="w-40"
-        label="부서"
-      />
-      <SelectField
-        :model-value="division"
-        :options="[{ label: '중앙보고', value: 'central-report' }]"
-        size="sm"
-        trigger-class="w-40"
-      />
-      <SelectField
-        :model-value="unit"
-        :options="[{ label: '전체', value: 'all' }]"
-        size="sm"
-        trigger-class="w-40"
-      />
+    <div class="flex items-center gap-2">
+      <span class="text-[1.5rem] font-semibold text-[var(--Text-body_0)]">부서</span>
+      <DepartmentCascadeSelect v-model="department" :tree="departmentTree" size="sm" select-class="w-40" />
     </div>
     <div class="flex gap-3">
       <Button type="button" variant="tertiary2" size="sm" class="w-30" @click="openManageDialog('甲지 일괄 출력')">甲지 일괄 출력</Button>
