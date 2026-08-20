@@ -149,11 +149,7 @@ body {
 
 *:focus {
   outline: 0.2rem solid var(--Base-secondary-dark);
-<<<<<<< Updated upstream
   outline-offset: 0.2rem;
-=======
-  outline-offset: 0;
->>>>>>> Stashed changes
   transition: outline 0s, box-shadow 0s !important;
 }
 
