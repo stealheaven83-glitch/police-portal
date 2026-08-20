@@ -1,7 +1,6 @@
 // 필요한 Vue 컴포넌트와 아이콘들을 임포트
 import type { Component } from 'vue';
 import {
-  HomeIcon,
   LayoutDashboardIcon,
   //UsersIcon,
   //SettingsIcon,
@@ -64,9 +63,9 @@ export const mainLayoutConfig: LayoutConfig = {
   headerTitle: 'vue starter 샘플',
   menuItems: [
     {
-      path: '/sample',
-      title: '홈',
-      icon: HomeIcon,
+      path: '/component/pub-list',
+      title: '퍼블리스트',
+      icon: FileTextIcon,
     },
     {
       title: '샘플 레이아웃',

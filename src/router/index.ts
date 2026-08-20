@@ -81,15 +81,15 @@ const router = createRouter({
                 title: '개인수첩'
             }
         },
-        // {
-        //     path: '/sample',
-        //     name: 'sample-home',
-        //     component: () => import('../views/SampleHome.vue'),
-        //     meta: {
-        //         layout: 'MainLayout',
-        //         title: '홈 (Scaffolding)'
-        //     }
-        // },
+        {
+            path: '/component/pub-list',
+            name: 'pub-list',
+            component: () => import('../views/component-sample/PubList.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: '퍼블 목록'
+            }
+        },
         {
             path: '/layout-sample',
             name: 'layout-sample',
