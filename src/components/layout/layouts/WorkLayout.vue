@@ -4,7 +4,7 @@
   main 안쪽 내용은 #main 슬롯으로 라우트별 화면이 채운다.
 -->
 <template>
-  <div class="wrap">
+  <div class="wrap sub-page">
     <PortalHeader />
     <main class="work-main flex pb-9 relative flex-1">
       <SideMenu :items="leftMenuDummyData" />

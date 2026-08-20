@@ -77,8 +77,6 @@ const advancedSearchOpen = ref(true);
     <template #right>
       <Breadcrumb :items="navItems" />
     </template>
-
-
   </PageHeader>
   <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
     <template #department>
@@ -141,7 +139,7 @@ const advancedSearchOpen = ref(true);
             label-position="left"
             size="sm"
             triggerClass="w-30"
-          />
+          /> 
         <InputField2 label="진단자" size="sm" label-position="left" inputClass="w-30"></InputField2>
       </div>
     </template>
@@ -149,7 +147,6 @@ const advancedSearchOpen = ref(true);
       <Button variant="secondary" size="sm" class="w-25">검색</Button>
     </template>
   </SearchWrapper>
-  <button @click="vIf = true">클릭</button>
   <LayoutSplite :count="3" :widths="[10, 70, 20]">
     <template #layout-1>
       <LayoutHeader title="부서" >

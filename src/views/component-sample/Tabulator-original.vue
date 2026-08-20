@@ -149,6 +149,16 @@ import { TabulatorFull as Tabulator } from 'tabulator-tables'
 import 'tabulator-tables/dist/css/tabulator.min.css'
 import '@/assets/css/tabulator-theme.css'
 import { Button as CustomBtn } from '@/components/custom/button'
+import { buttonVariants, ButtonGroup, type ButtonCaseItem, type ButtonVariants } from '@/components/custom/button'
+import { Checkbox as CustomCheckbox } from '@/components/custom/checkbox'
+import { Pagination } from '@/components/custom/pagination'
+import { cn } from '@/lib/utils'
+import { VueDatePicker } from '@vuepic/vue-datepicker'
+import { ko } from 'date-fns/locale'
+import '@vuepic/vue-datepicker/dist/main.css'
+import '@/components/custom/date-picker/DatePicker.css'
+import SelectField from '@/components/custom/select/SelectField.vue'
+import { Switch } from '@/components/custom/switch'
 
 /* ------------------------------------------------------------------ *
  * 기능 지원 요약 매트릭스
@@ -198,6 +208,7 @@ const initialData: Employee[] = [
 ]
 
 const deptValues = ['개발', '디자인', '기획', '마케팅', '영업']
+const deptOptions = deptValues.map((v) => ({ label: v, value: v }))
 
 /* ------------------------------------------------------------------ *
  * 반응형 상태
@@ -265,6 +276,235 @@ function watchVScrollBorder(hostEl: HTMLElement | null) {
 let nextId = initialData.length + 1
 
 /* ------------------------------------------------------------------ *
+ * 일괄 선택 체크박스: custom/checkbox(Checkbox.vue)를 셀/헤더에 마운트
+ * - Checkbox.vue 는 상태(선택/해제/부분선택)를 갖는 상호작용 컴포넌트라
+ *   단순 클래스 복사가 아니라 createApp 으로 실제 마운트해 Tabulator 의
+ *   행 선택 상태와 양방향으로 동기화한다.
+ * - 셀/헤더가 파괴될 때 app.unmount() 가 필요하므로 행(row) 기준으로 추적한다.
+ * ------------------------------------------------------------------ */
+const rowCheckboxRegistry = new Map<any, { app: App; state: Ref<boolean> }>()
+let headerCheckboxApp: { app: App; state: Ref<'checked' | 'unchecked' | 'indeterminate'> } | null = null
+
+function rowCheckboxFormatter(cell: any) {
+  const row = cell.getRow()
+  const container = document.createElement('div')
+  container.classList.add('grid-checkbox-cell')
+  container.addEventListener('click', (e) => e.stopPropagation())
+
+  const state = ref(row.isSelected())
+
+  const app = createApp({
+    render: () =>
+      h(CustomCheckbox, {
+        modelValue: state.value,
+        'onUpdate:modelValue': (val: boolean | 'indeterminate') => {
+          const next = val === true
+          state.value = next
+          next ? row.select() : row.deselect()
+        },
+      }),
+  })
+  app.mount(container)
+  rowCheckboxRegistry.set(row, { app, state })
+
+  return container
+}
+
+function headerCheckboxFormatter() {
+  const container = document.createElement('div')
+  container.classList.add('grid-checkbox-cell')
+  container.addEventListener('click', (e) => e.stopPropagation())
+
+  const state = ref<'checked' | 'unchecked' | 'indeterminate'>('unchecked')
+
+  const app = createApp({
+    render: () =>
+      h(CustomCheckbox, {
+        variant: state.value === 'indeterminate' ? 'minus' : 'default',
+        modelValue: state.value !== 'unchecked',
+        'onUpdate:modelValue': () => {
+          state.value === 'unchecked' ? mainTable?.selectRow() : mainTable?.deselectRow()
+        },
+      }),
+  })
+  app.mount(container)
+  headerCheckboxApp = { app, state }
+
+  return container
+}
+
+/* 행 선택 여부가 바뀔 때마다(선택/해제/추가/삭제 등) 모든 체크박스 상태를 동기화 */
+function syncSelectionCheckboxes() {
+  if (!mainTable) return
+
+  rowCheckboxRegistry.forEach((entry, row) => {
+    entry.state.value = row.isSelected()
+  })
+
+  if (headerCheckboxApp) {
+    const totalCount = mainTable.getRows().length
+    const selectedCount = mainTable.getSelectedRows().length
+    headerCheckboxApp.state.value =
+      selectedCount === 0 ? 'unchecked' : selectedCount === totalCount ? 'checked' : 'indeterminate'
+  }
+}
+
+function unmountRowCheckbox(row: any) {
+  const entry = rowCheckboxRegistry.get(row)
+  if (entry) {
+    entry.app.unmount()
+    rowCheckboxRegistry.delete(row)
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * 입사일 셀: custom/date-picker 와 동일한 VueDatePicker 를 셀에 직접 마운트
+ * - '비고' 컬럼(memoInputFormatter)처럼 클릭해서 편집 모드로 들어가는 대신,
+ *   셀에 항상 달력 아이콘 + 선택된 날짜 텍스트가 보이는 형태로 구성한다.
+ * - 체크박스와 마찬가지로 상호작용 컴포넌트를 마운트하므로 행(row) 기준으로
+ *   추적해 행이 삭제/재구성될 때 app.unmount() 로 정리한다.
+ * ------------------------------------------------------------------ */
+const dateCellRegistry = new Map<any, App>()
+
+function toDate(value: string | null | undefined): Date | null {
+  return value ? new Date(value) : null
+}
+
+function toIsoDate(date: Date | null): string {
+  if (!date) return ''
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
+}
+
+function dateCellFormatter(cell: any) {
+  const row = cell.getRow()
+  const container = document.createElement('div')
+  container.classList.add('grid-date-cell')
+  container.addEventListener('click', (e) => e.stopPropagation())
+
+  const dateValue = ref<Date | null>(toDate(cell.getValue()))
+
+  const app = createApp({
+    render: () =>
+      h(
+        VueDatePicker,
+        {
+          modelValue: dateValue.value,
+          'onUpdate:modelValue': (val: Date | null) => {
+            dateValue.value = val
+            cell.setValue(toIsoDate(val)) // 값 반영 + cellEdited 이벤트 발생
+          },
+          teleport: true,
+          timeConfig: { enableTimePicker: false },
+          formats: { input: (date: Date) => toIsoDate(date) },
+          locale: ko,
+          autoApply: true,
+          clearable: false,
+        },
+        {
+          'input-icon': () => h('img', { src: '../../../../public/portal/asset/images/icon/ico_calendar.svg', alt: '달력' }),
+        },
+      ),
+  })
+  app.mount(container)
+  dateCellRegistry.set(row, app)
+
+  return container
+}
+
+function unmountDateCell(row: any) {
+  const app = dateCellRegistry.get(row)
+  if (app) {
+    app.unmount()
+    dateCellRegistry.delete(row)
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * 부서 셀: custom/select 의 SelectField 를 셀에 직접 마운트
+ * - 클릭 시 편집모드로 들어가는 대신, 셀에 항상 셀렉트 박스가 보이는 형태로 구성한다.
+ * - 날짜 셀과 마찬가지로 상호작용 컴포넌트를 마운트하므로 행(row) 기준으로
+ *   추적해 행이 삭제/재구성될 때 app.unmount() 로 정리한다.
+ * ------------------------------------------------------------------ */
+const deptCellRegistry = new Map<any, App>()
+
+function deptSelectFormatter(cell: any) {
+  const row = cell.getRow()
+  const container = document.createElement('div')
+  container.classList.add('grid-select-cell')
+  container.addEventListener('click', (e) => e.stopPropagation())
+
+  const deptValue = ref<string>(cell.getValue() ?? '')
+
+  const app = createApp({
+    render: () =>
+      h(SelectField, {
+        modelValue: deptValue.value,
+        options: deptOptions,
+        size: 'xs',
+        placeholder: '부서 선택',
+        'onUpdate:modelValue': (val: string | number) => {
+          deptValue.value = val as string
+          cell.setValue(val) // 값 반영 + cellEdited 이벤트 발생
+        },
+      }),
+  })
+  app.mount(container)
+  deptCellRegistry.set(row, app)
+
+  return container
+}
+
+function unmountDeptCell(row: any) {
+  const app = deptCellRegistry.get(row)
+  if (app) {
+    app.unmount()
+    deptCellRegistry.delete(row)
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * 재직 셀: custom/switch 의 Switch 를 셀에 직접 마운트
+ * - tickCross 대신 항상 스위치 형태로 표시하고, 토글 시 바로 값을 반영한다.
+ * ------------------------------------------------------------------ */
+const activeSwitchRegistry = new Map<any, { app: App; state: Ref<boolean> }>()
+
+function activeSwitchFormatter(cell: any) {
+  const row = cell.getRow()
+  const container = document.createElement('div')
+  container.classList.add('grid-switch-cell')
+  container.addEventListener('click', (e) => e.stopPropagation())
+
+  const state = ref(!!cell.getValue())
+
+  const app = createApp({
+    render: () =>
+      h(Switch, {
+        modelValue: state.value,
+        'onUpdate:modelValue': (val: boolean) => {
+          state.value = val
+          cell.setValue(val) // 값 반영 + cellEdited 이벤트 발생
+        },
+      }),
+  })
+  app.mount(container)
+  activeSwitchRegistry.set(row, { app, state })
+
+  return container
+}
+
+function unmountActiveSwitch(row: any) {
+  const entry = activeSwitchRegistry.get(row)
+  if (entry) {
+    entry.app.unmount()
+    activeSwitchRegistry.delete(row)
+  }
+}
+
+/* ------------------------------------------------------------------ *
+>>>>>>> Stashed changes:src/components/custom/Tabulator/Tabulator.vue
  * 메인 그리드 컬럼 정의
  * ------------------------------------------------------------------ */
 function buildMainColumns() {
@@ -292,9 +532,10 @@ function buildMainColumns() {
     {
       title: '부서',
       field: 'dept',
-      minWidth: 100,
-      editor: 'list',
-      editorParams: { values: deptValues },
+      width: 160, // 셀렉트 박스가 항상 딱 맞게 보이도록 고정 너비
+      hozAlign: 'center',
+      // 클릭 시 편집모드로 들어가는 대신, 셀에 항상 SelectField 컴포넌트를 표시
+      formatter: deptSelectFormatter,
       responsive: 2,
     },
     { title: '직급', field: 'position', minWidth: 90, editor: 'input', responsive: 3 },
@@ -344,14 +585,13 @@ function buildMainColumns() {
       field: 'active',
       width: 70,
       hozAlign: 'center',
-      formatter: 'tickCross',
-      editor: 'tickCross',
+      formatter: activeSwitchFormatter,
       responsive: 1,
     },
     {
       title: '비고',
       field: 'memo',
-      minWidth: 140,
+      width: 100,
       hozAlign: 'center',
       // editor 대신 formatter 에서 직접 <input> 을 그려서, 클릭 없이 항상 입력창이 보이도록 함
       formatter: memoInputFormatter,
@@ -360,8 +600,34 @@ function buildMainColumns() {
   ]
 }
 
-/* '비고' 컬럼용: 편집 모드 진입 없이 셀 안에 항상 텍스트 input 을 표시 */
+/* '관리' 컬럼용: Button.vue 가 만드는 것과 동일한 클래스 조합(cva)을 그대로 사용해
+ * 진짜 버튼 엘리먼트를 그려 넣는다. (컴포넌트를 마운트하지 않고 클래스만 재사용) */
+function detailButtonFormatter(cell: any) {
+  const btn = document.createElement('button')
+  btn.type = 'button'
+  btn.className = cn(buttonVariants({ variant: 'tertiary' }))
+  btn.textContent = '상세보기'
+
+  // 버튼 클릭이 행 선택 등 그리드 기본 동작으로 전파되지 않도록 차단
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation()
+    const data = cell.getRow().getData()
+    console.log('상세보기 클릭:', data)
+  })
+
+  return btn
+}
+
+/* '비고' 컬럼용: 편집 모드 진입 없이 셀 안에 항상 텍스트 input(+ 지우기 버튼)을 표시 */
+
 function memoInputFormatter(cell: any) {
+  const wrapper = document.createElement('div')
+  wrapper.style.position = 'relative'
+  wrapper.style.width = '100%'
+  wrapper.style.height = '100%'
+  // 그리드의 행 선택/드래그 등 다른 클릭 핸들러로 이벤트가 새는 것을 방지
+  wrapper.addEventListener('click', (e) => e.stopPropagation())
+
   const input = document.createElement('input')
   input.type = 'text'
   input.classList.add('input-grid')
@@ -371,14 +637,44 @@ function memoInputFormatter(cell: any) {
   input.style.boxSizing = 'border-box'
   input.style.background = 'transparent'
   input.style.textAlign = 'center'
+  input.style.paddingRight = '2.2rem' // 지우기 버튼과 텍스트가 겹치지 않도록 여백 확보
 
-  // 그리드의 행 선택/드래그 등 다른 클릭 핸들러로 이벤트가 새는 것을 방지
-  input.addEventListener('click', (e) => e.stopPropagation())
+  const clearBtn = document.createElement('img')
+  clearBtn.src = '/portal/asset/images/icon/ico_clear_16.svg'
+  clearBtn.alt = '지우기'
+  clearBtn.style.position = 'absolute'
+  clearBtn.style.top = '50%'
+  clearBtn.style.right = '0.6rem'
+  clearBtn.style.transform = 'translateY(-50%)'
+  clearBtn.style.width = '1.6rem'
+  clearBtn.style.height = '1.6rem'
+  clearBtn.style.cursor = 'pointer'
+  clearBtn.style.display = input.value ? 'block' : 'none'
+
+  const toggleClearBtn = () => {
+    clearBtn.style.display = input.value ? 'block' : 'none'
+  }
+
+  input.addEventListener('input', toggleClearBtn)
   input.addEventListener('change', () => {
     cell.setValue(input.value) // 값 반영 + cellEdited 이벤트 발생
   })
 
-  return input
+  // mousedown 시점에 preventDefault 로 input 의 blur(→change)를 막아야 함.
+  // click 을 쓰면 blur 로 change 가 먼저 발생해 셀이 재포맷되면서 버튼 DOM 이 교체되어
+  // click 이벤트가 유실되고, 두 번 눌러야 지워지는 문제가 생긴다.
+  clearBtn.addEventListener('mousedown', (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    input.value = ''
+    toggleClearBtn()
+    input.focus()
+    cell.setValue('') // 값 반영 + cellEdited 이벤트 발생
+  })
+
+  wrapper.appendChild(input)
+  wrapper.appendChild(clearBtn)
+  return wrapper
 }
 
 /* 날짜 컬럼용 커스텀 에디터: 브라우저 기본 달력(input[type=date])을 셀 안에 띄움 */
@@ -464,7 +760,73 @@ function toggleColumn(field: string) {
 }
 
 /* ------------------------------------------------------------------ *
+
  * 마운트: 그리드 4개 생성
+=======
+ * 버튼 컴포넌트 케이스 그리드
+ * - variant × size 조합(케이스) 마다 실제 <button>(buttonVariants 클래스)을
+ *   셀에 그려 넣어, 케이스별 렌더링 결과를 그리드로 한눈에 비교한다.
+ * ------------------------------------------------------------------ */
+const buttonCaseVariants: NonNullable<ButtonVariants['variant']>[] = [
+  'default',
+  'primary',
+  'secondary',
+  'tertiary',
+  'tertiary2',
+  'destructive',
+  'outline',
+  'ghost',
+  'link',
+  'text',
+]
+const buttonCaseSizes: NonNullable<ButtonVariants['size']>[] = ['xxs', 'xs', 'sm', 'default']
+
+function buttonCaseFormatter(size: NonNullable<ButtonVariants['size']>) {
+  return (cell: any) => {
+    const variant = cell.getRow().getData().variant as NonNullable<ButtonVariants['variant']>
+    const btn = document.createElement('button')
+    btn.type = 'button'
+    btn.className = cn(buttonVariants({ variant, size }))
+    btn.textContent = '버튼'
+    // 케이스 미리보기 용도이므로 클릭이 행 선택 등으로 전파되지 않도록 차단
+    btn.addEventListener('click', (e) => e.stopPropagation())
+    return btn
+  }
+}
+
+function buildButtonCaseColumns() {
+  return [
+    { title: 'variant', field: 'variant', width: 110, hozAlign: 'center', headerSort: false, frozen: true },
+    ...buttonCaseSizes.map((size) => ({
+      title: `size: ${size}`,
+      field: `size_${size}`,
+      hozAlign: 'center',
+      headerSort: false,
+      formatter: buttonCaseFormatter(size),
+    })),
+  ]
+}
+
+/* ------------------------------------------------------------------ *
+ * 종합 그리드 툴바에 쓸 버튼 케이스
+ * - 공용 ButtonGroup에 이 배열만 넘기면 되고, 다른 페이지는 각자 다른
+ *   조합(variant/size/액션)의 배열을 만들어 쓰면 된다.
+ * ------------------------------------------------------------------ */
+const mainToolbarButtons: ButtonCaseItem[] = [
+  { key: 'add-row', label: '행 추가', variant: 'default', size: 'sm', onClick: addRow },
+  { key: 'select-all', label: '전체 선택', variant: 'primary', size: 'sm', onClick: selectAll },
+  { key: 'deselect-all', label: '선택 해제', variant: 'secondary', size: 'sm', onClick: deselectAll },
+  { key: 'delete-selected', label: '선택 삭제', variant: 'destructive', size: 'sm', onClick: deleteSelected },
+  { key: 'reset-changes', label: '변경사항 초기화', variant: 'tertiary2', size: 'sm', onClick: resetChanges },
+  { key: 'reset-columns', label: '컬럼 초기화', variant: 'text', size: 'sm', onClick: resetColumns },
+  { key: 'layout-fit-columns', label: '컬럼 맞춤', variant: 'outline', size: 'sm', onClick: () => setLayout('fitColumns') },
+  { key: 'layout-fit-data', label: '데이터 맞춤', variant: 'ghost', size: 'sm', onClick: () => setLayout('fitData') },
+  { key: 'layout-fit-data-stretch', label: '데이터 확장', variant: 'link', size: 'sm', onClick: () => setLayout('fitDataStretch') },
+]
+
+/* ------------------------------------------------------------------ *
+ * 마운트: 그리드 6개 생성
+>>>>>>> Stashed changes:src/components/custom/Tabulator/Tabulator.vue
  * ------------------------------------------------------------------ */
 onMounted(() => {
   /* 1) 종합 그리드 */
@@ -497,7 +859,48 @@ onMounted(() => {
   })
   mainTable.on('tableBuilt', () => watchVScrollBorder(mainTableEl.value))
 
+
   /* 2) & 3) 그리드 간 드래그 복사 (원본 → 대상) */
+
+  // 페이지네이션 동기화: 페이지 이동/데이터 변경 시 custom/pagination 컴포넌트에 표시할 상태 갱신
+  mainTable.on('pageLoaded', (pageno: number) => {
+    currentPage.value = pageno
+  })
+  mainTable.on('dataProcessed', () => {
+    totalElements.value = mainTable.getDataCount()
+  })
+
+  // 선택 상태 동기화: 행 체크박스 클릭/selectAll/deselectAll 등으로 선택이 바뀔 때마다
+  // 모든 행 체크박스 + 헤더 체크박스(indeterminate 포함)를 다시 계산
+  mainTable.on('rowSelectionChanged', () => {
+    syncSelectionCheckboxes()
+  })
+  // 행 추가 시 헤더 체크박스의 전체 개수 기준이 바뀌므로 함께 재계산
+  mainTable.on('rowAdded', () => {
+    syncSelectionCheckboxes()
+    totalElements.value = mainTable.getDataCount()
+  })
+  // 행 삭제 시 해당 행에 마운트된 체크박스/날짜 Vue 앱을 정리(unmount)
+  mainTable.on('rowDeleted', (row: any) => {
+    unmountRowCheckbox(row)
+    unmountDateCell(row)
+    unmountDeptCell(row)
+    unmountActiveSwitch(row)
+    syncSelectionCheckboxes()
+    totalElements.value = mainTable.getDataCount()
+  })
+
+  /* 2) 버튼 컴포넌트 케이스 그리드 (variant × size) */
+  buttonCaseTable = new Tabulator(buttonCaseTableEl.value, {
+    data: buttonCaseVariants.map((variant) => ({ variant })),
+    layout: 'fitDataFill',
+    height: 'auto',
+    columnDefaults: { headerSort: false },
+    columns: buildButtonCaseColumns(),
+  })
+  buttonCaseTable.on('tableBuilt', () => watchVScrollBorder(buttonCaseTableEl.value))
+
+  /* 3) & 4) 그리드 간 드래그 복사 (원본 → 대상) */
   const connectColumns = [
     { rowHandle: true, formatter: 'handle', headerSort: false, width: 40, frozen: true },
     { title: '사번', field: 'id', width: 70, hozAlign: 'center' },
@@ -564,6 +967,16 @@ onBeforeUnmount(() => {
   rightTable?.destroy()
   groupTable?.destroy()
   scrollBorderObservers.forEach((ro) => ro.disconnect())
+  rowCheckboxRegistry.forEach((entry) => entry.app.unmount())
+  rowCheckboxRegistry.clear()
+  headerCheckboxApp?.app.unmount()
+  headerCheckboxApp = null
+
+  dateCellRegistry.forEach((app) => app.unmount())
+  dateCellRegistry.clear()
+
+  deptCellRegistry.forEach((app) => app.unmount())
+  deptCellRegistry.clear()
 })
 </script>
 

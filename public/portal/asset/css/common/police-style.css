@@ -109,9 +109,7 @@
 
   --disabled-input-bg: #E6E8EA;
   --disabled-input-border: #B1B8BE;
-  --disabled-input-text-color: #6D7882;
-
-  
+  --disabled-input-text-color: #6D7882; 
 }
 
 /* reset */
@@ -151,7 +149,11 @@ body {
 
 *:focus {
   outline: 0.2rem solid var(--Base-secondary-dark);
+<<<<<<< Updated upstream
   outline-offset: 0.2rem;
+=======
+  outline-offset: 0;
+>>>>>>> Stashed changes
   transition: outline 0s, box-shadow 0s !important;
 }
 
@@ -488,6 +490,10 @@ caption {
 header .header-in .header-container {
   border-bottom: 1px solid var(--Border_gray0);
 }
+.wrap.sub-page .header-container .inner{
+  padding:0 4rem;
+  max-width:none;
+}
 header .header-in .header-container .header-branding {
   display: flex;
   justify-content: space-between;
@@ -515,6 +521,7 @@ header .header-in .header-container .header-branding .header-actions .btn-navi i
 header .header-in .header-container .main-menu .inner {
   display: flex;
   justify-content: space-between;
+  align-items:center;
 }
 header .header-in .header-container .main-menu .inner .gnb-menu {
   flex: 1;

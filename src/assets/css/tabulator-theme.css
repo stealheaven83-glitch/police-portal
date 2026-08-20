@@ -145,6 +145,13 @@
   text-align: center;
 }
 
+/* 재직 셀에 마운트된 Switch: 셀 중앙에 정렬 */
+.tabulator .grid-switch-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* 입사일 셀에 마운트된 VueDatePicker: 셀 안에 딱 맞는 컴팩트한 입력 박스 */
 .tabulator .grid-date-cell {
   width: 100%;
@@ -155,7 +162,7 @@
 }
 
 .tabulator .grid-date-cell .dp--input {
-  height: 3.6rem;
+  height: 4rem;
   border: 1px solid var(--Border_input01);
   border-radius: 0.6rem;
   font-size: 14px;
@@ -163,6 +170,15 @@
   padding-inline-start: 1.2rem;
   font-family: "Pretendard GOV", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
   font-size: 1.5rem;
+}
+
+/* 부서 셀에 마운트된 SelectField: 셀 안에 딱 맞는 컴팩트한 셀렉트 박스 */
+.tabulator .grid-select-cell {
+  width: 100%;
+}
+
+.tabulator .grid-select-cell [data-slot="select-trigger"] {
+  height: 4rem;
 }
 
 .tabulator .tabulator-tableholder .tabulator-placeholder {
