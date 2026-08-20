@@ -66,6 +66,7 @@
 .dp--month-year-wrap{
   gap:1rem;
   justify-content:center;
+  font-family: "Pretendard GOV", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 .dp--month-year-select{
   padding-right:2.8rem;

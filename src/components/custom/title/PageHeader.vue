@@ -17,7 +17,7 @@ const props = withDefaults(defineProps<Props>(), {
 <template>
   <div
     :class="cn(
-      'flex items-center justify-between gap-4 py-4 max-[768px]:flex-col-reverse max-[768px]:items-start',
+      'flex items-center justify-between gap-5 py-4 max-[768px]:flex-col-reverse max-[768px]:items-start',
       props.class
     )"
   >

@@ -72,21 +72,21 @@ export const mainLayoutConfig: LayoutConfig = {
       title: '샘플 레이아웃',
       icon: LayoutDashboardIcon,
       children: [
-        {
-          path: '/single-layout',
-          title: '싱글 레이아웃 샘플',
-          icon: Square,
-        },
+        // {
+        //   path: '/single-layout',
+        //   title: '싱글 레이아웃 샘플',
+        //   icon: Square,
+        // },
         {
           path: '/component/PC-COM-2201',
           title: '더블 레이아웃 샘플',
           icon: Layers2,
         },
-        {
-          path: '/layout-sample',
-          title: '데이터 샘플',
-          icon: FileTextIcon,
-        },
+        // {
+        //   path: '/layout-sample',
+        //   title: '데이터 샘플',
+        //   icon: FileTextIcon,
+        // },
       ]
     },
     {

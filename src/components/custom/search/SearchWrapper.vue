@@ -1,13 +1,13 @@
 <template>
     <div class="flex flex-col gap-3 flex-1 min-w-0">
-      <div v-if="$slots.department || collapsible" class="flex items-center justify-between gap-4 ">
-        <div :class="cn('flex items-center gap-4', props.departmentClass)">
+      <div v-if="$slots.department || collapsible" class="flex items-center gap-6 ">
+        <div :class="cn('flex items-center gap-2', props.departmentClass)">
           <slot name="department" />
         </div>
         <button
           v-if="collapsible"
           type="button"
-          class="inline-flex items-center gap-1 shrink-0 text-sm font-semibold text-[var(--Text-body_1)]"
+          class="inline-flex items-center gap-1 shrink-0 text-[15px] font-semibold text-[var(--Text-body_1)]"
           :aria-expanded="expanded"
           @click="toggle"
         >

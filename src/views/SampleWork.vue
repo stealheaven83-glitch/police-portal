@@ -85,7 +85,7 @@ const vIf = ref(false);
     <buton>자세히보기</buton>
   </div>
   <SearchWrapper>
-    <template #form>
+    <template #form>  
       <div class="flex mb-4 gap-9">
         <InputField2 label="관리번호" size="sm" label-position="left" inputClass="w-30"></InputField2>
         <InputField2 label="상호명" size="sm" label-position="left" inputClass="w-30"></InputField2>
@@ -114,8 +114,8 @@ const vIf = ref(false);
       <div class="flex gap-9">
         <div class="flex items-center">
           <DatePicker label="조회일자" labelPosition="left" size="sm" inputClass="w-[160px]"></DatePicker>
-          <span>~</span>
-          <DatePicker size="sm"></DatePicker>
+          <span class="px-3">~</span>
+          <DatePicker size="sm" inputClass="w-[160px]"></DatePicker>
         </div>
         <InputField2 label="진단일자" size="sm" label-position="left"></InputField2>
         <SelectField
