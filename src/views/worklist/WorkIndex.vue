@@ -228,7 +228,7 @@ const worklist = ref([
   { id: 121, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '순찰구역 상세', depth5: '', screenName: '순찰구역 상세 팝업창', screenId: 'PC-LPO-0604', path: '', status: '대기' },
   { id: 122, category: '스마트워크', depth1: '', depth2: '장비관리', depth3: '', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
   { id: 123, category: '스마트워크', depth1: '', depth2: '', depth3: '기동장비 탭', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
-  { id: 124, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '목록', depth5: '', screenName: '기동장비 목록', screenId: 'PC-LPO-0701', path: '', status: '대기' },
+  { id: 124, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '목록', depth5: '', screenName: '기동장비 목록', screenId: 'PC-LPO-0701', path: '/views/lpo/PC-LPO-0701', status: '대기' },
   { id: 125, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '등록/상세/수정', depth5: '', screenName: '기동장비 등록/상세/수정 팝업창', screenId: 'PC-LPO-0702', path: '', status: '대기' },
   { id: 126, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '', depth5: '112차량 조회', screenName: '112차량 조회 팝업창', screenId: 'PC-LPO-0703', path: '', status: '대기' },
   { id: 127, category: '스마트워크', depth1: '', depth2: '', depth3: '통신장비 탭', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
