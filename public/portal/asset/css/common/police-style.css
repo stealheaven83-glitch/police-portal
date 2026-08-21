@@ -109,7 +109,49 @@
 
   --disabled-input-bg: #E6E8EA;
   --disabled-input-border: #B1B8BE;
-  --disabled-input-text-color: #6D7882; 
+  --disabled-input-text-color: #6D7882;
+
+  /* Button (Figma: color/button/*) */
+  --Button-primary-fill: var(--Base-primary);
+  --Button-primary-fill-hover: #054887;
+  --Button-primary-fill-pressed: #0a3c70;
+  --Button-secondary-fill: var(--Text-body_1);
+  --Button-secondary-fill-hover: #33363d;
+  --Button-secondary-fill-pressed: var(--Text-body_0);
+  --Button-tertiary-pm-fill: #ffffff;
+  --Button-tertiary-pm-border: var(--Base-primary);
+  --Button-tertiary-pm-fill-hover: var(--Surface-primary);
+  --Button-tertiary-pm-fill-pressed: #dfeeff;
+  --Button-tertiary-bk-fill: #ffffff;
+  --Button-tertiary-bk-border: #58616a;
+  --Button-tertiary-bk-fill-hover: var(--Background-gray01);
+  --Button-tertiary-bk-fill-pressed: var(--Border_gray03);
+  --Button-disabled-fill: var(--Border_gray0);
+
+  /* Radius (Figma: radius/*) */
+  --Radius-small3: 0.4rem;   /* 4px */
+  --Radius-medium1: 0.6rem;  /* 6px */
+  --Radius-medium2: 0.6rem;  /* 6px */
+  --Radius-medium3: 0.8rem;  /* 8px */
+  --Radius-xlarge2: 1.2rem;  /* 12px */
+
+  /* Alert (Figma: color/{icon,text,surface,border}/{danger,warning,success,information}) */
+  --Alert-danger-icon: var(--danger);
+  --Alert-danger-text: #bd2c0f;
+  --Alert-danger-surface: #fdefec;
+  --Alert-danger-border: #fcdfd9;
+  --Alert-warning-icon: #9e6a00;
+  --Alert-warning-text: #8a5c00;
+  --Alert-warning-surface: #fff3db;
+  --Alert-warning-border: #ffe0a3;
+  --Alert-success-icon: var(--success);
+  --Alert-success-text: #00880b;
+  --Alert-success-surface: #e6f7e7;
+  --Alert-success-border: #cceecf;
+  --Alert-info-icon: #0b78cb;
+  --Alert-info-text: var(--info);
+  --Alert-info-surface: #e7f4fe;
+  --Alert-info-border: #d3ebfd;
 }
 
 /* reset */

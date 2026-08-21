@@ -98,7 +98,7 @@ function handleCancel() {
   <Dialog :open="open" @update:open="handleOpenChange">
     <DialogContent
       :show-close-button="showCloseButton"
-      class="px-10 py-6"
+      class="px-10 py-6 gap-0"
       :class="sizeClass"
       :style="sizeStyle"
       @pointer-down-outside="(e: Event) => persistent && e.preventDefault()"
@@ -120,7 +120,8 @@ function handleCancel() {
       </DialogHeader>
 
       <!-- 본문: 내용이 많으면 내부 스크롤 -->
-      <div class="flex-1 overflow-y-auto px-6 py-5">
+      <!-- <div class="flex-1 overflow-y-auto px-6 py-5"> -->
+      <div class="flex-1 overflow-y-auto">
         <slot />
       </div>
 
