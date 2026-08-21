@@ -1224,6 +1224,33 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   background:var(--Background-gray01);
   width: 100%;
 }
+.layout-wrap{
+  padding:2rem 2.4rem;
+  overflow-y:auto;
+}
+.layout-wrap::-webkit-scrollbar{
+  width:0.8rem;
+  height:0.8rem;
+}
+.layout-wrap::-webkit-scrollbar-track{
+  background:#F4F5F6;
+  border-radius:1.2rem;
+}
+.layout-wrap::-webkit-scrollbar-thumb{
+  border-radius:1.2rem;
+}
+/*하단 탭메뉴 */
+.tab-ul .tab-delete{
+  position:absolute;
+  right:1.2rem;
+  top:50%;
+  transform:translateY(-50%);
+  display:block;
+  padding-right:3.2rem;
+  width:2rem;
+  height:2rem;
+  background:url("../../images/icon/icon_tab_close.svg") no-repeat center/2rem auto;
+}
 /*dark-theme*/
 
 html.theme-dark body{
