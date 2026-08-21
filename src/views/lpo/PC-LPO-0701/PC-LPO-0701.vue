@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { ChevronDown } from 'lucide-vue-next'
+import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
@@ -32,6 +32,15 @@ const navItems = [
   { label: '지역경찰', path: '/lpo' },
   { label: '장비관리' },
 ]
+
+const selectItem = [
+  { label: '전체', value: 'all' },
+  { label: 'select1', value: 'select1' },
+  { label: 'select2', value: 'select2' },
+  { label: 'select3', value: 'select3' },
+]
+
+const advancedSearchOpen = ref(true);
 
 const department = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
 
@@ -98,19 +107,28 @@ function onSave() {
   </PageHeader>
 
   <div :class="styles.toolbar">
-    <div :class="styles.deptGroup">
-      <span class="text-[1.5rem] font-semibold text-[var(--Text-body_0)]">부서</span>
+
+    <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
+    <template #department>
+      <span class="text-sm font-semibold">부서</span>
       <DepartmentCascadeSelect v-model="department" size="sm" />
-    </div>
-    <button
-      type="button"
-      :class="styles.toggleButton"
-      :aria-expanded="showAdvancedSearch"
-      @click="showAdvancedSearch = !showAdvancedSearch"
-    >
-      상세조회 {{ showAdvancedSearch ? '닫기' : '열기' }}
-      <ChevronDown :size="14" />
-    </button>
+    </template>
+    <template #form>
+      <div class="search-area">
+        <SelectField
+            label="상태구분"
+            :options="selectItem"
+            label-position="left"
+            size="sm"
+            triggerClass="w-30"
+          />
+          <InputField2 label="통신장비 관리명" size="sm" inputClass="w-40" />
+      </div>
+    </template>
+    <template #btns>
+      <Button variant="secondary" size="sm" class="w-25">조회</Button>
+    </template>
+  </SearchWrapper>
   </div>
 
   <Tabs v-model="activeCategory" class="mt-4">
@@ -120,8 +138,8 @@ function onSave() {
   </Tabs>
 
   <div :class="styles.listActions">
-    <Button type="button" variant="tertiary2" size="sm" @click="onPrint">인쇄</Button>
-    <Button type="button" variant="primary" size="sm" @click="openNewDetail">신규</Button>
+    <Button type="button" variant="tertiary2" size="sm" class="w-25" @click="onPrint">인쇄</Button>
+    <Button type="button" variant="primary" size="sm" class="w-25" @click="openNewDetail">신규</Button>
   </div>
 
   <div :class="styles.tableSection">
@@ -138,7 +156,7 @@ function onSave() {
         </button>
       </template>
       <template #cell-maintenance>
-        <Button type="button" variant="tertiary2" size="xxs">보기</Button>
+        <Button type="button" variant="tertiary" size="xs" class="h-9 w-[50px]">보기</Button>
       </template>
       <template #cell-inUse="{ item }">
         {{ item.inUse ? '사용중' : '미사용' }}
@@ -147,10 +165,10 @@ function onSave() {
   </div>
 
   <!-- 기동장비 상세 -->
-  <GenericDialog2 v-model:open="detailDialogOpen" title="기동장비 상세" :size="860" :show-close-button="false">
+  <GenericDialog2 v-model:open="detailDialogOpen" title="기동장비 상세" :size="800" :show-close-button="true">
     <p :class="styles.legend">• 필수 입력 항목</p>
 
-    <InfoTable :columns="1">
+    <InfoTable :columns="2">
       <InfoField full>
         <template #label>기동장비 구분<span :class="styles.requiredDot" /></template>
         <RadioGroup v-model="detail.vehicleType" class="flex gap-6">
@@ -158,7 +176,7 @@ function onSave() {
         </RadioGroup>
       </InfoField>
 
-      <InfoField for="equip-plate-number">
+      <InfoField for="equip-plate-number" full>
         <template #label>차량번호<span :class="styles.requiredDot" /></template>
         <InputField2
           id="equip-plate-number"
@@ -170,87 +188,64 @@ function onSave() {
         <span v-if="!isVehicleRestricted && !detail.isSaved" :class="styles.hint">저장 이후에는 차량번호는 수정할 수 없습니다.</span>
       </InfoField>
 
-      <InfoField full>
-        <div class="grid w-full grid-cols-2 gap-x-6">
-          <div class="flex items-center gap-3">
-            <label class="w-[10rem] shrink-0 text-[1.5rem] font-semibold text-[var(--Text-body_0)]" for="equip-management-name">
-              장비관리명<span :class="styles.requiredDot" />
-            </label>
-            <InputField2 id="equip-management-name" v-model="detail.managementName" size="sm" class="!space-y-0 flex-1" />
-          </div>
-          <div class="flex items-center gap-3">
-            <label class="w-[10rem] shrink-0 text-[1.5rem] font-semibold text-[var(--Text-body_0)]" for="equip-car-type">
-              차량유형<span :class="styles.requiredDot" />
-            </label>
-            <SelectField
-              id="equip-car-type"
-              v-model="detail.carType"
-              :options="carTypeOptions"
-              size="sm"
-              trigger-class="w-full"
-              class="!space-y-0 flex-1"
-              placeholder="선택"
-              :disabled="isVehicleRestricted"
-            />
-          </div>
-        </div>
+      <!-- 아래 3쌍은 InfoTable columns=2 의 2열 자동배치를 그대로 써서 한 행에 라벨+값 두 쌍이 나란히 놓인다 -->
+      <InfoField for="equip-management-name">
+        <template #label>장비관리명<span :class="styles.requiredDot" /></template>
+        <InputField2 id="equip-management-name" v-model="detail.managementName" size="sm" class="!space-y-0 flex-1" />
+      </InfoField>
+      <InfoField for="equip-car-type">
+        <template #label>차량유형<span :class="styles.requiredDot" /></template>
+        <SelectField
+          id="equip-car-type"
+          v-model="detail.carType"
+          :options="carTypeOptions"
+          size="sm"
+          trigger-class="w-full"
+          class="!space-y-0 flex-1"
+          placeholder="선택"
+          :disabled="isVehicleRestricted"
+        />
       </InfoField>
 
-      <InfoField full>
-        <div class="grid w-full grid-cols-2 gap-x-6">
-          <div class="flex items-center gap-3">
-            <label class="w-[10rem] shrink-0 text-[1.5rem] font-semibold text-[var(--Text-body_0)]" for="equip-location">
-              배치장소<span :class="styles.requiredDot" />
-            </label>
-            <SelectField
-              id="equip-location"
-              v-model="detail.location"
-              :options="locationOptions"
-              size="sm"
-              trigger-class="w-full"
-              class="!space-y-0 flex-1"
-              placeholder="선택"
-            />
-          </div>
-          <div class="flex items-center gap-3">
-            <label class="w-[10rem] shrink-0 text-[1.5rem] font-semibold text-[var(--Text-body_0)]" for="equip-manufacturer">
-              차량제조사<span :class="styles.requiredDot" />
-            </label>
-            <InputField2
-              id="equip-manufacturer"
-              v-model="detail.manufacturer"
-              size="sm"
-              class="!space-y-0 flex-1"
-              :disabled="isVehicleRestricted"
-            />
-          </div>
-        </div>
+      <InfoField for="equip-location">
+        <template #label>배치장소<span :class="styles.requiredDot" /></template>
+        <SelectField
+          id="equip-location"
+          v-model="detail.location"
+          :options="locationOptions"
+          size="sm"
+          trigger-class="w-full"
+          class="!space-y-0 flex-1"
+          placeholder="선택"
+        />
+      </InfoField>
+      <InfoField for="equip-manufacturer">
+        <template #label>차량제조사<span :class="styles.requiredDot" /></template>
+        <InputField2
+          id="equip-manufacturer"
+          v-model="detail.manufacturer"
+          size="sm"
+          class="!space-y-0 flex-1"
+          :disabled="isVehicleRestricted"
+        />
       </InfoField>
 
-      <InfoField full>
-        <div class="grid w-full grid-cols-2 gap-x-6">
-          <div class="flex items-center gap-3">
-            <label class="w-[10rem] shrink-0 text-[1.5rem] font-semibold text-[var(--Text-body_0)]" for="equip-model">
-              차종명<span :class="styles.requiredDot" />
-            </label>
-            <InputField2 id="equip-model" v-model="detail.model" size="sm" class="!space-y-0 flex-1" />
-          </div>
-          <div class="flex items-center gap-3">
-            <label class="w-[10rem] shrink-0 text-[1.5rem] font-semibold text-[var(--Text-body_0)]" for="equip-year">
-              차량연식<span :class="styles.requiredDot" />
-            </label>
-            <InputField2
-              id="equip-year"
-              v-model="detail.year"
-              size="sm"
-              class="!space-y-0 flex-1"
-              :disabled="isVehicleRestricted"
-            />
-          </div>
-        </div>
+      <InfoField for="equip-model">
+        <template #label>차종명<span :class="styles.requiredDot" /></template>
+        <InputField2 id="equip-model" v-model="detail.model" size="sm" class="!space-y-0 flex-1" />
+      </InfoField>
+      <InfoField for="equip-year">
+        <template #label>차량연식<span :class="styles.requiredDot" /></template>
+        <InputField2
+          id="equip-year"
+          v-model="detail.year"
+          size="sm"
+          class="!space-y-0 flex-1"
+          :disabled="isVehicleRestricted"
+        />
       </InfoField>
 
-      <InfoField for="equip-info112" label="112차량정보">
+      <InfoField for="equip-info112" label="112차량정보" full>
         <SelectField
           id="equip-info112"
           v-model="detail.info112"
@@ -263,7 +258,7 @@ function onSave() {
         />
       </InfoField>
 
-      <InfoField label="임시차량">
+      <InfoField label="임시차량" full>
         <div :class="styles.tempVehicleRow">
           <InputField2 v-model="detail.tempVehicle" size="sm" class="!space-y-0 flex-1" readonly :disabled="isVehicleRestricted" />
           <Button type="button" variant="secondary" size="sm" :disabled="isVehicleRestricted" @click="openVehicle112Dialog">
@@ -278,9 +273,9 @@ function onSave() {
     </InfoTable>
 
     <template #footer>
-      <Button type="button" variant="tertiary2" size="md" @click="detailDialogOpen = false">닫기</Button>
-      <Button type="button" variant="tertiary2" size="md" :disabled="detail.id == null" @click="deleteDetail">삭제</Button>
-      <Button type="button" variant="primary" size="md" @click="onSave">저장</Button>
+      <Button type="button" class="w-25" variant="tertiary2" size="md" @click="detailDialogOpen = false">닫기</Button>
+      <Button type="button" class="w-25" variant="tertiary2" size="md" :disabled="detail.id == null" @click="deleteDetail">삭제</Button>
+      <Button type="button" class="w-25" variant="primary" size="md" @click="onSave">저장</Button>
     </template>
   </GenericDialog2>
 

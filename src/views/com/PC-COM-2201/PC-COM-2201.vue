@@ -37,7 +37,6 @@ const selectItem = [
   { label: 'select3', value: 'select3' },
 ]
 
-const vIf = ref(false);
 const advancedSearchOpen = ref(true);
 
 </script>

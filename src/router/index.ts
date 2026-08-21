@@ -28,7 +28,7 @@ const router = createRouter({
             }
         },
         {
-            path: '/lpo/PC-LPO-0701',
+            path: '/views/lpo/PC-LPO-0701',
             name: 'PC-LPO-0701',
             component: () => import('../views/lpo/PC-LPO-0701/PC-LPO-0701.vue'),
             meta: {

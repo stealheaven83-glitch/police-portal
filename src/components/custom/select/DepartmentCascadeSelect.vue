@@ -147,7 +147,7 @@ watch(
       :options="level1Options"
       :size="size"
       :trigger-class="selectClass"
-      class="!space-y-0"
+      class="!space-y-0 w-40"
       aria-label="상위부서"
       @update:model-value="onLevel1Change"
     />
@@ -157,7 +157,7 @@ watch(
       :options="level2Options"
       :size="size"
       :trigger-class="selectClass"
-      class="!space-y-0"
+      class="!space-y-0 w-40"
       aria-label="하위부서"
       @update:model-value="onLevel2Change"
     />
@@ -167,7 +167,7 @@ watch(
       :options="level3Options"
       :size="size"
       :trigger-class="selectClass"
-      class="!space-y-0"
+      class="!space-y-0 w-40"
       aria-label="세부부서"
       @update:model-value="onLevel3Change"
     />
