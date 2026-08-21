@@ -15,7 +15,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
 import { Checkbox } from '@/components/custom/checkbox'
 import { Button } from '@/components/custom/button'
 import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
-import { useWorkSchedule, timeSlots, teamOptions } from './work-schedule/useWorkSchedule'
+import { useWorkSchedule, timeSlots, teamOptions } from './useWorkSchedule'
 import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutHeader from '@/components/custom/content-layout/layoutHeader.vue'
 

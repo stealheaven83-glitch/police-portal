@@ -19,9 +19,9 @@ const router = createRouter({
             component: () => import('../views/Login.vue'),
         },
         {
-            path: '/lpo/memo',
-            name: 'lpo-memo',
-            component: () => import('../views/Memo.vue'),
+            path: '/views/lpo/PM-LPO-0101',
+            name: 'PM-LPO-0101',
+            component: () => import('../views/lpo/PM-LPO-0101/PM-LPO-0101.vue'),
             meta: {
                 layout: 'WorkLayout',
                 title: '메모',
@@ -46,9 +46,9 @@ const router = createRouter({
             }
         },
         {
-            path: '/lpo/jurisdiction-status',
-            name: 'lpo-jurisdiction-status',
-            component: () => import('../views/JurisdictionStatus.vue'),
+            path: '/views/lpo/PC-LPO-0601',
+            name: 'PC-LPO-0601',
+            component: () => import('../views/lpo/PC-LPO-0601/PC-LPO-0601.vue'),
             meta: {
                 layout: 'WorkLayout',
                 title: '관내현황',
@@ -64,9 +64,9 @@ const router = createRouter({
             }
         },
         {
-            path: '/lpo/work-assignment-schedule',
-            name: 'lpo-work-assignment-schedule',
-            component: () => import('../views/WorkAssignmentSchedule.vue'),
+            path: '/views/lpo/PC-LPO-0202',
+            name: 'PC-LPO-0202',
+            component: () => import('../views/lpo/PC-LPO-0202/PC-LPO-0202.vue'),
             meta: {
                 layout: 'WorkLayout',
                 title: '근무지정표작성',
