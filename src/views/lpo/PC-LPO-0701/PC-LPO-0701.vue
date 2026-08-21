@@ -133,7 +133,7 @@ const gridColumns: any[] = [
     hozAlign: 'center',
     headerSort: false,
     formatter() {
-      return mountCellButton({ type: 'button', variant: 'tertiary', size: 'xs' }, '보기')
+      return mountCellButton({ type: 'button', variant: 'tertiary', size: 'xs', class: 'h-9 w-12.5' }, '보기')
     },
   },
   {
