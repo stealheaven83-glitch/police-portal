@@ -5,7 +5,7 @@
 -->
 <template>
   <div class="wrap sub-page">
-    <PortalHeader />
+    <PortalHeader :show-banner="false" />
     <main class="work-main flex pb-9 relative flex-1">
       <SideMenu :items="leftMenuDummyData" />
       <div class="flex-1 min-w-0 relative pr-10">

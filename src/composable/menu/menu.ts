@@ -77,7 +77,7 @@ export const mainLayoutConfig: LayoutConfig = {
         //   icon: Square,
         // },
         {
-          path: '/component/PC-COM-2201',
+          path: '/views/com/PC-COM-2201',
           title: '더블 레이아웃 샘플',
           icon: Layers2,
         },

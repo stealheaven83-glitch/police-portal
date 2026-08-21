@@ -113,8 +113,7 @@ const advancedSearchOpen = ref(true);
             triggerClass="w-30"
           /> 
         <InputField2 label="진단자" size="sm" label-position="left" inputClass="w-30"></InputField2>
- 
-            </div>
+      </div>
     </template>
     <template #btns>
       <Button variant="secondary" size="sm" class="w-25">검색</Button>

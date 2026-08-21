@@ -6,12 +6,12 @@
 -->
 <template>
   <!-- 상단 헤더 영역 -->
-  <div class="identifier">
+  <div class="identifier" v-if="showBanner">
     <div class="inner">
       <div class="logo">
         <span class="sr-only">지역 경찰 포털</span>
       </div>
-      <p class="ban-txt">이 누리집은 대한민국 공식 전자정부 누리집입니다.</p>
+      <p  class="ban-txt">이 누리집은 대한민국 공식 전자정부 누리집입니다.</p>
     </div>
   </div>
 
@@ -106,6 +106,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { portalMenu, portalMyInfo } from './portalMenu'
+
+withDefaults(
+  defineProps<{
+    /** 전자정부 누리집 안내 문구 노출 여부. 업무화면(WorkLayout)에서는 숨긴다. */
+    showBanner?: boolean
+  }>(),
+  { showBanner: true },
+)
 
 /** 원본 마크업에서 첫 번째 depth1 에 active 가 걸려 있던 것을 상태로 옮김 */
 const activeDepth1 = ref(0)

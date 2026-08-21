@@ -156,7 +156,7 @@ import { cn } from '@/lib/utils'
 import { VueDatePicker } from '@vuepic/vue-datepicker'
 import { ko } from 'date-fns/locale'
 import '@vuepic/vue-datepicker/dist/main.css'
-import '@/components/custom/date-picker/DatePicker.css'
+import '@/components/custom/datepicker/DatePicker.css'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import { Switch } from '@/components/custom/switch'
 

@@ -163,7 +163,7 @@ import { cn } from '@/lib/utils'
 import { VueDatePicker } from '@vuepic/vue-datepicker'
 import { ko } from 'date-fns/locale'
 import '@vuepic/vue-datepicker/dist/main.css'
-import '@/components/custom/date-picker/DatePicker.css'
+import '@/components/custom/datepicker/DatePicker.css'
 
 /* ------------------------------------------------------------------ *
  * 기능 지원 요약 매트릭스

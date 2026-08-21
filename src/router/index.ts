@@ -183,7 +183,7 @@ const router = createRouter({
         {
             path: '/component/date-picker',
             name: 'date-picker',
-            component: () => import('../components/custom/date-picker/DatePicker.vue'),
+            component: () => import('../components/custom/datepicker/DatePicker.vue'),
             meta: {
                 layout: 'MainLayout',
                 title: 'Date Picker'
@@ -418,7 +418,7 @@ const router = createRouter({
         {
             path: '/component/PC-STT-0103',
             name: 'pc-stt-0103',
-            component: () => import('../views/stt/PC-STT-0103.vue'),
+            component: () => import('../views/stt/PC-STT-0103/PC-STT-0103.vue'),
             meta: {
                 layout: 'WorkLayout',
                 title: '인사관리'
