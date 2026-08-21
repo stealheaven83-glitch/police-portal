@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, createApp, h, onBeforeUnmount, onMounted, ref, watch, type App } from 'vue'
+import { TabulatorFull as Tabulator } from 'tabulator-tables'
+import 'tabulator-tables/dist/css/tabulator.min.css'
+import '@/assets/css/tabulator-theme.css'
 import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
@@ -9,7 +12,7 @@ import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascad
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import { Tabs, TabsList, TabsTrigger } from '@/components/custom/tabs'
 import { Button } from '@/components/custom/button'
-import TableWrapper from '@/components/custom/table/TableWrapper.vue'
+import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
@@ -63,21 +66,6 @@ const {
   assignVehicle112,
 } = useEquipmentList()
 
-const listColumns = [
-  { key: 'id', label: '번호', width: '7rem' },
-  { key: 'typeLabel', label: '장비구분', width: '10rem' },
-  { key: 'managementName', label: '장비관리명', width: '12rem' },
-  { key: 'manufacturer', label: '차량제조사', width: '10rem' },
-  { key: 'model', label: '차종명' },
-  { key: 'plateNumber', label: '차량번호', width: '12rem' },
-  { key: 'location', label: '배치장소', width: '12rem' },
-  { key: 'note', label: '비고', width: '12rem' },
-  { key: 'maintenance', label: '유지보수이력', width: '11rem' },
-  { key: 'inUse', label: '사용여부', width: '9rem' },
-  { key: 'updater', label: '수정자', width: '9rem' },
-  { key: 'updatedAt', label: '수정일자', width: '11rem' },
-]
-
 /** 순찰차 외(오토바이/자전거)에는 없는 차량 전용 항목들 */
 const isVehicleRestricted = computed(() => detail.vehicleType !== 'patrol')
 const isPlateNumberDisabled = computed(() => isVehicleRestricted.value || detail.isSaved)
@@ -85,6 +73,115 @@ const isPlateNumberDisabled = computed(() => isVehicleRestricted.value || detail
 function onOpenRow(row: EquipmentListRow) {
   openDetail(row)
 }
+
+/** 장비 목록 그리드 — TableWrapper 대신 tabulator-tables 라이브러리를 직접 사용 */
+const gridEl = ref<HTMLElement | null>(null)
+let table: any = null
+
+/**
+ * Tabulator 포맷터는 Vue 렌더 트리 밖에서 DOM 을 직접 만들어야 해서, 버튼처럼 보이는
+ * <button> 을 새로 그리는 대신 실제 custom/button Button 컴포넌트를 셀마다 별도 Vue 앱으로
+ * 마운트한다 (WorkerSelectDialog.vue 의 체크박스 셀과 같은 방식).
+ */
+const mountedCellApps: App[] = []
+
+function unmountCellApps() {
+  mountedCellApps.forEach((app) => app.unmount())
+  mountedCellApps.length = 0
+}
+
+function mountCellComponent(component: unknown, props: Record<string, unknown>, slot?: () => unknown) {
+  const container = document.createElement('div')
+  const app = createApp({
+    render: () => h(component as any, props, slot),
+  })
+  app.mount(container)
+  mountedCellApps.push(app)
+  return container
+}
+
+function mountCellButton(props: Record<string, unknown>, label: string) {
+  return mountCellComponent(Button, props, () => label)
+}
+
+const gridColumns: any[] = [
+  { title: '번호', field: 'id', width: 70, hozAlign: 'center', headerSort: false },
+  { title: '장비구분', field: 'typeLabel', width: 100, hozAlign: 'center', headerSort: false },
+  {
+    title: '장비관리명',
+    field: 'managementName',
+    width: 130,
+    hozAlign: 'center',
+    headerSort: false,
+    formatter(cell: any) {
+      const row = cell.getRow().getData() as EquipmentListRow
+      return mountCellButton(
+        { type: 'button', variant: 'link', size: 'xxs', onClick: () => onOpenRow(row) },
+        String(cell.getValue()),
+      )
+    },
+  },
+  { title: '차량제조사', field: 'manufacturer', width: 100, hozAlign: 'center', headerSort: false },
+  { title: '차종명', field: 'model', minWidth: 120, hozAlign: 'center', headerSort: false },
+  { title: '차량번호', field: 'plateNumber', width: 130, hozAlign: 'center', headerSort: false },
+  { title: '배치장소', field: 'location', width: 130, hozAlign: 'center', headerSort: false },
+  { title: '비고', field: 'note', width: 130, hozAlign: 'center', headerSort: false },
+  {
+    title: '유지보수이력',
+    field: 'id',
+    width: 110,
+    hozAlign: 'center',
+    headerSort: false,
+    formatter() {
+      return mountCellButton({ type: 'button', variant: 'tertiary', size: 'xs' }, '보기')
+    },
+  },
+  {
+    title: '사용여부',
+    field: 'inUse',
+    width: 90,
+    hozAlign: 'center',
+    headerSort: false,
+    formatter: (cell: any) => (cell.getValue() ? '사용중' : '미사용'),
+  },
+  { title: '수정자', field: 'updater', width: 90, hozAlign: 'center', headerSort: false },
+  { title: '수정일자', field: 'updatedAt', width: 120, hozAlign: 'center', headerSort: false },
+  // {
+  //   // 디자인엔 없는 실험용 컬럼 — DatePicker 도 h()+createApp() 으로 진짜 컴포넌트를 마운트할 수
+  //   // 있는지 확인하는 용도. DatePicker 는 modelValue 바인딩이 실제로 안 이어져 있는 기존 버그가
+  //   // 있어서(내부 pickerValue 가 로컬 상태), 여기 넣어도 행 데이터 값은 표시/반영되지 않는다.
+  //   title: '날짜테스트',
+  //   field: 'updatedAt',
+  //   width: 170,
+  //   hozAlign: 'center',
+  //   headerSort: false,
+  //   formatter(cell: any) {
+  //     return mountCellComponent(DatePicker, { modelValue: cell.getValue(), size: 'sm' })
+  //   },
+  // },
+]
+
+onMounted(() => {
+  if (!gridEl.value) return
+  table = new Tabulator(gridEl.value, {
+    data: rowsByCategory.value,
+    columns: gridColumns,
+    layout: 'fitColumns',
+    height: 'auto',
+    placeholder: '등록된 장비가 없습니다',
+  })
+})
+
+watch(rowsByCategory, (rows) => {
+  unmountCellApps()
+  table?.setData(rows)
+})
+
+onBeforeUnmount(() => {
+  unmountCellApps()
+  table?.destroy()
+  table = null
+})
 
 function onPrint() {
   window.print()
@@ -143,25 +240,7 @@ function onSave() {
   </div>
 
   <div :class="styles.tableSection">
-    <TableWrapper
-      :columns="listColumns"
-      :items="rowsByCategory"
-      :show-pagination="false"
-      empty-title="등록된 장비가 없습니다"
-      empty-description="신규 버튼을 눌러 장비를 등록해 주세요."
-    >
-      <template #cell-managementName="{ item }">
-        <button type="button" class="text-[var(--Base-primary)] hover:underline" @click="onOpenRow(item)">
-          {{ item.managementName }}
-        </button>
-      </template>
-      <template #cell-maintenance>
-        <Button type="button" variant="tertiary" size="xs" class="h-9 w-[50px]">보기</Button>
-      </template>
-      <template #cell-inUse="{ item }">
-        {{ item.inUse ? '사용중' : '미사용' }}
-      </template>
-    </TableWrapper>
+    <div ref="gridEl" class="tabulator-host" />
   </div>
 
   <!-- 기동장비 상세 -->

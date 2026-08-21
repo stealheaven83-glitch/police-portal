@@ -6,9 +6,9 @@
 <template>
   <div class="wrap sub-page">
     <PortalHeader :show-banner="false" />
-    <main class="work-main flex pb-9 relative flex-1">
+    <main class="work-main">
       <SideMenu :items="leftMenuDummyData" />
-      <div class="flex-1 min-w-0 relative pr-10">
+      <div class="flex-1 min-w-0 relative pr-10 flex flex-col pb-8">
          <slot name="main" />
          <!-- 컴포넌트화 작업중 -->
          <div class="absolute bottom-[7px] left-0 z-1" style="transform: translateY(100%)">
@@ -76,8 +76,16 @@ const leftMenuDummyData = [
 <style scoped>
 .wrap{
   min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
+}
+.work-main{
+  height: 0;
+  display: flex;
+  padding-bottom: 36px;
+  position: relative;
+  flex: 1;
 }
 .work-main:after{
   content: '';

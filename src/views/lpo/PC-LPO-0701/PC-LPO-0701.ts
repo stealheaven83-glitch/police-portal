@@ -79,7 +79,7 @@ export const info112Options: SelectOption[] = [
 ]
 
 function createMockList(): EquipmentListRow[] {
-  return Array.from({ length: 3 }, (_, i) => ({
+  return Array.from({ length: 50 }, (_, i) => ({
     id: 3 - i,
     category: 'mobile',
     typeLabel: '순찰차',
