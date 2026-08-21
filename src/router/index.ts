@@ -371,6 +371,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/component/PC-STT-0103',
+            name: 'pc-stt-0103',
+            component: () => import('../views/stt/PC-STT-0103.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '인사관리'
+            }
+        },        
+        {
             path: '/:pathMatch(.*)*',
             name: 'notFound',
             component: Error404

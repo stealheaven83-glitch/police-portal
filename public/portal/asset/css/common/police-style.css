@@ -1215,6 +1215,15 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
     border-bottom: 1px solid var(--Border_gray0);
   }
 }
+
+/*조회 회색 영역 */
+.search-area{
+  display:flex;
+  align-items:center;
+  gap:3.6rem;
+  background:var(--Background-gray01);
+  width: 100%;
+}
 /*dark-theme*/
 
 html.theme-dark body{
