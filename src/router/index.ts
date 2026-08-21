@@ -28,18 +28,18 @@ const router = createRouter({
             }
         },
         {
-            path: '/lpo/equipment-management',
-            name: 'lpo-equipment-management',
-            component: () => import('../views/EquipmentManagement.vue'),
+            path: '/lpo/PC-LPO-0701',
+            name: 'PC-LPO-0701',
+            component: () => import('../views/lpo/PC-LPO-0701/PC-LPO-0701.vue'),
             meta: {
                 layout: 'WorkLayout',
                 title: '장비관리',
             }
         },
         {
-            path: '/lpo/personnel-management',
-            name: 'lpo-personnel-management',
-            component: () => import('../views/PersonnelManagement.vue'),
+            path: '/views/lpo/PC-LPO-0801',
+            name: 'PC-LPO-0801',
+            component: () => import('../views/lpo/PC-LPO-0801/PC-LPO-0801.vue'),
             meta: {
                 layout: 'WorkLayout',
                 title: '인사관리',
@@ -55,9 +55,9 @@ const router = createRouter({
             }
         },
         {
-            path: '/lpo/request-management',
-            name: 'lpo-request-management',
-            component: () => import('../views/RequestManagement.vue'),
+            path: '/views/flp/PM-FLP-0101',
+            name: 'PM-FLP-0101',
+            component: () => import('../views/flp/PM-FLP-0101/PM-FLP-0101.vue'),
             meta: {
                 layout: 'WorkLayout',
                 title: '요청관리',
@@ -398,18 +398,18 @@ const router = createRouter({
         },         
         /* LPO */
         {
-            path: '/view/lpo/PC-LPO-0204.vue',
+            path: '/views/lpo/PC-LPO-0204',
             name: 'PC-LPO-0204',
-            component: () => import('../views/lpo/PC-LPO-0204.vue'),
+            component: () => import('../views/lpo/PC-LPO-0204/PC-LPO-0204.vue'),
             meta: {
                 layout: 'MainLayout',
                 title: '근무자 추가관리 팝업'
             }
         },
         {
-            path: '/component/PC-COM-2201',
-            name: 'pc-com-2201',
-            component: () => import('../views/com/PC-COM-2201.vue'),
+            path: '/views/com/PC-COM-2201',
+            name: 'PC-COM-2201',
+            component: () => import('../views/com/PC-COM-2201/PC-COM-2201.vue'),
             meta: {
                 layout: 'WorkLayout',
                 title: '사용자 권한관리'

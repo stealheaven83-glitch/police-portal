@@ -23,9 +23,9 @@ import {
   carTypeOptions,
   locationOptions,
   info112Options,
-} from './equipment-management/useEquipmentList'
-import type { EquipmentListRow } from './equipment-management/useEquipmentList'
-import styles from './equipment-management/equipment.module.css'
+} from './PC-LPO-0701'
+import type { EquipmentListRow } from './PC-LPO-0701'
+import styles from './PC-LPO-0701.module.css'
 
 const navItems = [
   { label: '홈', path: '/' },

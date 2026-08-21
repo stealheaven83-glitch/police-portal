@@ -7,15 +7,15 @@ import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import { Button } from '@/components/custom/button'
 import TableWrapper from '@/components/custom/table/TableWrapper.vue'
-import RequestDetailDialog from './request-management/RequestDetailDialog.vue'
+import RequestDetailDialog from './RequestDetailDialog.vue'
 import {
   useRequestManagementForm,
   periodTypeOptions,
   receiptTypeOptions,
   pageSizeOptions,
-} from './request-management/useRequestManagementForm'
-import type { RequestRow } from './request-management/useRequestManagementForm'
-import styles from './request-management/requestManagement.module.css'
+} from './PM-FLP-0101.ts'
+import type { RequestRow } from './PM-FLP-0101.ts'
+import styles from './PM-FLP-0101.module.css'
 
 const navItems = [
   { label: '홈', path: '/' },

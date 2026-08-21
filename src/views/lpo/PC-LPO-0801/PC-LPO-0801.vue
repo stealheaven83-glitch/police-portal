@@ -24,9 +24,9 @@ import {
   positionOptions,
   teamOptions,
   periodicAccidentReasonOptions,
-} from './personnel-management/usePersonnelForm'
-import type { PersonnelListRow } from './personnel-management/usePersonnelForm'
-import styles from './personnel-management/personnel.module.css'
+} from './PC-LPO-0801'
+import type { PersonnelListRow } from './PC-LPO-0801'
+import styles from './PC-LPO-0801.module.css'
 
 const navItems = [
   { label: '홈', path: '/' },

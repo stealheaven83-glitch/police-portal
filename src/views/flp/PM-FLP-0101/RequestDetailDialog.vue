@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import GenericDialog from '@/components/custom/dialog/GenericDialog.vue'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
-import type { RequestRow } from './useRequestManagementForm'
+import type { RequestRow } from './PM-FLP-0101'
 
 interface Props {
   open: boolean
