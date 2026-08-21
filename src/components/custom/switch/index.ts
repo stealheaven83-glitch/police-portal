@@ -18,10 +18,10 @@ export const switchVariants = cva(
         default: "w-[32px] h-[20px] border-3",
         lg: "w-[40px] h-[24px] border-4",
       },
-      defaultVariants: {
-        variant: "default",
-        size: "default"
-      }
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default"
     }
   }
 )
@@ -35,9 +35,9 @@ export const switchThumbVariants = cva(
         default: "size-4 data-[state=checked]:translate-x-[10px]",
         lg: "size-5 data-[state=checked]:translate-x-[12px]",
       },
-      defaultVariants: {
-        size: "default"
-      }
+    },
+    defaultVariants: {
+      size: "default"
     }
   }
 )

@@ -6,8 +6,8 @@ import { cn } from '@/lib/utils'
 import Textarea from '@/components/custom/textarea/Textarea.vue'
 import { Label } from '@/components/ui/label'
 
-import completeIcon from '@/assets/icon/icon_complete_message.svg'
-import errorIcon from '@/assets/icon/icon_error_message.svg'
+import completeIcon from '@/assets/icon/icon_complete_message.svg?url'
+import errorIcon from '@/assets/icon/icon_error_message.svg?url'
 
 /**
  * 레이블 · 텍스트영역 · 도움말 · 에러 메시지를 하나로 묶은 필드 컴포넌트.

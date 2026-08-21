@@ -10,7 +10,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 
-import closeIcon from '@/assets/icon/icon_popup_x.svg'
+import closeIcon from '@/assets/icon/icon_popup_x.svg?url'
 import { Button } from '@/components/custom/button'
 
 // Props 정의

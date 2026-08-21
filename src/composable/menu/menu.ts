@@ -188,6 +188,31 @@ export const mainLayoutConfig: LayoutConfig = {
           icon: Tag,
         },
         {
+          path: '/component/alert',
+          title: 'Alert',
+          icon: MessageCircleQuestionIcon,
+        },
+        {
+          path: '/component/grid-title',
+          title: 'Grid Title',
+          icon: TableIcon,
+        },
+        {
+          path: '/component/file-upload',
+          title: 'File Upload',
+          icon: FileTextIcon,
+        },
+        {
+          path: '/component/checklist-item',
+          title: 'Checklist Item',
+          icon: Check,
+        },
+        {
+          path: '/component/accordion',
+          title: 'Accordion',
+          icon: ChevronDownIcon,
+        },
+        {
           path: '/component/tooltip',
           title: 'Tooltip',
           icon: MessageCircleQuestionIcon,

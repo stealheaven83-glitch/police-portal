@@ -8,6 +8,7 @@ interface Props {
   variant?: BadgeVariants["variant"]
   size?: BadgeVariants["size"]
   shape?: BadgeVariants["shape"]
+  state?: BadgeVariants["state"]
   class?: HTMLAttributes["class"]
 }
 
@@ -16,6 +17,7 @@ const props = withDefaults(defineProps<Props>(), {
   variant: "solid",
   size: "md",
   shape: "full",
+  state: "default",
   class: undefined,
 })
 </script>
@@ -26,7 +28,8 @@ const props = withDefaults(defineProps<Props>(), {
     :data-color="color"
     :data-size="size"
     :data-shape="shape"
-    :class="cn(badgeVariants({ color: props.color, variant: props.variant, size: props.size, shape: props.shape }), props.class)"
+    :data-state="state"
+    :class="cn(badgeVariants({ color: props.color, variant: props.variant, size: props.size, shape: props.shape, state: props.state }), props.class)"
   >
     <slot />
   </span>

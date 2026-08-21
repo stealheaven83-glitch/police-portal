@@ -205,7 +205,7 @@ import { computed, reactive, ref, watch } from 'vue'
 import InputField from '@/components/custom/input/InputField.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import { Label } from '@/components/ui/label'
-import sampleIcon from '@/assets/icon/icon_sample.svg'
+import sampleIcon from '@/assets/icon/icon_sample.svg?url'
 
 /**
  * 기본 구조 예시용 값

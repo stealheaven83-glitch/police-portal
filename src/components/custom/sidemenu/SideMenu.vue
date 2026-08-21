@@ -171,4 +171,13 @@ function toggleDepth1(index: number) {
   border-top: 2px solid var(--Border_primary);
   transform: rotate(45deg);
 }
+.left-menu .lnb .depth1-item .depth1-btn,
+.left-menu .lnb .depth2-item a {
+  outline: none;
+}
+.left-menu .lnb .depth1-item .depth1-btn:focus-visible,
+.left-menu .lnb .depth2-item a:focus-visible {
+  outline: 2px solid var(--Border_primary);
+  outline-offset: -2px;
+}
 </style>

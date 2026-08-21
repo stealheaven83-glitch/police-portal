@@ -54,25 +54,9 @@ const etcText = ref("")
           <h2 class="text-xl font-semibold border-b pb-2">Help Text</h2>
           <div class="flex items-start flex-wrap gap-8">
             <RadioGroup v-model="selectHelp" class="grid grid-cols-3 gap-4">
-              <div class="group flex flex-col gap-1">
-                <RadioGroupItem value="help1" label="Help Text" />
-                <p class="pl-7 text-[1.3rem] text-[#464C53] group-has-[[disabled]]:text-[#8A949E]">
-                  다크모드 컬러 필요.<br/>dark:text-[white] dark:group-has-[[disabled]]:text-[white]
-                </p>
-              </div>
-              <div class="group flex flex-col gap-1">
-                <RadioGroupItem value="help2" label="Help Text" />
-                <p class="pl-7 text-[1.3rem] text-[#464C53] group-has-[[disabled]]:text-[#8A949E]">
-                   상위 group 클래스를 넣어줘야 컬러가 같이 적용됩니다.
-                </p>
-              </div>
-              <div class="group flex flex-col gap-1">
-                <RadioGroupItem value="help3" label="Help Text" disabled />
-                <p class="pl-7 text-[1.3rem] text-[#464C53] group-has-[[disabled]]:text-[#8A949E]">
-                   disabled 적용
-                </p>
-              </div>
-
+              <RadioGroupItem value="help1" label="Help Text" description="라벨 아래 보조 설명이 표시됩니다." />
+              <RadioGroupItem value="help2" label="Help Text" description="선택 시에도 동일하게 표시됩니다." />
+              <RadioGroupItem value="help3" label="Help Text" description="disabled 시 설명도 함께 흐려집니다." disabled />
             </RadioGroup>
           </div>
         </section>

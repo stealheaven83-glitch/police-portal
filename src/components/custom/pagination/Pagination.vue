@@ -72,7 +72,7 @@
     <div class="justify-self-end">
       <section class="space-y-4">
         <div class="flex gap-4">
-          <BaseSelect v-model="selectedValue" :options="samplePageOptions" placeholder=""
+          <BaseSelect v-model="selectedValue" :options="itemsPerPageOptions" placeholder=""
             width-class="" class="border-0 shadow-none
             "/>
         </div>
@@ -84,6 +84,11 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import BaseSelect from '@/components/select/BaseSelect.vue'
+
+interface PageSizeOption {
+  label: string;
+  value: string;
+}
 import {
   Pagination,
   PaginationList,
@@ -101,6 +106,7 @@ export interface Props {
   currentPage: number;
   totalPages: number;
   itemsPerPage?: number;
+  itemsPerPageOptions?: PageSizeOption[];
   totalElements?: number;
   /** 현재 페이지 기준 좌우로 보여줄 페이지 개수 (기본 1) */
   siblingCount?: number;
@@ -108,6 +114,11 @@ export interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   itemsPerPage: 10,
+  itemsPerPageOptions: () => [
+    { label: '10건', value: '10' },
+    { label: '20건', value: '20' },
+    { label: '30건', value: '30' },
+  ],
   totalElements: 0,
   siblingCount: 1
 })
@@ -136,15 +147,15 @@ const goToNextPage = () => {
 }
 
 //select box
-const samplePageOptions = [
-  { label: '10건', value: '10' },
-  { label: '20건', value: '20' },
-  { label: '30건', value: '30' },
-]
+const selectedValue = ref<string>(String(props.itemsPerPage))
 
-const selectedValue = ref<string>(samplePageOptions[0].value)
+// 부모가 itemsPerPage 를 외부에서 바꾸면(초기값 포함) 셀렉트 표시값을 동기화
+watch(() => props.itemsPerPage, (value) => {
+  selectedValue.value = String(value)
+})
 
 watch(selectedValue, (value) => {
+  if (Number(value) === props.itemsPerPage) return
   emit('update:itemsPerPage', Number(value))
   emit('update:page', 1)
 })

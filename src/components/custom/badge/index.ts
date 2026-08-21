@@ -24,14 +24,20 @@ export const badgeVariants = cva(
       variant: {
         solid: "",
         outline: "bg-white",
+        "solid-pastel": "border-transparent",
       },
       size: {
         lg: "h-8 px-3 text-[15px]",
         md: "h-6 px-2 text-[13px]",
+        sm: "h-5 px-1.5 text-[12px]",
       },
       shape: {
         full: "rounded-full",
         sm: "rounded-[4px]",
+      },
+      state: {
+        default: "",
+        disabled: "pointer-events-none opacity-40",
       },
     },
     compoundVariants: [
@@ -42,7 +48,7 @@ export const badgeVariants = cva(
       { color: "danger", variant: "solid", class: "bg-[var(--danger)] border-[var(--danger)] text-white" },
       { color: "warning", variant: "solid", class: "bg-[var(--warning)] border-[var(--warning)] text-[var(--Text-body_0)]" },
       { color: "success", variant: "solid", class: "bg-[var(--success)] border-[var(--success)] text-white" },
-      { color: "info", variant: "solid", class: "bg-[var(--info)] border-[var(--info)] text-white" },  
+      { color: "info", variant: "solid", class: "bg-[var(--info)] border-[var(--info)] text-white" },
       { color: "grayLighter", variant: "solid", class: "bg-[var(--Base-secondary-lighter)] border-[var(--Base-secondary-lighter)] text-[var(--Text-body_0)]" },
       { color: "primary", variant: "outline", class: "border-[var(--Base-primary)] text-[var(--Base-primary)]" },
       { color: "secondary", variant: "outline", class: "border-[var(--Base-secondary)] text-[var(--Base-secondary)]" },
@@ -52,12 +58,21 @@ export const badgeVariants = cva(
       { color: "warning", variant: "outline", class: "border-[var(--warning)] text-[var(--warning)]" },
       { color: "success", variant: "outline", class: "border-[var(--success)] text-[var(--success)]" },
       { color: "info", variant: "outline", class: "border-[var(--info)] text-[var(--info)]" },
+      { color: "primary", variant: "solid-pastel", class: "bg-[var(--Surface-primary)] text-[var(--Base-primary)]" },
+      { color: "secondary", variant: "solid-pastel", class: "bg-[var(--Base-secondary-lighter)] text-[var(--Base-secondary)]" },
+      { color: "tertiary", variant: "solid-pastel", class: "bg-[var(--Background-gray01)] text-[var(--Text-body_2)]" },
+      { color: "point", variant: "solid-pastel", class: "bg-[var(--Surface-point)] text-[var(--Base--point)]" },
+      { color: "danger", variant: "solid-pastel", class: "bg-[var(--Surface-point)] text-[var(--danger)]" },
+      { color: "warning", variant: "solid-pastel", class: "bg-[#fff6e5] text-[var(--warning)]" },
+      { color: "success", variant: "solid-pastel", class: "bg-[#e5f7e6] text-[var(--success)]" },
+      { color: "info", variant: "solid-pastel", class: "bg-[var(--Surface-secondary)] text-[var(--info)]" },
     ],
     defaultVariants: {
       color: "primary",
       variant: "solid",
       size: "md",
       shape: "full",
+      state: "default",
     },
   },
 )

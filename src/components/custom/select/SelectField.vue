@@ -8,8 +8,8 @@ import { cn } from '@/lib/utils'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectValue } from '@/components/ui/select'
 
-import completeIcon from '@/assets/icon/icon_complete_message.svg'
-import errorIcon from '@/assets/icon/icon_error_message.svg'
+import completeIcon from '@/assets/icon/icon_complete_message.svg?url'
+import errorIcon from '@/assets/icon/icon_error_message.svg?url'
 
 /**
  * 레이블 · 셀렉트 박스 · 도움말 · 에러 메시지를 하나로 묶은 셀렉트 필드 컴포넌트.
@@ -92,15 +92,15 @@ const describedBy = computed(() => {
 const messageStyleCss = () => {
   let css = 'text-[1.3rem] font-normal'
   if (props.messageType === 'complete') {
-    css += ' text-[#00880B]'
+    css += ' text-[var(--success)]'
   } else if (props.messageType === 'error') {
-    css += ' text-[#BD2C0F]'
+    css += ' text-[var(--danger)]'
   }
   return css
 }
 
 const borderStyleCss = computed(() => {
-  if (props.borderStyle === 'complete') return 'border-[#00880B]'
+  if (props.borderStyle === 'complete') return 'border-[var(--success)]'
   if (props.borderStyle === 'error') return 'border-[var(--danger)] border-2'
   return undefined
 })

@@ -5,7 +5,7 @@
         <TableCaption v-if="caption">{{ caption }}</TableCaption>
         <TableHeader class="bg-transparent">
           <TableRow class="" >
-            <TableHead v-for="column in columns" :key="column.key" :class="`text-center text-white text-[#464C53] font-bold border-b border-[#8A949E `"
+            <TableHead v-for="column in columns" :key="column.key" :class="cn('text-center text-[#464C53] font-bold border-b border-[#8A949E]')"
               :style="{ width: column.width || 'auto' }">
               {{ column.label }}
             </TableHead>
@@ -19,14 +19,12 @@
             <TableCell v-for="column in columns" :key="column.key" class="text-center border-l border-[#E6E8EA] first:border-l-0 " :class="column.cellClass || ''">
               <slot :name="`cell-${column.key}`" :item="item" :column="column">
                 <template v-if="column.type === 'status'">
-                  <span :class="{
-                    'px-2 py-1 rounded text-xs font-medium inline-block min-w-[80px] text-center': true,
-                    'bg-green-100 text-green-800': getNestedValue(item, column.key) === '활성화',
-                    'bg-red-100 text-red-800': getNestedValue(item, column.key) === '비활성화',
-                    'bg-yellow-100 text-yellow-800': getNestedValue(item, column.key) === '대기중'
-                  }">
+                  <Badge
+                    :color="statusColorMap[getNestedValue(item, column.key)] ?? 'grayLighter'"
+                    size="md"
+                  >
                     {{ getNestedValue(item, column.key) }}
-                  </span>
+                  </Badge>
                 </template>
                 <template v-else-if="column.type === 'dateTime'">
                   {{ dayjs(getNestedValue(item, column.key)).format('YYYY-MM-DD HH:mm:ss') }}
@@ -59,49 +57,22 @@
       </TableEmpty>
     </div>
 
-    <div class="grid grid-cols-[1fr_auto_1fr] items-center w-full mt-[20px]" v-if="showPagination">
-      <div class="justify-self-start text-sm">
-        총 <span class="font-bold">{{ totalElements }}</span>건 / 현재 {{ (currentPageComputed - 1) * itemsPerPage + 1 }}-{{
-          Math.min(currentPageComputed
-            * itemsPerPage, totalElements) }}
-      </div>
-      <Pagination class="flex items-center justify-self-center" :page="currentPageComputed" :itemsPerPage="itemsPerPage"
-        :total="totalElements" @update:page="goToPage">
-        <PaginationList class="flex items-center">
-          <PaginationFirst class="p-0 mx-1 bg-transparent flex items-center border-0 shadow-none" @click="goToPage(1)"
-            :disabled="currentPageComputed === 1" />
-          <PaginationPrev class="p-0 mx-1 bg-transparent flex items-center border-0 shadow-none" @click="goToPreviousPage"
-            :disabled="currentPageComputed === 1" />
-          <PaginationListItem v-for="page in totalPages" :key="page" :value="page"
-            class="p-0 mx-1 bg-transparent flex items-center">
-            <Button
-              class="w-9 h-9 flex items-center justify-center rounded-md text-sm outline outline-1 bg-white text-black py-0 hover:text-white"
-              :class="currentPageComputed === page ? 'bg-[#023F88] text-white rounded-full' : ''" @click="goToPage(page)">
-              {{ page }}
-            </Button>
-          </PaginationListItem>
-          <PaginationNext class="p-0 mx-1 bg-transparent flex items-center border-0 shadow-none" @click="goToNextPage"
-            :disabled="currentPageComputed === totalPages" />
-          <PaginationLast class="p-0 mx-1 bg-transparent flex items-center border-0 shadow-none" @click="goToPage(totalPages)"
-            :disabled="currentPageComputed === totalPages" />
-        </PaginationList>
-      </Pagination>
-      <div class="justify-self-end">
-        <section class="space-y-4">
-          <div class="flex gap-4">
-            <BaseSelect :model-value="String(itemsPerPage)" :options="itemsPerPageOptions" placeholder=""
-              width-class="" class="border-0 shadow-none"
-              @update:model-value="onItemsPerPageSelect" />
-          </div>
-        </section>
-      </div>
-    </div>
+    <Pagination
+      v-if="showPagination"
+      class="mt-[20px]"
+      :current-page="currentPageComputed"
+      :total-pages="totalPages"
+      :items-per-page="itemsPerPage"
+      :items-per-page-options="itemsPerPageOptions"
+      :total-elements="totalElements"
+      @update:page="goToPage"
+      @update:items-per-page="onItemsPerPageSelect"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import BaseSelect from '@/components/select/BaseSelect.vue';
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 import {
   Table,
   TableBody,
@@ -112,16 +83,9 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
-import {
-  Pagination,
-  PaginationList,
-  PaginationListItem,
-  PaginationFirst,
-  PaginationPrev,
-  PaginationNext,
-  PaginationLast
-} from '@/components/ui/pagination'
-import { Button } from '@/components/ui/button'
+import { Pagination } from '@/components/custom/pagination'
+import { Badge, type BadgeVariants } from '@/components/custom/badge'
+import { cn } from '@/lib/utils'
 import dayjs from 'dayjs'
 
 // Props 정의
@@ -151,6 +115,8 @@ interface Props {
   totalElements?: number;
   totalPages?: number;
   currentPage?: number;
+  /** type: 'status' 컬럼 값 -> Badge 색상 매핑. 지정 안 된 값은 grayLighter 로 표시 */
+  statusColorMap?: Record<string, BadgeVariants['color']>;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -166,7 +132,12 @@ const props = withDefaults(defineProps<Props>(), {
   selectable: false,
   totalElements: 0,
   totalPages: 1,
-  currentPage: 1
+  currentPage: 1,
+  statusColorMap: () => ({
+    '활성화': 'success',
+    '비활성화': 'danger',
+    '대기중': 'warning',
+  }),
 })
 
 // Emits 정의
@@ -202,20 +173,6 @@ const getNestedValue = (obj: any, path: string) => {
 const goToPage = (page: number) => {
   if (page >= 1 && page <= totalPages.value) {
     emit('page-change', page)
-  }
-}
-
-// 이전 페이지로 이동
-const goToPreviousPage = () => {
-  if (currentPageComputed.value > 1) {
-    emit('page-change', currentPageComputed.value - 1)
-  }
-}
-
-// 다음 페이지로 이동
-const goToNextPage = () => {
-  if (currentPageComputed.value < totalPages.value) {
-    emit('page-change', currentPageComputed.value + 1)
   }
 }
 

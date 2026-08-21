@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { RadioGroupItemProps } from "reka-ui"
 import type { HTMLAttributes } from "vue"
+import { computed, useId } from "vue"
 import { reactiveOmit } from "@vueuse/core"
 import { Circle } from "lucide-vue-next"
 import {
@@ -17,6 +18,8 @@ interface Props extends RadioGroupItemProps {
   size?: RadioItemVariants["size"]
   label?: string
   labelClass?: HTMLAttributes["class"]
+  /** 라벨 아래 도움말 문구 (Figma: Help text) */
+  description?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -24,21 +27,26 @@ const props = withDefaults(defineProps<Props>(), {
   size: "default",
   label: undefined,
   labelClass: undefined,
+  description: undefined,
 })
 
-const delegatedProps = reactiveOmit(props, "class", "variant", "size", "label", "labelClass")
+const delegatedProps = reactiveOmit(props, "class", "variant", "size", "label", "labelClass", "description")
 const forwardedProps = useForwardProps(delegatedProps)
+
+const uid = useId()
+const descId = computed(() => props.description ? `radio-desc-${uid}` : undefined)
 </script>
 
 <template>
 <label
   :class="cn(
-    'group inline-flex items-center has-[[disabled]]:cursor-not-allowed',
-    label ? 'gap-2' : 'gap-0 align-top'
+    'group inline-flex items-start has-[[disabled]]:cursor-not-allowed',
+    label || description ? 'gap-2' : 'gap-0 align-top'
   )">
   <RadioGroupItem
     data-slot="radio-group-item"
     v-bind="forwardedProps"
+    :aria-describedby="descId"
     :class="
       cn(radioItemVariants({ variant, size }), props.class)
     "
@@ -52,15 +60,24 @@ const forwardedProps = useForwardProps(delegatedProps)
       />
     </RadioGroupIndicator>
   </RadioGroupItem>
-  <span
-    v-if="label"
-    :class="cn(
-      'select-none leading-none text-[#1E2124] group-has-[[disabled]]:text-[#8A949E] group-has-[[disabled]]:cursor-not-allowed',
-      props.size === 'lg' ? 'text-[19px]' : 'text-[15px]',
-      props.labelClass
-    )"
-  >
-    {{  label }}
+  <span v-if="label || description" class="flex flex-col">
+    <span
+      v-if="label"
+      :class="cn(
+        'select-none leading-none text-[#1E2124] group-has-[[disabled]]:text-[#8A949E] group-has-[[disabled]]:cursor-not-allowed',
+        props.size === 'lg' ? 'text-[19px]' : 'text-[15px]',
+        props.labelClass
+      )"
+    >
+      {{  label }}
+    </span>
+    <span
+      v-if="description"
+      :id="descId"
+      class="mt-1 text-[13px] leading-normal text-[var(--Text-body_2)] group-has-[[disabled]]:text-[var(--Text-body_disable)]"
+    >
+      {{ description }}
+    </span>
   </span>
 </label>
 </template>

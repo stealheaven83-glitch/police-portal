@@ -11,7 +11,7 @@ import { DialogClose } from "reka-ui"
 import { Button } from '@/components/ui/button'
 // import { cn } from '@/lib/utils'
 
-import closeIcon from '@/assets/icon/icon_popup_x.svg'
+import closeIcon from '@/assets/icon/icon_popup_x.svg?url'
 
 /**
  * UI/UX 공통 가이드 4.3.2 레이어 팝업(Layer Pop-up) 컴포넌트

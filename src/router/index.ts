@@ -288,6 +288,51 @@ const router = createRouter({
                   title: 'Badge'
               }
           },
+          {
+              path: '/component/alert',
+              name: 'alert',
+              component: () => import('../views/component-sample/Alert.vue'),
+              meta: {
+                  layout: 'MainLayout',
+                  title: 'Alert'
+              }
+          },
+          {
+              path: '/component/grid-title',
+              name: 'grid-title',
+              component: () => import('../views/component-sample/GridTitle.vue'),
+              meta: {
+                  layout: 'MainLayout',
+                  title: 'Grid Title'
+              }
+          },
+          {
+              path: '/component/file-upload',
+              name: 'file-upload',
+              component: () => import('../views/component-sample/FileUpload.vue'),
+              meta: {
+                  layout: 'MainLayout',
+                  title: 'File Upload'
+              }
+          },
+          {
+              path: '/component/checklist-item',
+              name: 'checklist-item',
+              component: () => import('../views/component-sample/ChecklistItem.vue'),
+              meta: {
+                  layout: 'MainLayout',
+                  title: 'Checklist Item'
+              }
+          },
+          {
+              path: '/component/accordion',
+              name: 'custom-accordion',
+              component: () => import('../views/component-sample/Accordion.vue'),
+              meta: {
+                  layout: 'MainLayout',
+                  title: 'Accordion'
+              }
+          },
         {
             path: '/component/PageHeader',
             name: 'pageheader',

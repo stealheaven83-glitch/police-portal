@@ -25,10 +25,10 @@ export const buttonVariants = cva(
 
 
         //컴포넌트 커스텀
-        primary: "bg-[var(--Base-primary)] text-white hover:bg-[#054887] active:bg-[#0A3C70]",
-        secondary: "bg-[var(--Text-body_1)] text-white hover:bg-[#33363D] active:bg-[var(--Text-body_0)]",
-        tertiary: "border border-[var(--Base-primary)] text-[var(--Base-primary)] bg-white hover:bg-[var(--Surface-primary)] active:bg-[#DFEEFF]",
-        tertiary2: "border border-[#58616A] text-[var(--Text-body_0)] bg-white hover:bg-[var(--Background-gray01)] active:bg-[var(--Border_gray03)]",
+        primary: "bg-[var(--Button-primary-fill)] text-white hover:bg-[var(--Button-primary-fill-hover)] active:bg-[var(--Button-primary-fill-pressed)]",
+        secondary: "bg-[var(--Button-secondary-fill)] text-white hover:bg-[var(--Button-secondary-fill-hover)] active:bg-[var(--Button-secondary-fill-pressed)]",
+        tertiary: "border border-[var(--Button-tertiary-pm-border)] text-[var(--Base-primary)] bg-[var(--Button-tertiary-pm-fill)] hover:bg-[var(--Button-tertiary-pm-fill-hover)] active:bg-[var(--Button-tertiary-pm-fill-pressed)]",
+        tertiary2: "border border-[var(--Button-tertiary-bk-border)] text-[var(--Text-body_0)] bg-[var(--Button-tertiary-bk-fill)] hover:bg-[var(--Button-tertiary-bk-fill-hover)] active:bg-[var(--Button-tertiary-bk-fill-pressed)]",
         text: "gap-2 text-[var(--Text-body_0)] hover:bg-[var(--Surface-secondary)] active:bg-[#D6E0EB] disabled:text-[var(--Text-body_disable)]"
       },
       size: {
@@ -41,11 +41,12 @@ export const buttonVariants = cva(
         "icon-sm": "size-8",
         "icon-lg": "size-10",
 
-        lg: `h-14 px-5 text-[1.9rem]`,
-        md: `h-12 px-4 text-[1.7rem]`,
-        sm: `h-10 px-4 text-[1.5rem]`,
-        xs: `h-8 px-3 text-[1.5rem]`,
-        xxs: `h-6 px-2 text-[1.5rem]`,
+        // Figma size-height/radius 스케일: lg=8px, md/sm=6px, xs/xxs=4px
+        lg: `h-14 px-5 text-[1.9rem] rounded-[var(--Radius-medium3)]`,
+        md: `h-12 px-4 text-[1.7rem] rounded-[var(--Radius-medium2)]`,
+        sm: `h-10 px-4 text-[1.5rem] rounded-[var(--Radius-medium1)]`,
+        xs: `h-8 px-3 text-[1.5rem] rounded-[var(--Radius-small3)]`,
+        xxs: `h-6 px-2 text-[1.5rem] rounded-[var(--Radius-small3)]`,
       },
     },
     compoundVariants: [

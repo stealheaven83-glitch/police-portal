@@ -53,20 +53,19 @@ import { Checkbox } from "@/components/custom/checkbox"
         <section class="space-y-4">
           <h2 class="text-xl font-semibold border-b pb-2">Help Text</h2>
           <div class="flex items-start flex-wrap gap-8">
-            <div class="group flex flex-col gap-1">
-              <Checkbox variant="default" size="default" label="Help text" />
-              <p class="pl-7 text-[1.3rem] text-[#464C53] group-has-[[disabled]]:text-[#8A949E]">
-                다크모드 컬러 필요.<br/>dark:text-[white] dark:group-has-[[disabled]]:text-[white]
-              </p>
-            </div>
-            <div class="group flex flex-col gap-1">
-              <div class="flex flex-col gap-1">
-                <Checkbox variant="default" size="default" label="Help text" disabled />
-                <p class="pl-7 text-[1.3rem] text-[#464C53] group-has-[[disabled]]:text-[#8A949E]">
-                  상위 group 클래스를 넣어줘야 컬러가 같이 적용됩니다.
-                </p>
-              </div>
-            </div>
+            <Checkbox
+              variant="default"
+              size="default"
+              label="Help text"
+              description="라벨 아래 보조 설명이 표시됩니다."
+            />
+            <Checkbox
+              variant="default"
+              size="default"
+              label="Help text"
+              description="disabled 시 설명 텍스트도 함께 흐려집니다."
+              disabled
+            />
           </div>
         </section>
       </div>
