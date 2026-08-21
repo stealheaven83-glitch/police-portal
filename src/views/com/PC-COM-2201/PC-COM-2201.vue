@@ -98,8 +98,7 @@ const advancedSearchOpen = ref(true);
             size="sm"
             triggerClass="w-30"
           />
-      </div>
-      <div class="flex gap- 9">
+
         <div class="flex items-center">
           <DatePicker label="조회일자" labelPosition="left" size="sm" inputClass="w-[160px]"></DatePicker>
           <span class="p-[0.8rem]">~</span>
@@ -114,7 +113,8 @@ const advancedSearchOpen = ref(true);
             triggerClass="w-30"
           /> 
         <InputField2 label="진단자" size="sm" label-position="left" inputClass="w-30"></InputField2>
-      </div>
+ 
+            </div>
     </template>
     <template #btns>
       <Button variant="secondary" size="sm" class="w-25">검색</Button>

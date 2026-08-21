@@ -11,12 +11,12 @@
       <div class="flex-1 min-w-0 relative pr-10">
          <slot name="main" />
          <!-- 컴포넌트화 작업중 -->
-         <div class="absolute bottom-0 left-0 z-1" style="transform: translateY(100%)">
+         <div class="absolute bottom-[7px] left-0 z-1" style="transform: translateY(100%)">
             <ul class="flex tab-ul">
-              <li>1</li>
-              <li class="active">2</li>
-              <li>3</li>
-              <li>4</li>
+              <li>메모<button class="tab-delete" aria-label="닫기"></button></li>
+              <li class="active">근무일정조회<button class="tab-delete" aria-label="닫기"></button></li>
+              <li>출동수당조회 <button class="tab-delete" aria-label="닫기"></button></li>
+              <li>사용자 권한 권리 <button class="tab-delete" aria-label="닫기"></button></li>
             </ul>
          </div>
          <!--// 컴포넌트화 작업중 -->
@@ -86,16 +86,22 @@ const leftMenuDummyData = [
   bottom: 0;
   left: 0;
   right: 0;
-  height: 36px;
+  height: 43px;
   background: #EEF2F7;
   border-top: 1px solid #CDD1D5;
 }
-
+.tab-ul{
+  height:36px;
+}
 .tab-ul li{
   border: 1px solid #CDD1D5;
   border-top: 0;
-  padding: 2px 10px;
+  padding: 2px 8px;
   border-radius: 0 0 4px 4px;
+  color:var(--Text-body_2);
+  line-height: 3rem;
+
+
 }
 .tab-ul li.active{
   background: #fff;
