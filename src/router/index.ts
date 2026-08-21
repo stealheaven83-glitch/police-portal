@@ -423,7 +423,16 @@ const router = createRouter({
                 layout: 'WorkLayout',
                 title: '인사관리'
             }
-        },        
+        },   
+        {
+            path: '/worklist',
+            name: 'pc-stt-0103',
+            component: () => import('../views/worklist/WorkIndex.vue'),
+            meta: {
+                layout: '',
+                title: '인사관리'
+            }
+        },            
         {
             path: '/:pathMatch(.*)*',
             name: 'notFound',

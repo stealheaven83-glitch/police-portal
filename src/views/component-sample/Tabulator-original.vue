@@ -144,7 +144,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, onBeforeUnmount, computed } from 'vue'
+import { ref, reactive, onMounted, onBeforeUnmount, computed, createApp, h, type App, type Ref } from 'vue'
 import { TabulatorFull as Tabulator } from 'tabulator-tables'
 import 'tabulator-tables/dist/css/tabulator.min.css'
 import '@/assets/css/tabulator-theme.css'
@@ -233,14 +233,28 @@ const columnVisible = reactive<Record<string, boolean>>({
 })
 
 /* ------------------------------------------------------------------ *
+ * 페이지네이션 (Tabulator 내장 로컬 페이징 + custom/pagination UI)
+ * ------------------------------------------------------------------ */
+const currentPage = ref(1)
+const itemsPerPage = ref(5)
+const totalElements = ref(initialData.length)
+const totalPages = computed(() => Math.max(1, Math.ceil(totalElements.value / itemsPerPage.value)))
+
+function goToPage(page: number) {
+  mainTable?.setPage(page)
+}
+
+/* ------------------------------------------------------------------ *
  * Tabulator 인스턴스 및 DOM refs
  * ------------------------------------------------------------------ */
 const mainTableEl = ref<HTMLElement | null>(null)
+const buttonCaseTableEl = ref<HTMLElement | null>(null)
 const leftTableEl = ref<HTMLElement | null>(null)
 const rightTableEl = ref<HTMLElement | null>(null)
 const groupTableEl = ref<HTMLElement | null>(null)
 
 let mainTable: any = null
+let buttonCaseTable: any = null
 let leftTable: any = null
 let rightTable: any = null
 let groupTable: any = null
@@ -504,7 +518,6 @@ function unmountActiveSwitch(row: any) {
 }
 
 /* ------------------------------------------------------------------ *
->>>>>>> Stashed changes:src/components/custom/Tabulator/Tabulator.vue
  * 메인 그리드 컬럼 정의
  * ------------------------------------------------------------------ */
 function buildMainColumns() {
@@ -759,10 +772,19 @@ function toggleColumn(field: string) {
   columnVisible[field] ? mainTable.showColumn(field) : mainTable.hideColumn(field)
 }
 
-/* ------------------------------------------------------------------ *
+function setLayout(mode: typeof layoutMode.value) {
+  layoutMode.value = mode
+  applyLayout()
+}
 
- * 마운트: 그리드 4개 생성
-=======
+function resetColumns() {
+  toggleableColumns.forEach((col) => {
+    columnVisible[col.field] = true
+    toggleColumn(col.field)
+  })
+}
+
+/* ------------------------------------------------------------------ *
  * 버튼 컴포넌트 케이스 그리드
  * - variant × size 조합(케이스) 마다 실제 <button>(buttonVariants 클래스)을
  *   셀에 그려 넣어, 케이스별 렌더링 결과를 그리드로 한눈에 비교한다.
@@ -826,7 +848,6 @@ const mainToolbarButtons: ButtonCaseItem[] = [
 
 /* ------------------------------------------------------------------ *
  * 마운트: 그리드 6개 생성
->>>>>>> Stashed changes:src/components/custom/Tabulator/Tabulator.vue
  * ------------------------------------------------------------------ */
 onMounted(() => {
   /* 1) 종합 그리드 */

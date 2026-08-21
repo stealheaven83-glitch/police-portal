@@ -54,7 +54,7 @@ const listColumns = [
   { key: 'phone', label: '전화번호' },
   { key: 'updater', label: '수정자', width: '8rem' },
   { key: 'updatedAt', label: '수정일자', width: '10rem' },
-]
+] 
 
 const {
   pagedListRows,
