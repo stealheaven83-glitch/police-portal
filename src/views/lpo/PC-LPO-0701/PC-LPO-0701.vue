@@ -139,7 +139,7 @@ function onSave() {
 
   <div :class="styles.listActions">
     <Button type="button" variant="tertiary2" size="sm" class="w-25" @click="onPrint">인쇄</Button>
-    <Button type="button" variant="primary" size="sm" class="w-25" @click="openNewDetail">신규</Button>
+    <Button type="button" variant="primary" size="sm" class="w-25">신규</Button>
   </div>
 
   <div :class="styles.tableSection">

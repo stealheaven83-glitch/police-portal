@@ -59,7 +59,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in filteredList" :key="item.id">
+          <tr v-for="(item, index) in filteredList" :key="item.id" :class="{ 'has-path': item.path }">
             <td class="text-center">{{ index + 1 }}</td>
             <td class="text-center">{{ item.category }}</td>
             <td>{{ item.depth1 }}</td>
@@ -624,6 +624,10 @@ const goToPage = (path) => {
   background-color: #f1f3f5;
   font-weight: 600;
   text-align: center;
+}
+
+.worklist-table tbody tr.has-path {
+  background-color: #FFDEAD;
 }
 
 .worklist-table tbody tr:hover {
