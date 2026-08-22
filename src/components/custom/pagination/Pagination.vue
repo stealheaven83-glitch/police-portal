@@ -1,9 +1,7 @@
 <template>
   <div class="grid grid-cols-[1fr_auto_1fr] items-center w-full">
     <div class="justify-self-start text-sm">
-      총 <span class="font-bold">{{ totalElements }}</span>건 / 현재 {{ (currentPage - 1) * itemsPerPage + 1 }}-{{
-        Math.min(currentPage
-          * itemsPerPage, totalElements) }}
+      총 <span class="font-bold">{{ totalElements }}</span>건 / 현재 {{ rangeStart }}-{{ rangeEnd }}
     </div>
     <Pagination class="justify-self-center"
       :page="currentPage"
@@ -82,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import BaseSelect from '@/components/select/BaseSelect.vue'
 
 interface PageSizeOption {
@@ -127,6 +125,15 @@ const emit = defineEmits<{
   (e: 'update:page', page: number): void
   (e: 'update:itemsPerPage', itemsPerPage: number): void
 }>()
+
+/* 현재 페이지가 보여주는 항목 범위.
+ * 0건일 때 (currentPage - 1) * itemsPerPage + 1 을 그대로 쓰면 "1-0" 이 되므로 0-0 으로 표시한다. */
+const rangeStart = computed(() =>
+  props.totalElements ? (props.currentPage - 1) * props.itemsPerPage + 1 : 0,
+)
+const rangeEnd = computed(() =>
+  Math.min(props.currentPage * props.itemsPerPage, props.totalElements),
+)
 
 const goToPage = (page: number) => {
   if (page >= 1 && page <= props.totalPages) {

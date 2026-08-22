@@ -185,6 +185,73 @@ const toolbarButtons: ButtonCaseItem[] = [
 
 const selectedCount = ref(0)
 const savedMessage = ref('')
+
+/* ------------------------------------------------------------------ *
+ * 그리드 간 드래그 복사
+ *
+ * Tabulator 의 그리드 연결은 셀렉터가 "Tabulator 를 생성한 엘리먼트"에 걸려야 하므로
+ * 대상 그리드에 id 를 준다(공통 컴포넌트가 id 를 host 엘리먼트로 내려보낸다).
+ * 받은 행은 그리드 내부에만 남으므로 @rows-received 로 부모 상태에 동기화한다.
+ * ------------------------------------------------------------------ */
+const dragColumns: TabulatorGridColumn[] = [
+  { rowHandle: true, formatter: 'handle', headerSort: false, width: 40, frozen: true },
+  { title: '사번', field: 'id', width: 70, hozAlign: 'center' },
+  { title: '이름', field: 'name', minWidth: 100 },
+  { title: '부서', field: 'dept', minWidth: 100 },
+  { title: '직급', field: 'position', minWidth: 90 },
+]
+
+const sourceData = ref<Employee[]>(JSON.parse(JSON.stringify(initialData)))
+const droppedData = ref<Employee[]>([])
+
+function onRowsReceived(fromRow: any) {
+  const received = fromRow.getData()
+  if (droppedData.value.some((row) => row.id === received.id)) return
+  droppedData.value = [...droppedData.value, received]
+}
+
+/* ------------------------------------------------------------------ *
+ * 헤더 그룹핑 (셀 병합 대체)
+ *
+ * Tabulator 6.x 는 데이터 셀 rowspan/colspan 이 없어서 상단 헤더를 묶는 것만 가능하다.
+ * 그룹 안쪽 자식 컬럼에서도 cellType 이 그대로 동작하는지 함께 확인한다.
+ * ------------------------------------------------------------------ */
+const groupColumns: TabulatorGridColumn[] = [
+  { title: '사번', field: 'id', width: 70, hozAlign: 'center' },
+  {
+    title: '인적사항',
+    columns: [
+      { title: '이름', field: 'name', minWidth: 100 },
+      { title: '부서', field: 'dept', width: 130, cellType: 'select', selectOptions: deptOptions },
+      { title: '직급', field: 'position', minWidth: 90 },
+    ],
+  },
+  {
+    title: '평가정보',
+    columns: [
+      { title: '연봉(만원)', field: 'salary', hozAlign: 'right', minWidth: 110 },
+      { title: '평가', field: 'score', hozAlign: 'center', minWidth: 80 },
+      {
+        title: '상태',
+        field: 'status',
+        width: 110,
+        cellType: 'badge',
+        badgeColorMap: { 활성화: 'success', 비활성화: 'danger', 대기중: 'warning' },
+      },
+    ],
+  },
+]
+
+const groupData = ref<Employee[]>(JSON.parse(JSON.stringify(initialData)))
+
+/* ------------------------------------------------------------------ *
+ * 빈 데이터 상태
+ * ------------------------------------------------------------------ */
+const emptyData = ref<Employee[]>([])
+
+function toggleEmptyData() {
+  emptyData.value = emptyData.value.length ? [] : JSON.parse(JSON.stringify(initialData.slice(0, 3)))
+}
 </script>
 
 <template>
@@ -230,6 +297,92 @@ const savedMessage = ref('')
           · 셀을 클릭하면 셀 안에서 바로 편집됩니다. · 평가점수 60 미만 행은 붉게 하이라이트됩니다.
           · 편집된 셀은 노란색, 유효성 실패 셀은 붉은 테두리로 표시됩니다.
         </p>
+      </section>
+
+      <!-- ============ 그리드 간 드래그 복사 ============ -->
+      <section class="space-y-4 pt-12">
+        <h2 class="text-xl font-semibold">그리드 간 드래그 복사 (행 단위)</h2>
+        <p class="text-gray-500 text-sm">
+          왼쪽 행의 <b>핸들(⣿)</b>을 잡아 오른쪽 그리드로 끌어다 놓으면 복사됩니다(원본 유지).
+          공통 컴포넌트에서는 <code>movable-rows</code> + <code>connected-to</code> 로 연결하고,
+          받은 행은 <code>@rows-received</code> 로 부모 상태에 동기화합니다.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <div class="text-sm font-medium mb-1">원본 그리드</div>
+            <TabulatorGrid
+              :columns="dragColumns"
+              :data="sourceData"
+              layout="fitColumns"
+              height="300px"
+              movable-rows
+              connected-to="#drop-target-grid"
+            />
+          </div>
+          <div>
+            <div class="text-sm font-medium mb-1">
+              대상 그리드 (여기로 드롭) — {{ droppedData.length }}건
+            </div>
+            <TabulatorGrid
+              id="drop-target-grid"
+              :columns="dragColumns"
+              :data="droppedData"
+              layout="fitColumns"
+              height="300px"
+              movable-rows
+              placeholder="왼쪽 그리드에서 행을 드래그해 놓으세요"
+              @rows-received="onRowsReceived"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 헤더 그룹핑 (셀 병합 대체) ============ -->
+      <section class="space-y-4 pt-12">
+        <h2 class="text-xl font-semibold">
+          헤더 그룹핑 <span class="text-sm font-normal text-red-500">(데이터 셀 병합은 미지원)</span>
+        </h2>
+        <p class="text-gray-500 text-sm">
+          Tabulator 6.5 는 <b>데이터 셀의 rowspan/colspan 을 지원하지 않습니다</b>. 상단 헤더를 묶는
+          것만 가능하며, 컬럼 정의에 <code>columns</code> 를 중첩하면 됩니다. 그룹 안쪽 자식 컬럼에서도
+          <code>cellType</code>(아래 부서=select, 상태=badge)이 그대로 동작합니다.
+        </p>
+        <TabulatorGrid
+          :columns="groupColumns"
+          :data="groupData"
+          layout="fitColumns"
+          height="300px"
+        />
+      </section>
+
+      <!-- ============ 빈 데이터 상태 ============ -->
+      <section class="space-y-4 pt-12 pb-6">
+        <h2 class="text-xl font-semibold">빈 데이터 상태</h2>
+        <p class="text-gray-500 text-sm">
+          데이터가 0건이면 <code>placeholder</code> 프롭의 문구가 표시됩니다(기본
+          "데이터가 없습니다"). 페이지네이션을 함께 켠 상태에서 0건 ↔ 데이터 있음을 오가며
+          확인합니다.
+        </p>
+        <ButtonGroup
+          :items="[
+            {
+              key: 'toggle-empty',
+              label: emptyData.length ? '데이터 비우기' : '데이터 채우기',
+              variant: 'secondary',
+              size: 'sm',
+              onClick: toggleEmptyData,
+            },
+          ]"
+        />
+        <TabulatorGrid
+          :columns="dragColumns.slice(1)"
+          :data="emptyData"
+          layout="fitColumns"
+          height="220px"
+          placeholder="조회된 데이터가 없습니다"
+          show-pagination
+          :items-per-page="5"
+        />
       </section>
     </div>
   </div>

@@ -128,11 +128,6 @@ export const mainLayoutConfig: LayoutConfig = {
           icon: CalendarIcon,
         },
         {
-          path: '/component/tabulator',
-          title: 'Tabulator 샘플',
-          icon: TableIcon,
-        },
-        {
           path: '/component/tabulator-grid',
           title: 'Tabulator Grid',
           icon: TableIcon,

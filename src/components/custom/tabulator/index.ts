@@ -58,6 +58,15 @@ export interface TabulatorGridColumn {
   /** badgeColorMap 에 없는 값에 쓸 색상 (기본 grayLighter) */
   badgeFallbackColor?: BadgeVariants["color"]
 
+  /**
+   * 헤더 그룹(컬럼 중첩).
+   *
+   * Tabulator 6.x 는 데이터 셀의 rowspan/colspan(셀 병합)을 지원하지 않는다.
+   * 상단 헤더를 묶는 것은 이 `columns` 중첩으로 처리하며, 자식 컬럼에서도
+   * `cellType` 을 포함한 위 옵션을 그대로 쓸 수 있다.
+   */
+  columns?: TabulatorGridColumn[]
+
   /** 그 외 Tabulator 컬럼 옵션(width, editor, validator, hozAlign, frozen ...)은 그대로 전달됨 */
   [key: string]: any
 }

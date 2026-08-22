@@ -231,9 +231,23 @@
   height: 4rem;
 }
 
+/*
+ * 데이터 0건 안내(placeholder).
+ *
+ * Tabulator 기본 CSS 는 min-height:100% 를 renderVertical:'virtual' 일 때만 준다
+ * (.tabulator-placeholder[tabulator-render-mode=virtual]).
+ * 이 프로젝트는 행 높이를 CSS 로 제어하려고 renderVertical:'basic' 을 쓰기 때문에
+ * placeholder 높이가 내용 높이만큼만 잡혀 align-items:center 가 먹지 않고
+ * 아이콘이 그리드 헤더에 붙어버린다. 렌더 모드와 무관하게 영역을 채우도록 지정한다.
+ */
 .tabulator .tabulator-tableholder .tabulator-placeholder {
   display: flex;
   align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 100%;
+  /* 그리드 높이가 아주 낮아 가운데 정렬 여유가 없을 때의 최소 여백 */
+  padding: 2.4rem 0;
 }
 
 .tabulator .tabulator-tableholder .tabulator-placeholder .tabulator-placeholder-contents {
