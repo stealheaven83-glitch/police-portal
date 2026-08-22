@@ -458,21 +458,26 @@ function inputCellFormatter(columnKey: string) {
  * ------------------------------------------------------------------ */
 function buttonCellFormatter(col: TabulatorGridColumn, columnKey: string) {
   return (cell: any) =>
-    mountCell(cell, columnKey, 'grid-button-cell', () =>
-      h(
+    mountCell(cell, columnKey, 'grid-button-cell', () => {
+      const rowData = cell.getRow().getData()
+      // 라벨은 고정 문자열뿐 아니라 행 데이터로 만들어 쓸 수도 있다(셀 값을 버튼 텍스트로 쓰는 경우 등)
+      const label = typeof col.buttonLabel === 'function' ? col.buttonLabel(rowData, cell) : col.buttonLabel
+
+      return h(
         Button,
         {
           variant: col.buttonVariant ?? 'tertiary',
           size: col.buttonSize ?? 'sm',
-          disabled: col.buttonDisabled?.(cell.getRow().getData()) ?? false,
+          class: col.buttonClass,
+          disabled: col.buttonDisabled?.(rowData) ?? false,
           onClick: (e: Event) => {
             e.stopPropagation()
-            col.onButtonClick?.(cell.getRow().getData(), cell)
+            col.onButtonClick?.(rowData, cell)
           },
         },
-        () => col.buttonLabel ?? '버튼',
-      ),
-    )
+        () => label ?? '버튼',
+      )
+    })
 }
 
 /* ------------------------------------------------------------------ *
@@ -568,6 +573,7 @@ function buildColumn(col: TabulatorGridColumn, columnKey: string): Record<string
     buttonLabel,
     buttonVariant,
     buttonSize,
+    buttonClass,
     buttonDisabled,
     onButtonClick,
     selectOptions,
@@ -913,18 +919,24 @@ defineExpose({
 })
 </script>
 
+<!--
+  루트를 세로 flex 로 둬서 두 가지 사용법을 모두 지원한다.
+  - height="320px" 처럼 고정 높이: 루트 높이가 auto 라 지금까지와 동일하게 쌓인다.
+  - height="100%" + class="h-full" 로 부모를 채우는 경우: 그리드가 남는 공간을 차지하고
+    페이지네이션은 아래에 붙는다. (flex-auto + min-h-0 이라 페이지네이션 높이만큼 줄어든다)
+-->
 <template>
-  <div v-bind="rootAttrs">
+  <div v-bind="rootAttrs" class="flex flex-col">
     <div
       ref="hostEl"
       v-bind="hostAttrs"
-      class="tabulator-host"
+      class="tabulator-host flex-auto min-h-0"
       :style="{ '--row-h': rowHeightPx }"
     />
 
     <Pagination
       v-if="showPagination"
-      class="mt-[20px]"
+      class="mt-[20px] shrink-0"
       :current-page="currentPage"
       :total-pages="totalPages"
       :items-per-page="pageSize"

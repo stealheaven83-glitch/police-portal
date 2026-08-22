@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { computed, createApp, h, onBeforeUnmount, onMounted, ref, watch, type App } from 'vue'
-import { TabulatorFull as Tabulator } from 'tabulator-tables'
-import 'tabulator-tables/dist/css/tabulator.min.css'
-import '@/assets/css/tabulator-theme.css'
+import { computed, ref } from 'vue'
+import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
@@ -12,7 +10,6 @@ import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascad
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import { Tabs, TabsList, TabsTrigger } from '@/components/custom/tabs'
 import { Button } from '@/components/custom/button'
-import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
@@ -74,114 +71,53 @@ function onOpenRow(row: EquipmentListRow) {
   openDetail(row)
 }
 
-/** 장비 목록 그리드 — TableWrapper 대신 tabulator-tables 라이브러리를 직접 사용 */
-const gridEl = ref<HTMLElement | null>(null)
-let table: any = null
-
 /**
- * Tabulator 포맷터는 Vue 렌더 트리 밖에서 DOM 을 직접 만들어야 해서, 버튼처럼 보이는
- * <button> 을 새로 그리는 대신 실제 custom/button Button 컴포넌트를 셀마다 별도 Vue 앱으로
- * 마운트한다 (WorkerSelectDialog.vue 의 체크박스 셀과 같은 방식).
+ * 장비 목록 그리드 — 공용 custom/tabulator 의 TabulatorGrid 사용.
+ *
+ * 셀 안의 버튼은 cellType: 'button' 이 custom/button 의 Button 컴포넌트를 직접 마운트해준다.
+ * (그리드 인스턴스 생성/파기, 셀 컴포넌트 언마운트, 데이터 갱신은 컴포넌트가 처리)
  */
-const mountedCellApps: App[] = []
-
-function unmountCellApps() {
-  mountedCellApps.forEach((app) => app.unmount())
-  mountedCellApps.length = 0
-}
-
-function mountCellComponent(component: unknown, props: Record<string, unknown>, slot?: () => unknown) {
-  const container = document.createElement('div')
-  const app = createApp({
-    render: () => h(component as any, props, slot),
-  })
-  app.mount(container)
-  mountedCellApps.push(app)
-  return container
-}
-
-function mountCellButton(props: Record<string, unknown>, label: string) {
-  return mountCellComponent(Button, props, () => label)
-}
-
-const gridColumns: any[] = [
-  { title: '번호', field: 'id', width: 70, hozAlign: 'center', headerSort: false },
-  { title: '장비구분', field: 'typeLabel', width: 100, hozAlign: 'center', headerSort: false },
+const gridColumns: TabulatorGridColumn[] = [
+  { title: '번호', field: 'id', width: 70, hozAlign: 'center' },
+  { title: '장비구분', field: 'typeLabel', width: 100, hozAlign: 'center' },
   {
     title: '장비관리명',
     field: 'managementName',
     width: 130,
     hozAlign: 'center',
-    headerSort: false,
-    formatter(cell: any) {
-      const row = cell.getRow().getData() as EquipmentListRow
-      return mountCellButton(
-        { type: 'button', variant: 'link', size: 'xxs', onClick: () => onOpenRow(row) },
-        String(cell.getValue()),
-      )
-    },
+    cellType: 'button',
+    buttonVariant: 'link',
+    buttonSize: 'xxs',
+    // 버튼 텍스트가 곧 셀 값이다
+    buttonLabel: (row) => String((row as EquipmentListRow).managementName),
+    onButtonClick: (row) => onOpenRow(row as EquipmentListRow),
   },
-  { title: '차량제조사', field: 'manufacturer', width: 100, hozAlign: 'center', headerSort: false },
-  { title: '차종명', field: 'model', minWidth: 120, hozAlign: 'center', headerSort: false },
-  { title: '차량번호', field: 'plateNumber', width: 130, hozAlign: 'center', headerSort: false },
-  { title: '배치장소', field: 'location', width: 130, hozAlign: 'center', headerSort: false },
-  { title: '비고', field: 'note', width: 130, hozAlign: 'center', headerSort: false },
+  { title: '차량제조사', field: 'manufacturer', width: 100, hozAlign: 'center' },
+  { title: '차종명', field: 'model', minWidth: 120, hozAlign: 'center' },
+  { title: '차량번호', field: 'plateNumber', width: 130, hozAlign: 'center' },
+  { title: '배치장소', field: 'location', width: 130, hozAlign: 'center' },
+  { title: '비고', field: 'note', width: 130, hozAlign: 'center' },
   {
     title: '유지보수이력',
     field: 'id',
     width: 110,
     hozAlign: 'center',
-    headerSort: false,
-    formatter() {
-      return mountCellButton({ type: 'button', variant: 'tertiary', size: 'xs', class: 'h-9 w-12.5' }, '보기')
-    },
+    cellType: 'button',
+    buttonVariant: 'tertiary',
+    buttonSize: 'xs',
+    buttonClass: 'h-9 w-12.5',
+    buttonLabel: '보기',
   },
   {
     title: '사용여부',
     field: 'inUse',
     width: 90,
     hozAlign: 'center',
-    headerSort: false,
     formatter: (cell: any) => (cell.getValue() ? '사용중' : '미사용'),
   },
-  { title: '수정자', field: 'updater', width: 90, hozAlign: 'center', headerSort: false },
-  { title: '수정일자', field: 'updatedAt', width: 120, hozAlign: 'center', headerSort: false },
-  // {
-  //   // 디자인엔 없는 실험용 컬럼 — DatePicker 도 h()+createApp() 으로 진짜 컴포넌트를 마운트할 수
-  //   // 있는지 확인하는 용도. DatePicker 는 modelValue 바인딩이 실제로 안 이어져 있는 기존 버그가
-  //   // 있어서(내부 pickerValue 가 로컬 상태), 여기 넣어도 행 데이터 값은 표시/반영되지 않는다.
-  //   title: '날짜테스트',
-  //   field: 'updatedAt',
-  //   width: 170,
-  //   hozAlign: 'center',
-  //   headerSort: false,
-  //   formatter(cell: any) {
-  //     return mountCellComponent(DatePicker, { modelValue: cell.getValue(), size: 'sm' })
-  //   },
-  // },
+  { title: '수정자', field: 'updater', width: 90, hozAlign: 'center' },
+  { title: '수정일자', field: 'updatedAt', width: 120, hozAlign: 'center' },
 ]
-
-onMounted(() => {
-  if (!gridEl.value) return
-  table = new Tabulator(gridEl.value, {
-    data: rowsByCategory.value,
-    columns: gridColumns,
-    layout: 'fitColumns',
-    height: 'auto',
-    placeholder: '등록된 장비가 없습니다',
-  })
-})
-
-watch(rowsByCategory, (rows) => {
-  unmountCellApps()
-  table?.setData(rows)
-})
-
-onBeforeUnmount(() => {
-  unmountCellApps()
-  table?.destroy()
-  table = null
-})
 
 function onPrint() {
   window.print()
@@ -240,7 +176,20 @@ function onSave() {
   </div>
 
   <div :class="styles.tableSection">
-    <div ref="gridEl" class="tabulator-host" />
+    <!-- class 는 바깥 래퍼로, height 는 Tabulator 엘리먼트로 간다.
+         둘 다 있어야 그리드가 .tableSection 높이를 채우고 내부 스크롤 + 헤더 고정이 동작한다. -->
+    <TabulatorGrid
+      class="h-full"
+      :columns="gridColumns"
+      :data="rowsByCategory"
+      layout="fitColumns"
+      height="100%"
+      placeholder="등록된 장비가 없습니다"
+      :movable-columns="false"
+      :resizable-rows="false"
+      show-pagination
+      :items-per-page="10"
+    />
   </div>
 
   <!-- 기동장비 상세 -->

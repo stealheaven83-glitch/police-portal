@@ -78,9 +78,13 @@ export const info112Options: SelectOption[] = [
   { label: '중부교2호', value: 'jungbu-2' },
 ]
 
+const MOCK_LIST_SIZE = 50
+
 function createMockList(): EquipmentListRow[] {
-  return Array.from({ length: 50 }, (_, i) => ({
-    id: 3 - i,
+  // 최신 등록분이 위로 오도록 번호를 내림차순(50 → 1)으로 만든다.
+  // 건수와 무관하게 1 미만이 나오지 않도록 목록 길이를 기준으로 계산한다.
+  return Array.from({ length: MOCK_LIST_SIZE }, (_, i) => ({
+    id: MOCK_LIST_SIZE - i,
     category: 'mobile',
     typeLabel: '순찰차',
     managementName: '남포1',

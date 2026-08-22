@@ -37,12 +37,18 @@ export interface TabulatorGridColumn {
   cellType?: TabulatorCellType
 
   /* cellType: 'button' */
-  /** 버튼에 표시할 텍스트 */
-  buttonLabel?: string
+  /**
+   * 버튼에 표시할 텍스트.
+   * 셀 값이나 다른 컬럼 값을 버튼 텍스트로 쓰려면 행 데이터를 받는 함수를 넘긴다.
+   * 예) buttonLabel: (row) => row.managementName
+   */
+  buttonLabel?: string | ((rowData: any, cell: any) => string)
   /** 버튼 variant (기본 tertiary) */
   buttonVariant?: ButtonVariants["variant"]
   /** 버튼 size (기본 sm) */
   buttonSize?: ButtonVariants["size"]
+  /** 버튼에 추가로 붙일 클래스 (크기 미세조정 등) */
+  buttonClass?: string
   /** 행 데이터를 받아 버튼 비활성 여부를 반환 */
   buttonDisabled?: (rowData: any) => boolean
   /** 버튼 클릭 핸들러 */
