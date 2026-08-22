@@ -3,12 +3,12 @@ import type { HTMLAttributes } from 'vue'
 import { computed, ref, useId } from 'vue'
 import { useElementSize, useVModel } from '@vueuse/core'
 import { cn } from '@/lib/utils'
-import iconClear from '@/assets/icon/_delete.svg'
+import iconClear from '@/assets/icon/_delete.svg?url'
 import Input from '@/components/custom/input/Input.vue'
 import { Label } from '@/components/ui/label'
 
-import completeIcon from '@/assets/icon/icon_complete_message.svg'
-import errorIcon from '@/assets/icon/icon_error_message.svg'
+import completeIcon from '@/assets/icon/icon_complete_message.svg?url'
+import errorIcon from '@/assets/icon/icon_error_message.svg?url'
 
 /**
  * 레이블 · 입력 필드 · 도움말 · 알림 메시지를 하나로 묶은 입력 필드 컴포넌트.

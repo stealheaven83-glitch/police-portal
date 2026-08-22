@@ -111,7 +111,7 @@
   --disabled-input-border: #B1B8BE;
   --disabled-input-text-color: #6D7882;
 
-  /* Button (Figma: color/button/*) */
+  /* Button (Figma: color/button/*) — custom/button, ui/button 의 variant 가 참조 */
   --Button-primary-fill: var(--Base-primary);
   --Button-primary-fill-hover: #054887;
   --Button-primary-fill-pressed: #0a3c70;
@@ -191,7 +191,7 @@ body {
 
 *:focus {
   outline: 0.2rem solid var(--Base-secondary-dark);
-  outline-offset: 0.2rem;
+  outline-offset: 0;
   transition: outline 0s, box-shadow 0s !important;
 }
 

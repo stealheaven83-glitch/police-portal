@@ -51,13 +51,13 @@
   background:inherit;
 }
 .dp--month-year-wrap .dp--arrow-btn-nav[data-dp-element="action-prev"]{
-  background:url(/public/portal/asset/images/icon/ico_calendar_prev_20.svg) no-repeat center;
+  background:url(/portal/asset/images/icon/ico_calendar_prev_20.svg) no-repeat center;
 }
 .dp--month-year-wrap .dp--inner-nav:hover{
   background:inherit;
 }
 .dp--month-year-wrap .dp--arrow-btn-nav[data-dp-element="action-next"]{
-  background:url(/public/portal/asset/images/icon/ico_calendar_next_20.svg) no-repeat center;
+  background:url(/portal/asset/images/icon/ico_calendar_next_20.svg) no-repeat center;
 }
 .dp--calendar-header-item{
   font-size: 1.5rem;
@@ -67,17 +67,25 @@
   gap:1rem;
   justify-content:center;
 }
-.dp--month-year-select{
+.dp--month-year-wrap .dp--month-year-select{
   padding-right:2.8rem;
   width:auto;
-  background:url(/public/portal/asset/images/icon/ico_calendar_month_arrow.svg) no-repeat right 1rem top 1.5rem;
+  background:url(/portal/asset/images/icon/ico_calendar_month_arrow.svg) no-repeat right 1rem top 1.5rem;
   transition:none;
+}
+/* year-first 로 연도가 앞에 오므로 "2026년 8월" 로 읽히도록 단위를 붙인다 */
+.dp--month-year-wrap .dp--month-year-select[data-dp-element="overlay-year"]::after{
+  content:"년";
 }
 .dp--action-row{
   padding:1.6rem 2.4rem;
 }
 .dp--cell-offset{
   color:#8A949E;
+}
+.dp--cell-inner.dp--cell-disabled{
+  color:#C0C4CC;
+  cursor:not-allowed;
 }
 .dp--menu-inner{
   padding:1.6rem 2.1rem;
@@ -88,6 +96,6 @@
 .dp--calendar-header-separator{
   display:none;
 }
-.dp--clear-btn{
+.dp--input-wrap .dp--clear-btn{
   display:none;
 }

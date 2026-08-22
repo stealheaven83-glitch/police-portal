@@ -74,16 +74,44 @@
   background-color: #fff;
 }
 
+/*
+ * Tabulator 기본 짝수행 줄무늬(#efefef) 제거
+ * hover / selected / row-warn 규칙보다 위에 둬야 함
+ * (.tabulator-row:hover 와 특이도가 같아서, 아래에 두면 hover 배경을 덮어버림)
+ */
+.tabulator-row.tabulator-row-even {
+  background-color: transparent;
+}
+
+/*
+ * 고정열(frozen)은 짝수행 배경을 따라가지 않음.
+ *
+ * Tabulator 기본 CSS 는 고정열 셀을 position:sticky + background-color:inherit 로
+ * 처리해서 행 배경을 그대로 물려받는데, 위에서 짝수행을 transparent 로 만들면
+ * 고정열도 투명해져 가로 스크롤 시 뒤로 지나가는 셀 내용이 비침
+ * 그래서 고정열에는 불투명한 배경을 직접 지정
+ * (Tabulator 공식 예제에서도 고정열에는 짝수행 줄무늬가 적용되지 않음)
+ */
+.tabulator-row .tabulator-cell.tabulator-frozen {
+  background-color: #fff;
+}
+
+/*
+ * 단, hover · 선택 · 경고 상태는 행 전체에 걸쳐야 하므로
+ * 그 때는 다시 행 배경을 물려받도록 되돌린다.
+ */
+.tabulator-row:hover .tabulator-cell.tabulator-frozen,
+.tabulator-row.tabulator-selected .tabulator-cell.tabulator-frozen,
+.tabulator-row.row-warn .tabulator-cell.tabulator-frozen {
+  background-color: inherit;
+}
+
 .tabulator-row:hover {
   background-color: var(--Surface-primary);
 }
 
 .tabulator-row.tabulator-selectable:hover {
   background-color: #F0F7FF;
-}
-
-.tabulator-row.tabulator-row-even {
-  background-color: transparent;
 }
 
 .tabulator-row:hover .tabulator-cell {
@@ -111,6 +139,25 @@
 
 .tabulator-row .tabulator-cell.tabulator-editing {
   border: 1px solid var(--Base-primary);
+}
+
+/* 편집이 커밋된(변경된) 셀 표시 */
+.tabulator-row .tabulator-cell.cell-dirty {
+  background-color: #fff8e1;
+}
+
+/* 유효성 검사 실패 셀 표시 */
+.tabulator-row .tabulator-cell.tabulator-validation-fail {
+  border: 1px solid var(--danger);
+}
+
+/* 조건부 행 하이라이트 (rowClass 로 지정) */
+.tabulator-row.row-warn {
+  background-color: var(--Surface-point);
+}
+
+.tabulator-row.row-warn .tabulator-cell {
+  color: var(--Base--point);
 }
 
 /* 행 높이 슬라이더 반영 (종합 그리드 한정) */
@@ -152,7 +199,12 @@
   justify-content: center;
 }
 
-/* 입사일 셀에 마운트된 VueDatePicker: 셀 안에 딱 맞는 컴팩트한 입력 박스 */
+/*
+ * 입사일 셀: custom/datepicker(DatePicker.vue) 가 마운트된다.
+ * 실제 입력 박스는 그 컴포넌트 내부의 custom/input/Input.vue 가 스타일을 갖고 있어서
+ * (border/radius/font-size 등) 여기서 .dp--input 을 다시 스타일링할 필요가 없다 —
+ * 예전에 셀에 VueDatePicker 를 직접 마운트하던 시절의 잔재였고 지금은 매치되는 요소가 없다.
+ */
 .tabulator .grid-date-cell {
   width: 100%;
 }
@@ -161,15 +213,13 @@
   width: 100%;
 }
 
-.tabulator .grid-date-cell .dp--input {
-  height: 4rem;
-  border: 1px solid var(--Border_input01);
-  border-radius: 0.6rem;
-  font-size: 14px;
-  text-align: center;
-  padding-inline-start: 1.2rem;
-  font-family: "Pretendard GOV", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-  font-size: 1.5rem;
+/*
+ * 비고 셀: custom/input(Input.vue) 이 마운트된다.
+ * border/radius/padding/font-size 는 그 컴포넌트가 size="sm" 로 이미 갖고 있으므로
+ * 여기서는 셀 폭을 채우는 것만 담당한다.
+ */
+.tabulator .grid-input-cell {
+  width: 100%;
 }
 
 /* 부서 셀에 마운트된 SelectField: 셀 안에 딱 맞는 컴팩트한 셀렉트 박스 */

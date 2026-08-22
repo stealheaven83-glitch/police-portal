@@ -183,7 +183,7 @@ const router = createRouter({
         {
             path: '/component/date-picker',
             name: 'date-picker',
-            component: () => import('../components/custom/datepicker/DatePicker.vue'),
+            component: () => import('../views/component-sample/DatePicker.vue'),
             meta: {
                 layout: 'MainLayout',
                 title: 'Date Picker'
@@ -196,6 +196,15 @@ const router = createRouter({
             meta: {
                 layout: 'MainLayout',
                 title: 'Tabulator'
+            }
+        },
+        {
+            path: '/component/tabulator-grid',
+            name: 'tabulator-grid',
+            component: () => import('../views/component-sample/TabulatorGrid.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Tabulator Grid'
             }
         },
         {
@@ -426,13 +435,13 @@ const router = createRouter({
         },   
         {
             path: '/worklist',
-            name: 'pc-stt-0103',
+            name: 'worklist',
             component: () => import('../views/worklist/WorkIndex.vue'),
             meta: {
                 layout: '',
                 title: '인사관리'
             }
-        },            
+        },
         {
             path: '/:pathMatch(.*)*',
             name: 'notFound',
