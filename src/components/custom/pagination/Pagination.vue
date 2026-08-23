@@ -1,19 +1,25 @@
 <template>
-  <div class="grid grid-cols-[1fr_auto_1fr] items-center w-full">
-    <div class="justify-self-start text-sm">
+  <!--
+    좁은 화면에서는 2열로 접힌다.
+      1행: 총 건수(왼쪽) · 페이지당 건수(오른쪽)
+      2행: 페이지 버튼(전체 폭, 가운데)
+    md(768px) 이상에서는 시안대로 한 줄 3분할(1fr auto 1fr)이라 페이저가 바 정중앙에 온다.
+  -->
+  <div class="grid w-full grid-cols-2 items-center gap-y-3 md:grid-cols-[1fr_auto_1fr] md:gap-y-0">
+    <div class="order-1 min-w-0 justify-self-start truncate text-sm">
       총 <span class="font-bold">{{ totalElements }}</span>건 / 현재 {{ rangeStart }}-{{ rangeEnd }}
     </div>
-    <Pagination class="justify-self-center"
+    <Pagination class="order-3 col-span-2 justify-self-center md:order-2 md:col-span-1"
       :page="currentPage"
       :itemsPerPage="itemsPerPage"
       :total="totalElements"
-      :siblingCount="siblingCount"
+      :siblingCount="effectiveSiblingCount"
       show-edges
       @update:page="goToPage"
     >
       <PaginationList v-slot="{ items }" class="flex items-center gap-1">
         <PaginationFirst
-          class="p-1 flex items-center justify-center rounded-full border-none shadow-none bg-transparent text-gray-400 hover:bg-gray-100 hover:text-gray-600 hover:shadow-none disabled:opacity-40 disabled:hover:bg-transparent"
+          class="p-1 hidden sm:flex items-center justify-center rounded-full border-none shadow-none bg-transparent text-gray-400 hover:bg-gray-100 hover:text-gray-600 hover:shadow-none disabled:opacity-40 disabled:hover:bg-transparent"
           @click="goToPage(1)"
           :disabled="currentPage === 1"
         >
@@ -59,7 +65,7 @@
           <Icon name="arrowRight" :size="16" />
         </PaginationNext>
         <PaginationLast
-          class="has-[>svg]:px-1 p-1 flex items-center justify-center rounded-full border-none shadow-none bg-transparent text-gray-400 hover:bg-gray-100 hover:text-gray-600 hover:shadow-none disabled:opacity-40 disabled:hover:bg-transparent"
+          class="has-[>svg]:px-1 p-1 hidden sm:flex items-center justify-center rounded-full border-none shadow-none bg-transparent text-gray-400 hover:bg-gray-100 hover:text-gray-600 hover:shadow-none disabled:opacity-40 disabled:hover:bg-transparent"
           @click="goToPage(totalPages)"
           :disabled="currentPage === totalPages"
         >
@@ -67,20 +73,21 @@
         </PaginationLast>
       </PaginationList>
     </Pagination>
-    <div class="justify-self-end">
-      <section class="space-y-4">
-        <div class="flex gap-4">
-          <BaseSelect v-model="selectedValue" :options="itemsPerPageOptions" placeholder=""
-            width-class="" class="border-0 shadow-none
-            "/>
-        </div>
-      </section>
+    <div class="order-2 justify-self-end md:order-3">
+      <BaseSelect
+        v-model="selectedValue"
+        :options="itemsPerPageOptions"
+        placeholder=""
+        width-class=""
+        class="border-0 shadow-none"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { useMediaQuery } from '@vueuse/core'
 import BaseSelect from '@/components/select/BaseSelect.vue'
 
 interface PageSizeOption {
@@ -134,6 +141,11 @@ const rangeStart = computed(() =>
 const rangeEnd = computed(() =>
   Math.min(props.currentPage * props.itemsPerPage, props.totalElements),
 )
+
+/* 좁은 화면에서는 현재 페이지 좌우 번호를 접어 페이저가 넘치지 않게 한다.
+ * (sm 미만에서는 맨앞/맨뒤 버튼도 CSS 로 숨긴다) */
+const isNarrow = useMediaQuery('(max-width: 639px)')
+const effectiveSiblingCount = computed(() => (isNarrow.value ? 0 : props.siblingCount))
 
 const goToPage = (page: number) => {
   if (page >= 1 && page <= props.totalPages) {

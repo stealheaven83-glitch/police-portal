@@ -9,7 +9,15 @@
     <main class="work-main">
       <SideMenu :items="leftMenuDummyData" />
       <div class="flex-1 min-w-0 relative pr-10 flex flex-col pb-8">
-         <slot name="main" />
+         <!--
+           화면 내용. .wrap 이 화면 높이로 잠겨 있으므로 넘치는 내용은 이 래퍼가 스크롤한다.
+           바깥 컬럼이 아니라 안쪽 래퍼가 스크롤을 맡는 이유는, 탭 바가 컬럼에 absolute 로
+           붙어 있어서 컬럼이 스크롤 컨테이너가 되면 탭 바가 내용을 따라다니며 그리드 위로
+           겹쳐 올라오기 때문이다.
+         -->
+         <div class="flex flex-col flex-1 min-h-0 overflow-y-auto">
+           <slot name="main" />
+         </div>
          <!-- 컴포넌트화 작업중 -->
          <div class="absolute bottom-[7px] left-0 z-1" style="transform: translateY(100%)">
             <ul class="flex tab-ul">
@@ -74,11 +82,21 @@ const leftMenuDummyData = [
 </script>
 
 <style scoped>
+/*
+ * 화면 높이에 잠긴 껍데기. 넘치는 내용은 본문 래퍼가 스크롤하고 문서는 스크롤하지 않는다.
+ * overflow:hidden 은 그 규칙을 보장하는 장치다. 이게 없으면 탭 바처럼 박스 밖으로
+ * 밀어낸 요소가 문서 높이를 늘려 스크롤바가 하나 더 생긴다.
+ * (모달·셀렉트 등 떠 있는 UI 는 body 로 teleport 되므로 잘리지 않는다)
+ *
+ * dvh 는 모바일 주소창이 접혔다 펴질 때 실제 보이는 높이를 따라간다.
+ * 100vh 로만 두면 하단에 고정한 탭 바가 주소창 뒤로 숨는다.
+ */
 .wrap{
-  min-height: 100vh;
   height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 .work-main{
   height: 0;

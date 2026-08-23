@@ -5,6 +5,7 @@ import {
   onMounted,
   onBeforeUnmount,
   watch,
+  toRaw,
   useAttrs,
   getCurrentInstance,
   defineComponent,
@@ -64,15 +65,44 @@ interface Props {
   data: any[]
   /** 그리드 높이 */
   height?: string
+  /**
+   * 그리드 전체(표 + 페이지네이션)의 최소 높이. CSS 길이 문자열.
+   *
+   * height="100%" 로 부모를 채우는 화면에서, 좁은 폭이라 위쪽 툴바·탭이 여러 줄로
+   * 접히면 남는 높이가 거의 0 이 되어 표가 한 줄만 보이게 찌그러진다.
+   * 이 값을 주면 그 아래로는 줄어들지 않고, 넘치는 만큼은 바깥 스크롤이 받는다.
+   * (그리드를 flex 아이템으로 쓸 때 min-height: 0 을 함께 주면 이 값이 무시되니 주의)
+   */
+  minHeight?: string
   /** 행 높이(px) */
   rowHeight?: number
   layout?: TabulatorGridLayout
-  /** true 면 맨 앞에 일괄 선택 체크박스 컬럼을 자동으로 추가 */
+  /** true 면 맨 앞에 일괄 선택 체크박스 컬럼을 자동으로 추가 (= selectMode: 'checkbox' 와 같음) */
   selectable?: boolean
+  /**
+   * 행 선택 방식.
+   *  - 'none'     : 선택 없음(기본)
+   *  - 'single'   : 행을 클릭하면 그 행 하나만 선택 (체크박스 컬럼 없음)
+   *  - 'multi'    : 행을 클릭해 여러 행을 선택 (체크박스 컬럼 없음)
+   *  - 'checkbox' : 맨 앞에 체크박스 컬럼을 넣고 다중 선택
+   *
+   * 조회 팝업(112차량 조회 · 부서 조회 · 관할행정동 검색 등)은 시안상 체크박스 없이
+   * 행을 클릭해 고르는 형태라 'single' 을 쓴다.
+   */
+  selectMode?: 'none' | 'single' | 'multi' | 'checkbox'
   /** 데이터 0건일 때 표시할 문구 */
   placeholder?: string
   resizableColumns?: boolean
   resizableRows?: boolean
+  /**
+   * width / minWidth 를 아무것도 주지 않은 컬럼에 깔아줄 최소 폭(px).
+   *
+   * layout="fitColumns" 는 남는 폭을 컬럼끼리 나눠 갖는데, 폭을 안 준 컬럼은
+   * Tabulator 기본 minWidth(40px)까지 찌그러진 뒤에야 가로 스크롤이 생긴다.
+   * 좁은 화면에서 글자가 뭉개지는 대신 가로 스크롤이 생기도록 바닥을 올려 둔다.
+   * 컬럼에 width 나 minWidth 를 직접 주면 그 값이 그대로 우선한다.
+   */
+  columnMinWidth?: number
   movableColumns?: boolean
   /** 컬럼 헤더 클릭 정렬 허용 여부 (컬럼별로 headerSort 를 따로 줄 수도 있음) */
   headerSort?: boolean
@@ -107,13 +137,18 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   height: '220px',
+  minHeight: undefined,
   rowHeight: 48,
-  layout: 'fitDataStretch',
+  // 시안의 표는 모두 컨테이너 폭을 컬럼 비율로 나눠 갖는다(= fitColumns).
+  // 컬럼 이동·폭 조절은 시안 어디에도 없으므로 기본은 꺼둔다.
+  layout: 'fitColumns',
   selectable: false,
+  selectMode: 'none',
   placeholder: '데이터가 없습니다',
-  resizableColumns: true,
-  resizableRows: true,
-  movableColumns: true,
+  resizableColumns: false,
+  resizableRows: false,
+  movableColumns: false,
+  columnMinWidth: 90,
   headerSort: false,
   markDirty: true,
   rowClass: undefined,
@@ -131,9 +166,14 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   (e: 'update:itemsPerPage', size: number): void
+  /** 그리드 안에서 데이터가 바뀌었을 때(셀 편집 · 행 추가/삭제 · 다른 그리드에서 받기).
+   *  `v-model:data` 로 받으면 부모 배열이 항상 그리드 내용과 같은 상태로 유지된다. */
+  (e: 'update:data', rows: any[]): void
   (e: 'cell-edited', cell: any): void
   (e: 'row-selection-changed', rows: any[]): void
   (e: 'row-click', event: Event, row: any): void
+  /** 행 더블클릭. 시안의 "검색결과를 더블 클릭 시 하단 표에 추가" 흐름에 쓴다 */
+  (e: 'row-dbl-click', event: Event, row: any): void
   (e: 'table-built', table: any): void
   /** 연결된 다른 그리드에서 행을 받았을 때. 부모 상태와 동기화할 때 사용 */
   (e: 'rows-received', fromRow: any, toRow: any, fromTable: any): void
@@ -145,7 +185,10 @@ const attrs = useAttrs()
 /** class/style 은 기존 동작대로 바깥 래퍼에 */
 const rootAttrs = computed(() => ({
   class: attrs.class as HTMLAttributes['class'],
-  style: attrs.style as StyleValue,
+  style: [
+    attrs.style as StyleValue,
+    props.minHeight ? { minHeight: props.minHeight } : null,
+  ] as StyleValue,
 }))
 /** 그 외(id, data-* 등)는 Tabulator 가 생성되는 host 엘리먼트에 */
 const hostAttrs = computed(() => {
@@ -594,6 +637,10 @@ function buildColumn(col: TabulatorGridColumn, columnKey: string): Record<string
     }
   }
 
+  // 폭을 아무것도 안 준 컬럼은 fitColumns 에서 40px 까지 찌그러진다.
+  // 좁은 화면에서 컬럼이 뭉개지는 대신 가로 스크롤이 생기도록 바닥을 깔아준다.
+  if (rest.width == null && rest.minWidth == null) rest.minWidth = props.columnMinWidth
+
   // formatter 를 직접 넘긴 경우에는 그것을 우선한다
   if (rest.formatter || !cellType) return rest
 
@@ -617,10 +664,24 @@ function buildColumn(col: TabulatorGridColumn, columnKey: string): Record<string
   return rest
 }
 
+/* ------------------------------------------------------------------ *
+ * 행 선택 방식
+ * ------------------------------------------------------------------ */
+/** 구 프롭 selectable 은 체크박스 다중 선택과 같은 의미로 취급한다 */
+const resolvedSelectMode = computed(() => (props.selectable ? 'checkbox' : props.selectMode))
+/** 맨 앞 체크박스 컬럼을 넣을지 */
+const hasSelectColumn = computed(() => resolvedSelectMode.value === 'checkbox')
+/** Tabulator 의 selectableRows 값 (false = 선택 없음, 1 = 한 행만, true = 여러 행) */
+const selectableRows = computed(() => {
+  if (resolvedSelectMode.value === 'none') return false
+  if (resolvedSelectMode.value === 'single') return 1
+  return true
+})
+
 function buildColumns() {
   const cols = props.columns.map((col, index) => buildColumn(col, `col-${index}`))
 
-  if (!props.selectable) return cols
+  if (!hasSelectColumn.value) return cols
 
   return [
     {
@@ -665,7 +726,7 @@ onMounted(() => {
     resizableColumns: props.resizableColumns,
     resizableRows: props.resizableRows,
     movableColumns: props.movableColumns,
-    selectableRows: props.selectable,
+    selectableRows: selectableRows.value,
     columnDefaults: { headerSort: props.headerSort },
     tooltip: true,
     height: props.height,
@@ -715,6 +776,7 @@ onMounted(() => {
     // 편집이 커밋됐다는 건 유효성을 통과했다는 뜻
     removeField(invalidFields, rowData, field)
     paintCell(cell)
+    emitData()
     emit('cell-edited', cell)
   })
 
@@ -723,6 +785,7 @@ onMounted(() => {
   })
 
   table.on('rowClick', (e: Event, row: any) => emit('row-click', e, row))
+  table.on('rowDblClick', (e: Event, row: any) => emit('row-dbl-click', e, row))
 
   // 페이지네이션 동기화
   table.on('pageLoaded', (pageno: number) => {
@@ -740,16 +803,19 @@ onMounted(() => {
   table.on('rowAdded', () => {
     syncSelectionCheckboxes()
     totalElements.value = table.getDataCount()
+    emitData()
   })
   table.on('rowDeleted', () => {
     unmountOrphanRowCells()
     syncSelectionCheckboxes()
     totalElements.value = table.getDataCount()
+    emitData()
   })
 
   // 행 드래그
   table.on('movableRowsReceived', (fromRow: any, toRow: any, fromTable: any) => {
     totalElements.value = table.getDataCount()
+    emitData()
     emit('rows-received', fromRow, toRow, fromTable)
   })
   table.on('rowMoved', (row: any) => emit('row-moved', row))
@@ -780,11 +846,39 @@ function applyData(rows: any[]) {
   table.setData(clone(rows))
 }
 
+/* ------------------------------------------------------------------ *
+ * 부모 상태와의 동기화
+ *
+ * 이 컴포넌트는 data 를 복제해서 쓰기 때문에, 셀 편집·행 추가/삭제로 바뀐 내용은
+ * 부모 배열에 저절로 반영되지 않는다. 그래서 바뀔 때마다 update:data 로 알려준다.
+ *   <TabulatorGrid v-model:data="rows" ... />
+ * 이렇게 받으면 rows 가 항상 그리드와 같은 내용이라, 저장할 때 getData() 를 따로
+ * 부를 필요가 없고 부모가 배열을 갈아끼워도 편집 내용이 사라지지 않는다.
+ *
+ * v-model 로 되돌아온 배열까지 다시 setData 하면 편집 중에 리렌더가 일어나 포커스가
+ * 날아가므로, 방금 우리가 내보낸 배열이면 무시한다.
+ * ------------------------------------------------------------------ */
+let lastEmittedData: any[] | null = null
+
+function emitData() {
+  if (!table) return
+  const rows = table.getData()
+  lastEmittedData = rows
+  emit('update:data', rows)
+}
+
 /* 부모가 data 배열을 새로 넘기면 그리드를 갱신
  * (연결된 그리드에서 드래그로 받은 행도 함께 사라지므로, @rows-received 로 부모 상태를 맞춰둘 것) */
 watch(
   () => props.data,
-  (next) => applyData(next),
+  (next) => {
+    // v-model 로 돌려받은 배열은 reactive 프록시로 감싸여 오므로 toRaw 로 비교한다
+    if (next === lastEmittedData || toRaw(next) === lastEmittedData) {
+      lastEmittedData = null
+      return
+    }
+    applyData(next)
+  },
 )
 
 /* 부모가 columns 를 바꾸면 컬럼을 다시 만든다 */
@@ -934,8 +1028,9 @@ defineExpose({
       :style="{ '--row-h': rowHeightPx }"
     />
 
+    <!-- 시안(메모 검색결과없음)에서는 0건일 때 페이지네이션 바가 통째로 사라진다 -->
     <Pagination
-      v-if="showPagination"
+      v-if="showPagination && totalElements > 0"
       class="mt-[20px] shrink-0"
       :current-page="currentPage"
       :total-pages="totalPages"

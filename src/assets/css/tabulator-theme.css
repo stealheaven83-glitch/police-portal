@@ -111,7 +111,7 @@
 }
 
 .tabulator-row.tabulator-selectable:hover {
-  background-color: #F0F7FF;
+  background-color: var(--Surface-primary);
 }
 
 .tabulator-row:hover .tabulator-cell {
@@ -119,14 +119,20 @@
   font-weight: bold;
 }
 
+/*
+ * 선택 행. Figma 변수 기준:
+ *   배경   color/action/primary-selected  #f0f7ff  (= --Surface-primary)
+ *   글자   color/text/primary             #0054a6  (= --Base-primary)
+ *   타이포 body/small-bold                 700
+ * 시안에는 왼쪽 세로 바가 없다.
+ */
 .tabulator-row.tabulator-selected {
-  background-color: #fff;
-  box-shadow: inset 3px 0 0 var(--Base-primary);
+  background-color: var(--Surface-primary);
 }
 
 .tabulator-row.tabulator-selected .tabulator-cell {
   color: var(--Base-primary);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .tabulator-row .tabulator-cell.tabulator-frozen.tabulator-frozen-left input[type="checkbox"],

@@ -245,6 +245,32 @@ const groupColumns: TabulatorGridColumn[] = [
 const groupData = ref<Employee[]>(JSON.parse(JSON.stringify(initialData)))
 
 /* ------------------------------------------------------------------ *
+ * 행 더블클릭으로 다른 표에 추가 (체크박스 없는 단일 선택)
+ *
+ * 시안(관할행정동 검색 팝업)의 "검색결과를 더블 클릭 시 하단 표에 추가" 흐름.
+ * 위 표는 select-mode="single" 이라 체크박스 컬럼 없이 행 클릭만으로 선택된다.
+ * ------------------------------------------------------------------ */
+const pickColumns: TabulatorGridColumn[] = [
+  { title: '사번', field: 'id', width: 70, hozAlign: 'center' },
+  { title: '이름', field: 'name', minWidth: 100 },
+  { title: '부서', field: 'dept', minWidth: 100 },
+  { title: '직급', field: 'position', minWidth: 90 },
+]
+
+const pickSource = ref<Employee[]>(JSON.parse(JSON.stringify(initialData)))
+const pickedData = ref<Employee[]>([])
+
+function onPickRow(_event: Event, row: any) {
+  const picked = row.getData() as Employee
+  if (pickedData.value.some((r) => r.id === picked.id)) return
+  pickedData.value = [...pickedData.value, { ...picked }]
+}
+
+function clearPicked() {
+  pickedData.value = []
+}
+
+/* ------------------------------------------------------------------ *
  * 빈 데이터 상태
  * ------------------------------------------------------------------ */
 const emptyData = ref<Employee[]>([])
@@ -337,6 +363,48 @@ function toggleEmptyData() {
         </div>
       </section>
 
+      <!-- ============ 행 더블클릭으로 다른 표에 추가 ============ -->
+      <section class="space-y-4 pt-12">
+        <h2 class="text-xl font-semibold">행 더블클릭으로 다른 표에 추가</h2>
+        <p class="text-gray-500 text-sm">
+          시안(관할행정동 검색)의 <b>"검색결과를 더블 클릭 시 하단 표에 추가"</b> 흐름입니다.
+          위 그리드는 <code>select-mode="single"</code> 이라 <b>체크박스 컬럼 없이</b> 행을 클릭해
+          한 줄만 선택되고, <code>@row-dbl-click</code> 으로 아래 표에 넘깁니다.
+          두 그리드 모두 <code>layout</code> 을 주지 않았는데, 기본값이 <code>fitColumns</code> 라
+          컨테이너 폭을 컬럼 비율대로 나눠 갖습니다.
+        </p>
+        <div>
+          <div class="text-sm font-medium mb-1">검색 결과 — 행을 더블클릭하세요</div>
+          <TabulatorGrid
+            :columns="pickColumns"
+            :data="pickSource"
+            height="240px"
+            select-mode="single"
+            @row-dbl-click="onPickRow"
+          />
+        </div>
+        <ButtonGroup
+          :items="[
+            {
+              key: 'clear-picked',
+              label: '비우기',
+              variant: 'secondary',
+              size: 'sm',
+              onClick: clearPicked,
+            },
+          ]"
+        />
+        <div>
+          <div class="text-sm font-medium mb-1">선택된 항목 — {{ pickedData.length }}건</div>
+          <TabulatorGrid
+            :columns="pickColumns"
+            :data="pickedData"
+            height="200px"
+            placeholder="위 표에서 행을 더블클릭하세요"
+          />
+        </div>
+      </section>
+
       <!-- ============ 헤더 그룹핑 (셀 병합 대체) ============ -->
       <section class="space-y-4 pt-12">
         <h2 class="text-xl font-semibold">
@@ -360,8 +428,8 @@ function toggleEmptyData() {
         <h2 class="text-xl font-semibold">빈 데이터 상태</h2>
         <p class="text-gray-500 text-sm">
           데이터가 0건이면 <code>placeholder</code> 프롭의 문구가 표시됩니다(기본
-          "데이터가 없습니다"). 페이지네이션을 함께 켠 상태에서 0건 ↔ 데이터 있음을 오가며
-          확인합니다.
+          "데이터가 없습니다"). 시안과 맞추어 <b>0건일 때는 페이지네이션 바가 통째로 사라집니다.</b>
+          아래 버튼으로 0건 ↔ 데이터 있음을 오가며 확인합니다.
         </p>
         <ButtonGroup
           :items="[

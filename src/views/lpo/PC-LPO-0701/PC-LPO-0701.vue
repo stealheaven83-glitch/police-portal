@@ -76,14 +76,17 @@ function onOpenRow(row: EquipmentListRow) {
  *
  * 셀 안의 버튼은 cellType: 'button' 이 custom/button 의 Button 컴포넌트를 직접 마운트해준다.
  * (그리드 인스턴스 생성/파기, 셀 컴포넌트 언마운트, 데이터 갱신은 컴포넌트가 처리)
+ *
+ * 컬럼 폭: 시안(1564px 기준)은 번호만 60px 고정이고 나머지 11개가 136.72px 씩 균등하다.
+ * layout="fitColumns" 는 width 를 준 컬럼을 고정으로 빼고 나머지가 남는 폭을 나눠 가지므로,
+ * 균등 배분할 컬럼에는 width 를 주지 않는다. 좁은 화면용 최소 폭은 columnMinWidth(기본 90px).
  */
 const gridColumns: TabulatorGridColumn[] = [
-  { title: '번호', field: 'id', width: 70, hozAlign: 'center' },
-  { title: '장비구분', field: 'typeLabel', width: 100, hozAlign: 'center' },
+  { title: '번호', field: 'id', width: 60, hozAlign: 'center' },
+  { title: '장비구분', field: 'typeLabel', hozAlign: 'center' },
   {
     title: '장비관리명',
     field: 'managementName',
-    width: 130,
     hozAlign: 'center',
     cellType: 'button',
     buttonVariant: 'link',
@@ -92,15 +95,14 @@ const gridColumns: TabulatorGridColumn[] = [
     buttonLabel: (row) => String((row as EquipmentListRow).managementName),
     onButtonClick: (row) => onOpenRow(row as EquipmentListRow),
   },
-  { title: '차량제조사', field: 'manufacturer', width: 100, hozAlign: 'center' },
-  { title: '차종명', field: 'model', minWidth: 120, hozAlign: 'center' },
-  { title: '차량번호', field: 'plateNumber', width: 130, hozAlign: 'center' },
-  { title: '배치장소', field: 'location', width: 130, hozAlign: 'center' },
-  { title: '비고', field: 'note', width: 130, hozAlign: 'center' },
+  { title: '차량제조사', field: 'manufacturer', hozAlign: 'center' },
+  { title: '차종명', field: 'model', hozAlign: 'center' },
+  { title: '차량번호', field: 'plateNumber', hozAlign: 'center' },
+  { title: '배치장소', field: 'location', hozAlign: 'center' },
+  { title: '비고', field: 'note', hozAlign: 'center' },
   {
     title: '유지보수이력',
     field: 'id',
-    width: 110,
     hozAlign: 'center',
     cellType: 'button',
     buttonVariant: 'tertiary',
@@ -111,12 +113,11 @@ const gridColumns: TabulatorGridColumn[] = [
   {
     title: '사용여부',
     field: 'inUse',
-    width: 90,
     hozAlign: 'center',
     formatter: (cell: any) => (cell.getValue() ? '사용중' : '미사용'),
   },
-  { title: '수정자', field: 'updater', width: 90, hozAlign: 'center' },
-  { title: '수정일자', field: 'updatedAt', width: 120, hozAlign: 'center' },
+  { title: '수정자', field: 'updater', hozAlign: 'center' },
+  { title: '수정일자', field: 'updatedAt', hozAlign: 'center' },
 ]
 
 function onPrint() {
@@ -175,22 +176,21 @@ function onSave() {
     <Button type="button" variant="primary" size="sm" class="w-25">신규</Button>
   </div>
 
-  <div :class="styles.tableSection">
-    <!-- class 는 바깥 래퍼로, height 는 Tabulator 엘리먼트로 간다.
-         둘 다 있어야 그리드가 .tableSection 높이를 채우고 내부 스크롤 + 헤더 고정이 동작한다. -->
-    <TabulatorGrid
-      class="h-full"
-      :columns="gridColumns"
-      :data="rowsByCategory"
-      layout="fitColumns"
-      height="100%"
-      placeholder="등록된 장비가 없습니다"
-      :movable-columns="false"
-      :resizable-rows="false"
-      show-pagination
-      :items-per-page="10"
-    />
-  </div>
+  <!--
+    그리드가 직접 flex 아이템이라 남은 높이를 채운다(flex-1 + height="100%").
+    min-height 는 좁은 화면에서 위쪽 툴바·탭이 접혀 남는 높이가 사라졌을 때의 바닥이다.
+    (min-h-0 을 주면 min-height 가 무시되므로 주지 않는다)
+  -->
+  <TabulatorGrid
+    class="mt-[1.2rem] flex-1"
+    :columns="gridColumns"
+    :data="rowsByCategory"
+    height="100%"
+    min-height="40rem"
+    placeholder="등록된 장비가 없습니다"
+    show-pagination
+    :items-per-page="10"
+  />
 
   <!-- 기동장비 상세 -->
   <GenericDialog2 v-model:open="detailDialogOpen" title="기동장비 상세" :size="800" :show-close-button="true">

@@ -53,10 +53,20 @@ function toggleDepth1(index: number) {
 </template>
 
 <style scoped>
+/*
+ * .work-main 이 height:100vh 로 잠긴 flex 컨테이너라, 이 메뉴는 화면 높이만큼만
+ * 늘어난다. 메뉴 항목이 그보다 길면(뎁스를 펼친 경우 등) 넘치는 부분이 화면 밖으로
+ * 잘려 나가고 문서 스크롤도 없어서 볼 방법이 없다. 그래서 메뉴가 스스로 스크롤한다.
+ */
 .left-menu {
   padding: 2.4rem 3.6rem;
   width: 31.6rem;
   flex-shrink: 0;
+  overflow-y: auto;
+  /* 스크롤바가 나타났다 사라져도 메뉴 폭이 흔들리지 않게 자리를 미리 잡아둔다 */
+  scrollbar-gutter: stable;
+  /* 메뉴 끝까지 내렸을 때 본문이 따라 스크롤되지 않도록 */
+  overscroll-behavior: contain;
 }
 
 /* 사이드바 폭(31.6rem) 확보가 어려운 좁은 화면에서는 본문 폭을 우선한다. */

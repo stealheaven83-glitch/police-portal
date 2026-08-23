@@ -31,19 +31,6 @@
   margin-top: 1.6rem;
 }
 
-/*
- * 그리드 영역. 스크롤은 이 박스가 아니라 그리드가 직접 맡는다.
- * Tabulator 의 헤더 고정은 .tabulator-tableholder 가 스크롤될 때만 성립하는데,
- * 바깥 박스가 스크롤하면 헤더까지 함께 밀려 올라가기 때문.
- * (그래서 그리드에 height="100%" + h-full 을 준다)
- */
-.tableSection {
-  margin-top: 1.2rem;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-}
-
 /* -------------------------------------------------------------- 상세 모달 */
 .requiredDot {
   margin-left: 0.2rem;
