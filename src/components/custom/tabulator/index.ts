@@ -57,6 +57,8 @@ export interface TabulatorGridColumn {
   /* cellType: 'select' */
   /** 셀렉트 옵션 목록 */
   selectOptions?: SelectCellOption[]
+  /** 값이 비어 있을 때 셀렉트에 표시할 안내 문구 (예: '선택') */
+  selectPlaceholder?: string
 
   /* cellType: 'badge' */
   /** 셀 값 -> Badge 색상 매핑. 지정 안 된 값은 badgeFallbackColor 로 표시 */

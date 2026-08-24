@@ -85,12 +85,6 @@
   color: var(--Text-body_1, #33363d);
 }
 
-.listActions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.8rem;
-  margin-top: 1.6rem;
-}
 
 /* -------------------------------------------------------------- 상세 모달 */
 .requiredDot {

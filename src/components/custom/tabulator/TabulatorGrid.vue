@@ -534,6 +534,7 @@ function selectCellFormatter(col: TabulatorGridColumn, columnKey: string) {
       h(SelectField, {
         modelValue: value.value,
         options: col.selectOptions ?? [],
+        placeholder: col.selectPlaceholder,
         size: 'sm',
         'onUpdate:modelValue': (val: string | number) => {
           value.value = val

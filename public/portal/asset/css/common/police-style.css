@@ -1052,6 +1052,16 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   height: 2.4rem;
 }
 
+.listActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin: 1.6rem 0 2rem;
+}
+
+.grid-wrap{
+  margin-top:2rem;
+}
 @media (max-width: 1200px) {
   .search-wrap .keyword .keyword-list {
     flex-wrap: wrap;

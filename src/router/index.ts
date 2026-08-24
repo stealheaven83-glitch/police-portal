@@ -416,6 +416,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/views/com/PC-COM-2301',
+            name: 'PC-COM-2301',
+            component: () => import('../views/com/PC-COM-2301/PC-COM-2301.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '시스템모니터링 관리'
+            }
+        },
+        {
             path: '/component/PC-STT-0103',
             name: 'pc-stt-0103',
             component: () => import('../views/stt/PC-STT-0103/PC-STT-0103.vue'),
