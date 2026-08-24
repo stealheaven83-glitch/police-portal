@@ -24,9 +24,9 @@ import {
   positionOptions,
   teamOptions,
   periodicAccidentReasonOptions,
-} from './PC-LPO-0801'
-import type { PersonnelListRow } from './PC-LPO-0801'
-import styles from './PC-LPO-0801.module.css'
+} from './composable/PC-LPO-0801'
+import type { PersonnelListRow } from './composable/PC-LPO-0801'
+import styles from '.style/PC-LPO-0801.module.css'
 
 const navItems = [
   { label: '홈', path: '/' },

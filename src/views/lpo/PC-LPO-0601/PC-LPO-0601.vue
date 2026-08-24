@@ -6,7 +6,7 @@ import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import DepartmentToolbar from './DepartmentToolbar.vue'
 import DepartmentInfoSection from './DepartmentInfoSection.vue'
 import DistrictInfoSection from './DistrictInfoSection.vue'
-import { useJurisdictionStatusForm } from './useJurisdictionStatusForm.ts'
+import { useJurisdictionStatusForm } from './composable/useJurisdictionStatusForm.ts'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 
 const navItems = [

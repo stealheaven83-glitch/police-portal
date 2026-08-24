@@ -9,8 +9,8 @@ import { Checkbox } from '@/components/custom/checkbox'
 import { Button } from '@/components/custom/button'
 import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
 import Icon from '@/components/custom/icon/Icon.vue'
-import type { DepartmentInfoForm, SelectOption } from './useJurisdictionStatusForm'
-import styles from './infoGrid.module.css'
+import type { DepartmentInfoForm, SelectOption } from '../composable/useJurisdictionStatusForm'
+import styles from '../style/infoGrid.module.css'
 
 const props = defineProps<{
   modelValue: DepartmentInfoForm

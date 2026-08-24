@@ -14,9 +14,9 @@ import { Switch } from '@/components/custom/switch'
 import { Button } from '@/components/custom/button'
 import Pagination from '@/components/custom/pagination/Pagination.vue'
 import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
-import { useMemoList, sortOptions } from './useMemoList'
-import type { MemoSort } from './useMemoList'
-import styles from './PM-LPO-0101.module.css'
+import { useMemoList, sortOptions } from './composable/useMemoList'
+import type { MemoSort } from './composable/useMemoList'
+import styles from './style/PM-LPO-0101.module.css'
 
 const navItems = [
   { label: '홈', path: '/' },

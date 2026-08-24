@@ -4,8 +4,8 @@ import InputField2 from '@/components/custom/input/InputField2.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { Button } from '@/components/custom/button'
 import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
-import type { DistrictInfoForm, PatrolZoneSummary } from './useJurisdictionStatusForm'
-import styles from './infoGrid.module.css'
+import type { DistrictInfoForm, PatrolZoneSummary } from '../composable/useJurisdictionStatusForm'
+import styles from '../style/infoGrid.module.css'
 
 defineProps<{
   modelValue: DistrictInfoForm

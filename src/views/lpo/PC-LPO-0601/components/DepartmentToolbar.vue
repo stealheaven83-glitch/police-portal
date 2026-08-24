@@ -3,7 +3,7 @@ import { toast } from 'vue-sonner'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import type { DepartmentNode, DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import { Button } from '@/components/custom/button'
-import styles from './toolbar.module.css'
+import styles from '../style/toolbar.module.css'
 
 interface Props {
   department: DepartmentValue
