@@ -33,6 +33,20 @@
 
 
 /* -------------------------------------------------------------- 상세 모달 */
+.requiredDot {
+  margin-left: 0.2rem;
+  color: var(--Base--point);
+}
+
+.requiredDot::before {
+  content: '';
+  display: block;
+  width: 0.6rem;
+  height: 0.6rem;
+  background: var(--Base--point);
+  border-radius: 50%;
+}
+
 .legend {
   display: flex;
   align-items: center;

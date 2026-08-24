@@ -23,6 +23,8 @@ import {
   carTypeOptions,
   locationOptions,
   info112Options,
+  commTypeOptions,
+  commManageStatusLabel,
 } from './composable/PC-LPO-0701'
 import type { EquipmentListRow } from './composable/PC-LPO-0701'
 import styles from './style/PC-LPO-0701.module.css'
@@ -61,14 +63,27 @@ const {
   openVehicle112Dialog,
   searchVehicle112,
   assignVehicle112,
+  commDetail,
+  commDetailDialogOpen,
+  openNewCommDetail,
+  openCommDetail,
+  saveCommDetail,
+  deleteCommDetail,
 } = useEquipmentList()
 
 /** 순찰차 외(오토바이/자전거)에는 없는 차량 전용 항목들 */
 const isVehicleRestricted = computed(() => detail.vehicleType !== 'patrol')
 const isPlateNumberDisabled = computed(() => isVehicleRestricted.value || detail.isSaved)
 
+/** 목록 행 클릭/상세보기 — 지금 활성 탭이 어떤 카테고리인지에 따라 필드 구성이 다른 모달로 나뉜다 */
 function onOpenRow(row: EquipmentListRow) {
-  openDetail(row)
+  if (activeCategory.value === 'comm') openCommDetail(row)
+  else openDetail(row)
+}
+
+function onNew() {
+  if (activeCategory.value === 'comm') openNewCommDetail()
+  else openNewDetail()
 }
 
 /**
@@ -80,45 +95,69 @@ function onOpenRow(row: EquipmentListRow) {
  * 컬럼 폭: 시안(1564px 기준)은 번호만 60px 고정이고 나머지 11개가 136.72px 씩 균등하다.
  * layout="fitColumns" 는 width 를 준 컬럼을 고정으로 빼고 나머지가 남는 폭을 나눠 가지므로,
  * 균등 배분할 컬럼에는 width 를 주지 않는다. 좁은 화면용 최소 폭은 columnMinWidth(기본 90px).
+ *
+ * 카테고리(탭)마다 실제 항목이 달라(기동장비=차량 속성, 통신장비=종류/제조번호 등) 컬럼 구성도
+ * 갈라진다 — activeCategory 로 분기하는 computed 로 둬서 탭 전환 시 TabulatorGrid 가 자동으로
+ * 컬럼을 다시 그리게 한다.
  */
-const gridColumns: TabulatorGridColumn[] = [
+const maintenanceColumn: TabulatorGridColumn = {
+  title: '유지보수이력',
+  field: 'id',
+  hozAlign: 'center',
+  cellType: 'button',
+  buttonVariant: 'tertiary',
+  buttonSize: 'xs',
+  buttonClass: 'h-9 w-12.5',
+  buttonLabel: '보기',
+}
+
+const inUseColumn: TabulatorGridColumn = {
+  title: '사용여부',
+  field: 'inUse',
+  hozAlign: 'center',
+  formatter: (cell: any) => (cell.getValue() ? '사용중' : '미사용'),
+}
+
+const managementNameColumn: TabulatorGridColumn = {
+  title: '장비관리명',
+  field: 'managementName',
+  hozAlign: 'center',
+  cellType: 'button',
+  buttonVariant: 'link',
+  buttonSize: 'xxs',
+  // 버튼 텍스트가 곧 셀 값이다
+  buttonLabel: (row) => String((row as EquipmentListRow).managementName),
+  onButtonClick: (row) => onOpenRow(row as EquipmentListRow),
+}
+
+const mobileGridColumns: TabulatorGridColumn[] = [
   { title: '번호', field: 'id', width: 60, hozAlign: 'center' },
   { title: '장비구분', field: 'typeLabel', hozAlign: 'center' },
-  {
-    title: '장비관리명',
-    field: 'managementName',
-    hozAlign: 'center',
-    cellType: 'button',
-    buttonVariant: 'link',
-    buttonSize: 'xxs',
-    // 버튼 텍스트가 곧 셀 값이다
-    buttonLabel: (row) => String((row as EquipmentListRow).managementName),
-    onButtonClick: (row) => onOpenRow(row as EquipmentListRow),
-  },
+  managementNameColumn,
   { title: '차량제조사', field: 'manufacturer', hozAlign: 'center' },
   { title: '차종명', field: 'model', hozAlign: 'center' },
   { title: '차량번호', field: 'plateNumber', hozAlign: 'center' },
   { title: '배치장소', field: 'location', hozAlign: 'center' },
   { title: '비고', field: 'note', hozAlign: 'center' },
-  {
-    title: '유지보수이력',
-    field: 'id',
-    hozAlign: 'center',
-    cellType: 'button',
-    buttonVariant: 'tertiary',
-    buttonSize: 'xs',
-    buttonClass: 'h-9 w-12.5',
-    buttonLabel: '보기',
-  },
-  {
-    title: '사용여부',
-    field: 'inUse',
-    hozAlign: 'center',
-    formatter: (cell: any) => (cell.getValue() ? '사용중' : '미사용'),
-  },
+  maintenanceColumn,
+  inUseColumn,
   { title: '수정자', field: 'updater', hozAlign: 'center' },
   { title: '수정일자', field: 'updatedAt', hozAlign: 'center' },
 ]
+
+const commGridColumns: TabulatorGridColumn[] = [
+  { title: '번호', field: 'id', width: 60, hozAlign: 'center' },
+  { title: '통신장비 종류', field: 'typeLabel', hozAlign: 'center' },
+  managementNameColumn,
+  { title: '배치장소', field: 'location', hozAlign: 'center' },
+  { title: '비고', field: 'note', hozAlign: 'center' },
+  maintenanceColumn,
+  inUseColumn,
+  { title: '수정자', field: 'updater', hozAlign: 'center' },
+  { title: '수정일자', field: 'updatedAt', hozAlign: 'center' },
+]
+
+const gridColumns = computed(() => (activeCategory.value === 'comm' ? commGridColumns : mobileGridColumns))
 
 function onPrint() {
   window.print()
@@ -173,7 +212,7 @@ function onSave() {
 
   <div :class="styles.listActions">
     <Button type="button" variant="tertiary2" size="sm" class="w-25" @click="onPrint">인쇄</Button>
-    <Button type="button" variant="primary" size="sm" class="w-25">신규</Button>
+    <Button type="button" variant="primary" size="sm" class="w-25" @click="onNew">신규</Button>
   </div>
 
   <!--
@@ -318,7 +357,7 @@ function onSave() {
         :class="styles.searchInput"
         @keyup.enter="searchVehicle112"
       />
-      <Button type="button" variant="secondary" size="sm" @click="searchVehicle112">조회</Button>
+      <Button type="button" variant="secondary" size="sm" class="w-25" @click="searchVehicle112">조회</Button>
     </div>
 
     <div :class="styles.vehicleTableWrap">
@@ -354,10 +393,73 @@ function onSave() {
     </div>
 
     <template #footer>
-      <Button type="button" variant="tertiary2" size="md" @click="vehicle112DialogOpen = false">닫기</Button>
-      <Button type="button" variant="primary" size="md" :disabled="selectedVehicle112Id == null" @click="assignVehicle112">
+      <Button type="button" class="w-25" variant="tertiary2" size="md" @click="vehicle112DialogOpen = false">닫기</Button>
+      <Button type="button" class="w-25" variant="primary" size="md" :disabled="selectedVehicle112Id == null" @click="assignVehicle112">
         차량지정
       </Button>
+    </template>
+  </GenericDialog2>
+
+  <!-- 통신장비 상세 -->
+  <GenericDialog2 v-model:open="commDetailDialogOpen" title="통신장비" :size="700" :show-close-button="true">
+    <p :class="styles.legend">• 필수 입력 항목</p>
+
+    <InfoTable :columns="2">
+      <InfoField for="comm-type">
+        <template #label>통신장비 종류<span :class="styles.requiredDot" /></template>
+        <SelectField
+          id="comm-type"
+          v-model="commDetail.commType"
+          :options="commTypeOptions"
+          size="sm"
+          trigger-class="w-full"
+          class="!space-y-0 flex-1"
+          placeholder="선택"
+        />
+      </InfoField>
+      <InfoField for="comm-management-name">
+        <template #label>장비관리명<span :class="styles.requiredDot" /></template>
+        <InputField2 id="comm-management-name" v-model="commDetail.managementName" size="sm" class="!space-y-0 flex-1" />
+      </InfoField>
+
+      <InfoField for="comm-location">
+        <template #label>배치장소<span :class="styles.requiredDot" /></template>
+        <SelectField
+          id="comm-location"
+          v-model="commDetail.location"
+          :options="locationOptions"
+          size="sm"
+          trigger-class="w-full"
+          class="!space-y-0 flex-1"
+          placeholder="선택"
+        />
+      </InfoField>
+      <InfoField for="comm-serial-number">
+        <template #label>제조번호<span :class="styles.requiredDot" /></template>
+        <InputField2 id="comm-serial-number" v-model="commDetail.serialNumber" size="sm" class="!space-y-0 flex-1" />
+      </InfoField>
+
+      <InfoField full>
+        <template #label>관리상태<span :class="styles.requiredDot" /></template>
+        <RadioGroup v-model="commDetail.manageStatus" class="flex gap-6">
+          <RadioGroupItem
+            v-for="(label, value) in commManageStatusLabel"
+            :key="value"
+            :value="value"
+            :label="label"
+          />
+        </RadioGroup>
+      </InfoField>
+
+      <InfoField label="비고" full layout="column">
+        <TextareaField v-model="commDetail.note" class="w-full !space-y-0" textarea-class="w-full" :height="90" />
+      </InfoField>
+    </InfoTable>
+
+    <template #footer>
+      <Button type="button" class="w-25" variant="tertiary2" size="md" @click="commDetailDialogOpen = false">취소</Button>
+      <Button type="button" class="w-25" variant="tertiary2" size="md" :disabled="commDetail.id == null" @click="deleteCommDetail">삭제</Button>
+      <Button type="button" class="w-25" variant="primary" size="md" @click="saveCommDetail">저장</Button>
     </template>
   </GenericDialog2>
 </template>

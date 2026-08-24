@@ -46,6 +46,18 @@ export interface Vehicle112Row {
   patrolName: string
 }
 
+export type CommManageStatus = 'done' | 'hold'
+
+export interface CommDetailForm {
+  id: number | null
+  commType: string
+  managementName: string
+  location: string
+  serialNumber: string
+  manageStatus: CommManageStatus
+  note: string
+}
+
 export const categoryTabs: { value: EquipmentCategory; label: string }[] = [
   { value: 'mobile', label: '기동장비' },
   { value: 'comm', label: '통신장비' },
@@ -78,12 +90,23 @@ export const info112Options: SelectOption[] = [
   { label: '중부교2호', value: 'jungbu-2' },
 ]
 
+export const commTypeOptions: SelectOption[] = [
+  { label: '원격조정기', value: 'remote-controller' },
+  { label: '간이중계소', value: 'relay-station' },
+  { label: '무전기', value: 'radio' },
+]
+
+export const commManageStatusLabel: Record<CommManageStatus, string> = {
+  done: '완료',
+  hold: '보류',
+}
+
 const MOCK_LIST_SIZE = 50
 
 function createMockList(): EquipmentListRow[] {
   // 최신 등록분이 위로 오도록 번호를 내림차순(50 → 1)으로 만든다.
   // 건수와 무관하게 1 미만이 나오지 않도록 목록 길이를 기준으로 계산한다.
-  return Array.from({ length: MOCK_LIST_SIZE }, (_, i) => ({
+  const mobileRows: EquipmentListRow[] = Array.from({ length: MOCK_LIST_SIZE }, (_, i) => ({
     id: MOCK_LIST_SIZE - i,
     category: 'mobile',
     typeLabel: '순찰차',
@@ -98,6 +121,53 @@ function createMockList(): EquipmentListRow[] {
     updater: '홍길동',
     updatedAt: '2015-11-00',
   }))
+
+  const commRows: EquipmentListRow[] = [
+    {
+      id: 2,
+      category: 'comm',
+      typeLabel: '원격조정기',
+      managementName: '원격조정기',
+      manufacturer: '',
+      model: '',
+      plateNumber: '',
+      location: '지구대/파출소',
+      note: '',
+      maintenanceCount: 0,
+      inUse: true,
+      updater: '홍길동',
+      updatedAt: '2015-11-00',
+    },
+    {
+      id: 1,
+      category: 'comm',
+      typeLabel: '간이중계소',
+      managementName: '간이중계소',
+      manufacturer: '',
+      model: '',
+      plateNumber: '',
+      location: '치안센터',
+      note: '',
+      maintenanceCount: 0,
+      inUse: true,
+      updater: '홍길동',
+      updatedAt: '2015-11-00',
+    },
+  ]
+
+  return [...mobileRows, ...commRows]
+}
+
+function createEmptyCommDetail(): CommDetailForm {
+  return {
+    id: null,
+    commType: '',
+    managementName: '',
+    location: '',
+    serialNumber: '',
+    manageStatus: 'done',
+    note: '',
+  }
 }
 
 function createEmptyDetail(): EquipmentDetailForm {
@@ -171,6 +241,73 @@ export function useEquipmentList() {
     detailDialogOpen.value = false
   }
 
+  // 통신장비 상세 — 기동장비와 필드 구성이 완전히 달라 별도 폼/모달로 관리한다.
+  const commDetail = reactive<CommDetailForm>(createEmptyCommDetail())
+  const commDetailDialogOpen = ref(false)
+
+  function openNewCommDetail() {
+    Object.assign(commDetail, createEmptyCommDetail())
+    commDetailDialogOpen.value = true
+  }
+
+  function openCommDetail(row: EquipmentListRow) {
+    Object.assign(commDetail, {
+      id: row.id,
+      commType: '',
+      managementName: row.managementName,
+      location: '',
+      serialNumber: '',
+      manageStatus: 'done',
+      note: row.note,
+    })
+    commDetailDialogOpen.value = true
+  }
+
+  function saveCommDetail() {
+    toCommListRow(commDetail)
+    commDetailDialogOpen.value = false
+  }
+
+  function toCommListRow(form: CommDetailForm) {
+    const typeLabel = commTypeOptions.find((o) => o.value === form.commType)?.label ?? form.managementName
+    if (form.id != null) {
+      const existing = allRows.value.find((r) => r.id === form.id)
+      if (existing) {
+        existing.typeLabel = typeLabel
+        existing.managementName = form.managementName
+        existing.location = form.location
+        existing.note = form.note
+        return
+      }
+    }
+    const nextId = allRows.value.length ? Math.max(...allRows.value.map((r) => r.id)) + 1 : 1
+    allRows.value = [
+      {
+        id: nextId,
+        category: 'comm',
+        typeLabel,
+        managementName: form.managementName,
+        manufacturer: '',
+        model: '',
+        plateNumber: '',
+        location: form.location,
+        note: form.note,
+        maintenanceCount: 0,
+        inUse: true,
+        updater: '홍길동',
+        updatedAt: new Date().toISOString().slice(0, 10),
+      },
+      ...allRows.value,
+    ]
+  }
+
+  function deleteCommDetail() {
+    if (commDetail.id != null) {
+      allRows.value = allRows.value.filter((r) => r.id !== commDetail.id)
+    }
+    commDetailDialogOpen.value = false
+  }
+
   // 112차량 조회
   const vehicle112DialogOpen = ref(false)
   const vehicle112Keyword = ref('')
@@ -214,5 +351,11 @@ export function useEquipmentList() {
     openVehicle112Dialog,
     searchVehicle112,
     assignVehicle112,
+    commDetail,
+    commDetailDialogOpen,
+    openNewCommDetail,
+    openCommDetail,
+    saveCommDetail,
+    deleteCommDetail,
   }
 }
