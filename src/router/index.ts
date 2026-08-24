@@ -190,15 +190,6 @@ const router = createRouter({
             }
         },
         {
-            path: '/component/tabulator',
-            name: 'tabulator',
-            component: () => import('../views/component-sample/Tabulator.vue'),
-            meta: {
-                layout: 'MainLayout',
-                title: 'Tabulator'
-            }
-        },
-        {
             path: '/component/tabulator-grid',
             name: 'tabulator-grid',
             component: () => import('../views/component-sample/TabulatorGrid.vue'),
