@@ -57,8 +57,8 @@
               <td class="border px-3 py-2 text-gray-600">{{ item.sub ?? '-' }}</td>
               <td class="border px-3 py-2">
                 <RouterLink
-                  v-if="item.route"
-                  :to="item.route"
+                  v-if="resolveRoute(item)"
+                  :to="resolveRoute(item)!"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="text-primary underline underline-offset-4 hover:opacity-80"
@@ -74,7 +74,7 @@
               <td class="border px-3 py-2 text-center">{{ item.type }}</td>
               <td class="border px-3 py-2 text-center">{{ item.change }}</td>
               <td class="border px-3 py-2 text-center">
-                <Badge v-if="item.route" color="success" size="md">완료</Badge>
+                <Badge v-if="resolveRoute(item)" color="success" size="md">완료</Badge>
                 <Badge v-else color="grayLighter" variant="outline" size="md">작업전</Badge>
               </td>
               <td class="border px-3 py-2 text-gray-500 text-xs">{{ item.note ?? '' }}</td>
@@ -93,10 +93,31 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import BaseSelect from '@/components/select/BaseSelect.vue'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/custom/badge'
-import { pubListItems, pubListMajors } from './pubListData'
+import { pubListItems, pubListMajors, type PubListItem } from './pubListData'
+
+/*
+ * 화면ID(screenId)로 실제 라우트를 찾는다. pubListData.ts 에 경로를 손으로 적어두면
+ * 라우터가 바뀔 때 같이 안 바뀌어 어긋나므로(예: PC-LPO-0204, PC-COM-2201 오타 사례),
+ * 라우터를 유일한 출처로 삼는다. route.name 은 이 프로젝트에서 screenId 와 동일하게
+ * 짓는 관례라(예: name: 'PC-LPO-0701') 이것으로 매칭한다.
+ */
+const router = useRouter()
+const routePathByScreenId = computed(() => {
+  const map = new Map<string, string>()
+  for (const route of router.getRoutes()) {
+    if (typeof route.name === 'string') map.set(route.name, route.path)
+  }
+  return map
+})
+
+/** screenId 로 못 찾는 예외적인 경우에만 item.route 로 직접 지정한 값을 쓴다 */
+function resolveRoute(item: PubListItem): string | undefined {
+  return item.route ?? (item.screenId ? routePathByScreenId.value.get(item.screenId) : undefined)
+}
 
 const majorOptions = [
   { label: '전체 대분류', value: 'ALL' },
@@ -113,15 +134,15 @@ const selectedMajor = ref<string>('ALL')
 const selectedStatus = ref<string>('ALL')
 const keyword = ref('')
 
-const linkedCount = computed(() => pubListItems.filter((item) => item.route).length)
+const linkedCount = computed(() => pubListItems.filter((item) => resolveRoute(item)).length)
 
 const filteredItems = computed(() => {
   const kw = keyword.value.trim().toLowerCase()
 
   return pubListItems.filter((item) => {
     if (selectedMajor.value !== 'ALL' && item.major !== selectedMajor.value) return false
-    if (selectedStatus.value === 'LINKED' && !item.route) return false
-    if (selectedStatus.value === 'PENDING' && item.route) return false
+    if (selectedStatus.value === 'LINKED' && !resolveRoute(item)) return false
+    if (selectedStatus.value === 'PENDING' && resolveRoute(item)) return false
 
     if (!kw) return true
     const haystack = [item.name, item.screenName, item.screenId, item.major, item.sub]

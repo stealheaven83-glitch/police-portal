@@ -1,7 +1,10 @@
 // 스마트워크 IA(요구사항 추가) 문서를 기준으로 정리한 퍼블 대상 화면 목록
 // - 순번(no)은 원본 스프레드시트의 순번을 그대로 사용
 // - 화면ID(screenId)가 있는 항목은 실제 화면 단위로, 없는 항목은 LINK/BUTTON 등 단순 요소
-// - route가 지정된 항목은 이미 작업된 화면(현재 라우터 기준)으로 자동 연결됨
+// - 작업 완료 여부(링크 연결)는 이 파일이 아니라 router/index.ts 를 기준으로 PubList.vue 가
+//   자동으로 판단한다(라우트 name === screenId 로 매칭). 이 파일에는 라우트 경로를 직접
+//   적지 않는다 — 손으로 적으면 라우터가 바뀔 때 같이 안 바뀌어 어긋난다(2026-08-24 발견).
+//   화면ID가 라우트 name 과 다른 예외적인 경우에만 route 를 직접 지정해 덮어쓴다.
 export interface PubListItem {
   no: number
   major: string // 1Depth 대분류
@@ -12,7 +15,8 @@ export interface PubListItem {
   type: 'PAGE' | 'POPUP' | 'BBS' | 'BUTTON' | 'LINK'
   change: '신규' | '변경' | '유지'
   note?: string
-  route?: string // 이미 작업된 경우 연결할 라우트 경로
+  /** screenId 로 라우터를 찾을 수 없는 예외적인 경우에만 직접 지정 (평소엔 비워둔다) */
+  route?: string
 }
 
 export const pubListItems: PubListItem[] = [
@@ -49,7 +53,7 @@ export const pubListItems: PubListItem[] = [
   { no: 35, major: '지역경찰', sub: '근무일지 > 근무일지(甲)', name: '근무지정표작성', screenName: '근무지정표작성 화면', screenId: 'PC-LPO-0201', type: 'PAGE', change: '변경' },
   { no: 36, major: '지역경찰', sub: '근무일지 > 근무일지(甲)', name: '근무지정표', screenName: '근무지정표 화면', screenId: 'PC-LPO-0202', type: 'PAGE', change: '변경' },
   { no: 37, major: '지역경찰', sub: '근무일지 > 근무일지(甲)', name: '근무자', screenName: '근무자 화면', screenId: 'PC-LPO-0203', type: 'PAGE', change: '변경' },
-  { no: 38, major: '지역경찰', sub: '근무일지 > 근무일지(甲)', name: '근무자 추가관리', screenName: '근무자 추가관리 팝업', screenId: 'PC-LPO-0204', type: 'POPUP', change: '변경', route: '/view/lpo/PC-LPO-0204.vue' },
+  { no: 38, major: '지역경찰', sub: '근무일지 > 근무일지(甲)', name: '근무자 추가관리', screenName: '근무자 추가관리 팝업', screenId: 'PC-LPO-0204', type: 'POPUP', change: '변경' },
   { no: 39, major: '지역경찰', sub: '근무일지 > 근무일지(甲)', name: '자원근무자 관리', screenName: '자원근무자 팝업창', screenId: 'PC-LPO-0205', type: 'PAGE', change: '변경' },
   { no: 40, major: '지역경찰', sub: '근무일지 > 근무일지(甲)', name: '사고자 관리', screenName: '사고자 팝업창', screenId: 'PC-LPO-0206', type: 'POPUP', change: '변경' },
   { no: 41, major: '지역경찰', sub: '근무일지 > 근무일지(甲)', name: '근무관리', screenName: '근무관리 팝업창', screenId: 'PC-LPO-0207', type: 'PAGE', change: '변경' },
@@ -283,7 +287,7 @@ export const pubListItems: PubListItem[] = [
   { no: 304, major: '게시판', sub: '현장공감 TalkTalk > 정책 제안 및 건의사항', name: '등록', screenId: 'PM-COM-2104', type: 'BBS', change: '변경' },
 
   // ── 시스템 관리 ──────────────────────────────
-  { no: 308, major: '시스템 관리', sub: '시스템 운영관리 > 사용자 권한관리', name: '상세내역', screenName: '사용자 권한관리 상세화면', screenId: 'PC-COM-2201', type: 'PAGE', change: '변경', route: '/component/PC-COM-2201' },
+  { no: 308, major: '시스템 관리', sub: '시스템 운영관리 > 사용자 권한관리', name: '상세내역', screenName: '사용자 권한관리 상세화면', screenId: 'PC-COM-2201', type: 'PAGE', change: '변경' },
   { no: 309, major: '시스템 관리', sub: '시스템 운영관리 > 사용자 권한관리', name: '사용자정보 팝업창', screenName: '사용자 정보 상세 팝업창', screenId: 'PC-COM-2202', type: 'POPUP', change: '신규' },
   { no: 311, major: '시스템 관리', sub: '시스템 운영관리 > 메뉴관리', name: '상세내역', screenName: '메뉴관리 화면', screenId: 'PC-COM-2203', type: 'PAGE', change: '변경' },
   { no: 313, major: '시스템 관리', sub: '시스템 운영관리 > 권한관리', name: '상세내역', screenName: '권한관리 화면', screenId: 'PC-COM-2204', type: 'PAGE', change: '변경' },
