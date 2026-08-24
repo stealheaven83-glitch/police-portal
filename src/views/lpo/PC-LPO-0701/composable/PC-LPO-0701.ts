@@ -26,6 +26,18 @@ export interface EquipmentListRow {
   serialNumber?: string
   /** 무기 전용 — 휴대자 */
   holder?: string
+  /** 수갑 전용 — 관리번호 */
+  managementNumber?: string
+  /** 수갑 전용 — 지급일자 */
+  issuedDate?: string
+  /** 수갑 전용 — 만료일자 */
+  expiryDate?: string
+  /** 탄약 전용 — 단위 */
+  unit?: string
+  /** 탄약(결수량)/기타(보유수량) 전용 */
+  stock?: number
+  /** 탄약 전용 — 청수량 */
+  current?: number
 }
 
 export interface EquipmentDetailForm {
@@ -77,6 +89,45 @@ export interface CommDetailForm {
   serialNumber: string
   manageStatus: CommManageStatus
   note: string
+}
+
+export interface AmmoDetailForm {
+  id: number | null
+  managementName: string
+  unit: string
+  stock: number
+  current: number
+  note: string
+}
+
+export type CuffsStatus = 'normal' | 'discarded'
+
+export interface CuffsDetailForm {
+  id: number | null
+  cuffsType: string
+  managementName: string
+  managementNumber: string
+  holder: string
+  status: CuffsStatus
+  issuedDate: string
+  expiryDate: string
+  note: string
+}
+
+export interface EtcDetailForm {
+  id: number | null
+  etcType: string
+  managementName: string
+  stock: number
+  note: string
+}
+
+/** 유지보수이력 — 목록의 모든 카테고리가 공유하는 팝업이라 카테고리별 상세 폼과 별도로 둔다 */
+export interface MaintenanceRecord {
+  id: number
+  type: string
+  content: string
+  date: string
 }
 
 export const categoryTabs: { value: EquipmentCategory; label: string }[] = [
@@ -139,6 +190,33 @@ export const gunSerialOptions: SelectOption[] = [
   { label: '12345678', value: '12345678' },
   { label: '23456789', value: '23456789' },
   { label: '34567890', value: '34567890' },
+]
+
+export const ammoUnitOptions: SelectOption[] = [
+  { label: '정', value: 'jung' },
+  { label: '발', value: 'bal' },
+]
+
+export const cuffsTypeOptions: SelectOption[] = [
+  { label: '고정식수갑', value: 'fixed' },
+  { label: '전자식수갑', value: 'electronic' },
+]
+
+export const cuffsStatusLabel: Record<CuffsStatus, string> = {
+  normal: '정상',
+  discarded: '폐기',
+}
+
+export const etcTypeOptions: SelectOption[] = [
+  { label: '이동식스피커', value: 'speaker' },
+  { label: '확성기', value: 'megaphone' },
+  { label: '기타', value: 'etc' },
+]
+
+export const maintenanceTypeOptions: SelectOption[] = [
+  { label: '수리완료', value: 'done' },
+  { label: '수리중', value: 'in-progress' },
+  { label: '점검', value: 'inspect' },
 ]
 
 const MOCK_LIST_SIZE = 50
@@ -232,7 +310,120 @@ function createMockList(): EquipmentListRow[] {
     },
   ]
 
-  return [...mobileRows, ...commRows, ...weaponRows]
+  const ammoRows: EquipmentListRow[] = [
+    {
+      id: 2,
+      category: 'ammo',
+      typeLabel: '공기소총',
+      managementName: '공기소총',
+      manufacturer: '',
+      model: '',
+      plateNumber: '',
+      location: '',
+      unit: '정',
+      stock: 24,
+      current: 24,
+      note: '',
+      maintenanceCount: 0,
+      inUse: true,
+      updater: '홍길동',
+      updatedAt: '2015-11-00',
+    },
+    {
+      id: 1,
+      category: 'ammo',
+      typeLabel: '실탄',
+      managementName: '실탄',
+      manufacturer: '',
+      model: '',
+      plateNumber: '',
+      location: '',
+      unit: '정',
+      stock: 84,
+      current: 84,
+      note: '',
+      maintenanceCount: 0,
+      inUse: true,
+      updater: '홍길동',
+      updatedAt: '2015-11-00',
+    },
+  ]
+
+  const cuffsRows: EquipmentListRow[] = [
+    {
+      id: 2,
+      category: 'cuffs',
+      typeLabel: '고정식수갑',
+      managementName: '고정식수갑',
+      manufacturer: '',
+      model: '',
+      plateNumber: '',
+      location: '',
+      managementNumber: 'KNP-01-217',
+      issuedDate: '2026-01-01',
+      expiryDate: '2026-01-01',
+      note: '',
+      maintenanceCount: 0,
+      inUse: true,
+      updater: '홍길동',
+      updatedAt: '2015-11-00',
+    },
+    {
+      id: 1,
+      category: 'cuffs',
+      typeLabel: '전자식수갑',
+      managementName: '전자식수갑',
+      manufacturer: '',
+      model: '',
+      plateNumber: '',
+      location: '',
+      managementNumber: 'SS-0001',
+      issuedDate: '2026-01-01',
+      expiryDate: '2026-01-01',
+      note: '',
+      maintenanceCount: 0,
+      inUse: true,
+      updater: '홍길동',
+      updatedAt: '2015-11-00',
+    },
+  ]
+
+  const etcRows: EquipmentListRow[] = [
+    {
+      id: 2,
+      category: 'etc',
+      typeLabel: '이동식스피커',
+      managementName: '이동식스피커',
+      manufacturer: '',
+      model: '',
+      plateNumber: '',
+      location: '',
+      stock: 1,
+      note: '',
+      maintenanceCount: 0,
+      inUse: true,
+      updater: '홍길동',
+      updatedAt: '2015-11-00',
+    },
+    {
+      id: 1,
+      category: 'etc',
+      typeLabel: '확성기',
+      managementName: '확성기',
+      manufacturer: '',
+      model: '',
+      plateNumber: '',
+      location: '',
+      stock: 2,
+      note: '',
+      maintenanceCount: 0,
+      inUse: true,
+      updater: '홍길동',
+      updatedAt: '2015-11-00',
+    },
+  ]
+
+  return [...mobileRows, ...commRows, ...weaponRows, ...ammoRows, ...cuffsRows, ...etcRows]
 }
 
 function createEmptyCommDetail(): CommDetailForm {
@@ -276,6 +467,41 @@ function createEmptyWeaponDetail(): WeaponDetailForm {
     note: '',
     handlers: [{ id: 1, name: '' }],
     isSaved: false,
+  }
+}
+
+function createEmptyAmmoDetail(): AmmoDetailForm {
+  return {
+    id: null,
+    managementName: '',
+    unit: '',
+    stock: 0,
+    current: 0,
+    note: '',
+  }
+}
+
+function createEmptyCuffsDetail(): CuffsDetailForm {
+  return {
+    id: null,
+    cuffsType: '',
+    managementName: '',
+    managementNumber: '',
+    holder: '',
+    status: 'normal',
+    issuedDate: '',
+    expiryDate: '',
+    note: '',
+  }
+}
+
+function createEmptyEtcDetail(): EtcDetailForm {
+  return {
+    id: null,
+    etcType: '',
+    managementName: '',
+    stock: 0,
+    note: '',
   }
 }
 
@@ -478,6 +704,255 @@ export function useEquipmentList() {
     weaponDetailDialogOpen.value = false
   }
 
+  // 탄약 상세 — 결수량/청수량 두 수량을 따로 관리한다.
+  const ammoDetail = reactive<AmmoDetailForm>(createEmptyAmmoDetail())
+  const ammoDetailDialogOpen = ref(false)
+
+  function openNewAmmoDetail() {
+    Object.assign(ammoDetail, createEmptyAmmoDetail())
+    ammoDetailDialogOpen.value = true
+  }
+
+  function openAmmoDetail(row: EquipmentListRow) {
+    Object.assign(ammoDetail, {
+      id: row.id,
+      managementName: row.managementName,
+      unit: '',
+      stock: row.stock ?? 0,
+      current: row.current ?? 0,
+      note: row.note,
+    })
+    ammoDetailDialogOpen.value = true
+  }
+
+  function saveAmmoDetail() {
+    toAmmoListRow(ammoDetail)
+    ammoDetailDialogOpen.value = false
+  }
+
+  function toAmmoListRow(form: AmmoDetailForm) {
+    const unitLabel = ammoUnitOptions.find((o) => o.value === form.unit)?.label ?? ''
+    if (form.id != null) {
+      const existing = allRows.value.find((r) => r.id === form.id && r.category === 'ammo')
+      if (existing) {
+        existing.typeLabel = form.managementName
+        existing.managementName = form.managementName
+        existing.unit = unitLabel
+        existing.stock = form.stock
+        existing.current = form.current
+        existing.note = form.note
+        return
+      }
+    }
+    const ammoIds = allRows.value.filter((r) => r.category === 'ammo').map((r) => r.id)
+    const nextId = ammoIds.length ? Math.max(...ammoIds) + 1 : 1
+    allRows.value = [
+      {
+        id: nextId,
+        category: 'ammo',
+        typeLabel: form.managementName,
+        managementName: form.managementName,
+        manufacturer: '',
+        model: '',
+        plateNumber: '',
+        location: '',
+        unit: unitLabel,
+        stock: form.stock,
+        current: form.current,
+        note: form.note,
+        maintenanceCount: 0,
+        inUse: true,
+        updater: '홍길동',
+        updatedAt: new Date().toISOString().slice(0, 10),
+      },
+      ...allRows.value,
+    ]
+  }
+
+  function deleteAmmoDetail() {
+    if (ammoDetail.id != null) {
+      allRows.value = allRows.value.filter((r) => !(r.id === ammoDetail.id && r.category === 'ammo'))
+    }
+    ammoDetailDialogOpen.value = false
+  }
+
+  // 수갑 상세 — 관리번호/지급일자~만료일자를 갖는다는 점이 다른 카테고리와 다르다.
+  const cuffsDetail = reactive<CuffsDetailForm>(createEmptyCuffsDetail())
+  const cuffsDetailDialogOpen = ref(false)
+
+  function openNewCuffsDetail() {
+    Object.assign(cuffsDetail, createEmptyCuffsDetail())
+    cuffsDetailDialogOpen.value = true
+  }
+
+  function openCuffsDetail(row: EquipmentListRow) {
+    Object.assign(cuffsDetail, {
+      id: row.id,
+      cuffsType: '',
+      managementName: row.managementName,
+      managementNumber: row.managementNumber ?? '',
+      holder: '',
+      status: 'normal' as CuffsStatus,
+      issuedDate: row.issuedDate ?? '',
+      expiryDate: row.expiryDate ?? '',
+      note: row.note,
+    })
+    cuffsDetailDialogOpen.value = true
+  }
+
+  function saveCuffsDetail() {
+    toCuffsListRow(cuffsDetail)
+    cuffsDetailDialogOpen.value = false
+  }
+
+  function toCuffsListRow(form: CuffsDetailForm) {
+    const typeLabel = cuffsTypeOptions.find((o) => o.value === form.cuffsType)?.label ?? form.managementName
+    if (form.id != null) {
+      const existing = allRows.value.find((r) => r.id === form.id && r.category === 'cuffs')
+      if (existing) {
+        existing.typeLabel = typeLabel
+        existing.managementName = form.managementName
+        existing.managementNumber = form.managementNumber
+        existing.issuedDate = form.issuedDate
+        existing.expiryDate = form.expiryDate
+        existing.note = form.note
+        return
+      }
+    }
+    const cuffsIds = allRows.value.filter((r) => r.category === 'cuffs').map((r) => r.id)
+    const nextId = cuffsIds.length ? Math.max(...cuffsIds) + 1 : 1
+    allRows.value = [
+      {
+        id: nextId,
+        category: 'cuffs',
+        typeLabel,
+        managementName: form.managementName,
+        manufacturer: '',
+        model: '',
+        plateNumber: '',
+        location: '',
+        managementNumber: form.managementNumber,
+        issuedDate: form.issuedDate,
+        expiryDate: form.expiryDate,
+        note: form.note,
+        maintenanceCount: 0,
+        inUse: true,
+        updater: '홍길동',
+        updatedAt: new Date().toISOString().slice(0, 10),
+      },
+      ...allRows.value,
+    ]
+  }
+
+  function deleteCuffsDetail() {
+    if (cuffsDetail.id != null) {
+      allRows.value = allRows.value.filter((r) => !(r.id === cuffsDetail.id && r.category === 'cuffs'))
+    }
+    cuffsDetailDialogOpen.value = false
+  }
+
+  // 기타 상세
+  const etcDetail = reactive<EtcDetailForm>(createEmptyEtcDetail())
+  const etcDetailDialogOpen = ref(false)
+
+  function openNewEtcDetail() {
+    Object.assign(etcDetail, createEmptyEtcDetail())
+    etcDetailDialogOpen.value = true
+  }
+
+  function openEtcDetail(row: EquipmentListRow) {
+    Object.assign(etcDetail, {
+      id: row.id,
+      etcType: '',
+      managementName: row.managementName,
+      stock: row.stock ?? 0,
+      note: row.note,
+    })
+    etcDetailDialogOpen.value = true
+  }
+
+  function saveEtcDetail() {
+    toEtcListRow(etcDetail)
+    etcDetailDialogOpen.value = false
+  }
+
+  function toEtcListRow(form: EtcDetailForm) {
+    const typeLabel = etcTypeOptions.find((o) => o.value === form.etcType)?.label ?? form.managementName
+    if (form.id != null) {
+      const existing = allRows.value.find((r) => r.id === form.id && r.category === 'etc')
+      if (existing) {
+        existing.typeLabel = typeLabel
+        existing.managementName = form.managementName
+        existing.stock = form.stock
+        existing.note = form.note
+        return
+      }
+    }
+    const etcIds = allRows.value.filter((r) => r.category === 'etc').map((r) => r.id)
+    const nextId = etcIds.length ? Math.max(...etcIds) + 1 : 1
+    allRows.value = [
+      {
+        id: nextId,
+        category: 'etc',
+        typeLabel,
+        managementName: form.managementName,
+        manufacturer: '',
+        model: '',
+        plateNumber: '',
+        location: '',
+        stock: form.stock,
+        note: form.note,
+        maintenanceCount: 0,
+        inUse: true,
+        updater: '홍길동',
+        updatedAt: new Date().toISOString().slice(0, 10),
+      },
+      ...allRows.value,
+    ]
+  }
+
+  function deleteEtcDetail() {
+    if (etcDetail.id != null) {
+      allRows.value = allRows.value.filter((r) => !(r.id === etcDetail.id && r.category === 'etc'))
+    }
+    etcDetailDialogOpen.value = false
+  }
+
+  // 장비유지보수 이력 — 카테고리 전부가 공유하는 팝업. allRows 의 id 가 카테고리별로 겹치므로
+  // `category-id` 조합을 키로 이력을 따로 보관한다.
+  const maintenanceHistory = reactive<Record<string, MaintenanceRecord[]>>({
+    'mobile-50': [{ id: 1, type: 'done', content: '정기 점검 및 부품 교체 완료', date: '2026-01-01' }],
+  })
+  const maintenanceDialogOpen = ref(false)
+  const maintenanceTitle = ref('')
+  const maintenanceRows = ref<MaintenanceRecord[]>([])
+  let maintenanceActiveKey = ''
+
+  function maintenanceKey(row: EquipmentListRow) {
+    return `${row.category}-${row.id}`
+  }
+
+  function openMaintenanceHistory(row: EquipmentListRow) {
+    maintenanceActiveKey = maintenanceKey(row)
+    maintenanceTitle.value = row.managementName
+    maintenanceRows.value = maintenanceHistory[maintenanceActiveKey]
+      ? maintenanceHistory[maintenanceActiveKey].map((r) => ({ ...r }))
+      : []
+    maintenanceDialogOpen.value = true
+  }
+
+  function addMaintenanceRow() {
+    const nextId = maintenanceRows.value.length ? Math.max(...maintenanceRows.value.map((r) => r.id)) + 1 : 1
+    maintenanceRows.value = [{ id: nextId, type: '', content: '', date: '' }, ...maintenanceRows.value]
+  }
+
+  function saveMaintenanceHistory() {
+    maintenanceHistory[maintenanceActiveKey] = maintenanceRows.value.map((r) => ({ ...r }))
+    const row = allRows.value.find((r) => maintenanceKey(r) === maintenanceActiveKey)
+    if (row) row.maintenanceCount = maintenanceRows.value.length
+    maintenanceDialogOpen.value = false
+  }
+
   // 112차량 조회
   const vehicle112DialogOpen = ref(false)
   const vehicle112Keyword = ref('')
@@ -534,6 +1009,30 @@ export function useEquipmentList() {
     addWeaponHandler,
     saveWeaponDetail,
     deleteWeaponDetail,
+    ammoDetail,
+    ammoDetailDialogOpen,
+    openNewAmmoDetail,
+    openAmmoDetail,
+    saveAmmoDetail,
+    deleteAmmoDetail,
+    cuffsDetail,
+    cuffsDetailDialogOpen,
+    openNewCuffsDetail,
+    openCuffsDetail,
+    saveCuffsDetail,
+    deleteCuffsDetail,
+    etcDetail,
+    etcDetailDialogOpen,
+    openNewEtcDetail,
+    openEtcDetail,
+    saveEtcDetail,
+    deleteEtcDetail,
+    maintenanceDialogOpen,
+    maintenanceTitle,
+    maintenanceRows,
+    openMaintenanceHistory,
+    addMaintenanceRow,
+    saveMaintenanceHistory,
   }
 }
 
