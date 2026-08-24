@@ -425,6 +425,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/views/pub/PM-PUB-0101',
+            name: 'PM-PUB-0101',
+            component: () => import('../views/pub/PM-PUB-0101/PM-PUB-0101.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '간이 범죄예방진단'
+            }
+        },
+        {
             path: '/component/PC-STT-0103',
             name: 'pc-stt-0103',
             component: () => import('../views/stt/PC-STT-0103/PC-STT-0103.vue'),

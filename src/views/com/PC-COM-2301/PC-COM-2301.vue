@@ -39,6 +39,7 @@ import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 
 // KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!)
 defineOptions({
@@ -117,5 +118,15 @@ function onDeleteSelected() {
 function onSave() {
   toast.success('저장되었습니다.')
 }
+
+// 탭 추가 및 활성화
+useBottomTabSetup({
+  value: 'PC-COM-2301',                 // Unique Identifier (기본 컴포넌트 이름 매핑)
+  label: '시스템모니터링 관리',            // 탭 표시 명칭
+  path: '/views/com/PC-COM-2301',       // 클릭 시 이동할 라우트 경로
+  componentName: 'PcCom2301',           // KeepAlive 캐싱 대상 컴포넌트 이름 (필수)
+  closable: true                        // 닫기 가능 여부 (기본값 true)
+})
+
 </script>
 

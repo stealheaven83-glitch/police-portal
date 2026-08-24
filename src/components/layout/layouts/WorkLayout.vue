@@ -18,16 +18,8 @@
          <div class="flex flex-col flex-1 min-h-0 overflow-y-auto">
            <slot name="main" />
          </div>
-         <!-- 컴포넌트화 작업중 -->
-         <div class="absolute bottom-[7px] left-0 z-1" style="transform: translateY(100%)">
-            <ul class="flex tab-ul">
-              <li>메모<button class="tab-delete" aria-label="닫기"></button></li>
-              <li class="active">근무일정조회<button class="tab-delete" aria-label="닫기"></button></li>
-              <li>출동수당조회 <button class="tab-delete" aria-label="닫기"></button></li>
-              <li>사용자 권한 권리 <button class="tab-delete" aria-label="닫기"></button></li>
-            </ul>
-         </div>
-         <!--// 컴포넌트화 작업중 -->
+         <!-- 하단 동적 탭. 목록은 화면(View)의 useBottomTabSetup 이 채운다 -->
+         <BottomTab v-if="bottomTabStore.visible" />
       </div>
         
     </main>
@@ -37,6 +29,10 @@
 <script setup lang="ts">
 import PortalHeader from '../portal/PortalHeader.vue'
 import { SideMenu } from '@/components/custom/sidemenu/index.ts'
+import { BottomTab } from '@/components/custom/bottom-tab'
+import { useBottomTabStore } from '@/stores/tab/useBottomTab'
+
+const bottomTabStore = useBottomTabStore()
 
 defineSlots<{
   main: () => any
@@ -116,25 +112,5 @@ const leftMenuDummyData = [
   background: #EEF2F7;
   border-top: 1px solid #CDD1D5;
 }
-.tab-ul{
-  height:36px;
-}
-.tab-ul li{
-  border: 1px solid #CDD1D5;
-  border-top: 0;
-  padding: 2px 8px;
-  border-radius: 0 0 4px 4px;
-  color:var(--Text-body_2);
-  line-height: 3rem;
-
-
-}
-.tab-ul li.active{
-  background: #fff;
-  border-top: 1px solid #fff;
-  box-shadow: 1px 2px 2px 0px #00000014;
-}
-.tab-ul li + li{
-  margin-left: 2px;
-}
+/* 탭 바 자체의 스타일은 BottomTab.vue 가 들고 있다 */
 </style>
