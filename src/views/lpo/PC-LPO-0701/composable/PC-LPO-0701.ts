@@ -1,4 +1,4 @@
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, type InjectionKey } from 'vue'
 
 export interface SelectOption {
   label: string
@@ -22,6 +22,10 @@ export interface EquipmentListRow {
   inUse: boolean
   updater: string
   updatedAt: string
+  /** 무기 전용 — 총번 */
+  serialNumber?: string
+  /** 무기 전용 — 휴대자 */
+  holder?: string
 }
 
 export interface EquipmentDetailForm {
@@ -44,6 +48,23 @@ export interface Vehicle112Row {
   id: number
   deptName: string
   patrolName: string
+}
+
+export interface WeaponHandler {
+  id: number
+  name: string
+}
+
+export interface WeaponDetailForm {
+  id: number | null
+  gunType: string
+  managementName: string
+  serialNumber: string
+  introducedDate: string
+  location: string
+  note: string
+  handlers: WeaponHandler[]
+  isSaved: boolean
 }
 
 export type CommManageStatus = 'done' | 'hold'
@@ -101,6 +122,25 @@ export const commManageStatusLabel: Record<CommManageStatus, string> = {
   hold: '보류',
 }
 
+export const gunTypeOptions: SelectOption[] = [
+  { label: '38구경', value: 'gun-38' },
+  { label: '22구경', value: 'gun-22' },
+  { label: '4.5구경', value: 'gun-45' },
+  { label: 'M-16', value: 'm16' },
+  { label: 'K-1', value: 'k1' },
+  { label: 'K-2', value: 'k2' },
+  { label: '기타(CAR빈)', value: 'etc-carbine' },
+  { label: '전자충격기', value: 'taser' },
+  { label: '가스분사기', value: 'gas-spray' },
+  { label: '가스살포기', value: 'gas-sprayer' },
+]
+
+export const gunSerialOptions: SelectOption[] = [
+  { label: '12345678', value: '12345678' },
+  { label: '23456789', value: '23456789' },
+  { label: '34567890', value: '34567890' },
+]
+
 const MOCK_LIST_SIZE = 50
 
 function createMockList(): EquipmentListRow[] {
@@ -155,7 +195,44 @@ function createMockList(): EquipmentListRow[] {
     },
   ]
 
-  return [...mobileRows, ...commRows]
+  const weaponRows: EquipmentListRow[] = [
+    {
+      id: 2,
+      category: 'weapon',
+      typeLabel: '38구경',
+      managementName: '권총',
+      manufacturer: '',
+      model: '',
+      plateNumber: '',
+      serialNumber: '12345678',
+      location: '지구대/파출소',
+      holder: '',
+      note: '',
+      maintenanceCount: 0,
+      inUse: true,
+      updater: '홍길동',
+      updatedAt: '2015-11-00',
+    },
+    {
+      id: 1,
+      category: 'weapon',
+      typeLabel: '4.5구경',
+      managementName: '장총',
+      manufacturer: '',
+      model: '',
+      plateNumber: '',
+      serialNumber: '12345678',
+      location: '치안센터',
+      holder: '',
+      note: '',
+      maintenanceCount: 0,
+      inUse: true,
+      updater: '홍길동',
+      updatedAt: '2015-11-00',
+    },
+  ]
+
+  return [...mobileRows, ...commRows, ...weaponRows]
 }
 
 function createEmptyCommDetail(): CommDetailForm {
@@ -184,6 +261,20 @@ function createEmptyDetail(): EquipmentDetailForm {
     info112: '',
     tempVehicle: '',
     note: '',
+    isSaved: false,
+  }
+}
+
+function createEmptyWeaponDetail(): WeaponDetailForm {
+  return {
+    id: null,
+    gunType: '',
+    managementName: '',
+    serialNumber: '',
+    introducedDate: '',
+    location: '',
+    note: '',
+    handlers: [{ id: 1, name: '' }],
     isSaved: false,
   }
 }
@@ -308,6 +399,85 @@ export function useEquipmentList() {
     commDetailDialogOpen.value = false
   }
 
+  // 무기 상세 — 담당자(휴대자) 다건 목록을 갖는다는 점이 기동장비/통신장비와 다르다.
+  const weaponDetail = reactive<WeaponDetailForm>(createEmptyWeaponDetail())
+  const weaponDetailDialogOpen = ref(false)
+
+  function openNewWeaponDetail() {
+    Object.assign(weaponDetail, createEmptyWeaponDetail())
+    weaponDetailDialogOpen.value = true
+  }
+
+  function openWeaponDetail(row: EquipmentListRow) {
+    Object.assign(weaponDetail, {
+      id: row.id,
+      gunType: '',
+      managementName: row.managementName,
+      serialNumber: row.serialNumber ?? '',
+      introducedDate: '',
+      location: '',
+      note: row.note,
+      handlers: row.holder ? [{ id: 1, name: row.holder }] : [{ id: 1, name: '' }],
+      isSaved: true,
+    })
+    weaponDetailDialogOpen.value = true
+  }
+
+  function addWeaponHandler() {
+    const nextId = weaponDetail.handlers.length ? Math.max(...weaponDetail.handlers.map((h) => h.id)) + 1 : 1
+    weaponDetail.handlers.push({ id: nextId, name: '' })
+  }
+
+  function saveWeaponDetail() {
+    toWeaponListRow(weaponDetail)
+    weaponDetailDialogOpen.value = false
+  }
+
+  function toWeaponListRow(form: WeaponDetailForm) {
+    const typeLabel = gunTypeOptions.find((o) => o.value === form.gunType)?.label ?? form.managementName
+    const holder = form.handlers.map((h) => h.name.trim()).filter(Boolean).join(', ')
+    if (form.id != null) {
+      const existing = allRows.value.find((r) => r.id === form.id)
+      if (existing) {
+        existing.typeLabel = typeLabel
+        existing.managementName = form.managementName
+        existing.serialNumber = form.serialNumber
+        existing.location = form.location
+        existing.note = form.note
+        existing.holder = holder
+        return
+      }
+    }
+    const nextId = allRows.value.length ? Math.max(...allRows.value.map((r) => r.id)) + 1 : 1
+    allRows.value = [
+      {
+        id: nextId,
+        category: 'weapon',
+        typeLabel,
+        managementName: form.managementName,
+        manufacturer: '',
+        model: '',
+        plateNumber: '',
+        serialNumber: form.serialNumber,
+        location: form.location,
+        holder,
+        note: form.note,
+        maintenanceCount: 0,
+        inUse: true,
+        updater: '홍길동',
+        updatedAt: new Date().toISOString().slice(0, 10),
+      },
+      ...allRows.value,
+    ]
+  }
+
+  function deleteWeaponDetail() {
+    if (weaponDetail.id != null) {
+      allRows.value = allRows.value.filter((r) => r.id !== weaponDetail.id)
+    }
+    weaponDetailDialogOpen.value = false
+  }
+
   // 112차량 조회
   const vehicle112DialogOpen = ref(false)
   const vehicle112Keyword = ref('')
@@ -357,5 +527,20 @@ export function useEquipmentList() {
     openCommDetail,
     saveCommDetail,
     deleteCommDetail,
+    weaponDetail,
+    weaponDetailDialogOpen,
+    openNewWeaponDetail,
+    openWeaponDetail,
+    addWeaponHandler,
+    saveWeaponDetail,
+    deleteWeaponDetail,
   }
 }
+
+/**
+ * PC-LPO-0701.vue 에서 useEquipmentList() 를 한 번만 호출해 provide 하고,
+ * 하위 팝업 컴포넌트(components/)들은 이 키로 inject 해서 같은 인스턴스를 공유한다.
+ * (각자 useEquipmentList() 를 다시 부르면 상태가 따로 생겨 목록과 어긋난다)
+ */
+export type EquipmentListStore = ReturnType<typeof useEquipmentList>
+export const EquipmentListKey: InjectionKey<EquipmentListStore> = Symbol('PC-LPO-0701-equipment-list')
