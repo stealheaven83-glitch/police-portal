@@ -7,6 +7,7 @@ import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
 import { Checkbox } from '@/components/custom/checkbox'
 import { Button } from '@/components/custom/button'
+import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import styles from '@/components/custom/info-table/InfoTable.module.css'
 
 const form = reactive({
@@ -19,6 +20,9 @@ const form = reactive({
   useYn: 'use',
   tempVehicle: '',
   note: '',
+  regDate: '2026-08-24',
+  startDate: '2026-08-01',
+  endDate: '2026-08-24',
 })
 
 const carTypeOptions = [
@@ -180,6 +184,42 @@ const locationOptions = [
             </InfoField>
             <InfoField label="수정일자">
               2026-08-24
+            </InfoField>
+          </InfoTable>
+        </section>
+
+        <!-- DatePicker -->
+        <section class="space-y-4 pb-6">
+          <h2 class="text-xl font-semibold border-b pb-2">DatePicker</h2>
+          <p class="text-muted-foreground text-sm">
+            달력은 팝업이 값 영역 밖으로 열려야 하므로 폭을 <code>inputClass</code> 로 고정하고,
+            기간은 DatePicker 두 개를 <code>~</code> 로 잇습니다.
+          </p>
+          <InfoTable :columns="2">
+            <InfoField for="it-reg-date" label="등록일자">
+              <DatePicker
+                id="it-reg-date"
+                v-model="form.regDate"
+                size="sm"
+                class="!space-y-0 flex-1"
+                input-class="w-[16rem]"
+              />
+            </InfoField>
+            <InfoField for="it-disabled-date" label="처리일자">
+              <DatePicker
+                id="it-disabled-date"
+                v-model="form.regDate"
+                size="sm"
+                class="!space-y-0"
+                input-class="w-[16rem]"
+                disabled
+              />
+            </InfoField>
+
+            <InfoField label="조회기간" full>
+              <DatePicker v-model="form.startDate" size="sm" class="!space-y-0" input-class="w-[16rem]" />
+              <span>~</span>
+              <DatePicker v-model="form.endDate" size="sm" class="!space-y-0" input-class="w-[16rem]" />
             </InfoField>
           </InfoTable>
         </section>
