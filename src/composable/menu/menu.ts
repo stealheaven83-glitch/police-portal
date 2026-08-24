@@ -232,6 +232,11 @@ export const mainLayoutConfig: LayoutConfig = {
           title: 'Calendar',
           icon: MessageCircleQuestionIcon,
         },
+        {
+          path: '/infoTable',
+          title: 'Info Table',
+          icon: MessageCircleQuestionIcon,
+        },        
       ]
     }
   ],

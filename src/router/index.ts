@@ -438,7 +438,7 @@ const router = createRouter({
             name: 'info-table',
             component: () => import('../views/component-sample/info-table.vue'),
             meta: {
-                layout: '',
+                layout: 'MainLayout',
                 title: 'Info Table'
             }
         },        
