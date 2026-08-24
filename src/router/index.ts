@@ -434,6 +434,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/infoTable',
+            name: 'info-table',
+            component: () => import('../views/component-sample/info-table.vue'),
+            meta: {
+                layout: '',
+                title: 'Info Table'
+            }
+        },        
+        {
             path: '/:pathMatch(.*)*',
             name: 'notFound',
             component: Error404

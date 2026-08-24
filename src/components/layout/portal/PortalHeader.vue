@@ -89,7 +89,7 @@
 
             <div class="my-info">
               <a href="" title="마이페이지 바로가기" @click.prevent>
-                <span class="mypic"><img :src="portalMyInfo.thumbnail" alt="" aria-hidden="true" /></span>
+                <!-- <span class="mypic"><img :src="portalMyInfo.thumbnail" alt="" aria-hidden="true" /></span> -->
                 <span class="name">{{ portalMyInfo.name }}</span>
                 <span class="position">{{ portalMyInfo.position }}</span>
               </a>

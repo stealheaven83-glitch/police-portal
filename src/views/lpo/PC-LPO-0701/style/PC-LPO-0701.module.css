@@ -31,17 +31,12 @@
   margin-top: 1.6rem;
 }
 
+
 /* -------------------------------------------------------------- 상세 모달 */
-.requiredDot {
-  margin-left: 0.2rem;
-  color: var(--Base--point, #d32f2f);
-}
-
-.requiredDot::before {
-  content: '•';
-}
-
 .legend {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   margin-bottom: 1.2rem;
   font-size: 1.3rem;
   color: var(--Base--point, #d32f2f);
