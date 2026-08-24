@@ -36,7 +36,7 @@ const locationOptions = [
 
 <template>
   <div class="p-6">
-    <div class="container p-6 bg-white rounded-lg h-[calc(100vh-200px)] flex flex-col">
+    <div class="container p-6 bg-white rounded-lg  flex flex-col">
       <div class="flex justify-between items-center mb-6">
         <div>
           <h1 class="text-2xl font-bold tracking-tight">Info Table</h1>
@@ -161,7 +161,7 @@ const locationOptions = [
           </p>
           <InfoTable :columns="2">
             <InfoField label="기동장비 구분" full>
-              <RadioGroup v-model="form.vehicleType" class="flex gap-6">
+              <RadioGroup v-model="form.vehicleType" :class="styles['info-table-radio']">
                 <RadioGroupItem value="patrol" label="순찰차" />
                 <RadioGroupItem value="motorcycle" label="오토바이" />
                 <RadioGroupItem value="bicycle" label="자전거" />
@@ -179,7 +179,7 @@ const locationOptions = [
               <Checkbox label="사용" :default-value="true" />
             </InfoField>
             <InfoField label="수정일자">
-              <span class="text-[1.5rem] text-[var(--Text-body_1)]">2026-08-24</span>
+              2026-08-24
             </InfoField>
           </InfoTable>
         </section>

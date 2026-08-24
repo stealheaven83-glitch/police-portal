@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useId } from 'vue'
+import { computed, useId, useSlots, Comment, Text } from 'vue'
 import { cn } from '@/lib/utils'
 import styles from './InfoTable.module.css'
 
@@ -23,6 +23,21 @@ const props = withDefaults(defineProps<Props>(), {
 
 const uid = useId()
 const labelId = computed(() => `info-field-label-${uid}`)
+
+const slots = useSlots()
+
+/**
+ * 값 영역에 컨트롤 없이 글자만 들어왔는지 판별한다.
+ * 글자만 있으면 페이지마다 span 에 클래스를 붙이지 않아도 공통 텍스트 스타일이 자동으로 붙는다.
+ * (슬롯 내용은 반응형 소스가 아니라 computed 로 캐싱하면 갱신되지 않으므로 렌더마다 계산한다)
+ */
+function isTextOnly() {
+  const nodes = slots.default?.() ?? []
+  const meaningful = nodes.filter(
+    (node) => node.type !== Comment && !(node.type === Text && !String(node.children ?? '').trim()),
+  )
+  return meaningful.length > 0 && meaningful.every((node) => node.type === Text)
+}
 </script>
 
 <template>
@@ -38,7 +53,8 @@ const labelId = computed(() => `info-field-label-${uid}`)
       :class="layout === 'column' ? styles.controlColumn : styles.control"
       v-bind="!props.for ? { role: 'group', 'aria-labelledby': labelId } : {}"
     >
-      <slot />
+      <span v-if="isTextOnly()" :class="styles['info-table-txt']"><slot /></span>
+      <slot v-else />
     </div>
   </div>
 </template>

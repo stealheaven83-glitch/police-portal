@@ -7,8 +7,8 @@
 
 .grid {
   display: grid;
-  border-top: 0.2rem solid var(--Text-body_0, #1e2124);
-  border-left: 1px solid var(--Border_gray03, #e6e8ea);
+  border-top: 0.1rem solid var( --Border_gray01);
+  border-left: 1px solid var( --Border_gray03);
 }
 
 .cols2 {
@@ -25,7 +25,6 @@
   display: grid;
   grid-template-columns: 14rem minmax(0, 1fr);
   align-items: stretch;
-  border-right: 1px solid var(--Border_gray03, #e6e8ea);
   border-bottom: 1px solid var(--Border_gray03, #e6e8ea);
 }
 
@@ -95,7 +94,7 @@
 
 /* -------------------------------------------------------------- 상세 모달 */
 .requiredDot {
-  margin-left: 0.2rem;
+  margin-left: 0.6rem;
   color: var(--Base--point);
 }
 
@@ -244,7 +243,7 @@
 .vehicleTableWrap {
   max-height: 32rem;
   overflow-y: auto;
-  border-top: 2px solid var(--Text-body_0, #1e2124);
+  border-top: 2px solid var(--Text-body_0);
 }
 
 .vehicleTable {
@@ -255,7 +254,7 @@
 .vehicleTable th,
 .vehicleTable td {
   padding: 1rem 1.2rem;
-  border-bottom: 1px solid var(--Border_gray03, #e6e8ea);
+  border-bottom: 1px solid var(--Border_gray03);
   font-size: 1.4rem;
   text-align: center;
   color: var(--Text-body_1, #33363d);
@@ -264,8 +263,8 @@
 .vehicleTable th {
   position: sticky;
   top: 0;
-  background: var(--Background-gray01, #f5f6f8);
-  color: var(--Text-body_0, #1e2124);
+  background: var(--Background-gray01);
+  color: var(--Text-body_0);
   font-weight: 600;
 }
 
@@ -274,15 +273,26 @@
 }
 
 .vehicleRow:hover {
-  background: var(--Surface-primary, #eef4fb);
+  background: var(--Surface-primary);
 }
 
 .vehicleRowSelected {
-  background: var(--Surface-primary, #eef4fb);
-  color: var(--Base-primary, #0054a6);
+  background: var(--Surface-primary);
+  color: var(--Base-primary);
   font-weight: 600;
 }
+.info-table-txt{
+  margin-left:0.4rem;
+  line-height:1.5;
+  font-size: 1.5rem;
+  color:var(--Text-body_0);
+}
 
+.info-table-radio {
+  display:flex;
+  gap: 2.4rem;
+  align-items:center;
+}
 /* -------------------------------------------------------------- 반응형 */
 @media (max-width: 48rem) {
   .toolbar {
