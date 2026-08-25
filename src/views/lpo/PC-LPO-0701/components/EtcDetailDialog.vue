@@ -17,7 +17,7 @@ const { etcDetail, etcDetailDialogOpen, saveEtcDetail, deleteEtcDetail } = store
   <GenericDialog2 v-model:open="etcDetailDialogOpen" title="기타 상세" :size="800" :show-close-button="true">
     <p :class="styles.legend">• 필수 입력 항목</p>
 
-    <InfoTable :columns="2">
+    <InfoTable :columns="2" popup>
       <InfoField for="etc-type">
         <template #label>장비종류<span :class="styles.requiredDot" /></template>
         <InputField2 id="etc-type" v-model="etcDetail.etcType" size="sm" class="!space-y-0 flex-1" />

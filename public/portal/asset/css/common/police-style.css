@@ -1084,6 +1084,20 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   font-weight: 600;
 }
 
+.btn-wrap{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.btn-wrap-group{
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
 @media (max-width: 1200px) {
   .search-wrap .keyword .keyword-list {
     flex-wrap: wrap;

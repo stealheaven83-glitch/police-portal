@@ -77,8 +77,8 @@ function selectChild(event: MouseEvent, child: SideMenuItem) {
  * 잘려 나가고 문서 스크롤도 없어서 볼 방법이 없다. 그래서 메뉴가 스스로 스크롤한다.
  */
 .left-menu {
-  padding: 2.4rem 3.6rem;
-  width: 31.6rem;
+  padding: 2.4rem 0 0 3.6rem;
+  width: 28.6rem;
   flex-shrink: 0;
   overflow-y: auto;
   /* 스크롤바가 나타났다 사라져도 메뉴 폭이 흔들리지 않게 자리를 미리 잡아둔다 */

@@ -18,7 +18,7 @@ const { commDetail, commDetailDialogOpen, saveCommDetail, deleteCommDetail } = s
   <GenericDialog2 v-model:open="commDetailDialogOpen" title="통신장비 상세" :size="800" :show-close-button="true">
     <p :class="styles.legend">• 필수 입력 항목</p>
 
-    <InfoTable :columns="2">
+    <InfoTable :columns="2" popup>
       <InfoField for="comm-type">
         <template #label>통신장비 종류<span :class="styles.requiredDot" /></template>
         <SelectField

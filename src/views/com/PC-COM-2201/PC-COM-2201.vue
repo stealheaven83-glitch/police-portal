@@ -82,6 +82,34 @@ useBottomTabSetup({
             triggerClass="w-30"
           />
           <InputField2 v-model="equipmentName" label="통신장비 관리명" size="sm" inputClass="w-40" />
+          <SelectField
+            v-model="status"
+            label="상태구분"
+            :options="statusOptions"
+            label-position="left"
+            size="sm"
+            triggerClass="w-30"
+          />
+          <InputField2 v-model="equipmentName" label="통신장비 관리명" size="sm" inputClass="w-40" />   
+          <SelectField
+                  v-model="status"
+                  label="상태구분"
+                  :options="statusOptions"
+                  label-position="left"
+                  size="sm"
+                  triggerClass="w-30"
+                />
+                <InputField2 v-model="equipmentName" label="통신장비 관리명" size="sm" inputClass="w-40" />
+          <SelectField
+                  v-model="status"
+                  label="상태구분"
+                  :options="statusOptions"
+                  label-position="left"
+                  size="sm"
+                  triggerClass="w-30"
+                />
+          <InputField2 v-model="equipmentName" label="통신장비 관리명" size="sm" inputClass="w-40" />
+
         </div>
       </template>
       <template #btns>

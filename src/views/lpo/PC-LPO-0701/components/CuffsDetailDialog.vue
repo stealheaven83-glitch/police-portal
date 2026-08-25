@@ -19,7 +19,7 @@ const { cuffsDetail, cuffsDetailDialogOpen, saveCuffsDetail, deleteCuffsDetail }
   <GenericDialog2 v-model:open="cuffsDetailDialogOpen" title="수갑 상세" :size="800" :show-close-button="true">
     <p :class="styles.legend">• 필수 입력 항목</p>
 
-    <InfoTable :columns="2">
+    <InfoTable :columns="2" popup>
       <InfoField for="cuffs-type">
         <template #label>수갑종류<span :class="styles.requiredDot" /></template>
         <SelectField

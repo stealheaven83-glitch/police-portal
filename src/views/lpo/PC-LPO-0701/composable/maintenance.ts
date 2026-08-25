@@ -13,7 +13,12 @@ export interface MaintenanceRecord {
  * `category-id` 조합을 키로 이력을 따로 보관한다. */
 export function useMaintenanceHistory(allRows: Ref<EquipmentListRow[]>) {
   const maintenanceHistory = reactive<Record<string, MaintenanceRecord[]>>({
-    'mobile-50': [{ id: 1, type: 'done', content: '정기 점검 및 부품 교체 완료', date: '2026-01-01' }],
+    'mobile-50': Array.from({ length: 20 }, (_, i) => ({
+      id: i + 1,
+      type: i % 2 === 0 ? 'done' : '수리완료',
+      content: `정기 점검 및 부품 교체 완료 #${i + 1}`,
+      date: `2026-01-${String((i % 28) + 1).padStart(2, '0')}`,
+    })),
   })
   const maintenanceDialogOpen = ref(false)
   const maintenanceTitle = ref('')

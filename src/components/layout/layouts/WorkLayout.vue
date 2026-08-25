@@ -8,14 +8,14 @@
     <PortalHeader :show-banner="false" />
     <main class="work-main">
       <SideMenu v-if="sideMenuStore.visible" />
-      <div class="flex-1 min-w-0 relative pr-10 flex flex-col pb-[4px]">
+      <div class="flex-1 min-w-0 relative pr-10 flex flex-col pb-[4px] pl-[36px]">
          <!--
            화면 내용. .wrap 이 화면 높이로 잠겨 있으므로 넘치는 내용은 이 래퍼가 스크롤한다.
            바깥 컬럼이 아니라 안쪽 래퍼가 스크롤을 맡는 이유는, 탭 바가 컬럼에 absolute 로
            붙어 있어서 컬럼이 스크롤 컨테이너가 되면 탭 바가 내용을 따라다니며 그리드 위로
            겹쳐 올라오기 때문이다.
          -->
-         <div class="flex flex-col flex-1 min-h-0 overflow-y-auto">
+         <div class="flex flex-col flex-1 min-h-0">
            <slot name="main" />
          </div>
          <!-- 하단 동적 탭. 목록은 화면(View)의 useBottomTabSetup 이 채운다 -->
