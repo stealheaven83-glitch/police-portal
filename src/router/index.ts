@@ -359,7 +359,7 @@ const router = createRouter({
                 layout: 'MainLayout',
                 title: 'Title'
             }
-        },         
+        },
         {
             path: '/component/tooltip',
             name: 'tooltip',
@@ -368,7 +368,7 @@ const router = createRouter({
                 layout: 'MainLayout',
                 title: 'Tooltip'
             }
-        },      
+        },
         {
             path: '/component/textarea',
             name: 'Textarea',
@@ -395,7 +395,7 @@ const router = createRouter({
                 layout: 'MainLayout',
                 title: 'Pagination'
             }
-        },   
+        },
         {
             path: '/component/calendar',
             name: 'calendar',
@@ -413,7 +413,7 @@ const router = createRouter({
                 layout: 'MainLayout',
                 title: 'layoutSplit'
             }
-        },         
+        },
         /* LPO */
         {
             path: '/views/lpo/PC-LPO-0204',
@@ -452,55 +452,23 @@ const router = createRouter({
             }
         },
         {
-<<<<<<< Updated upstream
-            path: '/views/pub/PC-PUB-0301',
-            name: 'PC-PUB-0301',
-            component: () => import('../views/pub/PC-PUB-0301/PC-PUB-0301.vue'),
-            meta: { layout: 'WorkLayout', title: '단체정보리스트' }
+            path: '/views/pub/PM-PUB-0103',
+            name: 'PM-PUB-0101',
+            component: () => import('../views/pub/PM-PUB-0103/PM-PUB-0103.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '간이 범죄예방진단'
+            }
         },
         {
-            path: '/views/pub/PC-PUB-0302',
-            name: 'PC-PUB-0302',
-            component: () => import('../views/pub/PC-PUB-0302/PC-PUB-0302.vue'),
-            meta: { layout: 'WorkLayout', title: '단체정보상세' }
-        },
-        {
-            path: '/views/pub/PC-PUB-0303',
-            name: 'PC-PUB-0303',
-            component: () => import('../views/pub/PC-PUB-0303/PC-PUB-0303.vue'),
-            meta: { layout: 'WorkLayout', title: '단체정보등록' }
-        },
-        {
-            path: '/views/pub/PM-PUB-0304',
-            name: 'PM-PUB-0304',
-            component: () => import('../views/pub/PM-PUB-0304/PM-PUB-0304.vue'),
-            meta: { layout: 'WorkLayout', title: '단체활동기록' }
-        },
-        {
-            path: '/views/pub/PC-PUB-0306',
-            name: 'PC-PUB-0306',
-            component: () => import('../views/pub/PC-PUB-0306/PC-PUB-0306.vue'),
-            meta: { layout: 'WorkLayout', title: '단체현황' }
-        },
-        {
-            path: '/views/pub/PC-PUB-0307',
-            name: 'PC-PUB-0307',
-            component: () => import('../views/pub/PC-PUB-0307/PC-PUB-0307.vue'),
-            meta: { layout: 'WorkLayout', title: '활동현황' }
-        },
-        {
-            path: '/component/PC-STT-0103',
-            name: 'pc-stt-0103',
-=======
             path: '/views/stt/PC-STT-0103',
             name: 'PC-STT-0103',
->>>>>>> Stashed changes
             component: () => import('../views/stt/PC-STT-0103/PC-STT-0103.vue'),
             meta: {
                 layout: 'WorkLayout',
                 title: '인사관리'
             }
-        },   
+        },
         {
             path: '/worklist',
             name: 'worklist',
@@ -518,7 +486,7 @@ const router = createRouter({
                 layout: 'MainLayout',
                 title: 'Info Table'
             }
-        },        
+        },
         {
             path: '/:pathMatch(.*)*',
             name: 'notFound',
@@ -527,4 +495,4 @@ const router = createRouter({
     ]
 })
 
-export default router 
+export default router

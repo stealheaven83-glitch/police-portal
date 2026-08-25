@@ -1,0 +1,282 @@
+/* CPO 입력 · 관리 목록 페이지 전용 레이아웃. 1rem = 10px 기준 (전역 리셋). */
+
+/*
+ * SearchWrapper 루트에 flex-1 이 걸려 있어 WorkLayout 의 세로 flex 컬럼에 그대로 놓으면
+ * 검색영역이 남는 높이를 다 먹는다. 블록 래퍼로 한 겹 감싸 높이를 auto 로 묶어둔다.
+ */
+.searchArea {
+  display: block;
+}
+
+/* 상세조회 영역 한 줄(행). 좁은 화면에서는 필드가 줄바꿈되어 겹치지 않는다 */
+.formRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.6rem 3.6rem;
+}
+
+.formRow + .formRow {
+  margin-top: 1.6rem;
+}
+
+/*
+ * 조회 버튼을 #btns 슬롯 대신 마지막 formRow 안(진단자 옆)에 두므로, SearchWrapper 가
+ * #btns 자리로 항상 그려두는 두 번째(빈) 컬럼을 접어 form 컬럼이 폭 전체를 쓰게 한다.
+ * 그 컬럼을 그대로 두면 padding 만큼(약 48px) 빈 여백이 오른쪽 끝에 남아 조회 버튼이
+ * 진짜 오른쪽 끝에 붙지 못한다. SearchWrapper 의 `class` prop(래퍼 오버라이드용)에 이
+ * 클래스를 넘겨 자식 중 마지막(#btns 컬럼)만 숨긴다.
+ */
+.searchWrapper > div:last-child {
+  display: none;
+}
+
+/*
+ * 형제(#btns 컬럼)를 숨겨도 form 컬럼은 기본적으로 "내용 크기만큼"만 차지해, 필드가
+ * 줄바꿈되지 않을 만큼 화면이 넓으면(예: 1920px) 오른쪽에 빈 여백이 남아 조회 버튼이
+ * 진짜 오른쪽 끝까지 붙지 못한다. flex-grow 로 항상 전체 폭을 쓰게 한다.
+ */
+.searchWrapper > div:first-child {
+  flex: 1 1 auto;
+}
+
+/* 진단일자 ~ 종료일자 두 DatePicker 를 붙여 보여주는 묶음 */
+.dateRange {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+/* 엑셀다운로드 · 결과서 · 통보 발송 버튼 묶음. 좁은 화면에서는 줄바꿈된다 */
+.listActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 1.2rem;
+  margin: 1.6rem 0;
+}
+
+/*
+ * TabulatorGrid 의 hozAlign:'left' 는 셀에 text-align:left 만 넣어주는데, 셀 자체가
+ * (공용 tabulator-theme.css 기준) display:inline-flex 라 text-align 이 먹지 않고
+ * justify-content:center 가 그대로 적용돼 긴 주소 텍스트가 좌우 양쪽에서 잘린다.
+ * 컬럼의 cssClass 로 이 클래스를 셀에 얹어 justify-content 만 좌측으로 되돌린다.
+ */
+.leftAlignCell {
+  justify-content: flex-start !important;
+}
+
+/* -------------------------------------------------------------- 범죄예방진단 현황 신규 팝업(PM-PUB-0114) */
+.newDiagnosisDialog {
+  min-width: 0;
+}
+
+:global([data-slot='dialog-content']:has(.newDiagnosisDialog) [data-slot='dialog-title']) {
+  font-size: 2.4rem;
+  line-height: 1.3;
+}
+
+.dialogSection + .dialogSection {
+  margin-top: 2.4rem;
+}
+
+.sectionTitle {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+  margin-bottom: 0.8rem;
+}
+
+.subSectionTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--Text-body_0);
+  margin: 1.6rem 0 0.8rem;
+}
+
+.diagnosisCardTable > div {
+  grid-template-columns: 12rem minmax(0, 1fr);
+}
+
+.departmentSelectGroup {
+  flex: 1 1 auto;
+}
+
+.departmentSelectGroup > div {
+  width: 13.2rem;
+}
+
+.noticeDataButton {
+  height: 3.2rem;
+  border-color: #4f545b;
+  background: #4f545b;
+  color: #fff;
+}
+
+.noticeDataButton:hover,
+.noticeDataButton:active {
+  background: #3f444a;
+}
+
+.addressField {
+  grid-row: span 2;
+  height: 11.2rem;
+}
+
+.addressField > div:last-child {
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.8rem 1.6rem;
+}
+
+.addressSearchRow {
+  position: relative;
+  width: 100%;
+}
+
+.addressSearchButton {
+  position: absolute;
+  top: 50%;
+  right: 0.4rem;
+  transform: translateY(-50%);
+}
+
+.detailAddressField {
+  width: 13.6rem;
+  flex: 0 0 13.6rem;
+}
+
+.jurisdictionField {
+  min-height: 5.6rem;
+}
+
+.jurisdictionField > div:last-child {
+  padding: 0.8rem 1.6rem;
+}
+
+.referenceTable > div {
+  grid-template-columns: 14.8rem minmax(0, 1fr);
+}
+
+.referenceField > div:last-child {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+  color: var(--Text-body_0, #1e2124);
+}
+
+.referenceField > div:last-child > span {
+  display: flex;
+  align-items: center;
+  min-height: 100%;
+  padding: 0.8rem 1.6rem;
+}
+
+.referenceField > div:last-child > span + span {
+  border-left: 1px solid var(--Border_gray03, #e6e8ea);
+}
+
+.generalTable > div {
+  grid-template-columns: 12rem minmax(0, 1fr);
+}
+
+.emptyGeneralField > span:first-child {
+  background: var(--Background-gray01, #f5f6f8);
+}
+
+.buildingAssessmentTable > div {
+  grid-template-columns: 22rem minmax(0, 1fr);
+}
+
+.extraAssessmentTable > div,
+.etcAssessmentTable > div {
+  grid-template-columns: 30rem minmax(0, 1fr);
+}
+
+.assessmentStepper {
+  width: 12rem;
+  flex: 0 0 12rem;
+}
+
+.assessmentUnit {
+  font-size: 1.5rem;
+  color: #1e2124;
+}
+
+.etcAssessmentTable > div > div:last-child {
+  background: #fff;
+}
+
+.etcAssessmentTable > div > label:first-child {
+  padding: 0.8rem 1.6rem;
+}
+
+.totalScoreRow {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 4rem;
+  padding: 1rem 1.6rem;
+  margin-top: 1.2rem;
+  border: 0;
+  background: var(--Background-gray01, #f5f6f8);
+  font-size: 1.5rem;
+  color: #1e2124;
+}
+
+.totalScoreValue {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: #bd2c0f;
+}
+
+.improvementTable > div {
+  grid-template-columns: 16rem minmax(0, 1fr);
+}
+
+.improvementDate {
+  width: 20rem;
+  flex: 0 0 20rem;
+}
+
+.improvementStatusSelect {
+  width: 12rem;
+  flex: 0 0 12rem;
+}
+
+.dialogSection.emailNotifySection {
+  margin-top: 0.8rem;
+}
+
+@media (max-width: 62.5rem) {
+  .addressField {
+    grid-row: auto;
+    height: auto;
+  }
+}
+
+@media (max-width: 40rem) {
+  .diagnosisCardTable > div,
+  .referenceTable > div,
+  .generalTable > div,
+  .buildingAssessmentTable > div,
+  .extraAssessmentTable > div,
+  .etcAssessmentTable > div,
+  .improvementTable > div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .departmentSelectGroup > div {
+    width: 100%;
+  }
+
+  .detailAddressField,
+  .improvementDate,
+  .improvementStatusSelect {
+    width: 100%;
+    flex-basis: 100%;
+  }
+}

@@ -31,10 +31,10 @@
       </div>
 
       <div class="search-group">
-        <input 
-          type="text" 
-          v-model="searchKeyword" 
-          placeholder="화면ID, 화면명, Depth 검색" 
+        <input
+          type="text"
+          v-model="searchKeyword"
+          placeholder="화면ID, 화면명, Depth 검색"
         />
         <button v-if="searchKeyword" @click="searchKeyword = ''">초기화</button>
       </div>
@@ -78,8 +78,8 @@
               </select>
             </td>
             <td class="text-center">
-              <button 
-                class="btn-preview" 
+              <button
+                class="btn-preview"
                 :disabled="!item.path"
                 @click="goToPage(item.path)"
               >
@@ -258,7 +258,7 @@ const worklist = ref([
   { id: 151, category: '스마트워크', depth1: '', depth2: '범죄예방진단', depth3: '', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
   { id: 152, category: '스마트워크', depth1: '', depth2: '', depth3: '간이 범죄예방진단', depth4: '목록', depth5: '', screenName: '간이 범죄예방진단 목록', screenId: 'PM-PUB-0101', path: '/views/PUB/PM-PUB-0101', status: '대기' },
   { id: 153, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '상세', depth5: '', screenName: '간이 범죄예방진단 상세', screenId: 'PM-PUB-0102', path: '', status: '대기' },
-  { id: 154, category: '스마트워크', depth1: '', depth2: '', depth3: 'CPO 입력·관리', depth4: '목록', depth5: '', screenName: 'CPO 입력관리 목록', screenId: 'PM-PUB-0103', path: '', status: '대기' },
+  { id: 154, category: '스마트워크', depth1: '', depth2: '', depth3: 'CPO 입력·관리', depth4: '목록', depth5: '', screenName: 'CPO 입력관리 목록', screenId: 'PM-PUB-0103', path: '/views/PUB/PM-PUB-0103', status: '대기' },
   { id: 155, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '', depth5: '범죄예방진단결과(보관용)', screenName: '범죄예방진단결과(보관용)', screenId: 'PM-PUB-0104', path: '', status: '대기' },
   { id: 156, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '', depth5: '범죄예방진단결과(CPO확인용)', screenName: '범죄예방진단결과(CPO확인용)', screenId: 'PM-PUB-0105', path: '', status: '대기' },
   { id: 157, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '', depth5: '진단추가', screenName: '진단추가', screenId: 'PM-PUB-0106', path: '', status: '대기' },
@@ -511,8 +511,8 @@ const filteredList = computed(() => {
     const matchCat = !selectedCategory.value || item.depth1 === selectedCategory.value
     const matchStat = !selectedStatus.value || item.status === selectedStatus.value
     const keyword = searchKeyword.value.toLowerCase().trim()
-    
-    const matchSearch = !keyword || 
+
+    const matchSearch = !keyword ||
       (item.screenName && item.screenName.toLowerCase().includes(keyword)) ||
       (item.screenId && item.screenId.toLowerCase().includes(keyword)) ||
       (item.depth1 && item.depth1.toLowerCase().includes(keyword)) ||
