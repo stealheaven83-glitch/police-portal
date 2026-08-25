@@ -1,3 +1,78 @@
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="인사관리" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+  <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
+    <template #department>
+      <span class="text-sm font-semibold">부서</span>
+      <SelectField
+          :options="[{ label: '본청', value: 'hq' }]"
+          model-value="hq"
+          size="sm"
+          triggerClass="w-40"
+        />
+      <SelectField
+          :options="selectItem"
+          model-value="all"
+          size="sm"
+          triggerClass="w-40"
+        />
+      <SelectField
+          :options="selectItem"
+          model-value="all"
+          size="sm"
+          triggerClass="w-40"
+        />
+    </template>
+    <template #form>
+      <div class="search-area">
+        <SelectField
+            label="직급"
+            :options="selectItem"
+            label-position="left"
+            size="sm"
+            triggerClass="w-40"
+         />
+        <InputField2 label="이름" size="sm" label-position="left" inputClass="w-40"></InputField2>
+      </div>
+    </template>
+    <template #btns>
+      <Button variant="secondary" size="sm" class="w-25">조회</Button>
+    </template>
+  </SearchWrapper>
+  <LayoutSplite :count="2" :widths="[50, 50 ]"  :resizable="false">
+    <template #layout-1>
+      <LayoutHeader title="인사 현황" >
+      </LayoutHeader>
+      <!-- 헤더(60px)를 제외한 나머지 영역을 그리드가 채우고, 넘치면 세로 스크롤 -->
+      <div class="h-[calc(100%-60px)] overflow-auto p-[2rem]">
+        <TableWrapper
+          :columns="listColumns"
+          :items="pagedListRows"
+          :items-per-page="itemsPerPage"
+          :total-elements="listRows.length"
+          :total-pages="totalPages"
+          :current-page="currentPage"
+          selectable
+          empty-title="조회된 인사 정보가 없습니다"
+          empty-description="검색 조건을 변경해 다시 조회해 주세요."
+          @page-change="(page: number) => (currentPage = page)"
+          @update:items-per-page="(size: number) => { itemsPerPage = size; currentPage = 1 }"
+          @select-row="onSelectRow"
+        />
+      </div>
+    </template>
+    <template #layout-2>
+      <LayoutHeader title="인사 상세" />
+    </template>
+  </LayoutSplite>
+</template>
+
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 // import {
@@ -120,80 +195,6 @@ const advancedSearchOpen = ref(true);
 
 </script>
 
-<template>
-  <PageHeader>
-    <template #left>
-      <PageTitle title="인사관리" />
-    </template>
-    <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
-  </PageHeader>
-  <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
-    <template #department>
-      <span class="text-sm font-semibold">부서</span>
-      <SelectField
-          :options="[{ label: '본청', value: 'hq' }]"
-          model-value="hq"
-          size="sm"
-          triggerClass="w-40"
-        />
-      <SelectField
-          :options="selectItem"
-          model-value="all"
-          size="sm"
-          triggerClass="w-40"
-        />
-      <SelectField
-          :options="selectItem"
-          model-value="all"
-          size="sm"
-          triggerClass="w-40"
-        />
-    </template>
-    <template #form>
-      <div class="search-area">
-        <SelectField
-            label="직급"
-            :options="selectItem"
-            label-position="left"
-            size="sm"
-            triggerClass="w-40"
-         />
-        <InputField2 label="이름" size="sm" label-position="left" inputClass="w-40"></InputField2>
-      </div>
-    </template>
-    <template #btns>
-      <Button variant="secondary" size="sm" class="w-25">조회</Button>
-    </template>
-  </SearchWrapper>
-  <LayoutSplite :count="2" :widths="[50, 50 ]"  :resizable="false">
-    <template #layout-1>
-      <LayoutHeader title="인사 현황" >
-      </LayoutHeader>
-      <!-- 헤더(60px)를 제외한 나머지 영역을 그리드가 채우고, 넘치면 세로 스크롤 -->
-      <div class="h-[calc(100%-60px)] overflow-auto p-[2rem]">
-        <TableWrapper
-          :columns="listColumns"
-          :items="pagedListRows"
-          :items-per-page="itemsPerPage"
-          :total-elements="listRows.length"
-          :total-pages="totalPages"
-          :current-page="currentPage"
-          selectable
-          empty-title="조회된 인사 정보가 없습니다"
-          empty-description="검색 조건을 변경해 다시 조회해 주세요."
-          @page-change="(page: number) => (currentPage = page)"
-          @update:items-per-page="(size: number) => { itemsPerPage = size; currentPage = 1 }"
-          @select-row="onSelectRow"
-        />
-      </div>
-    </template>
-    <template #layout-2>
-      <LayoutHeader title="인사 상세" />
-    </template>
-  </LayoutSplite>
-</template>
 
 <style scoped>
 /* 담백함을 유지하기 위해 추가 스타일 최소화 */

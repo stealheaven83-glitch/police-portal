@@ -58,7 +58,9 @@
   border-left: 0;
   border-right: 1px solid var(--Border-grid-body);
 }
-
+.tabulator .tabulator-header .tabulator-frozen.tabulator-frozen-left{
+  border-right:0;
+}
 .tabulator-row .tabulator-cell {
   border-right: 1px solid var(--Border-grid-body);
   border-bottom: 1px solid var(--Border-grid-body);
@@ -148,9 +150,9 @@
 }
 
 /* 편집이 커밋된(변경된) 셀 표시 */
-.tabulator-row .tabulator-cell.cell-dirty {
+/* .tabulator-row .tabulator-cell.cell-dirty {
   background-color: #fff8e1;
-}
+} */
 
 /* 유효성 검사 실패 셀 표시 */
 .tabulator-row .tabulator-cell.tabulator-validation-fail {

@@ -1,4 +1,6 @@
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
+import { toast } from 'vue-sonner'
+import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 
 export interface SelectOption {
   label: string
@@ -31,6 +33,16 @@ export interface DiagnosisHistoryRow {
   reason: string
   address: string
   diagnoser: string
+}
+
+/** 검색영역 입력값 */
+export interface DiagnosisSearchForm {
+  department: DepartmentValue
+  diagnosedFrom: string
+  diagnosedTo: string
+  type: string
+  bizNameKeyword: string
+  diagnoserKeyword: string
 }
 
 export const typeOptions: SelectOption[] = [
@@ -74,10 +86,22 @@ function createRows(total: number): DiagnosisRow[] {
 /**
  * 간이 범죄예방진단 목록 화면 상태.
  *
- * 좌측 현황에서 고른 행 하나가 우측 이력의 조회 조건이 된다. 이력은 화면에서 직접 편집하지
+ * 좌측 현황에서 고른 행 하나가 우측 이력의 조회 조건이다. 이력은 화면에서 직접 편집하지
  * 않으므로 선택 행에서 파생시키기만 하고 별도 상태로 들고 있지 않는다.
  */
 export function useDiagnosisList() {
+  /** 시안은 상세조회가 접힌 상태로 열린다 */
+  const advancedSearchOpen = ref(false)
+
+  const searchForm = reactive<DiagnosisSearchForm>({
+    department: { level1: 'hq', level2: 'all', level3: 'all' },
+    diagnosedFrom: '',
+    diagnosedTo: '',
+    type: 'all',
+    bizNameKeyword: '',
+    diagnoserKeyword: '',
+  })
+
   const rows = ref<DiagnosisRow[]>(createRows(195))
   const selectedRow = ref<DiagnosisRow | null>(null)
 
@@ -104,10 +128,24 @@ export function useDiagnosisList() {
     selectedRow.value = row
   }
 
+  function search() {
+    // TODO: API 연동. 지금은 더미 목록이라 조회 조건이 결과에 반영되지 않는다.
+    toast.success('조회되었습니다.')
+  }
+
+  function openNew() {
+    // TODO: 진단신규(등록) 팝업 PM-PUB-0107 연결
+    toast.info('신규 등록 화면은 준비 중입니다.')
+  }
+
   return {
+    advancedSearchOpen,
+    searchForm,
     rows,
     selectedRow,
     historyRows,
     selectRow,
+    search,
+    openNew,
   }
 }
