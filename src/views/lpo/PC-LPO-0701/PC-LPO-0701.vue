@@ -313,7 +313,7 @@ function onPrint() {
     </TabsList>
   </Tabs>
 
-  <div class="listActions">
+  <div class="list-actions">
     <Button type="button" variant="tertiary2" size="sm" class="w-25" @click="onPrint">인쇄</Button>
     <Button type="button" variant="primary" size="sm" class="w-25" @click="onNew">신규</Button>
   </div>

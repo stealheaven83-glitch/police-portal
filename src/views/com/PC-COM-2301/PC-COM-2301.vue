@@ -9,7 +9,7 @@
     </template>
   </PageHeader>
 
-  <div class="list-ctions">
+  <div class="list-actions">
     <Button type="button" variant="tertiary2" size="sm" class="w-25" @click="onDeleteSelected">선택삭제</Button>
     <Button type="button" variant="secondary" size="sm" class="w-25" @click="onAdd">추가</Button>
     <Button type="button" variant="primary" size="sm" class="w-25" @click="onSave">저장</Button>

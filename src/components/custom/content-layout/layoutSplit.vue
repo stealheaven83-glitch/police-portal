@@ -66,14 +66,17 @@ const minSizeOf = (i: number) =>
 @reference "@/assets/css/style.css";
 
 /*
- * 높이는 인라인 style 대신 여기서 잡는다. 화면마다 다른 높이가 필요하면 호출부가
- * module.css 클래스로 --split-height 를 덮어쓴다.
- *   .tallSplit { --split-height: 110rem; }
- *   <LayoutSplite :class="styles.tallSplit" />
+ * 높이·상단여백은 인라인 style 대신 여기서 잡는다. 화면마다 값이 달라야 하면
+ * 호출부가 module.css 클래스로 CSS 변수를 덮어쓴다.
+ * (police-style.css 같은 @layer 안에서는 이 스코프 스타일을 못 이긴다 — 레이어 없는
+ *  선언이 항상 우선하므로, 바깥에서 규칙으로 덮으려 하지 말고 변수를 쓴다)
+ *
+ *   .tightSplit { --split-margin-top: 0; --split-height: 110rem; }
+ *   <LayoutSplite :class="styles.tightSplit" />
  */
 .splitLayout {
   height: var(--split-height, 90rem);
-  margin-top: 2rem;
+  margin-top: var(--split-margin-top, 2rem);
   border: 1px solid var(--Border_gray0);
   border-bottom: 0;
   border-radius: 1rem 1rem 0 0;

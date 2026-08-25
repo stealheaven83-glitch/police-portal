@@ -11,7 +11,7 @@
           :aria-expanded="expanded"
           @click="toggle"
         >
-          상세조회 {{ expanded ? '닫기' : '열기' }}
+          상세조회 
           <ChevronDown :size="14" class="transition-transform duration-200" :class="expanded ? 'rotate-180' : ''" />
         </button>
       </div>
