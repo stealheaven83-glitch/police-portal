@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, provide, ref } from 'vue'
+import { useAutoTrigger, type ScreenTriggerMap } from '@/composables/useAutoTrigger'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
@@ -50,20 +51,68 @@ provide(EquipmentListKey, store)
 const {
   activeCategory,
   rowsByCategory,
+  detailDialogOpen,
   openNewDetail,
   openDetail,
+  vehicle112DialogOpen,
+  commDetailDialogOpen,
   openNewCommDetail,
   openCommDetail,
+  weaponDetailDialogOpen,
   openNewWeaponDetail,
   openWeaponDetail,
+  ammoDetailDialogOpen,
   openNewAmmoDetail,
   openAmmoDetail,
+  cuffsDetailDialogOpen,
   openNewCuffsDetail,
   openCuffsDetail,
+  etcDetailDialogOpen,
   openNewEtcDetail,
   openEtcDetail,
   openMaintenanceHistory,
 } = store
+
+/**
+ * 화면ID(PC-LPO-XXXX) ↔ 이 페이지의 탭/팝업 상태 양방향 동기화.
+ *
+ * router.ts 에 화면ID별로 라우트를 등록해두고(컴포넌트는 전부 이 파일 재사용), 여기서는
+ * "이 화면ID면 이 ref들이 이 값이어야 한다"만 선언한다 — 탭(activeCategory)이든 팝업
+ * (xxxDialogOpen)이든 구분 없이 같은 [ref, 값] 쌍으로 나열한다. 0709 처럼 조건이 여러 개면
+ * (탭 + 팝업오픈) 그대로 이어붙이면 되고, 팝업 안에서 또 팝업을 여는 중첩 구조도 조건만
+ * 더 얹으면 된다 (예: [[activeCategory,'mobile'], [detailDialogOpen,true], [vehicle112DialogOpen,true]]).
+ * useAutoTrigger 자체는 이 페이지를 모르는 범용 유틸이라 다른 페이지에도 그대로 쓸 수 있다.
+ *
+ * 화면ID 매핑(장비관리 화면정의서 기준):
+ *   0701 기동장비 목록 · 0702 기동장비 상세팝업 · 0703 112차량조회팝업(0702 안의 하위팝업)
+ *   0704 통신장비 목록 · 0705 통신장비 상세팝업
+ *   0706 무기 목록   · 0707 무기 상세팝업
+ *   0708 탄약 목록   · 0709 탄약 상세팝업
+ *   0710 수갑 목록   · 0711 수갑 상세팝업
+ *   0712 기타 목록   · 0713 기타 상세팝업
+ *
+ * PC-LPO-0714(유지보수이력)는 여기서 일부러 뺐다 — 이 팝업은 특정 행(장비)을 골라야
+ * 열리는데, [ref,값] 방식은 순방향(URL 진입 시 적용)과 역방향(상태 변화 시 URL 반영)이
+ * 같은 조건을 공유해서 "열려 있으면 URL엔 반영하되, URL만으로 직접 열지는 않기"를 표현할
+ * 수 없다. 필요해지면 useAutoTrigger 와는 별도로 처리해야 한다.
+ */
+const screenTriggers: ScreenTriggerMap = {
+  'PC-LPO-0701': [[activeCategory, 'mobile']],
+  'PC-LPO-0702': [[activeCategory, 'mobile'], [detailDialogOpen, true]],
+  'PC-LPO-0703': [[activeCategory, 'mobile'], [detailDialogOpen, true], [vehicle112DialogOpen, true]],
+  'PC-LPO-0704': [[activeCategory, 'comm']],
+  'PC-LPO-0705': [[activeCategory, 'comm'], [commDetailDialogOpen, true]],
+  'PC-LPO-0706': [[activeCategory, 'weapon']],
+  'PC-LPO-0707': [[activeCategory, 'weapon'], [weaponDetailDialogOpen, true]],
+  'PC-LPO-0708': [[activeCategory, 'ammo']],
+  'PC-LPO-0709': [[activeCategory, 'ammo'], [ammoDetailDialogOpen, true]],
+  'PC-LPO-0710': [[activeCategory, 'cuffs']],
+  'PC-LPO-0711': [[activeCategory, 'cuffs'], [cuffsDetailDialogOpen, true]],
+  'PC-LPO-0712': [[activeCategory, 'etc']],
+  'PC-LPO-0713': [[activeCategory, 'etc'], [etcDetailDialogOpen, true]],
+}
+
+useAutoTrigger(screenTriggers)
 
 /** 목록 행 클릭/상세보기 — 지금 활성 탭이 어떤 카테고리인지에 따라 필드 구성이 다른 모달로 나뉜다 */
 function onOpenRow(row: EquipmentListRow) {

@@ -36,6 +36,18 @@ const router = createRouter({
                 title: '장비관리',
             }
         },
+        ...([
+            'PC-LPO-0702', 'PC-LPO-0703', 'PC-LPO-0704', 'PC-LPO-0705', 'PC-LPO-0706', 'PC-LPO-0707',
+            'PC-LPO-0708', 'PC-LPO-0709', 'PC-LPO-0710', 'PC-LPO-0711', 'PC-LPO-0712', 'PC-LPO-0713', 'PC-LPO-0714',
+        ] as const).map((name) => ({
+            path: `/views/lpo/${name}`,
+            name,
+            component: () => import('../views/lpo/PC-LPO-0701/PC-LPO-0701.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '장비관리',
+            }
+        })),
         {
             path: '/views/lpo/PC-LPO-0801',
             name: 'PC-LPO-0801',
