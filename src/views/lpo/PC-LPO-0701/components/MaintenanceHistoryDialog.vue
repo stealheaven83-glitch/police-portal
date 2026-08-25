@@ -2,21 +2,24 @@
 import { inject } from 'vue'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
-import SelectField from '@/components/custom/select/SelectField.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
-import { EquipmentListKey, maintenanceTypeOptions } from '../composable/PC-LPO-0701'
+import { EquipmentListKey } from '../composable/PC-LPO-0701'
 import styles from '../style/PC-LPO-0701.module.css'
 
 const store = inject(EquipmentListKey)!
 const { maintenanceDialogOpen, maintenanceTitle, maintenanceRows, addMaintenanceRow, saveMaintenanceHistory } = store
+
+function onPrint() {
+  window.print()
+}
 </script>
 
 <template>
   <GenericDialog2
     v-model:open="maintenanceDialogOpen"
     :title="`장비유지보수 이력(${maintenanceTitle})`"
-    :size="700"
+    :size="800"
     :show-close-button="true"
   >
     <div :class="styles.handlerTableWrap">
@@ -34,14 +37,7 @@ const { maintenanceDialogOpen, maintenanceTitle, maintenanceRows, addMaintenance
           <tr v-for="(record, index) in maintenanceRows" :key="record.id">
             <td>{{ maintenanceRows.length - index }}</td>
             <td>
-              <SelectField
-                v-model="record.type"
-                :options="maintenanceTypeOptions"
-                size="sm"
-                trigger-class="w-full"
-                class="!space-y-0"
-                placeholder="선택"
-              />
+              <InputField2 v-model="record.type" size="sm" class="!space-y-0" />
             </td>
             <td>
               <InputField2 v-model="record.content" size="sm" class="!space-y-0" />
@@ -56,13 +52,17 @@ const { maintenanceDialogOpen, maintenanceTitle, maintenanceRows, addMaintenance
         </tbody>
       </table>
     </div>
-    <div :class="styles.handlerActions">
-      <Button type="button" variant="secondary" size="sm" class="w-25" @click="addMaintenanceRow">추가</Button>
-    </div>
 
     <template #footer>
-      <Button type="button" class="w-25" variant="tertiary2" size="md" @click="maintenanceDialogOpen = false">닫기</Button>
-      <Button type="button" class="w-25" variant="primary" size="md" @click="saveMaintenanceHistory">저장</Button>
+      <div class="flex justify-between items-center w-full">
+        <Button type="button" class="w-25" variant="tertiary2" size="md" @click="onPrint">인쇄</Button>
+        <div class="flex gap-2 justify-between items-center">
+          <Button type="button" class="w-25" variant="tertiary2" size="md" @click="maintenanceDialogOpen = false">닫기</Button>
+          <Button type="button" class="w-25" variant="tertiary2" size="md" @click="maintenanceDialogOpen = false">삭제</Button>
+          <Button type="button" class="w-25" variant="secondary" size="md" @click="addMaintenanceRow">신규</Button>
+          <Button type="button" class="w-25" variant="primary" size="md" @click="saveMaintenanceHistory">저장</Button>
+        </div>
+      </div>
     </template>
   </GenericDialog2>
 </template>

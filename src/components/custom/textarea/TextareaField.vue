@@ -140,7 +140,7 @@ const computedHeight = computed(() => {
           <Textarea
             :id="fieldId"
             v-model="modelValue"
-            :style="{ height: computedHeight }"
+            :style="{ height: computedHeight, verticalAlign: 'top' }"
             :class="cn(borderStyleCss, textareaClass)"
             :placeholder="placeholder"
             :maxlength="maxlength"

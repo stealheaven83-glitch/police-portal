@@ -34,6 +34,11 @@ const router = createRouter({
             meta: {
                 layout: 'WorkLayout',
                 title: '장비관리',
+                // Layout.vue 가 <component :key="route.meta.screenGroup ?? route.fullPath">로 렌더링한다.
+                // 이 화면군(0701~0714)은 전부 같은 컴포넌트가 useAutoTrigger 로 URL↔탭/팝업 상태를
+                // 동기화하는데, key 가 화면ID마다 바뀌면 그때마다 리마운트되어 상태가 날아간다.
+                // screenGroup 을 공통으로 줘서 이 화면군 안에서 이동할 땐 key 가 안 바뀌게 한다.
+                screenGroup: 'PC-LPO-0701',
             }
         },
         ...([
@@ -46,6 +51,7 @@ const router = createRouter({
             meta: {
                 layout: 'WorkLayout',
                 title: '장비관리',
+                screenGroup: 'PC-LPO-0701',
             }
         })),
         {

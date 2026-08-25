@@ -45,7 +45,7 @@ function increase() {
 
 <template>
   <div
-    :class="cn('inline-flex h-10 items-center overflow-hidden rounded-sm border border-[var(--Border_input01)] bg-white', props.class)"
+    :class="cn('inline-flex w-full h-10 items-center overflow-hidden rounded-sm border border-[var(--Border_input01)] bg-white', props.class)"
     role="group"
     :aria-label="label"
   >
@@ -59,7 +59,7 @@ function increase() {
       <Minus class="size-4" />
     </button>
     <span
-      class="flex h-full min-w-9 items-center justify-center border-x border-[var(--Border_input01)] px-2 text-[1.5rem] tabular-nums"
+      class="flex h-full min-w-9 flex-1 items-center justify-center px-2 text-[1.5rem] tabular-nums"
       aria-live="polite"
     >
       {{ modelValue }}

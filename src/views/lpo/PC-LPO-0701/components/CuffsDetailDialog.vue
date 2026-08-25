@@ -16,7 +16,7 @@ const { cuffsDetail, cuffsDetailDialogOpen, saveCuffsDetail, deleteCuffsDetail }
 </script>
 
 <template>
-  <GenericDialog2 v-model:open="cuffsDetailDialogOpen" title="수갑" :size="700" :show-close-button="true">
+  <GenericDialog2 v-model:open="cuffsDetailDialogOpen" title="수갑 상세" :size="800" :show-close-button="true">
     <p :class="styles.legend">• 필수 입력 항목</p>
 
     <InfoTable :columns="2">
@@ -32,22 +32,22 @@ const { cuffsDetail, cuffsDetailDialogOpen, saveCuffsDetail, deleteCuffsDetail }
           placeholder="선택하세요"
         />
       </InfoField>
-      <InfoField for="cuffs-management-number">
-        <template #label>관리번호<span :class="styles.requiredDot" /></template>
-        <InputField2 id="cuffs-management-number" v-model="cuffsDetail.managementNumber" size="sm" class="!space-y-0 flex-1" />
-      </InfoField>
-
       <InfoField for="cuffs-management-name">
         <template #label>장비관리명<span :class="styles.requiredDot" /></template>
         <InputField2 id="cuffs-management-name" v-model="cuffsDetail.managementName" size="sm" class="!space-y-0 flex-1" />
       </InfoField>
+
       <InfoField for="cuffs-holder">
-        <template #label>사용자</template>
+        <template #label>사용자<span :class="styles.requiredDot" /></template>
         <InputField2 id="cuffs-holder" v-model="cuffsDetail.holder" size="sm" class="!space-y-0 flex-1" />
       </InfoField>
+      <InfoField for="cuffs-manufacturer">
+        <template #label>제조회사<span :class="styles.requiredDot" /></template>
+        <InputField2 id="cuffs-manufacturer" v-model="cuffsDetail.manufacturer" size="sm" class="!space-y-0 flex-1" />
+      </InfoField>
 
-      <InfoField full>
-        <template #label>상태<span :class="styles.requiredDot" /></template>
+      <InfoField>
+        <template #label>관리상태<span :class="styles.requiredDot" /></template>
         <RadioGroup v-model="cuffsDetail.status" class="flex gap-6">
           <RadioGroupItem
             v-for="(label, value) in cuffsStatusLabel"
@@ -57,14 +57,22 @@ const { cuffsDetail, cuffsDetailDialogOpen, saveCuffsDetail, deleteCuffsDetail }
           />
         </RadioGroup>
       </InfoField>
+      <InfoField for="cuffs-status-date">
+        <template #label>상태일자<span :class="styles.requiredDot" /></template>
+        <DatePicker id="cuffs-status-date" v-model="cuffsDetail.statusDate" size="sm" class="!space-y-0 flex-1" />
+      </InfoField>
 
+      <InfoField for="cuffs-delivery-date">
+        <template #label>보급일자<span :class="styles.requiredDot" /></template>
+        <DatePicker id="cuffs-delivery-date" v-model="cuffsDetail.deliveryDate" size="sm" class="!space-y-0 flex-1" />
+      </InfoField>
       <InfoField for="cuffs-issued-date">
         <template #label>지급일자<span :class="styles.requiredDot" /></template>
         <DatePicker id="cuffs-issued-date" v-model="cuffsDetail.issuedDate" size="sm" class="!space-y-0 flex-1" />
       </InfoField>
-      <InfoField for="cuffs-expiry-date">
-        <template #label>만료일자<span :class="styles.requiredDot" /></template>
-        <DatePicker id="cuffs-expiry-date" v-model="cuffsDetail.expiryDate" size="sm" class="!space-y-0 flex-1" />
+      <InfoField for="cuffs-status-reason" full>
+        <template #label>상태사유<span :class="styles.requiredDot" /></template>
+        <InputField2 id="cuffs-status-reason" v-model="cuffsDetail.statusReason" size="sm" class="!space-y-0 flex-1" />
       </InfoField>
 
       <InfoField label="비고" full layout="column">

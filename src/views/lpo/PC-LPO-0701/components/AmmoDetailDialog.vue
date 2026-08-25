@@ -17,7 +17,7 @@ const unitLabel = computed(() => ammoUnitOptions.find((o) => o.value === ammoDet
 </script>
 
 <template>
-  <GenericDialog2 v-model:open="ammoDetailDialogOpen" title="탄약" :size="700" :show-close-button="true">
+  <GenericDialog2 v-model:open="ammoDetailDialogOpen" title="탄약" :size="800" :show-close-button="true">
     <p :class="styles.legend">• 필수 입력 항목</p>
 
     <InfoTable :columns="2">
@@ -39,16 +39,16 @@ const unitLabel = computed(() => ammoUnitOptions.find((o) => o.value === ammoDet
       </InfoField>
 
       <InfoField>
-        <template #label>결수량<span :class="styles.requiredDot" /></template>
+        <template #label>정 수량<span :class="styles.requiredDot" /></template>
         <div :class="styles.tempVehicleRow">
-          <Stepper v-model="ammoDetail.stock" :min="0" label="결수량" />
+          <Stepper v-model="ammoDetail.stock" :min="0" label="정 수량" />
           <span v-if="unitLabel">{{ unitLabel }}</span>
         </div>
       </InfoField>
       <InfoField>
-        <template #label>청수량<span :class="styles.requiredDot" /></template>
+        <template #label>현 수량<span :class="styles.requiredDot" /></template>
         <div :class="styles.tempVehicleRow">
-          <Stepper v-model="ammoDetail.current" :min="0" label="청수량" />
+          <Stepper v-model="ammoDetail.current" :min="0" label="현 수량" />
           <span v-if="unitLabel">{{ unitLabel }}</span>
         </div>
       </InfoField>

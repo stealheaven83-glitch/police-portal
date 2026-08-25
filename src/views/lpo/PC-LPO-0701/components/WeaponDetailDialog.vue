@@ -15,7 +15,7 @@ const { weaponDetail, weaponDetailDialogOpen, addWeaponHandler, saveWeaponDetail
 </script>
 
 <template>
-  <GenericDialog2 v-model:open="weaponDetailDialogOpen" title="무기" :size="700" :show-close-button="true">
+  <GenericDialog2 v-model:open="weaponDetailDialogOpen" title="무기 상세" :size="800" :show-close-button="true">
     <p :class="styles.legend">• 필수 입력 항목</p>
 
     <InfoTable :columns="2">
@@ -70,35 +70,33 @@ const { weaponDetail, weaponDetailDialogOpen, addWeaponHandler, saveWeaponDetail
         <TextareaField v-model="weaponDetail.note" class="w-full !space-y-0" textarea-class="w-full" :height="90" />
       </InfoField>
 
-      <InfoField label="담당자" full layout="column">
-        <div :class="styles.handlerTableWrap">
-          <table :class="styles.handlerTable">
-            <caption class="sr-only">담당자 목록 — 번호, 담당자</caption>
-            <thead>
-              <tr>
-                <th scope="col">번호</th>
-                <th scope="col">담당자</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(handler, index) in weaponDetail.handlers" :key="handler.id">
-                <td>{{ index + 1 }}</td>
-                <td>
-                  <InputField2 v-model="handler.name" size="sm" class="!space-y-0" placeholder="담당자명 입력" />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div :class="styles.handlerActions">
-          <Button type="button" variant="secondary" size="sm" class="w-25" @click="addWeaponHandler">담당자추가</Button>
-        </div>
-      </InfoField>
     </InfoTable>
-
+    <div class="mt-5" :class="styles.handlerTableWrap">
+      <table :class="styles.handlerTable">
+        <caption class="sr-only">담당자 목록 — 번호, 담당자</caption>
+        <thead>
+          <tr>
+            <th scope="col">번호</th>
+            <th scope="col">담당자</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(handler, index) in weaponDetail.handlers" :key="handler.id">
+            <td>{{ index + 1 }}</td>
+            <td>
+              <InputField2 v-model="handler.name" size="sm" class="!space-y-0" placeholder="담당자명 입력" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div :class="styles.handlerActions">
+    </div>
+    
     <template #footer>
       <Button type="button" class="w-25" variant="tertiary2" size="md" @click="weaponDetailDialogOpen = false">닫기</Button>
       <Button type="button" class="w-25" variant="tertiary2" size="md" :disabled="weaponDetail.id == null" @click="deleteWeaponDetail">삭제</Button>
+      <Button type="button" class="w-25" variant="secondary" size="md" @click="addWeaponHandler">담당자추가</Button>
       <Button type="button" class="w-25" variant="primary" size="md" @click="saveWeaponDetail">저장</Button>
     </template>
   </GenericDialog2>

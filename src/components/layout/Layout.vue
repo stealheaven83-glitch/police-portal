@@ -10,10 +10,17 @@
           :include 는 컴포넌트 name 으로 걸리므로 화면의 defineOptions({ name }) 과
           BottomTabItem.componentName 이 일치해야 한다. (menu-tab-guide.md 5.2)
           탭을 닫으면 이름이 목록에서 빠지면서 인스턴스도 함께 해제된다.
+
+          key 는 기본적으로 route.fullPath 라 URL이 바뀔 때마다 새 인스턴스를 만든다(의도된
+          동작 — 별개 화면은 상태도 별개여야 함). 다만 한 컴포넌트가 여러 화면ID 라우트에
+          걸쳐 있으면서(useAutoTrigger 로 URL↔내부 탭/팝업 상태를 동기화하는 화면, 예:
+          PC-LPO-0701~0714) 그 화면ID 이동이 "새 화면"이 아니라 "같은 화면의 다른 상태"인
+          경우엔 route.meta.screenGroup 을 공통으로 줘서 그 화면군 안에서는 key 가 안 바뀌게
+          한다 — 그래야 화면ID가 바뀔 때마다 리마운트되어 팝업/입력 상태가 날아가지 않는다.
         -->
         <RouterView v-slot="{ Component }">
           <KeepAlive :include="bottomTabStore.cachedTabNames">
-            <component :is="Component" :key="route.fullPath" />
+            <component :is="Component" :key="(route.meta.screenGroup as string | undefined) ?? route.fullPath" />
           </KeepAlive>
         </RouterView>
       </template>

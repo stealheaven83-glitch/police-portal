@@ -15,7 +15,7 @@ const { commDetail, commDetailDialogOpen, saveCommDetail, deleteCommDetail } = s
 </script>
 
 <template>
-  <GenericDialog2 v-model:open="commDetailDialogOpen" title="통신장비" :size="700" :show-close-button="true">
+  <GenericDialog2 v-model:open="commDetailDialogOpen" title="통신장비 상세" :size="800" :show-close-button="true">
     <p :class="styles.legend">• 필수 입력 항목</p>
 
     <InfoTable :columns="2">
