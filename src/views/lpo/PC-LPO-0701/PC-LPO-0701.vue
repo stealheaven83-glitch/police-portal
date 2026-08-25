@@ -284,7 +284,6 @@ function onPrint() {
   </PageHeader>
 
   <div :class="styles.toolbar">
-
     <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
     <template #department>
       <span class="text-sm font-semibold">부서</span>
@@ -299,7 +298,7 @@ function onPrint() {
             size="sm"
             triggerClass="w-30"
           />
-          <InputField2 label="통신장비 관리명" size="sm" inputClass="w-40" />
+        <InputField2 label="통신장비 관리명" size="sm" inputClass="w-40" />
       </div>
     </template>
     <template #btns>

@@ -31,44 +31,6 @@
   margin-top: 1.6rem;
 }
 
-
-/* -------------------------------------------------------------- 상세 모달 */
-.requiredDot {
-  margin-left: 0.6rem;
-  color: var(--Base--point);
-}
-
-.requiredDot::before {
-  content: '';
-  display: block;
-  width: 0.6rem;
-  height: 0.6rem;
-  background: var(--Base--point);
-  border-radius: 50%;
-}
-
-.legend {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-bottom: 1.2rem;
-  font-size: 1.3rem;
-  color: var(--Base--point, #d32f2f);
-}
-
-.hint {
-  font-size: 1.3rem;
-  color: var(--Base--point, #d32f2f);
-  white-space: nowrap;
-}
-
-.tempVehicleRow {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  width: 100%;
-}
-
 /* -------------------------------------------------------------- 112차량 조회 팝업 */
 .searchRow {
   display: flex;

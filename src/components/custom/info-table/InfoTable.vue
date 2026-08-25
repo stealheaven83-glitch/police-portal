@@ -14,17 +14,20 @@ defineOptions({ inheritAttrs: false })
 
 interface Props {
   columns?: 1 | 2
+  /** 팝업(다이얼로그) 안에 놓일 때 위쪽 여백을 준다 */
+  popup?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   columns: 2,
+  popup: false,
 })
 
 const columnsClass = computed(() => (props.columns === 1 ? styles.cols1 : styles.cols2))
 </script>
 
 <template>
-  <div :class="cn(styles.grid, columnsClass)" class="mt-[7px]" v-bind="$attrs">
+  <div :class="cn(styles.grid, columnsClass, { [styles.popTable]: popup })" v-bind="$attrs">
     <slot />
   </div>
 </template>

@@ -86,11 +86,29 @@
   color: var(--Text-body_1, #33363d);
 }
 
+.popTable {
+  margin-top: 0.7rem;
+}
 
 /* -------------------------------------------------------------- 상세 모달 */
 .requiredDot {
   margin-left: 0.6rem;
   color: var(--Base--point);
+}
+.hint {
+  font-size: 1.3rem;
+  color: var(--Base--point, #d32f2f);
+  white-space: nowrap;
+}
+
+.tempVehicleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+}
+.popTable{
+  margin-top: 7px;
 }
 
 .requiredDot::before {
@@ -101,8 +119,18 @@
   background:var(--Base--point);
   border-radius: 50%;
 }
-
+.requiredDot::before {
+  content: '';
+  display: block;
+  width: 0.6rem;
+  height: 0.6rem;
+  background: var(--Base--point);
+  border-radius: 50%;
+}
 .legend {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   margin-bottom: 1.2rem;
   font-size: 1.3rem;
   color: var(--Base--point, #d32f2f);
@@ -288,6 +316,12 @@
   gap: 2.4rem;
   align-items:center;
 }
+
+.disclaimerStrong {
+  font-weight: 700;
+  color: var(--Base--point, #d32f2f);
+}
+
 /* -------------------------------------------------------------- 반응형 */
 @media (max-width: 48rem) {
   .toolbar {

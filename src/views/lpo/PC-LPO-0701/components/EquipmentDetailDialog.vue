@@ -9,7 +9,7 @@ import SelectField from '@/components/custom/select/SelectField.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
 import { EquipmentListKey, vehicleTypeLabel, carTypeOptions, locationOptions, info112Options } from '../composable/PC-LPO-0701'
-import styles from '../style/PC-LPO-0701.module.css'
+import styles from '@/components/custom/info-table/InfoTable.module.css'
 
 const store = inject(EquipmentListKey)!
 const { detail, detailDialogOpen, saveDetail, deleteDetail, openVehicle112Dialog } = store
@@ -28,7 +28,7 @@ function onSave() {
   <GenericDialog2 v-model:open="detailDialogOpen" title="기동장비 상세" :size="800" :show-close-button="true">
     <p :class="styles.legend">• 필수 입력 항목</p>
 
-    <InfoTable :columns="2">
+    <InfoTable :columns="2" popup>
       <InfoField full>
         <template #label>기동장비 구분<span :class="styles.requiredDot" /></template>
         <RadioGroup v-model="detail.vehicleType" class="flex gap-6">
@@ -117,15 +117,13 @@ function onSave() {
           :disabled="isVehicleRestricted"
         />
       </InfoField>
-
       <InfoField label="임시차량" full>
-        <div :class="styles.tempVehicleRow">
-          <InputField2 v-model="detail.tempVehicle" size="sm" class="!space-y-0 flex-1" readonly :disabled="isVehicleRestricted" />
-          <Button type="button" variant="secondary" size="sm" :disabled="isVehicleRestricted" @click="openVehicle112Dialog">
-            차량조회
-          </Button>
+        <div class="flex w-full items-center gap-2">
+          <InputField2  size="sm" class="!space-y-0 flex-1" readonly />
+          <Button type="button" variant="secondary" size="sm">차량조회</Button>
         </div>
       </InfoField>
+
 
       <InfoField label="비고" full layout="column">
         <TextareaField v-model="detail.note" class="w-full !space-y-0" textarea-class="w-full" :height="90" />

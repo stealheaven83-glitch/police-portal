@@ -20,7 +20,7 @@ const unitLabel = computed(() => ammoUnitOptions.find((o) => o.value === ammoDet
   <GenericDialog2 v-model:open="ammoDetailDialogOpen" title="탄약" :size="800" :show-close-button="true">
     <p :class="styles.legend">• 필수 입력 항목</p>
 
-    <InfoTable :columns="2">
+    <InfoTable :columns="2" popup>
       <InfoField for="ammo-management-name">
         <template #label>장비관리명<span :class="styles.requiredDot" /></template>
         <InputField2 id="ammo-management-name" v-model="ammoDetail.managementName" size="sm" class="!space-y-0 flex-1" />

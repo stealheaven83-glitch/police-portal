@@ -1,4 +1,4 @@
-/* 인사관리 페이지 전용 레이아웃. 1rem = 10px 기준 (전역 리셋). */
+/*인사관리 페이지 전용 레이아웃. 1rem = 10px 기준 (전역 리셋).
 
 .toolbar {
   display: flex;
@@ -72,11 +72,6 @@
 .disclaimer {
   font-size: 1.3rem;
   color: var(--Text-body_2, #58616a);
-}
-
-.disclaimerStrong {
-  font-weight: 700;
-  color: var(--Base--point, #d32f2f);
 }
 
 .advancedSearchRow {
