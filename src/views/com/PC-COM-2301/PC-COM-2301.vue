@@ -91,6 +91,7 @@ const columns: TabulatorGridColumn[] = [
     selectOptions: collectTypeOptions,
     selectPlaceholder: '선택',
     widthGrow: 1.5,
+    width:300,
   },
   { title: 'URL', field: 'url', cellType: 'input', widthGrow: 5 },
 ]

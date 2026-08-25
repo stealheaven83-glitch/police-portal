@@ -453,7 +453,7 @@ const router = createRouter({
         },
         {
             path: '/views/pub/PM-PUB-0103',
-            name: 'PM-PUB-0101',
+            name: 'PM-PUB-0103',
             component: () => import('../views/pub/PM-PUB-0103/PM-PUB-0103.vue'),
             meta: {
                 layout: 'WorkLayout',
