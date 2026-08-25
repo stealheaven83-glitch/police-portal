@@ -19,7 +19,7 @@
     >
       <PaginationList v-slot="{ items }" class="flex items-center gap-1">
         <PaginationFirst
-          class="p-1 hidden sm:flex items-center justify-center rounded-full border-none shadow-none bg-transparent text-gray-400 hover:bg-gray-100 hover:text-gray-600 hover:shadow-none disabled:opacity-40 disabled:hover:bg-transparent"
+          class="w-8 h-8 p-1 hidden sm:flex items-center justify-center rounded-full border-none shadow-none bg-transparent text-gray-400 hover:bg-gray-100 hover:text-gray-600 hover:shadow-none disabled:opacity-40 disabled:hover:bg-transparent"
           @click="goToPage(1)"
           :disabled="currentPage === 1"
         >
@@ -28,7 +28,7 @@
           </span>
         </PaginationFirst>
         <PaginationPrev
-          class="p-1 flex items-center justify-center rounded-full border-none shadow-none bg-transparent text-gray-400 hover:bg-gray-100 hover:text-gray-600 hover:shadow-none disabled:opacity-40 disabled:hover:bg-transparent"
+          class="w-8 h-8 p-1 flex items-center justify-center rounded-full border-none shadow-none bg-transparent text-gray-400 hover:bg-gray-100 hover:text-gray-600 hover:shadow-none disabled:opacity-40 disabled:hover:bg-transparent"
           @click="goToPreviousPage"
           :disabled="currentPage === 1"
         >
@@ -58,14 +58,14 @@
         </template>
 
         <PaginationNext
-          class="has-[>svg]:px-1 p-1 flex items-center justify-center rounded-full border-none shadow-none bg-transparent text-gray-400 hover:bg-gray-100 hover:text-gray-600 hover:shadow-none disabled:opacity-40 disabled:hover:bg-transparent"
+          class="has-[>svg]:px-1 p-1 w-8 h-8 flex items-center justify-center rounded-full border-none shadow-none bg-transparent text-gray-400 hover:bg-gray-100 hover:text-gray-600 hover:shadow-none disabled:opacity-40 disabled:hover:bg-transparent"
           @click="goToNextPage"
           :disabled="currentPage === totalPages"
         >
           <Icon name="arrowRight" :size="16" />
         </PaginationNext>
         <PaginationLast
-          class="has-[>svg]:px-1 p-1 hidden sm:flex items-center justify-center rounded-full border-none shadow-none bg-transparent text-gray-400 hover:bg-gray-100 hover:text-gray-600 hover:shadow-none disabled:opacity-40 disabled:hover:bg-transparent"
+          class="has-[>svg]:px-1 p-1 w-8 h-8 hidden sm:flex items-center justify-center rounded-full border-none shadow-none bg-transparent text-gray-400 hover:bg-gray-100 hover:text-gray-600 hover:shadow-none disabled:opacity-40 disabled:hover:bg-transparent"
           @click="goToPage(totalPages)"
           :disabled="currentPage === totalPages"
         >

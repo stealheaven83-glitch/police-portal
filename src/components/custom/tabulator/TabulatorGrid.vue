@@ -71,7 +71,9 @@ interface Props {
    * height="100%" 로 부모를 채우는 화면에서, 좁은 폭이라 위쪽 툴바·탭이 여러 줄로
    * 접히면 남는 높이가 거의 0 이 되어 표가 한 줄만 보이게 찌그러진다.
    * 이 값을 주면 그 아래로는 줄어들지 않고, 넘치는 만큼은 바깥 스크롤이 받는다.
-   * (그리드를 flex 아이템으로 쓸 때 min-height: 0 을 함께 주면 이 값이 무시되니 주의)
+   *
+   * 넘기지 않으면 0 이다. flex 아이템으로 쓸 때 min-height 의 CSS 기본값(auto)은
+   * 내용보다 작게 줄어들지 못하게 막아 부모 밖으로 넘치게 만들기 때문에, 0 이 안전한 기본이다.
    */
   minHeight?: string
   /** 행 높이(px) */
@@ -137,7 +139,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   height: '220px',
-  minHeight: undefined,
+  minHeight: '0',
   rowHeight: 48,
   // 시안의 표는 모두 컨테이너 폭을 컬럼 비율로 나눠 갖는다(= fitColumns).
   // 컬럼 이동·폭 조절은 시안 어디에도 없으므로 기본은 꺼둔다.
@@ -187,7 +189,7 @@ const rootAttrs = computed(() => ({
   class: attrs.class as HTMLAttributes['class'],
   style: [
     attrs.style as StyleValue,
-    props.minHeight ? { minHeight: props.minHeight } : null,
+    { '--grid-min-h': props.minHeight },
   ] as StyleValue,
 }))
 /** 그 외(id, data-* 등)는 Tabulator 가 생성되는 host 엘리먼트에 */
@@ -1021,7 +1023,7 @@ defineExpose({
     페이지네이션은 아래에 붙는다. (flex-auto + min-h-0 이라 페이지네이션 높이만큼 줄어든다)
 -->
 <template>
-  <div v-bind="rootAttrs" class="flex flex-col">
+  <div v-bind="rootAttrs" class="tabulator-root flex flex-col">
     <div
       ref="hostEl"
       v-bind="hostAttrs"
@@ -1043,3 +1045,13 @@ defineExpose({
     />
   </div>
 </template>
+
+<style scoped>
+/*
+ * 최소 높이는 min-height prop 이 --grid-min-h 로 넘겨준다. 값이 없으면 0.
+ * (템플릿에 인라인 style 을 두지 않으려고 변수만 넘기고 규칙은 여기에 둔다)
+ */
+.tabulator-root {
+  min-height: var(--grid-min-h, 0);
+}
+</style>
