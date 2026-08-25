@@ -51,6 +51,8 @@ interface Props {
   class?: HTMLAttributes['class']
   /** 트리거(선택 영역)에 적용할 클래스 */
   triggerClass?: HTMLAttributes['class']
+  /** 레이블에 적용할 클래스 (sr-only 로 감출 때 등). InputField2·DatePicker 와 동일 */
+  labelClass?: HTMLAttributes['class']
 
   size?: 'lg' | 'md' | 'sm' | 'xs'
 
@@ -127,8 +129,7 @@ const iconSizeClass = computed(() => {
       <Label
         v-if="label || $slots.label"
         :for="fieldId"
-        class="font-normal text-[1.5rem]"
-        :class="labelPosition === 'left' ? 'shrink-0 mr-3' : 'mb-2'"
+        :class="cn('font-normal text-[1.5rem]', labelPosition === 'left' ? 'shrink-0 mr-3' : 'mb-2', props.labelClass)"
       >
         <slot name="label">{{ label }}</slot>
         <span v-if="required" class="text-destructive">*</span>

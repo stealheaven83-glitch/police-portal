@@ -5,9 +5,8 @@ import {
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
 } from '@/components/ui/dialog'
-import { DialogClose } from "reka-ui"
+import { DialogClose, DialogTitle } from "reka-ui"
 import { Button } from '@/components/ui/button'
 // import { cn } from '@/lib/utils'
 
@@ -98,17 +97,25 @@ function handleCancel() {
   <Dialog :open="open" @update:open="handleOpenChange">
     <DialogContent
       :show-close-button="showCloseButton"
-      class="px-10 py-6 gap-0"
+      class="px-10 py-6 gap-0 flex flex-col max-h-[85dvh]"
       :class="sizeClass"
       :style="sizeStyle"
       @pointer-down-outside="(e: Event) => persistent && e.preventDefault()"
       @escape-key-down="(e: Event) => persistent && e.preventDefault()"
       >
 
-      <!-- :class="cn('px-10 py-6 flex max-h-[85vh] flex-col gap-0 p-0', sizeClass)" -->
       
-      <DialogHeader class="text-left justify-between flex-row items-center mb-4">
-        <DialogTitle>{{ title }}</DialogTitle>
+      <DialogHeader class="text-left justify-between flex-row items-center mb-4 shrink-0">
+        <!--
+          퍼블 원본의 팝업 제목 마크업. 스타일은 police-style.css 의 .pop-title h1 이 맡는다.
+          ui/dialog 의 DialogTitle 래퍼는 Tailwind 클래스(utilities 레이어)를 붙이는데,
+          utilities 가 police 레이어보다 우선이라 퍼블 스타일이 덮여버린다.
+          그래서 클래스를 붙이지 않는 reka-ui 원본을 h1 으로 렌더한다.
+          (DialogTitle 을 거쳐야 aria-labelledby 연결이 유지된다)
+        -->
+        <div class="pop-title">
+          <DialogTitle as="h1">{{ title }}</DialogTitle>
+        </div>
         <DialogClose
           v-if="showCloseButton"
           data-slot="dialog-close"
@@ -120,12 +127,11 @@ function handleCancel() {
       </DialogHeader>
 
       <!-- 본문: 내용이 많으면 내부 스크롤 -->
-      <!-- <div class="flex-1 overflow-y-auto px-6 py-5"> -->
-      <div class="flex-1 overflow-y-auto">
+      <div class="flex-1 min-h-0 overflow-y-auto">
         <slot />
       </div>
 
-      <DialogFooter v-if="showFooter" class="mt-4 gap-2">
+      <DialogFooter v-if="showFooter" class="mt-4 gap-2 shrink-0">
         <slot name="footer" :confirm="handleConfirm" :cancel="handleCancel">
           <Button v-if="showCancel" variant="outline" @click="handleCancel">
             {{ cancelText }}

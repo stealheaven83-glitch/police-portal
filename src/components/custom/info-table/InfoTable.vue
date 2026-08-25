@@ -24,7 +24,7 @@ const columnsClass = computed(() => (props.columns === 1 ? styles.cols1 : styles
 </script>
 
 <template>
-  <div :class="cn(styles.grid, columnsClass)" v-bind="$attrs">
+  <div :class="cn(styles.grid, columnsClass)" class="mt-[7px]" v-bind="$attrs">
     <slot />
   </div>
 </template>

@@ -364,7 +364,7 @@ const worklist = ref([
   { id: 257, category: '스마트워크', depth1: '', depth2: '기초통계', depth3: '', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
   { id: 258, category: '스마트워크', depth1: '', depth2: '', depth3: '관서별현황', depth4: '', depth5: '', screenName: '관서별현황', screenId: 'PC-STT-0101', path: '', status: '대기' },
   { id: 259, category: '스마트워크', depth1: '', depth2: '', depth3: '치안센터현황', depth4: '', depth5: '', screenName: '치안센터현황', screenId: 'PC-STT-0102', path: '', status: '대기' },
-  { id: 260, category: '스마트워크', depth1: '', depth2: '', depth3: '인사관리현황', depth4: '', depth5: '', screenName: '인사관리현황', screenId: 'PC-STT-0103', path: '', status: '대기' },
+  { id: 260, category: '스마트워크', depth1: '', depth2: '', depth3: '인사관리현황', depth4: '', depth5: '', screenName: '인사관리현황', screenId: 'PC-STT-0103', path: '/views/STT/PC-STT-0103', status: '대기' },
   { id: 261, category: '스마트워크', depth1: '', depth2: '', depth3: '물리력사용현황', depth4: '', depth5: '', screenName: '물리력사용현황', screenId: 'PC-STT-0104', path: '', status: '대기' },
   { id: 262, category: '스마트워크', depth1: '', depth2: '', depth3: '장비현황', depth4: '', depth5: '', screenName: '장비현황', screenId: 'PC-STT-0105', path: '', status: '대기' },
   { id: 263, category: '스마트워크', depth1: '', depth2: '', depth3: '근무현황', depth4: '', depth5: '', screenName: '근무현황', screenId: 'PC-STT-0106', path: '', status: '대기' },

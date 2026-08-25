@@ -23,7 +23,8 @@
 
 .field {
   display: grid;
-  grid-template-columns: 14rem minmax(0, 1fr);
+  /* 라벨이 긴 화면(설문 문항 등)은 호출부에서 --info-label-w 로 라벨 열 폭을 넓힌다 */
+  grid-template-columns: var(--info-label-w, 14rem) minmax(0, 1fr);
   align-items: stretch;
   border-bottom: 1px solid var(--Border_gray03, #e6e8ea);
 }
@@ -145,7 +146,7 @@
   color: var(--Text-body_1, #33363d);
 }
 
-.listActions {
+.list-actions {
   display: flex;
   justify-content: flex-end;
   gap: 0.8rem;
@@ -216,7 +217,7 @@
     align-items: stretch;
   }
 
-  .listActions {
+  .list-actions {
     justify-content: flex-start;
   }
 }
@@ -294,7 +295,7 @@
     align-items: stretch;
   }
 
-  .listActions {
+  .list-actions {
     justify-content: flex-start;
   }
 }

@@ -452,6 +452,7 @@ const router = createRouter({
             }
         },
         {
+<<<<<<< Updated upstream
             path: '/views/pub/PC-PUB-0301',
             name: 'PC-PUB-0301',
             component: () => import('../views/pub/PC-PUB-0301/PC-PUB-0301.vue'),
@@ -490,6 +491,10 @@ const router = createRouter({
         {
             path: '/component/PC-STT-0103',
             name: 'pc-stt-0103',
+=======
+            path: '/views/stt/PC-STT-0103',
+            name: 'PC-STT-0103',
+>>>>>>> Stashed changes
             component: () => import('../views/stt/PC-STT-0103/PC-STT-0103.vue'),
             meta: {
                 layout: 'WorkLayout',
