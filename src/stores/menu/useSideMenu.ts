@@ -59,8 +59,17 @@ export const useSideMenuStore = defineStore('useSideMenu', () => {
     openIndex.value = openIndex.value === index ? -1 : index
   }
 
+  /**
+   * 프리셋의 activeChild 는 프리셋 하나에 고정값 하나뿐이라, 화면이 여러 개(예: 방범협력단체
+   * 하위 4개 화면)를 공유하는 프리셋을 쓰면 그 프리셋을 쓰는 다른 화면에 있어도 늘 같은
+   * 자식만 활성 표시된다. 그래서 각 화면이 useSideMenuSetup(preset) 직후 이 함수로 자기
+   * 화면에 맞는 항목명을 넘긴다. 그 항목이 속한 1뎁스도 함께 펼쳐야 실제로 보이므로,
+   * items 에서 역으로 찾아 openIndex 도 같이 맞춘다.
+   */
   function setActiveChild(name: string) {
     activeChild.value = name
+    const depth1Index = items.value.findIndex((item) => item.children?.some((child) => child.name === name))
+    if (depth1Index !== -1) openIndex.value = depth1Index
   }
 
   return {

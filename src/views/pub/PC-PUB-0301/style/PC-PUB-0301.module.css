@@ -1,0 +1,27 @@
+/* 방범협력단체 - 단체정보목록. 1rem = 10px 기준(전역 리셋). */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+}
+
+.listActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin-top: 1.6rem;
+}
+
+@media (max-width: 48rem) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .listActions {
+    justify-content: flex-start;
+  }
+}

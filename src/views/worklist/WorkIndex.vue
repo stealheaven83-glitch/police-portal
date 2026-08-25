@@ -627,11 +627,11 @@ const goToPage = (path) => {
 }
 
 .worklist-table tbody tr.has-path {
-  background-color: #FFDEAD;
+  background-color: #FFDEAD20;
 }
 
 .worklist-table tbody tr:hover {
-  background-color: #f8faff;
+  background-color: #e8eaee;
 }
 
 .text-center { text-align: center; }

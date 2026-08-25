@@ -3,6 +3,7 @@ import {
   ref,
   computed,
   onMounted,
+  onActivated,
   onBeforeUnmount,
   watch,
   toRaw,
@@ -822,6 +823,16 @@ onMounted(() => {
     emit('rows-received', fromRow, toRow, fromTable)
   })
   table.on('rowMoved', (row: any) => emit('row-moved', row))
+})
+
+/**
+ * KeepAlive 로 캐시된 화면(하단 탭)이 숨겨졌다가 다시 활성화될 때, 숨겨져 있던 동안
+ * :data 가 바뀌었어도(예: 다른 화면에서 저장하고 목록으로 돌아옴) Tabulator 가 컨테이너
+ * 크기를 0으로 측정한 채라 행을 그리지 못하고 있을 수 있다. 다시 보이게 된 시점에
+ * redraw(true) 로 강제로 다시 그린다.
+ */
+onActivated(() => {
+  table?.redraw(true)
 })
 
 onBeforeUnmount(() => {

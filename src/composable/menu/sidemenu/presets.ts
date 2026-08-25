@@ -68,7 +68,15 @@ export const publicSafetyMenu: SideMenuConfig = {
       ],
     },
     { name: '여성청소년', children: [{ name: '통합판단조사표' }, { name: '아동학대' }] },
-    { name: '방범협력단체', children: [{ name: '단체관리' }, { name: '활동실적' }] },
+    {
+      name: '방범협력단체',
+      children: [
+        { name: '단체정보리스트', path: '/views/pub/PC-PUB-0301' },
+        { name: '단체활동기록', path: '/views/pub/PM-PUB-0304' },
+        { name: '단체현황', path: '/views/pub/PC-PUB-0306' },
+        { name: '활동현황', path: '/views/pub/PC-PUB-0307' },
+      ],
+    },
     { name: '해바라기센터', children: [{ name: '센터현황' }] },
     { name: '보호조치 대응팀', children: [{ name: '대응팀 현황' }] },
     { name: '보고서', children: [{ name: '보고서 목록' }] },
