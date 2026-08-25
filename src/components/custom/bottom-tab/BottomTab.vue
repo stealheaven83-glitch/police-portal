@@ -76,7 +76,7 @@ function closeTab(tab: BottomTabItem) {
  */
 .bottom-tab {
   position: absolute;
-  bottom: 7px;
+  bottom: 0;
   left: 0;
   z-index: 1;
   transform: translateY(100%);
@@ -89,7 +89,7 @@ function closeTab(tab: BottomTabItem) {
   display: none;
 }
 .tab-ul {
-  height: 36px;
+  height: 32px;
 }
 .tab-ul li {
   border: 1px solid #CDD1D5;
@@ -100,6 +100,7 @@ function closeTab(tab: BottomTabItem) {
   line-height: 3rem;
   white-space: nowrap;
   cursor: pointer;
+  font-size: 1.5rem;
 }
 .tab-ul li.active {
   background: #fff;

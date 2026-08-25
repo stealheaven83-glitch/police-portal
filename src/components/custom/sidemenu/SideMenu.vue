@@ -1,38 +1,47 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useSideMenuStore } from '@/stores/menu/useSideMenu'
+import type { SideMenuItem } from '@/composable/menu/sidemenu/types'
 
-interface MenuItem {
-  name: string
-  children?: { name: string }[]
-}
+/**
+ * 사이드메뉴(LNB).
+ * 표시할 내용은 화면(View)이 useSideMenuSetup 으로 등록한 스토어 상태를 그대로 그린다.
+ * (예전에는 items 를 props 로 받았지만, 화면마다 메뉴가 달라져 스토어로 옮겼다)
+ */
+const router = useRouter()
+const sideMenuStore = useSideMenuStore()
 
-defineProps<{
-  items: MenuItem[]
-}>()
+/**
+ * 메뉴 항목 클릭.
+ * 외부 링크는 기본 동작(새 창)에 맡긴다 — 가운데 클릭·새 탭으로 열기 같은 브라우저 기능을
+ * 그대로 쓸 수 있어야 하기 때문이다. 내부 경로만 라우터로 넘긴다.
+ */
+function selectChild(event: MouseEvent, child: SideMenuItem) {
+  sideMenuStore.setActiveChild(child.name)
 
-const openIndex = ref(0)
-const activeChild = ref('메모')
+  if (child.href) return
 
-function toggleDepth1(index: number) {
-  openIndex.value = openIndex.value === index ? -1 : index
+  event.preventDefault()
+  if (child.path) router.push(child.path)
 }
 </script>
 
 <template>
   <div class="left-menu">
     <nav class="lnb">
-      <h3 class="title">지역경찰</h3>
+      <h3 class="title">{{ sideMenuStore.title }}</h3>
       <ul class="depth1">
         <li
-          v-for="(item, index) in items"
+          v-for="(item, index) in sideMenuStore.items"
           :key="item.name"
           class="depth1-item"
         >
           <button
             class="depth1-btn"
-            :class="{ 'is-open': openIndex === index, 'no-child': !item.children }"
+            :class="{ 'is-open': sideMenuStore.openIndex === index, 'no-child': !item.children }"
             type="button"
-            @click="toggleDepth1(index)"
+            :aria-expanded="item.children ? sideMenuStore.openIndex === index : undefined"
+            @click="item.children ? sideMenuStore.toggleDepth1(index) : selectChild($event, item)"
           >
             {{ item.name }}
           </button>
@@ -41,9 +50,18 @@ function toggleDepth1(index: number) {
               v-for="child in item.children"
               :key="child.name"
               class="depth2-item"
-              :class="{ active: activeChild === child.name }"
+              :class="{ active: sideMenuStore.activeChild === child.name }"
             >
-              <a href="" @click.prevent="activeChild = child.name"><span>{{ child.name }}</span></a>
+              <a
+                :href="child.href ?? '#'"
+                :target="child.href ? '_blank' : undefined"
+                :rel="child.href ? 'noopener noreferrer' : undefined"
+                :aria-current="sideMenuStore.activeChild === child.name ? 'page' : undefined"
+                @click="selectChild($event, child)"
+              >
+                <span>{{ child.name }}</span>
+                <span v-if="child.href" class="external" aria-label="새 창으로 열림"></span>
+              </a>
             </li>
           </ul>
         </li>
@@ -157,7 +175,7 @@ function toggleDepth1(index: number) {
   padding: 1.2rem 1.6rem;
   font-weight: 600;
 }
-.left-menu .lnb .depth1 .depth2 .depth2-item a.active a {
+.left-menu .lnb .depth1 .depth2 .depth2-item.active a {
   background: var(--Surface-primary);
   color: var(--Base-primary);
   font-weight: 700;
@@ -181,6 +199,18 @@ function toggleDepth1(index: number) {
   border-top: 2px solid var(--Border_primary);
   transform: rotate(45deg);
 }
+/* 외부 시스템으로 나가는 항목(Pre-CAS 등)에 붙는 표시 */
+.left-menu .lnb .depth2-item .external {
+  display: inline-block;
+  margin-left: 0.6rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 2px solid currentColor;
+  border-radius: 0.2rem;
+  opacity: 0.6;
+  vertical-align: middle;
+}
+
 .left-menu .lnb .depth1-item .depth1-btn,
 .left-menu .lnb .depth2-item a {
   outline: none;

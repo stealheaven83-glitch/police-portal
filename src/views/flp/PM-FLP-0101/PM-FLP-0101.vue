@@ -15,7 +15,7 @@ import {
   pageSizeOptions,
 } from './composable/PM-FLP-0101.ts'
 import type { RequestRow } from './composable/PM-FLP-0101.ts'
-import styles from './PM-FLP-0101.module.css'
+import styles from './style/PM-FLP-0101.module.css'
 
 const navItems = [
   { label: '홈', path: '/' },

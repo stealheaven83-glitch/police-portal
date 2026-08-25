@@ -256,7 +256,7 @@ const worklist = ref([
   { id: 149, category: '스마트워크', depth1: '', depth2: '', depth3: '등록', depth4: '', depth5: '', screenName: '기초통계 엑셀 업로드', screenId: 'PC-LPO-0903', path: '', status: '대기' },
   { id: 150, category: '스마트워크', depth1: '생활안전', depth2: '', depth3: '', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
   { id: 151, category: '스마트워크', depth1: '', depth2: '범죄예방진단', depth3: '', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
-  { id: 152, category: '스마트워크', depth1: '', depth2: '', depth3: '간이 범죄예방진단', depth4: '목록', depth5: '', screenName: '간이 범죄예방진단 목록', screenId: 'PM-PUB-0101', path: '', status: '대기' },
+  { id: 152, category: '스마트워크', depth1: '', depth2: '', depth3: '간이 범죄예방진단', depth4: '목록', depth5: '', screenName: '간이 범죄예방진단 목록', screenId: 'PM-PUB-0101', path: '/views/PUB/PM-PUB-0101', status: '대기' },
   { id: 153, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '상세', depth5: '', screenName: '간이 범죄예방진단 상세', screenId: 'PM-PUB-0102', path: '', status: '대기' },
   { id: 154, category: '스마트워크', depth1: '', depth2: '', depth3: 'CPO 입력·관리', depth4: '목록', depth5: '', screenName: 'CPO 입력관리 목록', screenId: 'PM-PUB-0103', path: '', status: '대기' },
   { id: 155, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '', depth5: '범죄예방진단결과(보관용)', screenName: '범죄예방진단결과(보관용)', screenId: 'PM-PUB-0104', path: '', status: '대기' },

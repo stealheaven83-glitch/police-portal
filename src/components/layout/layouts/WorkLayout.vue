@@ -7,8 +7,8 @@
   <div class="wrap sub-page">
     <PortalHeader :show-banner="false" />
     <main class="work-main">
-      <SideMenu :items="leftMenuDummyData" />
-      <div class="flex-1 min-w-0 relative pr-10 flex flex-col pb-8">
+      <SideMenu v-if="sideMenuStore.visible" />
+      <div class="flex-1 min-w-0 relative pr-10 flex flex-col pb-[4px]">
          <!--
            화면 내용. .wrap 이 화면 높이로 잠겨 있으므로 넘치는 내용은 이 래퍼가 스크롤한다.
            바깥 컬럼이 아니라 안쪽 래퍼가 스크롤을 맡는 이유는, 탭 바가 컬럼에 absolute 로
@@ -31,50 +31,15 @@ import PortalHeader from '../portal/PortalHeader.vue'
 import { SideMenu } from '@/components/custom/sidemenu/index.ts'
 import { BottomTab } from '@/components/custom/bottom-tab'
 import { useBottomTabStore } from '@/stores/tab/useBottomTab'
+import { useSideMenuStore } from '@/stores/menu/useSideMenu'
 
 const bottomTabStore = useBottomTabStore()
+const sideMenuStore = useSideMenuStore()
 
 defineSlots<{
   main: () => any
 }>()
 
-const leftMenuDummyData = [
-  {
-    name: '개인수첩',
-    children: [
-      { name: '메모' },
-      { name: '근무일정 조회' },
-      { name: '사고자/자원근무 신청' },
-      { name: '출동수당' },
-    ]
-  },
-  {
-    name: '근무일지',
-    children: [
-      { name: '근무일지(甲)' },
-      { name: '근무일지(乙)' },
-      { name: '월간근무표' },
-    ]
-  },
-  {
-    name: '인수인계',
-    children: [
-      { name: '인수인계 작성' },
-      { name: '차량점검' },
-      { name: '인수인계 현황' },
-    ]
-  },
-  {
-    name: '출동수당',
-    children: [
-      { name: '출동수당 조회' },
-      { name: '승인관리' },
-    ]
-  },
-  { name: '관내현황' },
-  { name: '개인장비' },
-  { name: '인사관리' },
-]
 </script>
 
 <style scoped>
@@ -108,7 +73,7 @@ const leftMenuDummyData = [
   bottom: 0;
   left: 0;
   right: 0;
-  height: 43px;
+  height: 36px;
   background: #EEF2F7;
   border-top: 1px solid #CDD1D5;
 }

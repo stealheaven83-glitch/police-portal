@@ -153,7 +153,7 @@ useBottomTabSetup({
     좌측에서 고른 한 건이 우측 이력의 조회 조건이라, 두 그리드를 나란히 두고 폭만 조절하게 한다.
     좁은 화면에서는 LayoutSplite 가 알아서 위아래로 쌓는다.
   -->
-  <LayoutSplite :count="2" :widths="[55, 45]">
+  <LayoutSplite :count="2" :widths="[55, 45]" >
     <template #layout-1>
       <LayoutPanel title="간이 범죄예방진단 현황">
         <TabulatorGrid
@@ -166,6 +166,7 @@ useBottomTabSetup({
           placeholder="조회된 진단 내역이 없습니다"
           show-pagination
           :items-per-page="10"
+          min-height="40rem"
           @row-selection-changed="onRowSelectionChanged"
         />
       </LayoutPanel>

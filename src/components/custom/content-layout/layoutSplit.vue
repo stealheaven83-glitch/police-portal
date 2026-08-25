@@ -1,16 +1,16 @@
 <template>
-  <!-- class="default-theme"와 높이 지정(height)이 필수입니다 -->
+  <!-- class="default-theme" 는 splitpanes 기본 테마라 빼면 스플릿 바 형태가 깨집니다 -->
   <splitpanes
-    class="default-theme mt-[20px] rounded-t-2xl overflow-hidden border border-b-0 border-[var(--Border_gray0)]"
-    style="height:900px"
+    class="default-theme splitLayout"
     :class="cn(defaultClass, !props.resizable && 'splitpanes--fixed', props.class)"
-    :maximize-panes="props.resizable"
+    :horizontal="isStacked"
+    :maximize-panes="props.resizable && !isStacked"
   >
     <slot>
       <template v-for="i in props.count" :key="i">
         <pane
           v-if="$slots[`layout-${i}`]"
-          :size="props.widths?.[i - 1]"
+          :size="paneSize(i)"
           :min-size="minSizeOf(i)"
           :max-size="props.maxWidths?.[i - 1]"
         >
@@ -23,6 +23,7 @@
 
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
+import { useMediaQuery } from '@vueuse/core'
 import { cn } from '@/lib/utils'
 import { Splitpanes, Pane } from 'splitpanes'
 // CSS 파일을 반드시 불러와야 스플릿 바 형태가 깨지지 않고 제대로 보입니다!
@@ -44,12 +45,47 @@ interface Props {
 }
 const props = withDefaults(defineProps<Props>(), { count: 1, resizable: true })
 
+/*
+ * 좁은 화면에서는 pane 을 좌우로 두면 각 pane 이 글자 몇 자 폭밖에 안 남는다.
+ * 사이드메뉴가 사라지는 지점과 같은 폭에서 위아래로 쌓아 각 pane 이 전체 폭을 쓰게 한다.
+ * (미디어쿼리의 rem 은 html font-size 가 아니라 초기값 16px 기준이라 CSS 쪽과 값을 맞춘다)
+ */
+const isStacked = useMediaQuery('(max-width: 82rem)')
+
+/** 쌓인 상태에서는 가로 비율이 의미가 없어 pane 을 균등 높이로 나눈다 */
+const paneSize = (i: number) => (isStacked.value ? undefined : props.widths?.[i - 1])
+
 // minWidths를 안 넘긴 기존 사용처는 첫 번째 pane 20% 제한을 그대로 유지합니다.
-const minSizeOf = (i: number) => props.minWidths?.[i - 1] ?? (props.minWidths ? undefined : (i === 1 ? 20 : undefined))
+const minSizeOf = (i: number) =>
+  isStacked.value
+    ? undefined
+    : props.minWidths?.[i - 1] ?? (props.minWidths ? undefined : (i === 1 ? 20 : undefined))
 </script>
 
 <style scoped>
 @reference "@/assets/css/style.css";
+
+/*
+ * 높이는 인라인 style 대신 여기서 잡는다. 화면마다 다른 높이가 필요하면 호출부가
+ * module.css 클래스로 --split-height 를 덮어쓴다.
+ *   .tallSplit { --split-height: 110rem; }
+ *   <LayoutSplite :class="styles.tallSplit" />
+ */
+.splitLayout {
+  height: var(--split-height, 90rem);
+  margin-top: 2rem;
+  border: 1px solid var(--Border_gray0);
+  border-bottom: 0;
+  border-radius: 1rem 1rem 0 0;
+  overflow: hidden;
+}
+
+/* 위아래로 쌓이면 pane 하나가 가로 전체를 쓰는 대신 세로 공간이 더 필요하다 */
+@media (max-width: 82rem) {
+  .splitLayout {
+    height: var(--split-height-stacked, 120rem);
+  }
+}
 
 :deep(.splitpanes__pane) {
   background-color: transparent !important;
