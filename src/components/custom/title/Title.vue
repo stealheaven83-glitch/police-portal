@@ -30,7 +30,18 @@ const navItems = [
           </template>
         </PageHeader>
     </section>
-
+    <section class="mt-10">
+      <h2 class="text-xl font-semibold border-b mt-8 mb-9">팝업 헤더</h2>
+      <div class="pop-title">
+        <h1>공지팝업</h1>
+      </div>
+      <div class="pop-title-sub">
+        <h2>서브타이틀</h2>
+      </div>
+      <div class="pop-title-lv2">
+        <h3>서브- 서브 타이틀</h3>
+      </div>
+    </section>
       <!-- <section class="space-y-4">
       <h2 class="text-xl font-semibold border-b">기본 조합(팝업)</h2>
       </section> -->

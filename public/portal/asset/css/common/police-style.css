@@ -1052,7 +1052,7 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   height: 2.4rem;
 }
 
-.listActions {
+.list-actions {
   display: flex;
   justify-content: flex-end;
   gap: 0.8rem;
@@ -1062,6 +1062,28 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
 .grid-wrap{
   margin-top:2rem;
 }
+
+.pop-title h1{
+  font-size: 2.4rem;
+  color:var(--Text-body_0);
+  line-height:1.5;
+  font-weight: 700;
+
+}
+.pop-title-sub{
+  margin-top: 1.6rem;
+  font-size: 1.7rem;
+  color:var(--Text-body_0);
+  line-height:1.5;
+  font-weight:700;
+}
+.pop-title-lv2{
+  margin-top: 0.8rem;
+  font-size: 1.5rem;
+  line-height:1.5;
+  font-weight: 600;
+}
+
 @media (max-width: 1200px) {
   .search-wrap .keyword .keyword-list {
     flex-wrap: wrap;
@@ -1308,6 +1330,14 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   height:2rem;
   background:url('../../images/icon/icon_tab_close.svg') no-repeat center center / 1.2rem auto;
 }
+
+.ly-between{
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin: 1.6rem 0 0;
+}
+
 /*dark-theme*/
 html.theme-dark body{
   background:#000;
