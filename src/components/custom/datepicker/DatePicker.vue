@@ -151,7 +151,6 @@ const iconCalendar = '/portal/asset/images/icon/ico_calendar.svg'
         :input-class="cn(inputClass, isMenuOpen ? 'border-[var(--Base-primary)] border-2' : undefined)"
         :label-class="labelClass"
         :size="size"
-        :placeholder="placeholder || 'YYYY.MM.DD'"
         :icon="iconCalendar"
         :disabled="disabled"
         :border-style="borderStyle"

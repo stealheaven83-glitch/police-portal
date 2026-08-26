@@ -452,6 +452,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/views/com/PC-COM-2401',
+            name: 'PC-COM-2401',
+            component: () => import('../views/com/PC-COM-2401/PC-COM-2401.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '게시판 관리'
+            }
+        },
+        {
             path: '/views/pub/PM-PUB-0101',
             name: 'PM-PUB-0101',
             component: () => import('../views/pub/PM-PUB-0101/PM-PUB-0101.vue'),
