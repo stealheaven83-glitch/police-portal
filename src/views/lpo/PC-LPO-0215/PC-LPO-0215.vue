@@ -67,12 +67,12 @@ useBottomTabSetup({
   <div>
     <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
       <template #department>
-        <span class="text-sm font-semibold">부서</span>
+        <span class="dept-name">부서</span>
         <DepartmentCascadeSelect v-model="department" size="sm" />
       </template>
       <template #form>
         <div class="search-area">
-          <div class="flex items-center gap-2">
+          <div class="group-gap2">
             <DatePicker v-model="dateFrom" label="근무일자" size="sm" inputClass="w-40" />
             <span aria-hidden="true">~</span>
             <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />

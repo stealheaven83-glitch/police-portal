@@ -2,6 +2,7 @@
   <div class="worklist-container">
     <header class="worklist-header">
       <h2>스마트워크 퍼블리싱 워크리스트</h2>
+      <div><button>공통가이드</button></div>
       <!-- <div class="summary-box">
         <span>전체: <strong>{{ worklist.length }}</strong>건</span>
         <span>완료: <strong>{{ countByStatus('완료') }}</strong>건</span>

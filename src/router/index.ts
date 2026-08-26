@@ -100,6 +100,42 @@ const router = createRouter({
             }
         },
         {
+            path: '/views/lpo/PC-LPO-0301',
+            name: 'PC-LPO-0301',
+            component: () => import('../views/lpo/PC-LPO-0301/PC-LPO-0301.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '월별인수인계현황',
+            }
+        },
+        {
+            path: '/views/lpo/PC-LPO-0501',
+            name: 'PC-LPO-0501',
+            component: () => import('../views/lpo/PC-LPO-0501/PC-LPO-0501.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '출동수당조회',
+            }
+        },
+        {
+            path: '/views/lpo/PC-LPO-0505',
+            name: 'PC-LPO-0505',
+            component: () => import('../views/lpo/PC-LPO-0505/PC-LPO-0505.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '출동수당취합(월별)',
+            }
+        },
+        {
+            path: '/views/lpo/PC-LPO-0511',
+            name: 'PC-LPO-0511',
+            component: () => import('../views/lpo/PC-LPO-0511/PC-LPO-0511.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '출동수당취합(일별)',
+            }
+        },
+        {
             path: '/',
             name: 'home',
             component: () => import('../views/Main.vue'),
@@ -449,6 +485,33 @@ const router = createRouter({
             meta: {
                 layout: 'WorkLayout',
                 title: '시스템모니터링 관리'
+            }
+        },
+        {
+            path: '/views/com/PC-COM-2401',
+            name: 'PC-COM-2401',
+            component: () => import('../views/com/PC-COM-2401/PC-COM-2401.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '게시판 관리'
+            }
+        },
+        {
+            path: '/views/com/PC-COM-2501',
+            name: 'PC-COM-2501',
+            component: () => import('../views/com/PC-COM-2501/PC-COM-2501.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '앱관리'
+            }
+        },
+        {
+            path: '/views/com/PM-COM-1001',
+            name: 'PM-COM-1001',
+            component: () => import('../views/com/PM-COM-1001/PM-COM-1001.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '공지사항'
             }
         },
         {

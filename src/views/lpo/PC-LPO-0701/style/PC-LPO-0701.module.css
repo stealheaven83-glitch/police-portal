@@ -1,35 +1,6 @@
 /*장비관리 페이지 전용 레이아웃. 1rem = 10px 기준 (전역 리셋).*/
 
-/* .toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.2rem;
-} */
 
-.deptGroup {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1rem;
-}
-
-.toggleButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: var(--Text-body_1, #33363d);
-}
-
-.list-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.8rem;
-  margin-top: 1.6rem;
-}
 
 /* -------------------------------------------------------------- 112차량 조회 팝업 */
 .searchRow {

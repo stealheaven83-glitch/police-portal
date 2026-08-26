@@ -44,7 +44,7 @@ function select(address: string) {
     :show-close-button="true"
     @update:open="emit('update:open', $event)"
   >
-    <div class="flex items-center gap-2 mb-4">
+    <div class="group-gap2 mb-4">
       <InputField2 v-model="keyword" size="sm" placeholder="도로명, 지번 등으로 검색" class="flex-1 !space-y-0" @keyup.enter="search" />
       <Button type="button" variant="secondary" size="sm" class="w-20" @click="search">검색</Button>
     </div>

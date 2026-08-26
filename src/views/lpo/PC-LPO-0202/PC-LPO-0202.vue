@@ -119,7 +119,7 @@ function openAssignCell(rowLabel: string, slot: string) {
   </PageHeader>
 
   <div class="flex items-center justify-between mb-5">
-    <div class="flex items-center gap-2">
+    <div class="group-gap2">
       <span class="text-[1.5rem] font-semibold text-[var(--Text-body_0)]">부서</span>
       <DepartmentCascadeSelect v-model="department" :tree="departmentTree" size="sm" select-class="w-40" />
     </div>
@@ -148,7 +148,7 @@ function openAssignCell(rowLabel: string, slot: string) {
       </RadioGroup>
     </div>
 
-    <div class="flex items-center gap-3">
+    <div class="group-gap3">
       <Button type="button" class="w-25" variant="tertiary2" size="sm" @click="resetScheduleGrid">甲지 초기화</Button>
       <Button type="button" class="w-25" variant="secondary" size="sm" @click="openManageDialog('순찰구역 관리')">순찰구역</Button>
       <Button type="button" class="w-25" variant="secondary" size="sm" @click="openManageDialog('교대복구')">교대복구</Button>
@@ -169,7 +169,7 @@ function openAssignCell(rowLabel: string, slot: string) {
           </div>
           <div class="flex items-end justify-between my-2">
             <SelectField v-model="regularTeam" :options="teamOptions" size="sm" trigger-class="w-25" />
-            <div class="flex items-center gap-2">
+            <div class="group-gap2">
               <Button type="button" variant="secondary" size="xs" @click="addRegularWorker">추가</Button>
               <Button type="button" variant="primary" size="xs" @click="onSave">저장</Button>
             </div>
@@ -211,7 +211,7 @@ function openAssignCell(rowLabel: string, slot: string) {
         <div class="mb-9">
           <div class="flex items-end justify-between mb-2">
             <h4>자원근무자</h4>
-            <div class="flex items-center gap-2">
+            <div class="group-gap2">
               <Button type="button" variant="tertiary2" size="xs" @click="addVolunteerWorker">삭제</Button>
               <Button type="button" variant="secondary" size="xs" @click="onSave">추가</Button>
             </div>
@@ -258,7 +258,7 @@ function openAssignCell(rowLabel: string, slot: string) {
         <div>
           <div class="flex items-end justify-between mb-2">
             <h4>사고자</h4>
-            <div class="flex items-center gap-2">
+            <div class="group-gap2">
               <Button type="button" variant="tertiary2" size="xs" @click="removeSelectedIncidents">삭제</Button>
               <Button type="button" variant="secondary" size="xs" @click="addIncidentWorker">추가</Button>
             </div>
@@ -306,7 +306,7 @@ function openAssignCell(rowLabel: string, slot: string) {
     <template #layout-2>
       <LayoutHeader title="근무지정표">
         <template #right>
-          <div class="flex items-center gap-3">
+          <div class="group-gap3">
             <DatePicker label="대상일자" size="sm" inputClass="w-40"/>
             <Button variant="tertiary" size="sm">근무지정표 불러오기</Button>
             <Button variant="tertiary" size="sm">근무형태 불러오기</Button>
