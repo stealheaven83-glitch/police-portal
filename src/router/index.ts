@@ -468,6 +468,17 @@ const router = createRouter({
                 layout: 'WorkLayout',
                 title: '간이 범죄예방진단'
             }
+         },
+        {
+            // PM-PUB-0103 과 같은 파일을 가리킨다 — useAutoTrigger 로 이 화면ID에 진입하면
+            // "범죄예방진단 현황 신규" 팝업이 바로 열린 상태로 보인다(PC-LPO-0701/0702 와 동일 패턴).
+            path: '/views/pub/PM-PUB-0114',
+            name: 'PM-PUB-0114',
+            component: () => import('../views/pub/PM-PUB-0103/PM-PUB-0103.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '범죄예방진단 현황 신규'
+            }
         },
         {
             path: '/views/stt/PC-STT-0103',

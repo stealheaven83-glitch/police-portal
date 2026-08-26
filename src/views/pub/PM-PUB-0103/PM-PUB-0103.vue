@@ -8,94 +8,81 @@
     </template>
   </PageHeader>
 
-  <!--
-    SearchWrapper 루트에 flex-1 이 걸려 있어 WorkLayout 의 세로 flex 컬럼에 그대로 놓으면
-    검색영역이 남는 높이를 다 먹는다. 블록 래퍼로 한 겹 감싸 높이를 auto 로 묶어둔다.
-  -->
-  <div :class="styles.searchArea">
-    <SearchWrapper collapsible :class="styles.searchWrapper" v-model:expanded="advancedSearchOpen">
-      <template #department>
-        <span class="text-sm font-semibold">부서</span>
-        <DepartmentCascadeSelect v-model="searchForm.department" size="sm" />
-      </template>
-      <template #form>
-        <div :class="styles.formRow">
-          <InputField2 v-model="searchForm.detailAddress" label="상세주소" size="sm" inputClass="w-40" />
-          <SelectField
-            v-model="searchForm.sortBy"
-            label="정렬기준"
-            :options="sortOptions"
-            label-position="left"
-            size="sm"
-            triggerClass="w-30"
-          />
-          <InputField2 v-model="searchForm.managementNo" label="관리번호" size="sm" inputClass="w-32" />
-          <InputField2 v-model="searchForm.bizName" label="상호명" size="sm" inputClass="w-32" />
-          <SelectField
-            v-model="searchForm.type"
-            label="유형"
-            :options="typeOptions"
-            label-position="left"
-            size="sm"
-            triggerClass="w-50"
-          />
-        </div>
-        <div :class="styles.formRow">
-          <SelectField
-            v-model="searchForm.facilityImproved"
-            label="시설개선 확인유무"
-            :options="yesNoAllOptions"
-            label-position="left"
-            size="sm"
-            triggerClass="w-30"
-          />
-          <SelectField
-            v-model="searchForm.hasNotice"
-            label="착안사항 유무"
-            :options="yesNoAllOptions"
-            label-position="left"
-            size="sm"
-            triggerClass="w-30"
-          />
-          <SelectField
-            v-model="searchForm.cashIntensive"
-            label="현금다액업소"
-            :options="cashOptions"
-            label-position="left"
-            size="sm"
-            triggerClass="w-30"
-          />
-          <div class="flex items-center">
-            <span class="text-[1.5rem] mr-3">진단일자</span>
-            <div :class="styles.dateRange">
-              <DatePicker v-model="searchForm.diagnosedFrom" size="sm" inputClass="w-40" placeholder="YYYY.MM.DD" />
-              <span aria-hidden="true">~</span>
-              <DatePicker v-model="searchForm.diagnosedTo" size="sm" inputClass="w-40" placeholder="YYYY.MM.DD" />
-            </div>
+  <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
+    <template #department>
+      <span class="text-sm font-semibold">부서</span>
+      <DepartmentCascadeSelect v-model="searchForm.department" size="sm" />
+    </template>
+    <template #form>
+      <div class="search-area">
+        <InputField2 v-model="searchForm.detailAddress" label="상세주소" size="sm" inputClass="w-40" />
+        <SelectField
+          v-model="searchForm.sortBy"
+          label="정렬기준"
+          :options="sortOptions"
+          label-position="left"
+          size="sm"
+          triggerClass="w-30"
+        />
+        <InputField2 v-model="searchForm.managementNo" label="관리번호" size="sm" inputClass="w-32" />
+        <InputField2 v-model="searchForm.bizName" label="상호명" size="sm" inputClass="w-32" />
+        <SelectField
+          v-model="searchForm.type"
+          label="유형"
+          :options="typeOptions"
+          label-position="left"
+          size="sm"
+          triggerClass="w-50"
+        />
+        <SelectField
+          v-model="searchForm.facilityImproved"
+          label="시설개선 확인유무"
+          :options="yesNoAllOptions"
+          label-position="left"
+          size="sm"
+          triggerClass="w-30"
+        />
+        <SelectField
+          v-model="searchForm.hasNotice"
+          label="착안사항 유무"
+          :options="yesNoAllOptions"
+          label-position="left"
+          size="sm"
+          triggerClass="w-30"
+        />
+        <SelectField
+          v-model="searchForm.cashIntensive"
+          label="현금다액업소"
+          :options="cashOptions"
+          label-position="left"
+          size="sm"
+          triggerClass="w-30"
+        />
+        <div class="flex items-center">
+          <span class="text-[1.5rem] mr-3">진단일자</span>
+          <div :class="styles.dateRange">
+            <DatePicker v-model="searchForm.diagnosedFrom" size="sm" inputClass="w-40" placeholder="YYYY.MM.DD" />
+            <span aria-hidden="true">~</span>
+            <DatePicker v-model="searchForm.diagnosedTo" size="sm" inputClass="w-40" placeholder="YYYY.MM.DD" />
           </div>
         </div>
-        <div :class="styles.formRow">
-          <SelectField
-            v-model="searchForm.reason"
-            label="진단사유"
-            :options="reasonOptions"
-            label-position="left"
-            size="sm"
-            triggerClass="w-50"
-          />
-          <InputField2 v-model="searchForm.diagnoser" label="진단자" size="sm" inputClass="w-30" />
-          <!--
-            SearchWrapper 의 #btns 슬롯은 form 전체 높이만큼 별도 컬럼을 차지해, 필드가 많은
-            이 화면에서는 그 폭만큼 앞쪽 줄들이 예정보다 일찍 줄바꿈됐다. 조회 버튼을 마지막
-            줄(진단자) 안에 같이 두면 앞줄들이 컨테이너 폭을 그대로 쓸 수 있다.
-          -->
-          <Button variant="secondary" size="sm" class="w-25 ml-auto" @click="search">조회</Button>
-        </div>
-      </template>
-    </SearchWrapper>
-  </div>
+        <SelectField
+          v-model="searchForm.reason"
+          label="진단사유"
+          :options="reasonOptions"
+          label-position="left"
+          size="sm"
+          triggerClass="w-50"
+        />
+        <InputField2 v-model="searchForm.diagnoser" label="진단자" size="sm" inputClass="w-30" />
+      </div>
+    </template>
+    <template #btns>
+      <Button variant="secondary" size="sm" class="w-25" @click="search">조회</Button>
+    </template>
+  </SearchWrapper>
 
-  <div :class="styles.listActions">
+  <div class="list-actions" :class="styles.listActions">
     <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel(true)">
       <Download :size="16" aria-hidden="true" />
       엑셀다운로드 (헤더+값)
@@ -126,6 +113,7 @@
           :data="rows"
           select-mode="single"
           height="100%"
+          min-height="40rem"
           placeholder="조회된 진단 내역이 없습니다"
           show-pagination
           :items-per-page="10"
@@ -147,6 +135,7 @@
           v-model:data="historyRows"
           select-mode="checkbox"
           height="100%"
+          min-height="40rem"
           placeholder="좌측 목록에서 진단 건을 선택해 주세요"
         />
       </LayoutPanel>
@@ -166,7 +155,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Download } from 'lucide-vue-next'
-import '@vuepic/vue-datepicker/dist/main.css'
 
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
@@ -181,9 +169,11 @@ import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import NewDiagnosisDialog from './components/NewDiagnosisDialog.vue'
+import { useAutoTrigger, type ScreenTriggerMap } from '@/composables/useAutoTrigger'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { publicSafetyMenu } from '@/composable/menu/sidemenu/presets'
+
 import {
   useCpoList,
   sortOptions,
@@ -231,38 +221,6 @@ const listGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const historyGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 
 /**
- * 후보 문자열들 중 실제 렌더 시 가장 넓은 폭(px)을 측정한다.
- * .tabulator-cell 과 똑같은 클래스를 쓰는 보이지 않는 프로브로 실측하므로, 폰트·패딩을
- * 하드코딩해서 추측한 값보다 정확하고, 목업 문구가 바뀌어도 값을 다시 재지 않아도 된다.
- */
-function measureMaxCellWidth(values: (string | number)[]): number {
-  const probe = document.createElement('div')
-  probe.className = 'tabulator-row'
-  probe.style.cssText = 'position:absolute; visibility:hidden; left:-9999px; top:-9999px; white-space:nowrap;'
-  const cell = document.createElement('div')
-  cell.className = 'tabulator-cell'
-  probe.appendChild(cell)
-  document.body.appendChild(probe)
-
-  let max = 0
-  for (const value of values) {
-    cell.textContent = String(value)
-    max = Math.max(max, cell.getBoundingClientRect().width)
-  }
-
-  document.body.removeChild(probe)
-  return Math.ceil(max)
-}
-
-/** 페이지 단위가 아니라 전체 목록(rows) 기준으로 재야, 어느 페이지·어느 건을 선택해도 잘리지 않는다 */
-const baseAddressWidth = measureMaxCellWidth(['기본주소', ...rows.value.map((r) => r.baseAddress)])
-const detailAddressWidth = measureMaxCellWidth(['상세주소', ...rows.value.map((r) => r.detailAddress)])
-const historyAddressWidth = measureMaxCellWidth([
-  '주소',
-  ...rows.value.map((r) => `${r.baseAddress} ${r.detailAddress}`),
-])
-
-/**
  * 좌측 현황 그리드 컬럼.
  * 번호/총점처럼 짧은 값은 layout="fitColumns" 가 남는 폭을 나눠 갖게 그대로 둔다.
  * 주소는 다른 값보다 길어, widthGrow(비례 배분) 대신 widthShrink:0 을 줘서 폭이 부족해도
@@ -276,15 +234,15 @@ const listColumns: TabulatorGridColumn[] = [
   { title: '상호명', field: 'bizName', hozAlign: 'center' },
   { title: '총점', field: 'score', width: 70, hozAlign: 'center' },
   { title: '진단자', field: 'diagnoser', hozAlign: 'center' },
-  { title: '기본주소', field: 'baseAddress', width: baseAddressWidth, widthShrink: 0, hozAlign: 'left', cssClass: styles.leftAlignCell },
-  { title: '상세주소', field: 'detailAddress', width: detailAddressWidth, widthShrink: 0, hozAlign: 'left', cssClass: styles.leftAlignCell },
+  { title: '기본주소', field: 'baseAddress', widthGrow: 2, hozAlign: 'left', cssClass: styles.leftAlignCell },
+  { title: '상세주소', field: 'detailAddress', widthGrow: 2, hozAlign: 'left', cssClass: styles.leftAlignCell },
   { title: '현금다액업소', field: 'cashIntensive', width: 110, hozAlign: 'center' },
 ]
 
 const historyColumns: TabulatorGridColumn[] = [
   { title: '진단일자', field: 'diagnosedAt', hozAlign: 'center' },
   { title: '상호명', field: 'bizName', hozAlign: 'center' },
-  { title: '주소', field: 'address', width: historyAddressWidth, widthShrink: 0, hozAlign: 'left', cssClass: styles.leftAlignCell },
+  { title: '주소', field: 'address', widthGrow: 2, hozAlign: 'left', cssClass: styles.leftAlignCell },
   { title: '우편희망', field: 'mailRequested', hozAlign: 'center' },
   { title: '우편상태', field: 'mailStatus', hozAlign: 'center' },
   { title: '진단자', field: 'diagnoser', hozAlign: 'center' },
@@ -315,6 +273,19 @@ function onDownloadExcel(withHeader: boolean) {
   const suffix = withHeader ? '헤더값' : '값'
   listGridRef.value?.download('csv', `CPO입력관리_${suffix}_${today}.csv`)
 }
+
+/**
+ * 화면ID(PM-PUB-XXXX) ↔ 신규 등록 팝업 상태 양방향 동기화 (PC-LPO-0701/0702 와 동일 패턴).
+ *   PM-PUB-0103 : 목록만(신규 등록 팝업 닫힘)
+ *   PM-PUB-0114 : 목록 + 신규 등록 팝업(newDiagnosisDialogOpen) 열림
+ * 워크리스트에서 PM-PUB-0114 로 바로 들어오면 팝업이 열린 채로 보이고, "신규" 버튼을 눌러
+ * 팝업을 열면 주소창이 자동으로 PM-PUB-0114 로 바뀐다(router.replace, 히스토리는 안 쌓임).
+ */
+const screenTriggers: ScreenTriggerMap = {
+  'PM-PUB-0103': [[newDiagnosisDialogOpen, false]],
+  'PM-PUB-0114': [[newDiagnosisDialogOpen, true]],
+}
+useAutoTrigger(screenTriggers)
 
 // 사이드메뉴(생활안전 LNB) 설정. 이 화면이 열려 있는 동안은 'CPO 입력 · 관리' 를 활성 표시한다.
 useSideMenuSetup({ ...publicSafetyMenu, activeChild: 'CPO 입력 · 관리' })

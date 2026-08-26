@@ -304,9 +304,10 @@ export function useCpoList() {
   })
 
   const rows = ref<CpoDiagnosisRow[]>(createRows(195))
-  /** 시안처럼 화면 진입 시 최상단 건이 이미 선택되어 우측 이력이 비어있지 않게 한다 */
-  const selectedRow = ref<CpoDiagnosisRow | null>(rows.value[0] ?? null)
-  const historyRows = ref<CpoHistoryRow[]>(createHistoryRows(selectedRow.value))
+  /** 다른 화면(PM-PUB-0101)과 동일하게, 화면 진입 시에는 아무 건도 선택되어 있지 않다.
+   *  좌측 목록에서 행을 클릭해야 그 건의 이력이 우측에 뜬다. */
+  const selectedRow = ref<CpoDiagnosisRow | null>(null)
+  const historyRows = ref<CpoHistoryRow[]>([])
 
   /** 좌측 선택 행이 바뀌면 우측 이력을 새로 채운다(직접 편집 가능한 로컬 상태) */
   watch(selectedRow, (row) => {

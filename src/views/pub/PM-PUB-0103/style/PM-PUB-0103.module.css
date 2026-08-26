@@ -1,45 +1,5 @@
 /* CPO 입력 · 관리 목록 페이지 전용 레이아웃. 1rem = 10px 기준 (전역 리셋). */
 
-/*
- * SearchWrapper 루트에 flex-1 이 걸려 있어 WorkLayout 의 세로 flex 컬럼에 그대로 놓으면
- * 검색영역이 남는 높이를 다 먹는다. 블록 래퍼로 한 겹 감싸 높이를 auto 로 묶어둔다.
- */
-.searchArea {
-  display: block;
-}
-
-/* 상세조회 영역 한 줄(행). 좁은 화면에서는 필드가 줄바꿈되어 겹치지 않는다 */
-.formRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1.6rem 3.6rem;
-}
-
-.formRow + .formRow {
-  margin-top: 1.6rem;
-}
-
-/*
- * 조회 버튼을 #btns 슬롯 대신 마지막 formRow 안(진단자 옆)에 두므로, SearchWrapper 가
- * #btns 자리로 항상 그려두는 두 번째(빈) 컬럼을 접어 form 컬럼이 폭 전체를 쓰게 한다.
- * 그 컬럼을 그대로 두면 padding 만큼(약 48px) 빈 여백이 오른쪽 끝에 남아 조회 버튼이
- * 진짜 오른쪽 끝에 붙지 못한다. SearchWrapper 의 `class` prop(래퍼 오버라이드용)에 이
- * 클래스를 넘겨 자식 중 마지막(#btns 컬럼)만 숨긴다.
- */
-.searchWrapper > div:last-child {
-  display: none;
-}
-
-/*
- * 형제(#btns 컬럼)를 숨겨도 form 컬럼은 기본적으로 "내용 크기만큼"만 차지해, 필드가
- * 줄바꿈되지 않을 만큼 화면이 넓으면(예: 1920px) 오른쪽에 빈 여백이 남아 조회 버튼이
- * 진짜 오른쪽 끝까지 붙지 못한다. flex-grow 로 항상 전체 폭을 쓰게 한다.
- */
-.searchWrapper > div:first-child {
-  flex: 1 1 auto;
-}
-
 /* 진단일자 ~ 종료일자 두 DatePicker 를 붙여 보여주는 묶음 */
 .dateRange {
   display: flex;
@@ -47,11 +7,13 @@
   gap: 0.8rem;
 }
 
-/* 엑셀다운로드 · 결과서 · 통보 발송 버튼 묶음. 좁은 화면에서는 줄바꿈된다 */
+/*
+ * 버튼 정렬(display/justify-content)은 police-style.css 의 전역 .list-actions 를 그대로 쓴다
+ * (PC-LPO-0701.vue 와 동일 패턴). 여기서는 전역 클래스가 갖지 않은 것만 덧붙인다: 버튼이
+ * 5개라 좁은 화면에서 줄바꿈이 필요하고(flex-wrap), 간격/여백은 시안 기준으로 살짝 다르다.
+ */
 .listActions {
-  display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
   gap: 1.2rem;
   margin: 1.6rem 0;
 }
@@ -67,35 +29,30 @@
 }
 
 /* -------------------------------------------------------------- 범죄예방진단 현황 신규 팝업(PM-PUB-0114) */
-.newDiagnosisDialog {
-  min-width: 0;
-}
-
-:global([data-slot='dialog-content']:has(.newDiagnosisDialog) [data-slot='dialog-title']) {
-  font-size: 2.4rem;
-  line-height: 1.3;
-}
-
 .dialogSection + .dialogSection {
   margin-top: 2.4rem;
 }
 
-.sectionTitle {
-  font-size: 1.7rem;
-  font-weight: 700;
-  color: var(--Text-body_0);
-  margin-bottom: 0.8rem;
+/* InfoTable 공통 확장 변수로 섹션별 라벨 열 너비만 조정한다. */
+.cardTable,
+.generalTable {
+  --info-label-w: 12rem;
 }
 
-.subSectionTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--Text-body_0);
-  margin: 1.6rem 0 0.8rem;
+.refTables {
+  --info-label-w: 14.8rem;
 }
 
-.diagnosisCardTable > div {
-  grid-template-columns: 12rem minmax(0, 1fr);
+.buildingTable {
+  --info-label-w: 22rem;
+}
+
+.wideTables {
+  --info-label-w: 30rem;
+}
+
+.scheduleTable {
+  --info-label-w: 16rem;
 }
 
 .departmentSelectGroup {
@@ -106,98 +63,75 @@
   width: 13.2rem;
 }
 
-.noticeDataButton {
-  height: 3.2rem;
-  border-color: #4f545b;
-  background: #4f545b;
-  color: #fff;
-}
-
-.noticeDataButton:hover,
-.noticeDataButton:active {
-  background: #3f444a;
+.addressGrid {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, 4.9rem);
 }
 
 .addressField {
-  grid-row: span 2;
-  height: 11.2rem;
+  grid-column: 1;
+  grid-row: 1 / 3;
+  min-height: 0;
+  height: 100%;
 }
 
 .addressField > div:last-child {
   justify-content: space-between;
   gap: 0.8rem;
-  padding: 0.8rem 1.6rem;
+  min-height: 0;
+  padding: 0.4rem 1.6rem;
 }
 
-.addressSearchRow {
-  position: relative;
-  width: 100%;
+.jurisdictionRow {
+  grid-column: 2;
 }
 
-.addressSearchButton {
-  position: absolute;
-  top: 50%;
-  right: 0.4rem;
-  transform: translateY(-50%);
+.jurisdictionRow:nth-child(2) {
+  grid-row: 1;
 }
 
-.detailAddressField {
+.jurisdictionRow:nth-child(3) {
+  grid-row: 2;
+}
+
+.jurisdictionRow > div:last-child {
+  padding: 0.4rem 1.6rem;
+}
+
+.detailAddress {
   width: 13.6rem;
   flex: 0 0 13.6rem;
 }
 
-.jurisdictionField {
-  min-height: 5.6rem;
-}
-
-.jurisdictionField > div:last-child {
-  padding: 0.8rem 1.6rem;
-}
-
-.referenceTable > div {
-  grid-template-columns: 14.8rem minmax(0, 1fr);
-}
-
-.referenceField > div:last-child {
+/*
+ * InfoField 는 class prop 을 선언하고 있지만(다른 페이지 어디서도 실제로 안 쓴다), 이 값
+ * 그리드는 InfoField 내부 control div 를 밖에서 셀렉터로 건드리는 대신 슬롯 안에 래퍼
+ * div 를 두고 그 안에서만 스타일을 준다. control 의 기본 padding(0.8rem 1.6rem)을
+ * 음수 margin 으로 상쇄해 셀 가장자리까지 꽉 채우고, align-self:stretch 로 셀 높이
+ * 전체를 채운다.
+ */
+.referenceValueGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: stretch;
+  align-self: stretch;
+  width: calc(100% + 3.2rem);
   gap: 0;
-  padding: 0;
+  margin: -0.8rem -1.6rem;
   color: var(--Text-body_0, #1e2124);
 }
 
-.referenceField > div:last-child > span {
+.referenceValueGrid > span {
   display: flex;
   align-items: center;
   min-height: 100%;
   padding: 0.8rem 1.6rem;
 }
 
-.referenceField > div:last-child > span + span {
+.referenceValueGrid > span + span {
   border-left: 1px solid var(--Border_gray03, #e6e8ea);
-}
-
-.generalTable > div {
-  grid-template-columns: 12rem minmax(0, 1fr);
-}
-
-.emptyGeneralField > span:first-child {
-  background: var(--Background-gray01, #f5f6f8);
-}
-
-.buildingAssessmentTable > div {
-  grid-template-columns: 22rem minmax(0, 1fr);
-}
-
-.extraAssessmentTable > div,
-.etcAssessmentTable > div {
-  grid-template-columns: 30rem minmax(0, 1fr);
-}
-
-.assessmentStepper {
-  width: 12rem;
-  flex: 0 0 12rem;
 }
 
 .assessmentUnit {
@@ -205,11 +139,12 @@
   color: #1e2124;
 }
 
-.etcAssessmentTable > div > div:last-child {
-  background: #fff;
-}
-
-.etcAssessmentTable > div > label:first-child {
+/*
+ * "기타" 항목은 라벨 자리에 입력창(#label 슬롯)을 넣는 특수 케이스라, InfoField 가 항상
+ * 렌더링하는 <label> 요소 자체(슬롯 밖, InfoField 내부 마크업)의 패딩을 줄여야 한다 —
+ * 슬롯 콘텐츠가 아니라 InfoField 루트가 대상이라 class prop 없이는 닿지 않는 진짜 예외.
+ */
+.etcLabelField > label:first-child {
   padding: 0.8rem 1.6rem;
 }
 
@@ -233,50 +168,34 @@
   color: #bd2c0f;
 }
 
-.improvementTable > div {
-  grid-template-columns: 16rem minmax(0, 1fr);
-}
-
-.improvementDate {
-  width: 20rem;
-  flex: 0 0 20rem;
-}
-
-.improvementStatusSelect {
-  width: 12rem;
-  flex: 0 0 12rem;
-}
-
 .dialogSection.emailNotifySection {
   margin-top: 0.8rem;
 }
 
 @media (max-width: 62.5rem) {
+  .addressGrid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+  }
+
   .addressField {
+    grid-column: auto;
     grid-row: auto;
     height: auto;
+  }
+
+  .jurisdictionRow {
+    grid-column: auto;
+    grid-row: auto;
   }
 }
 
 @media (max-width: 40rem) {
-  .diagnosisCardTable > div,
-  .referenceTable > div,
-  .generalTable > div,
-  .buildingAssessmentTable > div,
-  .extraAssessmentTable > div,
-  .etcAssessmentTable > div,
-  .improvementTable > div {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .departmentSelectGroup > div {
-    width: 100%;
-  }
-
-  .detailAddressField,
+  /* 라벨/값 세로 쌓기는 InfoTable.module.css 의 .field 반응형 규칙이 공통으로 처리한다 */
+  .departmentSelectGroup > div,
+  .detailAddress,
   .improvementDate,
   .improvementStatusSelect {
     width: 100%;
-    flex-basis: 100%;
   }
 }
