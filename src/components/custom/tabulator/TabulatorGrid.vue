@@ -881,29 +881,41 @@ function emitData() {
   emit('update:data', rows)
 }
 
-/* 부모가 data 배열을 새로 넘기면 그리드를 갱신
- * (연결된 그리드에서 드래그로 받은 행도 함께 사라지므로, @rows-received 로 부모 상태를 맞춰둘 것) */
+/*
+ * 부모가 data / columns 를 바꾸면 그리드를 갱신.
+ *
+ * 두 prop 을 별개의 watcher 로 다루면(예: 탭 전환처럼 둘이 같은 tick 에 함께 바뀔 때)
+ * 등록 순서에 따라 "이전 컬럼 구조 + 새 데이터" 같은 어긋난 조합이 한 순간 Tabulator 에
+ * 들어가서, 그 이후로 다시 그려도(redraw) 복구되지 않는 레이아웃 깨짐이 남을 수 있다.
+ * 하나의 watcher 에서 컬럼을 먼저 반영한 뒤 데이터를 반영해 항상 같은 순서를 보장한다.
+ * (연결된 그리드에서 드래그로 받은 행도 함께 사라지므로, @rows-received 로 부모 상태를 맞춰둘 것)
+ */
 watch(
-  () => props.data,
-  (next) => {
-    // v-model 로 돌려받은 배열은 reactive 프록시로 감싸여 오므로 toRaw 로 비교한다
-    if (next === lastEmittedData || toRaw(next) === lastEmittedData) {
-      lastEmittedData = null
-      return
-    }
-    applyData(next)
-  },
-)
-
-/* 부모가 columns 를 바꾸면 컬럼을 다시 만든다 */
-watch(
-  () => props.columns,
-  () => {
+  [() => props.columns, () => props.data],
+  ([nextColumns, nextData], prev) => {
     if (!table) return
-    unmountAllRowCells()
-    unmountHeaderCheckbox()
-    table.setColumns(buildColumns())
-    repaintAll()
+    const [prevColumns, prevData] = prev ?? []
+    const columnsChanged = nextColumns !== prevColumns
+    // v-model 로 돌려받은 배열은 reactive 프록시로 감싸여 오므로 toRaw 로 비교한다
+    const isOwnEmit = nextData === lastEmittedData || toRaw(nextData) === lastEmittedData
+    const dataChanged = nextData !== prevData && !isOwnEmit
+    if (isOwnEmit) lastEmittedData = null
+
+    if (columnsChanged) {
+      unmountAllRowCells()
+      unmountHeaderCheckbox()
+      table.setColumns(buildColumns())
+      repaintAll()
+    }
+
+    if (dataChanged) applyData(nextData)
+
+    if (columnsChanged) {
+      table.redraw(true)
+      // setColumns 직후엔 세로 스크롤바가 생기기/사라지기 전 폭 기준으로 fitColumns 가
+      // 계산돼 헤더·본문 폭이 어긋날 수 있다. 스크롤바 반영 후 한 번 더 그린다.
+      requestAnimationFrame(() => table?.redraw(true))
+    }
   },
 )
 

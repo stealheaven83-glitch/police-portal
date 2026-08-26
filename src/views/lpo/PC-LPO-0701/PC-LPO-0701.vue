@@ -283,7 +283,7 @@ function onPrint() {
     </template>
   </PageHeader>
 
-  <div :class="styles.toolbar">
+  <div class="toolbar">
     <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
     <template #department>
       <span class="text-sm font-semibold">부서</span>
