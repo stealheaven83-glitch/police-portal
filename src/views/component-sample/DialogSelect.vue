@@ -172,25 +172,12 @@ const handleCustomDelete = () => {
  * Confirm Dialog 샘플 코드 
  */
 const handleConfirmDialog = async () => {
-
-  try {
-    const result = await dialog.confirm({
-      title: 'Confirm Dialog 예시',
-      description: 'Confirm Dialog 관련 설명을 작성합니다.',
-      btnOk: '확인',
-      btnCancel: '취소'
-    })
-
-    if (result.confirmed) {
-      toast.success('확인', {
-        description: '확인 알림입니다.',
-      })
-    }
-  } catch (error) {
-    toast.error('오류', {
-      description: '오류 알림입니다.',
-    })
-  }
+  await dialog.confirm({
+    title: 'Confirm Dialog 예시',
+    description: 'Confirm Dialog 관련 설명을 작성합니다.',
+    btnOk: '확인',
+    btnCancel: '취소'
+  })
 }
 
 /**

@@ -1355,9 +1355,18 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
 
 .ly-between{
   display: flex;
-  justify-content: flex-end;
+  justify-content:space-between;
   gap: 0.8rem;
   margin: 1.6rem 0 0;
+}
+.list-actions.space-between{
+  justify-content:space-between;
+}
+.list-actions-txt p{
+  color:var(--Base--point);
+}
+.list-actions-txt p + p {
+  margin-top:4px;
 }
 
 /*dark-theme*/

@@ -21,4 +21,8 @@ export interface SideMenuConfig {
 }
 
 /** 미리 등록해둔 메뉴 구성의 키 */
-export type SideMenuPresetKey = 'localPolice' | 'publicSafety' | 'menuTabSample'
+export type SideMenuPresetKey =
+  | 'localPolice'
+  | 'publicSafety'
+  | 'systemAdmin'
+  | 'menuTabSample'

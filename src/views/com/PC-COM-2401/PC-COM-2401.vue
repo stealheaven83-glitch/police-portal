@@ -6,6 +6,7 @@ import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import { useDialog } from '@/composable/dialog/dialog'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useBoardManage, countOptions } from './composable/PC-COM-2401'
@@ -20,6 +21,8 @@ const navItems = [
 ]
 
 const { rows, createEmptyRow } = useBoardManage()
+
+const dialog = useDialog()
 
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const selectedCount = ref(0)
@@ -63,8 +66,11 @@ const columns: TabulatorGridColumn[] = [
   { title: '수정일', field: 'updatedAt', hozAlign: 'center' },
 ]
 
-function onAdd() {
-  gridRef.value?.addRow(createEmptyRow(), false)
+async function onAdd() {
+  // 새 행은 시안대로 맨 뒤에 붙는다. 그대로 두면 다음 페이지로 밀려 안 보이므로
+  // 추가가 끝난 뒤 마지막 페이지로 따라간다.
+  await gridRef.value?.addRow(createEmptyRow(), false)
+  gridRef.value?.setPage('last')
 }
 
 function onDeleteSelected() {
@@ -76,9 +82,20 @@ function onDeleteSelected() {
   toast.success('삭제되었습니다.')
 }
 
-function onSave() {
+async function onSave() {
+  const result = await dialog.confirm({
+    title: '저장하시겠습니까?',
+    description: '변경한 게시판 설정을 저장합니다.',
+    btnOk: '확인',
+    btnCancel: '취소',
+  })
+  if (!result.confirmed) return
+
   // TODO: API 연동. 변경된 행만 보내려면 gridRef.getDirtyRows() 를 쓴다.
-  toast.success('저장되었습니다.')
+  await dialog.alert({
+    title: '저장되었습니다.',
+    btnCancel: '확인',
+  })
 }
 
 // 사이드메뉴(시스템 관리 LNB) 설정
@@ -104,14 +121,19 @@ useBottomTabSetup({
     </template>
   </PageHeader>
 
-  <div class="list-actions">
-    <Button type="button" variant="tertiary2" size="sm" class="w-25" @click="onDeleteSelected">
-      선택삭제
-    </Button>
-    <Button type="button" variant="secondary" size="sm" class="w-25" @click="onAdd">추가</Button>
-    <Button type="button" variant="primary" size="sm" class="w-25" @click="onSave">저장</Button>
-  </div>
-
+  <div class="list-actions space-between">
+    <div class="list-action-txt">
+      <p>출동업무수당 지급대상 자동체크는 매일 오전 08시~12시에 반영됩니다. 12시 이후에 확인 후 작성하세요</p>
+      <p>출동업무수당 자동체크 된 지급대상 사건과 임의등록 사건 만 표시됩니다.</p>
+    </div>
+    <div>
+      <Button type="button" variant="tertiary2" size="sm" class="w-25" @click="onDeleteSelected">
+        선택삭제
+      </Button>
+      <Button type="button" variant="secondary" size="sm" class="w-25" @click="onAdd">추가</Button>
+      <Button type="button" variant="primary" size="sm" class="w-25" @click="onSave">저장</Button>
+    </div>
+  </div>  
   <TabulatorGrid
     ref="gridRef"
     v-model:data="rows"

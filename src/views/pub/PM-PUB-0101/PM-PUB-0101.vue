@@ -201,7 +201,7 @@ useBottomTabSetup({
     </SearchWrapper>
   </div>
 
-  <div class="ly-between"> 
+  <div class="list-actions"> 
     <Button type="button" variant="tertiary2" size="sm" @click="onDownloadExcel">
       <Download :size="16" aria-hidden="true" />
       엑셀다운로드

@@ -83,6 +83,35 @@ export const publicSafetyMenu: SideMenuConfig = {
   ],
 }
 
+/** 시스템 관리 LNB */
+export const systemAdminMenu: SideMenuConfig = {
+  title: '시스템 관리',
+  // 시안은 '홈페이지 관리'가 펼쳐진 상태다
+  openIndex: 2,
+  activeChild: '게시판 관리',
+  items: [
+    {
+      name: '시스템 운영 관리',
+      children: [
+        { name: '사용자 권한관리', path: '/views/com/PC-COM-2201' },
+        { name: '메뉴관리' },
+        { name: '권한관리' },
+        { name: '코드관리' },
+      ],
+    },
+    // 하위가 없는 1뎁스는 그 자체가 링크다(시안에서도 +/- 표시가 없다)
+    { name: '시스템 모니터링', path: '/views/com/PC-COM-2301' },
+    {
+      name: '홈페이지 관리',
+      children: [
+        { name: '게시판 관리', path: '/views/com/PC-COM-2401' },
+        { name: '팝업 관리' },
+      ],
+    },
+    { name: '앱 관리', children: [{ name: '앱관리' }] },
+  ],
+}
+
 /** 메뉴 · 탭 연동 확인용 샘플 (menu-tab-guide.md 3.2) */
 export const menuTabSampleMenu: SideMenuConfig = {
   title: '지역경찰',
@@ -102,6 +131,7 @@ export const menuTabSampleMenu: SideMenuConfig = {
 const PRESETS: Record<SideMenuPresetKey, SideMenuConfig> = {
   localPolice: localPoliceMenu,
   publicSafety: publicSafetyMenu,
+  systemAdmin: systemAdminMenu,
   menuTabSample: menuTabSampleMenu,
 }
 

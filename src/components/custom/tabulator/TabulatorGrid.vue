@@ -942,6 +942,12 @@ defineExpose({
   getSelectedRows: () => table?.getSelectedRows() ?? [],
   setData: (rows: any[]) => applyData(rows),
   addRow: (rowData: any, top = true) => table?.addRow(rowData, top),
+  /**
+   * 페이지 이동 (1-based). 'last' 면 마지막 페이지.
+   * 행을 맨 뒤에 추가하면 페이지네이션이 있을 때 다음 페이지로 밀려 안 보이므로,
+   * addRow 뒤에 setPage('last') 로 따라가는 데 쓴다.
+   */
+  setPage: (page: number | 'last') => goToPage(page === 'last' ? totalPages.value : page),
   updateRow: (index: any, rowData: any) => table?.updateRow(index, rowData),
   deleteRow: (index: any) => table?.deleteRow(index),
   deleteSelected: () => table?.getSelectedRows().forEach((r: any) => r.delete()),
