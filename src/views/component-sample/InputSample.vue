@@ -165,7 +165,7 @@
       <section class="space-y-4 pt-10">
         <h2 class="text-2xl font-semibold">커스텀(InputField2 컴포넌트 사용)</h2>
         <div class="text-gray-500">InputField2</div>
-        <div class="text-red-500 font-semibold">반드시 클리어버튼 들어가야함!! 꼭 clearble 옵션 넣어주세요</div>
+        <div class="text-red-500 font-semibold text-2xl">반드시 클리어버튼 들어가야함!! 꼭 clearble 옵션 넣어주세요</div>
         <div>
           <div class="w-[480px] mb-3">
             <label for="input11">개별 라벨</label>
