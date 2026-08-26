@@ -198,7 +198,7 @@
 
 .tabulator .grid-checkbox-cell {
   display:flex;
-  algin-items:center;
+  align-items:center;
   justify-content:center;
   text-align: center;
 }
