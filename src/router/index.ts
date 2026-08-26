@@ -91,6 +91,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/views/lpo/PC-LPO-0215',
+            name: 'PC-LPO-0215',
+            component: () => import('../views/lpo/PC-LPO-0215/PC-LPO-0215.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '사고자/자원근무자현황',
+            }
+        },
+        {
             path: '/',
             name: 'home',
             component: () => import('../views/Main.vue'),
