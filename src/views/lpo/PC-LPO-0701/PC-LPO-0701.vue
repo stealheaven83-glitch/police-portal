@@ -286,7 +286,7 @@ function onPrint() {
   <div :class="styles.toolbar">
     <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
     <template #department>
-      <span class="text-sm font-semibold">부서</span>
+      <span class="dept-name">부서</span>
       <DepartmentCascadeSelect v-model="department" size="sm" />
     </template>
     <template #form>

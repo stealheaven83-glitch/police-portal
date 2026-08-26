@@ -72,7 +72,7 @@ useBottomTabSetup({
       </template>
       <template #form>
         <div class="search-area">
-          <div class="flex items-center gap-2">
+          <div class="date-from-to">
             <DatePicker v-model="dateFrom" label="근무일자" size="sm" inputClass="w-40" />
             <span aria-hidden="true">~</span>
             <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
