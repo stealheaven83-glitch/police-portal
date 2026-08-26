@@ -8,7 +8,7 @@ import SelectField from '@/components/custom/select/SelectField.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
 import { EquipmentListKey, commTypeOptions, locationOptions, commManageStatusLabel } from '../composable/PC-LPO-0701'
-import styles from '../style/PC-LPO-0701.module.css'
+import styles from '@/components/custom/info-table/InfoTable.module.css'
 
 const store = inject(EquipmentListKey)!
 const { commDetail, commDetailDialogOpen, saveCommDetail, deleteCommDetail } = store

@@ -65,6 +65,8 @@ defineProps({
   line-height:1;
 }
 .breadcrumb__item .breadcrumb__link .icon-home{
+  display:flex;
+  align-items: center;
   margin-right: 0.5rem;
 }
 .breadcrumb__item + .breadcrumb__item::before {

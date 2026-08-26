@@ -8,7 +8,7 @@ import SelectField from '@/components/custom/select/SelectField.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import Stepper from '@/components/custom/input/Stepper.vue'
 import { EquipmentListKey, ammoUnitOptions } from '../composable/PC-LPO-0701'
-import styles from '../style/PC-LPO-0701.module.css'
+import styles from '@/components/custom/info-table/InfoTable.module.css'
 
 const store = inject(EquipmentListKey)!
 const { ammoDetail, ammoDetailDialogOpen, saveAmmoDetail, deleteAmmoDetail } = store

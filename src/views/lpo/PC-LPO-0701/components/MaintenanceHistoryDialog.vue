@@ -3,7 +3,7 @@ import { inject, ref } from 'vue'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
-import { EquipmentListKey } from '../composable/PC-LPO-0701'
+import styles from '@/components/custom/info-table/InfoTable.module.css'
 
 const store = inject(EquipmentListKey)!
 const { maintenanceDialogOpen, maintenanceTitle, maintenanceRows, addMaintenanceRow, saveMaintenanceHistory } = store

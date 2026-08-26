@@ -7,7 +7,7 @@ import InputField2 from '@/components/custom/input/InputField2.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import Stepper from '@/components/custom/input/Stepper.vue'
 import { EquipmentListKey } from '../composable/PC-LPO-0701'
-import styles from '../style/PC-LPO-0701.module.css'
+import styles from '@/components/custom/info-table/InfoTable.module.css'
 
 const store = inject(EquipmentListKey)!
 const { etcDetail, etcDetailDialogOpen, saveEtcDetail, deleteEtcDetail } = store
