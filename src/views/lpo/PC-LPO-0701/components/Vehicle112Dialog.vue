@@ -4,7 +4,7 @@ import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import { EquipmentListKey } from '../composable/PC-LPO-0701'
-import styles from '../style/PC-LPO-0701.module.css'
+import styles from '@/components/custom/info-table/InfoTable.module.css'
 
 const store = inject(EquipmentListKey)!
 const {

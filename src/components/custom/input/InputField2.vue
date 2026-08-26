@@ -57,6 +57,10 @@ interface Props {
   //아이콘 관련
   icon?: string
   iconClass?: string
+  /** true 면 아이콘을 클릭 가능한 버튼으로 만든다 (검색 실행 등). 클릭 시 icon-click 을 emit */
+  search?: boolean
+  /** search 일 때 아이콘 버튼의 접근성 이름 */
+  iconLabel?: string
 
   //메세지 관련(input 아래)
   message?: string
@@ -74,11 +78,15 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   readonly: false,
   size: 'lg',
-  messageType: 'complete'
+  messageType: 'complete',
+  search: false,
+  iconLabel: '검색',
 })
 
 const emits = defineEmits<{
   (e: 'update:modelValue', payload: string | number): void
+  /** search 일 때 아이콘 버튼 클릭 */
+  (e: 'icon-click'): void
 }>()
 
 const modelValue = useVModel(props, 'modelValue', emits, { passive: true })
@@ -187,7 +195,21 @@ const borderStyleCss = computed(() => {
               >
                 <img :src="iconClear" alt="" class="size-full" />
               </button>
-              <img v-if="icon" :src="icon" alt="" :class="iconClass" />
+              <!--
+                search 면 클릭 가능한 버튼, 아니면 장식용 이미지.
+                버튼 안 이미지는 alt 를 비우고 버튼에 aria-label 을 둬야 이름이 두 번 읽히지 않는다.
+              -->
+              <button
+                v-if="icon && search"
+                type="button"
+                class="flex flex-shrink"
+                :aria-label="iconLabel"
+                :disabled="disabled"
+                @click="emits('icon-click')"
+              >
+                <img :src="icon" alt="" :class="iconClass" />
+              </button>
+              <img v-else-if="icon" :src="icon" alt="" :class="iconClass" />
             </div>
           </div>
           <div v-if="message" :id="`${fieldId}-message`" class="flex mt-2 gap-1 items-center" :class="messageStyleCss">

@@ -15,7 +15,7 @@
   <div :class="styles.searchArea">
     <SearchWrapper collapsible :class="styles.searchWrapper" v-model:expanded="advancedSearchOpen">
       <template #department>
-        <span class="text-sm font-semibold">부서</span>
+        <span class="dept-name">부서</span>
         <DepartmentCascadeSelect v-model="searchForm.department" size="sm" />
       </template>
       <template #form>

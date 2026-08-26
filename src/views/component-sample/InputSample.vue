@@ -165,6 +165,7 @@
       <section class="space-y-4 pt-10">
         <h2 class="text-2xl font-semibold">커스텀(InputField2 컴포넌트 사용)</h2>
         <div class="text-gray-500">InputField2</div>
+        <div class="text-red-500 font-semibold text-2xl">반드시 클리어버튼 들어가야함!! 꼭 clearble 옵션 넣어주세요</div>
         <div>
           <div class="w-[480px] mb-3">
             <label for="input11">개별 라벨</label>
@@ -181,6 +182,19 @@
           </div>
           <div class="w-[480px] mb-3">
             <InputField2 label="아이콘 있을 때" :icon="sampleIcon" iconClass="size-8" clearable></InputField2>
+          </div> 
+          <div class="w-[480px] mb-3">
+            <InputField2
+              v-model="searchKeyword"
+              label="검색 아이콘"
+              :icon="searchIcon"
+              iconClass="size-8"
+              icon-label="검색"
+              clearable
+              search
+              @icon-click="search"
+              @keyup.enter="search"
+            />
           </div>
           <div class="w-[480px] mb-3">
             <InputField2 label="비활성화" :icon="sampleIcon" iconClass="size-8" clearable disabled></InputField2>
@@ -206,7 +220,13 @@ import InputField from '@/components/custom/input/InputField.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import { Label } from '@/components/ui/label'
 import sampleIcon from '@/assets/icon/icon_sample.svg?url'
-
+// 퍼블 원본 아이콘은 public/portal 아래에 그대로 두고 절대경로로 참조한다
+// (번들 대상이 아니라 import 하지 않는다 — DatePicker·PortalHeader 와 같은 방식)
+const searchIcon = '/portal/asset/images/icon/ico_seach_black_20.svg'
+const searchKeyword = ref('')
+const search = () => {
+  console.log('검색어:', searchKeyword.value)
+}
 /**
  * 기본 구조 예시용 값
  */

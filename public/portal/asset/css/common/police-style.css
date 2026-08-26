@@ -1327,6 +1327,21 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   background:#BACBDE;
 }
 
+/*날짜(from ~ to) 감싸는 스타일*/
+.date-from-to{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/*부서 이름 스타일*/
+.dept-name{
+  --tw-font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-semibold);
+
+  font-size: var(--text-sm);
+  line-height: var(--tw-leading, var(--text-sm--line-height));
+}
 
 /*하단 탭메뉴 */
 .tab-ul li{

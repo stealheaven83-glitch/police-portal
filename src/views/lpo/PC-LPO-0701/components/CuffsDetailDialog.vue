@@ -9,7 +9,7 @@ import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
 import { EquipmentListKey, cuffsTypeOptions, cuffsStatusLabel } from '../composable/PC-LPO-0701'
-import styles from '../style/PC-LPO-0701.module.css'
+import styles from '@/components/custom/info-table/InfoTable.module.css'
 
 const store = inject(EquipmentListKey)!
 const { cuffsDetail, cuffsDetailDialogOpen, saveCuffsDetail, deleteCuffsDetail } = store

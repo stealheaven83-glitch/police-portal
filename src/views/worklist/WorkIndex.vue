@@ -2,6 +2,7 @@
   <div class="worklist-container">
     <header class="worklist-header">
       <h2>스마트워크 퍼블리싱 워크리스트</h2>
+      <div><button>공통가이드</button></div>
       <!-- <div class="summary-box">
         <span>전체: <strong>{{ worklist.length }}</strong>건</span>
         <span>완료: <strong>{{ countByStatus('완료') }}</strong>건</span>
@@ -105,6 +106,7 @@ const searchKeyword = ref('')
 
 // IA 기반 전체 데이터 목록 (393건)
 const worklist = ref([
+  { id: 1111, category: '메인', depth1: '', depth2: '', depth3: '', depth4: '', depth5: '', screenName: '', screenId: '', path: '/', status: '완료' },
   { id: 1, category: '스마트워크', depth1: '지역경찰', depth2: '', depth3: '', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
   { id: 2, category: '스마트워크', depth1: '', depth2: '개인수첩', depth3: '', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
   { id: 3, category: '스마트워크', depth1: '', depth2: '', depth3: '메모', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
