@@ -72,11 +72,13 @@ useBottomTabSetup({
       </template>
       <template #form>
         <div class="search-area">
-          <DatePicker v-model="dateFrom" label="근무일자" size="sm" inputClass="w-40" />
-          <span aria-hidden="true">~</span>
-          <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
-          <SelectField v-model="typeFilter" label="구분" :options="typeFilterOptions" size="sm" triggerClass="w-32" />
-          <InputField2 v-model="nameFilter" label="이름" size="sm" inputClass="w-40" />
+          <div class="flex items-center gap-2">
+            <DatePicker v-model="dateFrom" label="근무일자" size="sm" inputClass="w-40" />
+            <span aria-hidden="true">~</span>
+            <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
+          </div>
+          <SelectField v-model="typeFilter" label="구분" :options="typeFilterOptions" size="sm" triggerClass="w-37" />
+          <InputField2 v-model="nameFilter" label="이름" size="sm" inputClass="w-[13.3rem]" />
         </div>
       </template>
       <template #btns>
