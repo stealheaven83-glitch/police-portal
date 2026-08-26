@@ -1327,13 +1327,6 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   background:#BACBDE;
 }
 
-/*날짜(from ~ to) 감싸는 스타일*/
-.date-from-to{
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 /*부서 이름 스타일*/
 .dept-name{
   --tw-font-weight: var(--font-weight-semibold);
@@ -1470,4 +1463,22 @@ html.theme-dark .rowgroup.notice .notice-list .noticeSwiper .swiper-nav .slide-a
   html.theme-dark header .header-in .header-container .header-branding .header-actions .btn-navi.all {
     background: url("../../images/icon/ico_menu_24_white.svg") no-repeat center/2.4rem auto;
   }
+}
+
+
+/*그루핑 및 gap 처리*/
+.group-gap1{
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 1);
+}
+.group-gap2{
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 2);
+}
+.group-gap3{
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 3);
 }
