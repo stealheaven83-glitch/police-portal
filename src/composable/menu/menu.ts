@@ -63,11 +63,6 @@ export const mainLayoutConfig: LayoutConfig = {
   headerTitle: 'vue starter 샘플',
   menuItems: [
     {
-      path: '/component/pub-list',
-      title: '퍼블리스트',
-      icon: FileTextIcon,
-    },
-    {
       title: '샘플 레이아웃',
       icon: LayoutDashboardIcon,
       children: [
