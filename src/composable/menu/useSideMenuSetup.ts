@@ -1,4 +1,5 @@
 import { getCurrentInstance, onActivated, onUnmounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { useSideMenuStore } from '@/stores/menu/useSideMenu'
 import { loadSideMenuPreset } from './sidemenu/presets'
 import type { SideMenuConfig } from './sidemenu/types'
@@ -16,8 +17,31 @@ import type { SideMenuConfig } from './sidemenu/types'
  */
 export function useSideMenuSetup(config: string | SideMenuConfig | false) {
   const sideMenuStore = useSideMenuStore()
+  const route = useRoute()
   // 화면 인스턴스마다 고유한 토큰. 같은 화면이 탭으로 여러 번 열려도 서로 구분된다.
   const ownerId = Symbol(getCurrentInstance()?.type.name ?? 'side-menu-owner')
+
+  /**
+   * 지금 열린 라우트와 경로가 같은 메뉴 항목을 활성으로 표시한다.
+   * 프리셋의 activeChild 는 기본값일 뿐이라, 같은 메뉴를 쓰는 화면이 여러 개면
+   * (예: 시스템 관리의 게시판 관리 · 팝업 관리) 어느 화면에서든 같은 항목이 켜져 버린다.
+   * 경로로 맞춰주면 화면마다 프리셋을 따로 만들 필요가 없다.
+   */
+  function syncActiveByRoute() {
+    for (const [index, item] of sideMenuStore.items.entries()) {
+      if (item.path === route.path) {
+        sideMenuStore.setActiveChild(item.name)
+        return
+      }
+      const hit = item.children?.find((child) => child.path === route.path)
+      if (hit) {
+        sideMenuStore.setActiveChild(hit.name)
+        // 활성 항목이 접힌 그룹 안에 있으면 보이지 않으므로 그 그룹을 펼친다
+        sideMenuStore.openIndex = index
+        return
+      }
+    }
+  }
 
   async function apply() {
     sideMenuStore.claim(ownerId)
@@ -29,6 +53,7 @@ export function useSideMenuSetup(config: string | SideMenuConfig | false) {
 
     if (typeof config !== 'string') {
       sideMenuStore.apply(config)
+      syncActiveByRoute()
       return
     }
 
@@ -42,6 +67,7 @@ export function useSideMenuSetup(config: string | SideMenuConfig | false) {
         return
       }
       sideMenuStore.apply(preset)
+      syncActiveByRoute()
     } finally {
       if (sideMenuStore.isOwner(ownerId)) sideMenuStore.setLoading(false)
     }

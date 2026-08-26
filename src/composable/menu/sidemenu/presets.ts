@@ -105,7 +105,7 @@ export const systemAdminMenu: SideMenuConfig = {
       name: '홈페이지 관리',
       children: [
         { name: '게시판 관리', path: '/views/com/PC-COM-2401' },
-        { name: '팝업 관리' },
+        { name: '팝업 관리', path: '/views/com/PC-COM-2402' },
       ],
     },
     { name: '앱 관리', children: [{ name: '앱관리' }] },
