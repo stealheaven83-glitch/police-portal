@@ -159,16 +159,14 @@ useBottomTabSetup({
           <Button type="button" variant="secondary" size="sm" @click="addDept">추가</Button>
         </template>
 
-        <div :class="styles.treeToolbar">
+        <div class="btn-tree">
           <Button type="button" variant="text" size="sm" @click="treeRef?.openAll()">
-            ＋ 모두 확장
+            모두 확장
           </Button>
           <Button type="button" variant="text" size="sm" @click="treeRef?.closeAll()">
-            − 모두 축소
+            모두 축소
           </Button>
         </div>
-
-        <div :class="styles.treeScroll">
           <TreeView
             ref="treeRef"
             v-model="deptTree"
@@ -176,7 +174,6 @@ useBottomTabSetup({
             :draggable="false"
             @node-click="onDeptClick"
           />
-        </div>
       </LayoutPanel>
     </template>
 

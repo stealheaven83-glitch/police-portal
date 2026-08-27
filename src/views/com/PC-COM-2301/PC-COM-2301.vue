@@ -14,24 +14,24 @@
     <Button type="button" variant="secondary" size="sm" class="w-25" @click="onAdd">추가</Button>
     <Button type="button" variant="primary" size="sm" class="w-25" @click="onSave">저장</Button>
   </div>
-    <TabulatorGrid
-      ref="gridRef"
-      v-model:data="rows"
-      class="flex-1"
-      :columns="columns"
-      select-mode="checkbox"
-      height="100%"
-      min-height="40rem"
-      placeholder="등록된 항목이 없습니다"
-      show-pagination
-      :items-per-page="10"
-      @row-selection-changed="selectedCount = $event.length"
-    />
+  <TabulatorGrid
+    ref="gridRef"
+    v-model:data="rows"
+    class="flex-1"
+    :columns="columns"
+    select-mode="checkbox"
+    height="100%"
+    min-height="40rem"
+    placeholder="등록된 항목이 없습니다"
+    show-pagination
+    :items-per-page="10"
+    @row-selection-changed="selectedCount = $event.length"
+  />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { toast } from 'vue-sonner'
+import { useDialog } from '@/composable/dialog/dialog'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -96,6 +96,8 @@ const columns: TabulatorGridColumn[] = [
   { title: 'URL', field: 'url', cellType: 'input', widthGrow: 5 },
 ]
 
+const dialog = useDialog()
+
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const selectedCount = ref(0)
 
@@ -105,17 +107,41 @@ function onAdd() {
   gridRef.value?.addRow({ no: nextNo, title: '', collectType: '', url: '' }, true)
 }
 
-function onDeleteSelected() {
+async function onDeleteSelected() {
   if (!selectedCount.value) {
-    toast.warning('삭제할 항목을 선택해 주세요.')
+    await dialog.alert({ title: '삭제할 항목을 선택해 주세요.', btnCancel: '확인' })
     return
   }
+
+  // 되돌릴 수 없는 동작이라 지우기 전에 한 번 묻는다
+  const result = await dialog.confirm({
+    title: '삭제하시겠습니까?',
+    btnOk: '확인',
+    btnCancel: '취소',
+  })
+  if (!result.confirmed) return
+
   gridRef.value?.deleteSelected()
-  toast.success('삭제되었습니다.')
+  await dialog.alert({
+    title: '삭제 되었습니다.',
+    btnCancel: '확인',
+  })
 }
 
-function onSave() {
-  toast.success('저장되었습니다.')
+async function onSave() {
+  // 설명 없이 제목만 있는 확인 다이얼로그
+  const result = await dialog.confirm({
+    title: '저장하시겠습니까?',
+    btnOk: '확인',
+    btnCancel: '취소',
+  })
+  if (!result.confirmed) return
+
+  // TODO: API 연동
+  await dialog.alert({
+    title: '등록되었습니다.',
+    btnCancel: '확인',
+  })
 }
 
 // 탭 추가 및 활성화

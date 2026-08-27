@@ -1491,3 +1491,24 @@ html.theme-dark .rowgroup.notice .notice-list .noticeSwiper .swiper-nav .slide-a
   align-items: center;
   gap: calc(var(--spacing) * 3);
 }
+
+/*panel 조회 영역 wrapper*/
+.panel-search{
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+
+.btn-tree{
+  display:flex;
+}
+
+.btn-tree button{
+  padding:0.85rem 1rem; 
+  flex:1;
+}
+
+.btn-tree .plus{
+
+}

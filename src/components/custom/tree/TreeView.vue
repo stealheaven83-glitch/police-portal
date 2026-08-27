@@ -2,6 +2,7 @@
 import { computed, ref, type HTMLAttributes } from 'vue'
 import { Draggable, OpenIcon } from '@he-tree/vue'
 import '@he-tree/vue/style/default.css'
+import { File, Folder, FolderOpen } from 'lucide-vue-next'
 import { cn } from '@/lib/utils'
 import { Checkbox } from '@/components/custom/checkbox'
 
@@ -45,6 +46,10 @@ interface Props {
   treeLine?: boolean
   /** 단계별 들여쓰기(px) */
   indent?: number
+  /** 하위가 있으면 폴더, 없으면 문서 아이콘을 노드 앞에 표시 */
+  showIcon?: boolean
+  /** 선택된 노드 (v-model:selected). 선택 항목은 색으로 구분된다 */
+  selected?: TreeNode | null
   class?: HTMLAttributes['class']
 }
 
@@ -55,10 +60,13 @@ const props = withDefaults(defineProps<Props>(), {
   draggable: true,
   treeLine: true,
   indent: 24,
+  showIcon: false,
+  selected: null,
 })
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: TreeNode[]): void
+  (e: 'update:selected', value: TreeNode | null): void
   /** 노드 라벨 클릭 */
   (e: 'node-click', node: TreeNode, stat: TreeStat): void
   /** 체크 상태가 바뀐 뒤의 체크된 노드 목록 */
@@ -78,6 +86,11 @@ function labelOf(node: TreeNode) {
 
 function onToggle(stat: TreeStat) {
   stat.open = !stat.open
+}
+
+function onSelect(node: TreeNode, stat: TreeStat) {
+  emit('update:selected', node)
+  emit('node-click', node, stat)
 }
 
 function onCheckChange() {
@@ -113,7 +126,7 @@ defineExpose({
       :each-draggable="() => draggable"
     >
       <template #default="{ node, stat }">
-        <div class="treeRow">
+        <div class="treeRow" :class="{ 'is-selected': selected === node }">
           <!--
             접기/펼치기는 실제 button 이어야 키보드로 조작할 수 있다.
             하위가 없는 노드는 자리만 비워 라벨 시작 위치를 맞춘다.
@@ -138,8 +151,18 @@ defineExpose({
           />
 
           <slot name="label" :node="node" :stat="stat">
-            <button type="button" class="treeLabel" @click="emit('node-click', node, stat)">
-              {{ labelOf(node) }}
+            <button type="button" class="treeLabel" @click="onSelect(node, stat)">
+              <!--
+                하위가 있으면 폴더(펼침 상태에 따라 열린/닫힌), 없으면 문서 아이콘.
+                장식이라 스크린리더가 읽지 않게 감춘다.
+              -->
+              <component
+                :is="stat.children.length ? (stat.open ? FolderOpen : Folder) : File"
+                v-if="showIcon"
+                class="treeIcon"
+                aria-hidden="true"
+              />
+              <span class="treeLabelText">{{ labelOf(node) }}</span>
             </button>
           </slot>
 
@@ -195,12 +218,39 @@ defineExpose({
 }
 
 .treeLabel {
+  display: flex;
   flex: 1;
   min-width: 0;
+  align-items: center;
+  gap: 0.6rem;
   font-size: 1.5rem;
   text-align: left;
   color: var(--Text-body_0);
   cursor: pointer;
+}
+
+.treeLabelText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.treeIcon {
+  flex-shrink: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+  color: var(--Text-body_2);
+}
+
+/* 선택된 노드는 색으로 구분한다 */
+.treeRow.is-selected {
+  background: var(--Surface-primary);
+}
+
+.treeRow.is-selected .treeLabel,
+.treeRow.is-selected .treeIcon {
+  color: var(--Base-primary);
+  font-weight: 700;
 }
 
 /*

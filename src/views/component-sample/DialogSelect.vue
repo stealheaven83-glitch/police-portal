@@ -18,6 +18,10 @@
             확인 Dialog 생성
           </Button>
 
+          <Button @click="handleConfirmDialogTitleOnly">
+            확인 Dialog (제목만)
+          </Button>
+
           <Button @click="handleAlertDialog">
             알림 Dialog 생성
           </Button>
@@ -181,7 +185,19 @@ const handleConfirmDialog = async () => {
 }
 
 /**
- * Alert Dialog 샘플 코드 
+ * Confirm Dialog 샘플 코드 — 설명 없이 제목만
+ * description 을 넘기지 않으면 회색 본문 영역이 통째로 빠지고 제목 + 버튼만 남는다.
+ */
+const handleConfirmDialogTitleOnly = async () => {
+  await dialog.confirm({
+    title: 'Confirm Dialog 예시',
+    btnOk: '확인',
+    btnCancel: '취소'
+  })
+}
+
+/**
+ * Alert Dialog 샘플 코드
  */
 const handleAlertDialog = async () => {
   await dialog.alert({
