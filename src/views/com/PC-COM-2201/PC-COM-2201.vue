@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -96,31 +97,30 @@ const userColumns: TabulatorGridColumn[] = [
   { title: '사용여부', field: 'use', hozAlign: 'center' },
 ]
 
-/** select-mode="single" 이라 선택 행은 0건 아니면 1건이다 */
-function onUserSelectionChanged(selected: UserRow[]) {
-  selectUser(selected[0] ?? null)
+/**
+ * select-mode="single" 이라 선택 행은 0건 아니면 1건이다.
+ * @row-selection-changed 는 데이터가 아니라 Tabulator RowComponent 배열을 넘긴다(CLAUDE.md §6) —
+ * row.getData() 로 꺼낸다.
+ */
+function onUserSelectionChanged(selected: any[]) {
+  const row = selected[0]
+  const data = row ? ((typeof row.getData === 'function' ? row.getData() : row) as UserRow) : null
+  selectUser(data)
 }
 
 /* ── 권한목록 ─────────────────────────────── */
 const authColumns: TabulatorGridColumn[] = [{ title: '권한명', field: 'name' }]
 const authGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 
-function onAuthSelectionChanged(selected: AuthRow[]) {
-  checkedAuthCodes.value = selected.map((auth) => auth.code)
+/** @row-selection-changed 는 데이터가 아니라 Tabulator RowComponent 배열을 넘긴다(CLAUDE.md §6) */
+function onAuthSelectionChanged(selected: any[]) {
+  checkedAuthCodes.value = selected.map((row) => (typeof row.getData === 'function' ? row.getData() : row) as AuthRow).map((auth) => auth.code)
 }
 
 /* ── 저장 ─────────────────────────────────── */
-async function onSave() {
-  const result = await dialog.confirm({
-    title: '저장하시겠습니까?',
-    description: '선택한 사용자의 권한을 저장합니다.',
-    btnOk: '확인',
-    btnCancel: '취소',
-  })
-  if (!result.confirmed) return
-
+function onSave() {
   // TODO: API 연동 (선택 사용자 + checkedAuthCodes 전송)
-  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
+  toast.success('저장되었습니다.')
 }
 
 // 사이드메뉴(시스템 관리 LNB) 설정 — 활성 항목은 라우트 경로로 자동 매칭된다

@@ -6,6 +6,7 @@ import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { FlexRow, FlexCol } from '@/components/custom/flex-grid'
 import { PermissionManagementKey, type UserRow } from '../composable/PC-COM-2204'
+import styles from '../style/PC-COM-2204.module.css'
 
 const store = inject(PermissionManagementKey)!
 const {
@@ -74,7 +75,7 @@ function onSelectionChanged(rows: any[]) {
     </div>
 
     <FlexRow class="gap-4">
-      <FlexCol class="!flex-none !w-[22rem]" style="--flex-col-min-w: 0">
+      <FlexCol :class="['!flex-none !w-[22rem]', styles.narrowCol]">
         <h3 class="mb-2 text-[1.4rem] font-semibold">부서 정보</h3>
         <ul class="max-h-80 overflow-y-auto border-t border-[var(--Text-body_0)]">
           <li v-for="node in deptList" :key="`${node.station}-${node.dept}`">
@@ -92,7 +93,7 @@ function onSelectionChanged(rows: any[]) {
         </ul>
       </FlexCol>
 
-      <FlexCol style="--flex-col-min-w: 0">
+      <FlexCol :class="styles.narrowCol">
         <h3 class="mb-2 text-[1.4rem] font-semibold">사용자 정보</h3>
         <TabulatorGrid
           :columns="columns"

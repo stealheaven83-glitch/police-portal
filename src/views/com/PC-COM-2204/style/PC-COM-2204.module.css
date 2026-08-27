@@ -25,3 +25,9 @@
   border-top: none !important;
   overflow: hidden;
 }
+
+/* FlexCol 의 최소폭 변수를 오버라이드한다 — 인라인 style="--flex-col-min-w: 0" 대신
+   (CLAUDE.md §1: 컴포넌트가 노출한 CSS 변수도 module.css 클래스로 덮어쓴다) */
+.narrowCol {
+  --flex-col-min-w: 0;
+}

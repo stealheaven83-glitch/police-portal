@@ -22,7 +22,13 @@ import EtcDetailDialog from './components/EtcDetailDialog.vue'
 import MaintenanceHistoryDialog from './components/MaintenanceHistoryDialog.vue'
 import { useEquipmentList, categoryTabs, EquipmentListKey } from './composable/PC-LPO-0701'
 import type { EquipmentListRow } from './composable/PC-LPO-0701'
+import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import styles from './style/PC-LPO-0701.module.css'
+
+// KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!) — useBottomTabSetup 의 componentName 과 일치해야 한다.
+// 0701~0714 가 이 컴포넌트 하나를 screenGroup 으로 공유하므로(router/index.ts 참고), 탭도
+// 어느 화면ID로 들어오든 항상 이 하나의 "장비관리" 탭으로 고정한다.
+defineOptions({ name: 'PcLpo0701' })
 
 const navItems = [
   { label: '홈', path: '/' },
@@ -271,6 +277,14 @@ const gridColumns = computed(() => {
 function onPrint() {
   window.print()
 }
+
+useBottomTabSetup({
+  value: 'PC-LPO-0701',
+  label: '장비관리',
+  path: '/views/lpo/PC-LPO-0701',
+  componentName: 'PcLpo0701',
+  closable: true,
+})
 </script>
 
 <template>

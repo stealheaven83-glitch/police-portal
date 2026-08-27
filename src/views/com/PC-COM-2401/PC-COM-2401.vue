@@ -6,7 +6,6 @@ import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
-import { useDialog } from '@/composable/dialog/dialog'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useBoardManage, countOptions } from './composable/PC-COM-2401'
@@ -21,8 +20,6 @@ const navItems = [
 ]
 
 const { rows, createEmptyRow } = useBoardManage()
-
-const dialog = useDialog()
 
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const selectedCount = ref(0)
@@ -82,13 +79,9 @@ function onDeleteSelected() {
   toast.success('삭제되었습니다.')
 }
 
-async function onSave() {
+function onSave() {
   // TODO: API 연동. 변경된 행만 보내려면 gridRef.getDirtyRows() 를 쓴다.
-  await dialog.alert({
-    title: '저장하시.',
-    description: '게시판 설정이 저장되었습니다.',
-    btnCancel: '확인',
-  })
+  toast.success('저장되었습니다.')
 }
 
 // 사이드메뉴(시스템 관리 LNB) 설정

@@ -26,7 +26,11 @@ import {
   periodicAccidentReasonOptions,
 } from './composable/PC-LPO-0801'
 import type { PersonnelListRow } from './composable/PC-LPO-0801'
+import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import styles from './style/PC-LPO-0801.module.css'
+
+// KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!) — useBottomTabSetup 의 componentName 과 일치해야 한다.
+defineOptions({ name: 'PcLpo0801' })
 
 const navItems = [
   { label: '홈', path: '/' },
@@ -103,6 +107,14 @@ function removeSelectedTransfers() {
   removeTransferRows(rows)
   transferSelection.value.clear()
 }
+
+useBottomTabSetup({
+  value: 'PC-LPO-0801',
+  label: '인사관리',
+  path: '/views/lpo/PC-LPO-0801',
+  componentName: 'PcLpo0801',
+  closable: true,
+})
 </script>
 
 <template>
