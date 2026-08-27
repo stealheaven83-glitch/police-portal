@@ -142,6 +142,37 @@ const router = createRouter({
             meta: {
                 layout: 'WorkLayout',
                 title: '권한 관리',
+                // PC-COM-2205(부서조회)/2207(전체 사용자)은 이 컴포넌트 안의 팝업이라 같은 파일을
+                // 가리킨다 — screenGroup 을 공통으로 줘서 팝업 오픈/URL 동기화 시 리마운트되지
+                // 않게 한다(PC-LPO-0701~0714, PM-COM-0101/0102 와 동일 패턴, Layout.vue 참고).
+                screenGroup: 'PC-COM-2204',
+            }
+        },
+        {
+            // PC-COM-2204 와 같은 파일을 가리킨다 — useAutoTrigger 로 이 화면ID에 진입하면
+            // "부서조회" 팝업이 바로 열린 상태로 보인다. 어느 권한 행에 대한 조회인지는 URL만으로
+            // 알 수 없어(비대칭 팝업, CLAUDE.md §3 참고) 특정 행을 물지 않고 그냥 팝업만 연다 —
+            // 퍼블리싱 검수 단계에서 화면ID 단위로 직접 열어볼 수 있게 하는 용도.
+            path: '/views/com/PC-COM-2205',
+            name: 'PC-COM-2205',
+            component: () => import('../views/com/PC-COM-2204/PC-COM-2204.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '부서조회',
+                screenGroup: 'PC-COM-2204',
+            }
+        },
+        {
+            // PC-COM-2204 와 같은 파일을 가리킨다 — "전체 사용자" 팝업만 독립적으로 연다
+            // (실제로는 부서조회 팝업 안에서 여는 하위 팝업이지만, GenericDialog2 는 각자 open
+            // prop 으로 따로 열리므로 부서조회를 같이 열 필요는 없다).
+            path: '/views/com/PC-COM-2207',
+            name: 'PC-COM-2207',
+            component: () => import('../views/com/PC-COM-2204/PC-COM-2204.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '전체 사용자',
+                screenGroup: 'PC-COM-2204',
             }
         },
         {

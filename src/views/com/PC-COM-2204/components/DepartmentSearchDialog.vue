@@ -52,6 +52,8 @@ function onSelectionChanged(rows: any[]) {
         size="sm"
         class="!space-y-0 ml-auto w-60"
         placeholder="부서조회"
+        label="부서 조회어"
+        label-class="sr-only"
         :icon="searchIcon"
         icon-class="size-5"
         icon-label="검색"
@@ -77,7 +79,11 @@ function onSelectionChanged(rows: any[]) {
     <FlexRow class="gap-4">
       <FlexCol :class="['!flex-none !w-[22rem]', styles.narrowCol]">
         <h3 class="mb-2 text-[1.4rem] font-semibold">부서 정보</h3>
-        <ul class="max-h-80 overflow-y-auto border-t border-[var(--Text-body_0)]">
+        <div class="grid grid-cols-2 border-t border-b border-[var(--Text-body_0)] bg-[var(--Background-gray01)] py-2 text-[1.3rem] font-semibold text-[var(--Text-body_1)]">
+          <span class="text-center">소속관서</span>
+          <span class="border-l border-[var(--Border_gray03)] text-center">소속부서</span>
+        </div>
+        <ul class="max-h-80 overflow-y-auto">
           <li v-for="node in deptList" :key="`${node.station}-${node.dept}`">
             <button
               type="button"

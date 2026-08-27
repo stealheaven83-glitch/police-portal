@@ -9,6 +9,7 @@ import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import LayoutSplit from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
+import { useAutoTrigger, type ScreenTriggerMap } from '@/composables/useAutoTrigger'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { usePermissionManagement, PermissionManagementKey, type PermissionRow } from './composable/PC-COM-2204'
@@ -30,8 +31,32 @@ const navItems = [
 const store = usePermissionManagement()
 provide(PermissionManagementKey, store)
 
-const { permissions, activePermission, activePermissionKey, menuPermissions, selectPermission, addPermission, openDeptSearch } =
-  store
+const {
+  permissions,
+  activePermission,
+  activePermissionKey,
+  menuPermissions,
+  selectPermission,
+  addPermission,
+  openDeptSearch,
+  deptSearchOpen,
+  allUsersOpen,
+} = store
+
+/**
+ * PC-COM-2205(부서조회)/2207(전체 사용자)는 특정 권한 행을 선택해야 여는 팝업이라 어느 행인지는
+ * URL로 못 담는다(비대칭 팝업, CLAUDE.md §3) — 그래서 행 데이터는 물지 않고 "열림 여부"만
+ * 화면ID와 동기화한다. 퍼블리싱 검수 단계에서 화면ID 단위로 바로 열어볼 수 있게 하는 용도.
+ */
+const screenTriggers: ScreenTriggerMap = {
+  'PC-COM-2204': [],
+  'PC-COM-2205': [[deptSearchOpen, true]],
+  // 전체 사용자(2207)는 부서조회(2205) 안에서 여는 하위 팝업이라 실제로도 deptSearchOpen 이
+  // 같이 true 다 — 0703(0701/0702 의 하위팝업)과 같은 패턴으로, 부모 조건을 포함해야
+  // "더 구체적인 화면ID"로 인식돼 URL 이 2207까지 따라간다(안 그러면 조건 개수가 같아서 2205 에 묶인다).
+  'PC-COM-2207': [[deptSearchOpen, true], [allUsersOpen, true]],
+}
+useAutoTrigger(screenTriggers)
 
 const permissionKeyword = ref('')
 const searchIcon = '/portal/asset/images/icon/ico_seach_black_20.svg'
@@ -163,7 +188,7 @@ useBottomTabSetup({
           </span>
         </template>
         <template #actions>
-          <Button type="button" variant="primary" size="sm" @click="onSaveMenuPermissions">저장</Button>
+          <Button type="button" class="w-25" variant="primary" size="sm" @click="onSaveMenuPermissions">저장</Button>
         </template>
 
         <TabulatorGrid
