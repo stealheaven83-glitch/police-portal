@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { provide, ref } from 'vue'
 import { ChevronLeft, ChevronRight } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
@@ -15,9 +15,10 @@ import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
 import { Checkbox } from '@/components/custom/checkbox'
 import { Button } from '@/components/custom/button'
 import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
-import { useWorkSchedule, timeSlots, teamOptions } from './composable/useWorkSchedule'
+import { useWorkSchedule, WorkScheduleKey, timeSlots, teamOptions } from './composable/useWorkSchedule'
 import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutHeader from '@/components/custom/content-layout/layoutHeader.vue'
+import WorkerAddDialog from './components/WorkerAddDialog.vue'
 
 const navItems = [
   { label: '홈', path: '/' },
@@ -26,6 +27,9 @@ const navItems = [
   { label: '근무일지(甲)', path: '/lpo' },
   { label: '근무지정표작성' },
 ]
+
+const workSchedule = useWorkSchedule()
+provide(WorkScheduleKey, workSchedule)
 
 const {
   workDate,
@@ -37,13 +41,12 @@ const {
   scheduleRows,
   importantNotes,
   targetDate,
-  addRegularWorker,
-  addVolunteerWorker,
   removeVolunteerWorkers,
   addIncidentWorker,
   removeIncidentWorkers,
   shiftWorkDate,
-} = useWorkSchedule()
+  openWorkerAddDialog,
+} = workSchedule
 
 const departmentTree: DepartmentNode[] = [
   {
@@ -170,7 +173,7 @@ function openAssignCell(rowLabel: string, slot: string) {
           <div class="flex items-end justify-between my-2">
             <SelectField v-model="regularTeam" :options="teamOptions" size="sm" trigger-class="w-25" />
             <div class="group-gap2">
-              <Button type="button" variant="secondary" size="xs" @click="addRegularWorker">추가</Button>
+              <Button type="button" variant="secondary" size="xs" @click="openWorkerAddDialog('regular')">추가</Button>
               <Button type="button" variant="primary" size="xs" @click="onSave">저장</Button>
             </div>
           </div>
@@ -212,8 +215,8 @@ function openAssignCell(rowLabel: string, slot: string) {
           <div class="flex items-end justify-between mb-2">
             <h4>자원근무자</h4>
             <div class="group-gap2">
-              <Button type="button" variant="tertiary2" size="xs" @click="addVolunteerWorker">삭제</Button>
-              <Button type="button" variant="secondary" size="xs" @click="onSave">추가</Button>
+              <Button type="button" variant="tertiary2" size="xs" @click="removeSelectedVolunteers">삭제</Button>
+              <Button type="button" variant="secondary" size="xs" @click="openWorkerAddDialog('volunteer')">추가</Button>
             </div>
           </div>
           <table class="table-style1">
@@ -362,6 +365,7 @@ function openAssignCell(rowLabel: string, slot: string) {
 
   <EmptyStubDialog v-model:open="manageDialogOpen" :title="manageDialogTitle" description="아직 준비 중인 관리 화면입니다." />
   <EmptyStubDialog v-model:open="assignDialogOpen" :title="assignDialogTitle" description="근무자를 선택해 배정합니다." />
+  <WorkerAddDialog />
 </template>
 
 <style scoped>

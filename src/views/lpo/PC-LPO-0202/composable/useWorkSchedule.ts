@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, type InjectionKey } from 'vue'
 
 export interface SelectOption {
   label: string
@@ -40,6 +40,18 @@ export interface ScheduleRow {
   cells: string[][]
 }
 
+/** 근무자 추가 팝업(PC-LPO-0204) 조회 결과 한 행 */
+export interface WorkerCandidate {
+  id: number
+  rank: string
+  name: string
+  /** 관서장 확인 여부. 체크박스로 표시되며, 값이 없는 행은 빈칸으로 둔다 */
+  dept?: boolean
+}
+
+/** 근무자 추가 팝업에서 고른 인원을 어느 목록에 담을지 */
+export type WorkerAddTarget = 'regular' | 'volunteer' | 'incident'
+
 export const timeSlots = [
   '08:30~09:00', '09:00~10:00', '10:00~11:00', '11:00~12:00',
   '12:00~13:00', '13:00~14:00', '14:00~15:00', '15:00~16:00',
@@ -59,6 +71,15 @@ function emptyCells(): string[][] {
 function fixedCells(names: string[]): string[][] {
   return timeSlots.map(() => [...names])
 }
+
+// TODO: API 연동 전까지 사용하는 더미 데이터.
+const WORKER_POOL: WorkerCandidate[] = [
+  { id: 1, rank: '경위', name: '김철수', dept: false },
+  { id: 2, rank: '경사', name: '이영희' },
+  { id: 3, rank: '순경', name: '박민수' },
+  { id: 4, rank: '경장', name: '정지훈' },
+  { id: 5, rank: '경위', name: '최유리' },
+]
 
 export function useWorkSchedule() {
   const workDate = ref('2026.08.11.')
@@ -141,6 +162,68 @@ export function useWorkSchedule() {
     void days
   }
 
+  /* ------------------------------------------------------------------ *
+   * 근무자 추가 팝업(PC-LPO-0204) — 자원근무자/사고자 섹션의 "추가" 버튼에서 연다.
+   * 검색 조건 없이 WORKER_POOL 전체를 보여주고, 고른 인원을 그 섹션의
+   * 목록(volunteerWorkers/incidentWorkers)에 추가한다.
+   * ------------------------------------------------------------------ */
+  const workerAddDialogOpen = ref(false)
+  const workerAddTarget = ref<WorkerAddTarget>('volunteer')
+  const workerCandidates = ref<WorkerCandidate[]>([])
+
+  function searchWorkerCandidates() {
+    workerCandidates.value = WORKER_POOL.map((w) => ({ ...w }))
+  }
+
+  function openWorkerAddDialog(target: WorkerAddTarget) {
+    workerAddTarget.value = target
+    searchWorkerCandidates()
+    workerAddDialogOpen.value = true
+  }
+
+  function confirmWorkerAdd(selected: WorkerCandidate[]) {
+    if (workerAddTarget.value === 'regular') {
+      let nextId = regularWorkers.value.length ? Math.max(...regularWorkers.value.map((w) => w.id)) + 1 : 1
+      regularWorkers.value = [
+        ...regularWorkers.value,
+        ...selected.map((w) => ({
+          id: nextId++,
+          group: '',
+          rank: w.rank,
+          name: w.name,
+          assignCount: 0,
+        })),
+      ]
+    } else if (workerAddTarget.value === 'volunteer') {
+      let nextId = volunteerWorkers.value.length ? Math.max(...volunteerWorkers.value.map((w) => w.id)) + 1 : 1
+      volunteerWorkers.value = [
+        ...volunteerWorkers.value,
+        ...selected.map((w) => ({
+          id: nextId++,
+          rank: w.rank,
+          name: w.name,
+          volunteerType: '자원근무',
+          startTime: '',
+          endTime: '',
+        })),
+      ]
+    } else {
+      let nextId = incidentWorkers.value.length ? Math.max(...incidentWorkers.value.map((w) => w.id)) + 1 : 1
+      incidentWorkers.value = [
+        ...incidentWorkers.value,
+        ...selected.map((w) => ({
+          id: nextId++,
+          rank: w.rank,
+          name: w.name,
+          reason: '',
+          startTime: '',
+          endTime: '',
+        })),
+      ]
+    }
+    workerAddDialogOpen.value = false
+  }
+
   return {
     workDate,
     shift,
@@ -157,5 +240,16 @@ export function useWorkSchedule() {
     addIncidentWorker,
     removeIncidentWorkers,
     shiftWorkDate,
+
+    workerAddDialogOpen,
+    workerAddTarget,
+    workerCandidates,
+    searchWorkerCandidates,
+    openWorkerAddDialog,
+    confirmWorkerAdd,
   }
 }
+
+export type WorkScheduleStore = ReturnType<typeof useWorkSchedule>
+/** PC-LPO-0202.vue 에서 provide 하고, components/WorkerAddDialog.vue 가 inject 해서 같은 인스턴스를 공유한다. */
+export const WorkScheduleKey: InjectionKey<WorkScheduleStore> = Symbol('PC-LPO-0202-work-schedule')

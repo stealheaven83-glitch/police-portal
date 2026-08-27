@@ -3,7 +3,6 @@ import type { VNode, App } from 'vue'
 import ConfirmDialog2 from '../../components/custom/dialog/ConfirmDialog2.vue'
 import AlertDialog2 from '../../components/custom/dialog/AlertDialog2.vue'
 import FormDialog from '../../components/custom/dialog/FormDialog.vue'
-import WorkerSelectDialog from '../../components/custom/dialog/WorkerSelectDialog.vue'
 
 
 interface ConfirmOptions {
@@ -41,19 +40,6 @@ interface FormDialogResult<T = any> {
   value?: T
 }
 
-interface WorkerSelectOptions {
-  title?: string
-  subtitle?: string
-  btnOk?: string
-  btnCancel?: string
-}
-
-interface WorkerSelectResult {
-  confirmed: boolean
-  value?: any[]
-}
-
-
 
 /**
  * 확인 다이얼로그를 표시합니다.
@@ -70,7 +56,7 @@ function showConfirmDialog(options: ConfirmOptions): Promise<DialogResult> {
     const dialogOptions = {
       title: options.title || '확인',
       subtitle: options.subtitle,
-      description: options.description || '계속 진행하시겠습니까?',
+      description: options.description,
       btnOk: options.btnOk || '확인',
       btnCancel: options.btnCancel || '취소'
     }
@@ -111,51 +97,6 @@ function showConfirmDialog(options: ConfirmOptions): Promise<DialogResult> {
     }
   })
 }
-
-function showWorkerSelectDialog(options: WorkerSelectOptions): Promise<WorkerSelectResult> {
-  return new Promise((resolve) => {
-    const dialogContainer = document.createElement('div')
-    document.body.appendChild(dialogContainer)
-
-    const dialogOptions = {
-      title: options.title || '근무자 추가',
-      subtitle: options.subtitle,
-      btnOk: options.btnOk || '저장',
-      btnCancel: options.btnCancel || '닫기',
-    }
-
-    const dialogApp = createApp({
-      render() {
-        return h(WorkerSelectDialog, {
-          ...dialogOptions,
-          onVnodeMounted: (vnode: VNode) => {
-            setTimeout(() => {
-              if (vnode.component && vnode.component.exposed) {
-                vnode.component.exposed.openDialog()
-                  .onOk((value: any) => {
-                    resolve({ confirmed: true, value })
-                    destroyDialog()
-                  })
-                  .onCancel(() => {
-                    resolve({ confirmed: false })
-                    destroyDialog()
-                  })
-              }
-            }, 0)
-          }
-        })
-      }
-    })
-
-    dialogApp.mount(dialogContainer)
-
-    const destroyDialog = () => {
-      dialogApp.unmount()
-      document.body.removeChild(dialogContainer)
-    }
-  })
-}
-
 
 /**
  * 알림 다이얼로그를 표시합니다.
@@ -276,7 +217,6 @@ export function useDialog() {
       confirm: showConfirmDialog,
       alert: showAlertDialog,
       form: showFormDialog,
-      workerSelect: showWorkerSelectDialog
     }
   }
 
@@ -291,7 +231,6 @@ declare global {
       confirm: (options: ConfirmOptions) => Promise<DialogResult>
       alert: (options: AlertOptions) => Promise<void>
       form: <T = any>(options: FormDialogOptions<T>) => Promise<FormDialogResult<T>>
-      workerSelect: (options: WorkerSelectOptions) => Promise<WorkerSelectResult>
     }
   }
 }
@@ -306,7 +245,6 @@ export default {
       confirm: showConfirmDialog,
       alert: showAlertDialog,
       form: showFormDialog,
-      workerSelect: showWorkerSelectDialog
     }
   }
 }

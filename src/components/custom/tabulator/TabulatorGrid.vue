@@ -93,6 +93,13 @@ interface Props {
    * 행을 클릭해 고르는 형태라 'single' 을 쓴다.
    */
   selectMode?: 'none' | 'single' | 'multi' | 'checkbox'
+  /**
+   * 일괄 선택 체크박스 컬럼(맨 앞)의 헤더에 넣을 문구(예: '추가여부').
+   * 넘기지 않으면 기존처럼 전체선택 체크박스만 보인다.
+   * 넘기면 전체선택 체크박스 대신 그 문구를 일반 컬럼 헤더처럼 표시한다
+   * (행별 체크박스는 그대로 동작 — 전체선택만 빠진다). 좁은 컬럼 폭도 글자에 맞게 넓힌다.
+   */
+  selectColumnTitle?: string
   /** 데이터 0건일 때 표시할 문구 */
   placeholder?: string
   resizableColumns?: boolean
@@ -569,7 +576,12 @@ function switchCellFormatter(columnKey: string) {
 
 function checkboxCellFormatter(columnKey: string) {
   return (cell: any) => {
-    const value = ref(!!cell.getValue())
+    // 값이 null/undefined 인 행은 체크박스를 그리지 않고 빈 칸으로 둔다(badgeCellFormatter 와 같은 규칙).
+    // 명시적으로 true/false 를 준 행만 체크박스가 보인다.
+    const raw = cell.getValue()
+    if (raw === null || raw === undefined) return document.createElement('div')
+
+    const value = ref(!!raw)
 
     return mountCell(cell, columnKey, 'grid-checkbox-cell', () =>
       h(Checkbox, {
@@ -690,10 +702,14 @@ function buildColumns() {
   return [
     {
       formatter: rowCheckboxFormatter,
-      titleFormatter: headerCheckboxFormatter,
+      // selectColumnTitle 을 주면 헤더에 전체선택 체크박스 대신 그 문구만 보통 컬럼처럼 표시한다
+      // (행별 체크박스는 그대로 동작 — 전체선택만 빠진다).
+      ...(props.selectColumnTitle
+        ? { title: props.selectColumnTitle }
+        : { titleFormatter: headerCheckboxFormatter }),
       hozAlign: 'center',
       headerSort: false,
-      width: 44,
+      width: props.selectColumnTitle ? 80 : 44,
       frozen: true,
       responsive: 0,
     },

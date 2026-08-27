@@ -463,9 +463,12 @@ const router = createRouter({
         {
             path: '/views/lpo/PC-LPO-0204',
             name: 'PC-LPO-0204',
-            component: () => import('../views/lpo/PC-LPO-0204/PC-LPO-0204.vue'),
+            // 근무자 추가관리 팝업(PC-LPO-0204)은 아직 별도 화면이 없고, PC-LPO-0202(근무지정표작성)
+            // 안의 팝업으로만 존재한다. PC-LPO-0701~0714 가 한 컴포넌트를 여러 화면ID 라우트로
+            // 공유하는 것과 같은 방식으로, 이 라우트도 PC-LPO-0202.vue 를 그대로 가리킨다.
+            component: () => import('../views/lpo/PC-LPO-0202/PC-LPO-0202.vue'),
             meta: {
-                layout: 'MainLayout',
+                layout: 'WorkLayout',
                 title: '근무자 추가관리 팝업'
             }
         },
