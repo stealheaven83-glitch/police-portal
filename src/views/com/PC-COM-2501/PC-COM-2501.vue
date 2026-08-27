@@ -7,10 +7,13 @@ import SelectField from '@/components/custom/select/SelectField.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useAppVersionList, searchConditionOptions } from './composable/PC-COM-2501'
 
 defineOptions({ name: 'PcCom2501' })
+
+useSideMenuSetup('systemAdmin')
 
 const navItems = [
   { label: '홈', path: '/' },
@@ -53,20 +56,17 @@ useBottomTabSetup({
       <Breadcrumb :items="navItems" />
     </template>
   </PageHeader>
-
-  <div>
-    <SearchWrapper>
-      <template #form>
-        <div class="search-area">
-          <SelectField v-model="searchCondition" label="검색조건" :options="searchConditionOptions" size="sm" triggerClass="w-35" />
-          <InputField2 v-model="keyword" size="sm" inputClass="w-100" placeholder="검색어를 입력해주세요." />
-        </div>
-      </template>
-      <template #btns>
-        <Button variant="secondary" size="sm" class="w-25">조회</Button>
-      </template>
-    </SearchWrapper>
-  </div>
+  <SearchWrapper>
+    <template #form>
+      <div class="search-area">
+        <SelectField v-model="searchCondition" label="검색조건" :options="searchConditionOptions" size="sm" triggerClass="w-35" />
+        <InputField2 v-model="keyword" size="sm" inputClass="w-100" placeholder="검색어를 입력해주세요." />
+      </div>
+    </template>
+    <template #btns>
+      <Button variant="secondary" size="sm" class="w-25">조회</Button>
+    </template>
+  </SearchWrapper>
 
   <div class="list-actions">
     <Button type="button" variant="primary" size="sm" class="w-25">신규</Button>

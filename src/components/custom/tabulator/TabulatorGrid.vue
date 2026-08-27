@@ -510,13 +510,27 @@ function inputCellFormatter(columnKey: string) {
  * (클래스만 복사하지 않고 컴포넌트를 그대로 쓰므로 Button 스펙이 바뀌면 함께 반영됨)
  * ------------------------------------------------------------------ */
 function buttonCellFormatter(col: TabulatorGridColumn, columnKey: string) {
-  return (cell: any) =>
-    mountCell(cell, columnKey, 'grid-button-cell', () => {
+  return (cell: any) => {
       const rowData = cell.getRow().getData()
       // 라벨은 고정 문자열뿐 아니라 행 데이터로 만들어 쓸 수도 있다(셀 값을 버튼 텍스트로 쓰는 경우 등)
       const label = typeof col.buttonLabel === 'function' ? col.buttonLabel(rowData, cell) : col.buttonLabel
 
-      return h(
+    // buttonVisible 이 false 인 행은 버튼 모양(테두리/배경) 없이 라벨 텍스트만 보여준다.
+    // 클릭 핸들러는 그대로 살려서, "값이 없으면 버튼으로 고르고 값이 생기면 그 값 자체를
+    // 눌러서 다시 바꾸는" 패턴을 Vue 컴포넌트를 새로 mount 하지 않고도 구현할 수 있게 한다.
+    if (col.buttonVisible?.(rowData) === false) {
+      const span = document.createElement('span')
+      span.textContent = label ?? ''
+      span.style.cursor = 'pointer'
+      span.addEventListener('click', (e) => {
+        e.stopPropagation()
+        col.onButtonClick?.(rowData, cell)
+      })
+      return span
+    }
+
+    return mountCell(cell, columnKey, 'grid-button-cell', () =>
+      h(
         Button,
         {
           variant: col.buttonVariant ?? 'tertiary',
@@ -529,8 +543,9 @@ function buttonCellFormatter(col: TabulatorGridColumn, columnKey: string) {
           },
         },
         () => label ?? '버튼',
+      ),
       )
-    })
+  }
 }
 
 /* ------------------------------------------------------------------ *
@@ -972,6 +987,16 @@ defineExpose({
   selectAll: () => table?.selectRow(),
   deselectAll: () => table?.deselectRow(),
   selectRow: (index: any) => table?.selectRow(index),
+  /**
+   * 조건에 맞는 행만 선택 상태로 만든다(기존 선택은 해제).
+   * 다른 목록에서 고른 값에 맞춰 체크 상태를 맞출 때 쓴다.
+   */
+  selectWhere: (match: (rowData: any) => boolean) => {
+    table?.deselectRow()
+    table?.getRows().forEach((row: any) => {
+      if (match(row.getData())) row.select()
+    })
+  },
 
   /* 컬럼 */
   showColumn: (field: string) => table?.showColumn(field),

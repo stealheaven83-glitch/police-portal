@@ -51,6 +51,13 @@ export interface TabulatorGridColumn {
   buttonClass?: string
   /** 행 데이터를 받아 버튼 비활성 여부를 반환 */
   buttonDisabled?: (rowData: any) => boolean
+  /**
+   * 행 데이터를 받아 이 행에서 버튼을 실제 버튼 모양으로 보여줄지 결정한다(기본 true).
+   * false 를 반환하면 버튼 테두리/배경 없이 buttonLabel 텍스트만 표시한다(클릭은 그대로 동작) —
+   * 예: 값이 비어 있을 때만 "선택" 버튼으로 보이고, 값이 채워지면 그 값 자체가 텍스트로만
+   * 보이면서 눌러서 바꿀 수 있는 패턴.
+   */
+  buttonVisible?: (rowData: any) => boolean
   /** 버튼 클릭 핸들러 */
   onButtonClick?: (rowData: any, cell: any) => void
 

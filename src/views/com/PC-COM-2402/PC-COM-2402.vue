@@ -92,10 +92,10 @@ useBottomTabSetup({
     <SearchWrapper>
       <template #form>
         <div class="search-area">
-          <div class="date-from-to">
-            <DatePicker v-model="searchFrom" label="시작일" size="sm" inputClass="w-40" />
-            <span aria-hidden="true">~</span>
-            <DatePicker v-model="searchTo" label="종료일" size="sm" inputClass="w-40" />
+          <div class="group-gap2">
+            <DatePicker v-model="searchFrom" label="시작일" size="sm" class="!space-y-0" input-class="w-[16rem]" />
+            <span>~</span>
+            <DatePicker v-model="searchTo" label="종료일" size="sm" class="!space-y-0" input-class="w-[16rem]" />
           </div>
         </div>
       </template>

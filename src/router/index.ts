@@ -136,6 +136,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/views/com/PC-COM-2204',
+            name: 'PC-COM-2204',
+            component: () => import('../views/com/PC-COM-2204/PC-COM-2204.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '권한 관리',
+            }
+        },
+        {
             path: '/',
             name: 'home',
             component: () => import('../views/Main.vue'),
@@ -277,6 +286,15 @@ const router = createRouter({
             meta: {
                 layout: 'MainLayout',
                 title: 'Editor'
+            }
+        },
+        {
+            path: '/component/tree-view',
+            name: 'tree-view',
+            component: () => import('../views/component-sample/treeView.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'TreeView 가이드'
             }
         },
         {
@@ -580,6 +598,24 @@ const router = createRouter({
             meta: {
                 layout: 'MainLayout',
                 title: 'Info Table'
+            }
+        },
+        {
+            path: '/treeView',
+            name: 'treeView',
+            component: () => import('../views/component-sample/treeView.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Info Table'
+            }
+        },        
+        {
+            path: '/component/flex-grid',
+            name: 'flex-grid',
+            component: () => import('../views/component-sample/flex-grid.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Flex Grid'
             }
         },
         {

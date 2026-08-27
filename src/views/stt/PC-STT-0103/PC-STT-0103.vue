@@ -50,7 +50,7 @@
       <LayoutHeader title="인사 현황" >
       </LayoutHeader>
       <!-- 헤더(60px)를 제외한 나머지 영역을 그리드가 채우고, 넘치면 세로 스크롤 -->
-      <div class="h-[calc(100%-60px)] overflow-auto p-[2rem]">
+
         <TableWrapper
           :columns="listColumns"
           :items="pagedListRows"
@@ -65,7 +65,7 @@
           @update:items-per-page="(size: number) => { itemsPerPage = size; currentPage = 1 }"
           @select-row="onSelectRow"
         />
-      </div>
+
     </template>
     <template #layout-2>
       <LayoutHeader title="인사 상세" />

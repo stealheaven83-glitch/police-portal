@@ -231,7 +231,12 @@ export const mainLayoutConfig: LayoutConfig = {
           path: '/infoTable',
           title: 'Info Table',
           icon: MessageCircleQuestionIcon,
-        },        
+        },
+        {
+          path: '/component/flex-grid',
+          title: 'Flex Grid',
+          icon: Square,
+        },
       ]
     }
   ],

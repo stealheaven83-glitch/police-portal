@@ -1,0 +1,22 @@
+/*
+ * FlexRow / FlexCol — bootstrap 의 flexbox grid(row/col)를 본떠 이 프로젝트 CSS Module로
+ * 직접 구현한 범용 레이아웃 프리미티브. 실제 bootstrap 은 설치하지 않는다 — 전역 클래스명
+ * (.row/.col/.btn 등)이 Tailwind/기존 커스텀 컴포넌트와 충돌할 위험이 커서, 동작 방식만
+ * 옮겨왔다.
+ * border 는 이 프로젝트 전역 리셋(police-style.css)에서 이미 모든 div 에 box-sizing:
+ * border-box 를 적용해두므로, FlexCol 에 border 를 줘도 폭이 밖으로 늘어나 갑자기
+ * 줄바꿈되는 일은 없다.
+ * 1rem = 10px 기준 (전역 리셋).
+ */
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col {
+  flex: 1 1 0%;
+  /* breakpoint 없이 폭에 따라 자연스럽게 다음 줄로 떨어지는 기준값.
+     특정 칸만 다르게 주려면 그 FlexCol 에 style="--flex-col-min-w: ..." 로 오버라이드한다. */
+  min-width: var(--flex-col-min-w, 20rem);
+}
