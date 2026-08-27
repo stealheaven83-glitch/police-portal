@@ -95,7 +95,7 @@ export const systemAdminMenu: SideMenuConfig = {
       children: [
         { name: '사용자 권한관리', path: '/views/com/PC-COM-2201' },
         { name: '메뉴관리' },
-        { name: '권한관리' },
+        { name: '권한관리', path: '/views/com/PC-COM-2204' },
         { name: '코드관리' },
       ],
     },
@@ -108,7 +108,7 @@ export const systemAdminMenu: SideMenuConfig = {
         { name: '팝업 관리', path: '/views/com/PC-COM-2402' },
       ],
     },
-    { name: '앱 관리', children: [{ name: '앱관리' }] },
+    { name: '앱 관리', children: [{ name: '앱관리', path: '/views/com/PC-COM-2501' }] },
   ],
 }
 

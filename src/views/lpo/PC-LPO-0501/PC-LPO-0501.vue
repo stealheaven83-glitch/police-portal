@@ -97,8 +97,8 @@ useBottomTabSetup({
   </div>
 
   
-  <div class="list-actions justify-between items-end">
-    <div>
+  <div class="list-actions space-between items-end">
+    <div class="list-actions-txt">
       <p>＊ 출동업무수당 지급대상 자동체크는 매일 오전 08시~12시에 반영됩니다. 12시 이후에 확인 후 작성하세요</p>
       <p>＊ 출동업무수당 자동체크 된 지급대상 사건과 임의등록 사건 만 표시됩니다.</p>
     </div>

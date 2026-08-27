@@ -49,10 +49,9 @@ const workTypeOptions = [
   { label: '교대', value: 'shift' },
 ]
 
-// table cell 처럼 보이게 하는 라벨/값 셀 공통 class. --flex-col-min-w: 0 으로 FlexCol 기본
-// min-width(20rem)를 꺼서, 이 좁은 셀들이 표 폭 안에서 제멋대로 줄바꿈되지 않게 한다
-// (줄바꿈은 바깥 그룹 FlexCol 단위로만 일어나야 한다).
-const cellLabel = '!flex-none !w-[11rem] flex items-center px-3 py-2 text-[1.4rem] font-semibold bg-[var(--Background-gray01)] text-[var(--Text-body_0)]'
+// table cell 처럼 보이게 하는 라벨/값 셀 공통 class. size:'content'/'full' 을 쓰므로
+// min-width 오버라이드나 flex-none 을 따로 줄 필요가 없다(FlexCol 이 알아서 처리).
+const cellLabel = 'flex items-center px-3 py-2 text-[1.4rem] font-semibold bg-[var(--Background-gray01)] text-[var(--Text-body_0)] whitespace-nowrap'
 const cellValue = 'flex items-center flex-wrap gap-2 px-3 py-2 bg-white'
 </script>
 
@@ -149,7 +148,7 @@ const cellValue = 'flex items-center flex-wrap gap-2 px-3 py-2 bg-white'
           <p class="text-muted-foreground text-sm">
             자동 균등분할이 아니라 "12를 기준 단위로 몇을 차지할지"를 직접 지정하고 싶을 때
             <code>size</code>를 씁니다(bootstrap의 <code>col-4</code>와 같은 비율 감각).
-            <code>:size="&#123; default: 4, '761&lt;': 6 &#125;"</code>처럼 객체로 주면, 평소(넓을 때)엔
+            <code>:size="&#123; default: 4, '761&gt;=': 6 &#125;"</code>처럼 객체로 주면, 평소(넓을 때)엔
             4(=33.3%)라 한 줄에 3칸씩, 부모 <code>FlexRow</code>의 실제 렌더 폭이 761px 이하가 되면
             6(=50%)으로 바뀌어 한 줄에 2칸씩 배치됩니다. 미디어쿼리의 기준값(761)은 CSS 변수로 표현이
             안 되는 값이라(브라우저가 지원하지 않음), <code>FlexRow</code>가 <code>ResizeObserver</code>로
@@ -160,23 +159,30 @@ const cellValue = 'flex items-center flex-wrap gap-2 px-3 py-2 bg-white'
             밀려 의도한 폭보다 넓게 렌더링됩니다.
           </p>
           <p class="text-muted-foreground text-sm">
+            breakpoint key는 <b>숫자를 왼쪽에 둔 부등식을 그대로</b> 읽습니다("N 연산자 폭"): <code>'N&lt;'</code>
+            = N &lt; 폭(폭이 N 초과), <code>'N&gt;'</code> = N &gt; 폭(폭이 N 미만), <code>'N&lt;='</code>
+            = 폭이 N 이상, <code>'N&gt;='</code> = 폭이 N 이하. 그래서 "폭이 761 이하일 때"는
+            <code>'761&gt;='</code>로 씁니다 — <code>'761&lt;'</code>이 아닙니다(그건 "761 초과"라
+            정반대 뜻입니다).
+          </p>
+          <p class="text-muted-foreground text-sm">
             <b>주의:</b> 숫자 size는 flex-grow가 0이라 정확히 그 비율만 차지합니다 — 강제개행이
             섞이는 row라면 아래 "size 규칙" 섹션을 먼저 보세요.
           </p>
           <p class="text-sm font-medium">900px 컨테이너 (761보다 넓음 → 4, 3칸)</p>
           <div class="w-[90rem] max-w-full border border-dashed p-2">
             <FlexRow>
-              <FlexCol :size="{ default: 4, '761<': 6 }" class="bg-blue-50 p-2 border">1</FlexCol>
-              <FlexCol :size="{ default: 4, '761<': 6 }" class="bg-blue-50 p-2 border">2</FlexCol>
-              <FlexCol :size="{ default: 4, '761<': 6 }" class="bg-blue-50 p-2 border">3</FlexCol>
+              <FlexCol :size="{ default: 4, '761>=': 6 }" class="bg-blue-50 p-2 border">1</FlexCol>
+              <FlexCol :size="{ default: 4, '761>=': 6 }" class="bg-blue-50 p-2 border">2</FlexCol>
+              <FlexCol :size="{ default: 4, '761>=': 6 }" class="bg-blue-50 p-2 border">3</FlexCol>
             </FlexRow>
           </div>
           <p class="text-sm font-medium">700px 컨테이너 (761 이하 → 6, 2칸)</p>
           <div class="w-[70rem] max-w-full border border-dashed p-2">
             <FlexRow>
-              <FlexCol :size="{ default: 4, '761<': 6 }" class="bg-blue-50 p-2 border">1</FlexCol>
-              <FlexCol :size="{ default: 4, '761<': 6 }" class="bg-blue-50 p-2 border">2</FlexCol>
-              <FlexCol :size="{ default: 4, '761<': 6 }" class="bg-blue-50 p-2 border">3</FlexCol>
+              <FlexCol :size="{ default: 4, '761>=': 6 }" class="bg-blue-50 p-2 border">1</FlexCol>
+              <FlexCol :size="{ default: 4, '761>=': 6 }" class="bg-blue-50 p-2 border">2</FlexCol>
+              <FlexCol :size="{ default: 4, '761>=': 6 }" class="bg-blue-50 p-2 border">3</FlexCol>
             </FlexRow>
           </div>
         </section>
@@ -345,34 +351,33 @@ const cellValue = 'flex items-center flex-wrap gap-2 px-3 py-2 bg-white'
           <p class="text-muted-foreground text-sm">
             실제 화면(관할현황 &gt; 부서정보)처럼 한 행에 라벨-값 쌍 여러 개를 촘촘히 박고,
             "소재지 주소"처럼 라벨 하나가 값 영역 2줄에 걸치는 경우까지 FlexGrid로 만든 예시입니다.
-            "소재지 주소" 라벨을 담은 FlexCol은 <code>grid-row-span</code> 같은 속성이 따로 없어도,
-            FlexRow의 기본 <code>align-items: stretch</code> 덕분에 옆(주소 2줄) 칸 높이에 맞춰
-            자동으로 늘어나서 rowspan처럼 보입니다. 이 좁은 라벨/값 셀들은 FlexCol 기본
-            min-width(20rem)를 그대로 두면 표 폭 안에서 제멋대로 줄바꿈되므로,
-            <code>--flex-col-min-w: 0</code>으로 꺼두고 줄바꿈은 바깥 그룹(FlexCol) 단위에서만
-            일어나게 합니다.
+            라벨은 <code>size:{ default: 'content' }</code>로 텍스트 길이만큼만, 값은
+            <code>size:{ default: 'full' }</code>로 나머지 전부를 차지합니다(grow:0인 content는
+            반드시 full과 짝지어야 한다는 "size 규칙"을 그대로 따른 예시). "소재지 주소" 라벨은
+            <code>grid-row-span</code> 같은 속성 없이도, FlexRow의 기본 <code>align-items: stretch</code>
+            덕분에 옆(주소 2줄) 칸 높이에 맞춰 자동으로 늘어나서 rowspan처럼 보입니다.
           </p>
           <div class="max-w-[100rem] border-l border-t-2 border-[var(--Border_gray03)] border-t-[var(--Text-body_0)]">
             <!-- row 1: 부서명 / 개소년도 / 급지+정원 -->
             <FlexRow class="divide-x divide-[var(--Border_gray03)] border-b border-[var(--Border_gray03)]">
-              <FlexCol>
+              <FlexCol :size="{default: 3, '950>': 6}">
                 <FlexRow class="h-full divide-x divide-[var(--Border_gray03)]">
-                  <FlexCol :class="cellLabel" style="--flex-col-min-w: 0">부서명</FlexCol>
-                  <FlexCol :class="cellValue" style="--flex-col-min-w: 0">{{ dept.deptName }}</FlexCol>
+                  <FlexCol :size="{ default: 'content' }" :class="cellLabel">부서명</FlexCol>
+                  <FlexCol :size="{ default: 'full' }" :class="cellValue">{{ dept.deptName }}</FlexCol>
                 </FlexRow>
               </FlexCol>
-              <FlexCol>
+              <FlexCol :size="{default: 3, '950>': 6}">
                 <FlexRow class="h-full divide-x divide-[var(--Border_gray03)]">
-                  <FlexCol :class="cellLabel" style="--flex-col-min-w: 0">개소년도</FlexCol>
-                  <FlexCol :class="cellValue" style="--flex-col-min-w: 0">
+                  <FlexCol :size="{ default: '100' }" :class="cellLabel">개소년도</FlexCol>
+                  <FlexCol :size="{ default: 'full' }" :class="cellValue">
                     <DatePicker v-model="dept.openYear" size="sm" input-class="w-full max-w-[16rem]" class="!space-y-0" />
                   </FlexCol>
                 </FlexRow>
               </FlexCol>
-              <FlexCol>
+              <FlexCol :size="{default: 3, '950>': 6}">
                 <FlexRow class="h-full divide-x divide-[var(--Border_gray03)]">
-                  <FlexCol :class="cellLabel" style="--flex-col-min-w: 0">급지</FlexCol>
-                  <FlexCol :class="cellValue" style="--flex-col-min-w: 0">
+                  <FlexCol :size="{ default: 'content' }" :class="cellLabel">급지</FlexCol>
+                  <FlexCol :size="{ default: 'full' }" :class="cellValue">
                     <Stepper v-model="dept.gradeLevel" :min="1" :max="9" label="급지" class="w-[12rem]" />
                     <label class="text-[1.4rem] text-[var(--Text-body_1)]">정원</label>
                     <InputField2 v-model="dept.capacity" size="sm" input-class="w-16" class="!space-y-0" />
@@ -382,96 +387,69 @@ const cellValue = 'flex items-center flex-wrap gap-2 px-3 py-2 bg-white'
                   </FlexCol>
                 </FlexRow>
               </FlexCol>
-            </FlexRow>
-
-            <!-- row 2: 소재지 주소(label 2줄 rowspan) / 소재지+경비전화 / 일반전화+경비팩스 -->
-            <FlexRow class="divide-x divide-[var(--Border_gray03)] border-b border-[var(--Border_gray03)]">
-              <FlexCol :class="cellLabel" style="--flex-col-min-w: 0">소재지 주소</FlexCol>
-              <FlexCol>
-                <div class="flex flex-col h-full divide-y divide-[var(--Border_gray03)]">
-                  <div class="flex items-center flex-wrap gap-2 px-3 py-2 bg-white">
-                    <InputField2
-                      v-model="dept.addressRoad"
-                      size="sm"
-                      input-class="w-full max-w-[22rem]"
-                      class="!space-y-0 flex-1 min-w-[14rem]"
-                      placeholder="도로명주소"
-                    />
-                    <Button type="button" variant="tertiary2" size="sm">
-                      <Icon name="search" :size="16" aria-label="" />
-                      주소검색
-                    </Button>
-                  </div>
-                  <div class="flex items-center px-3 py-2 bg-white">
-                    <InputField2 v-model="dept.addressDetail" size="sm" class="!space-y-0 flex-1" placeholder="상세주소" />
-                  </div>
-                </div>
-              </FlexCol>
-              <FlexCol>
-                <div class="flex flex-col h-full divide-y divide-[var(--Border_gray03)]">
-                  <FlexRow class="h-full divide-x divide-[var(--Border_gray03)]">
-                    <FlexCol :class="cellLabel" style="--flex-col-min-w: 0">소재지</FlexCol>
-                    <FlexCol :class="cellValue" style="--flex-col-min-w: 0">
-                      <SelectField v-model="dept.region" :options="regionOptions" size="sm" trigger-class="w-full max-w-[16rem]" class="!space-y-0" placeholder="선택" />
-                    </FlexCol>
-                  </FlexRow>
-                  <FlexRow class="h-full divide-x divide-[var(--Border_gray03)]">
-                    <FlexCol :class="cellLabel" style="--flex-col-min-w: 0">경비전화</FlexCol>
-                    <FlexCol :class="cellValue" style="--flex-col-min-w: 0">
-                      <InputField2 v-model="dept.guardPhone" size="sm" class="!space-y-0 flex-1" placeholder="00-0000-0000" />
-                    </FlexCol>
-                  </FlexRow>
-                </div>
-              </FlexCol>
-              <FlexCol>
-                <div class="flex flex-col h-full divide-y divide-[var(--Border_gray03)]">
-                  <FlexRow class="h-full divide-x divide-[var(--Border_gray03)]">
-                    <FlexCol :class="cellLabel" style="--flex-col-min-w: 0">일반전화</FlexCol>
-                    <FlexCol :class="cellValue" style="--flex-col-min-w: 0">
-                      <InputField2 v-model="dept.phone" size="sm" class="!space-y-0 flex-1" placeholder="00-0000-0000" />
-                    </FlexCol>
-                  </FlexRow>
-                  <FlexRow class="h-full divide-x divide-[var(--Border_gray03)]">
-                    <FlexCol :class="cellLabel" style="--flex-col-min-w: 0">경비팩스</FlexCol>
-                    <FlexCol :class="cellValue" style="--flex-col-min-w: 0">
-                      <InputField2 v-model="dept.guardFax" size="sm" class="!space-y-0 flex-1" placeholder="00-0000-0000" />
-                    </FlexCol>
-                  </FlexRow>
-                </div>
-              </FlexCol>
-            </FlexRow>
-
-            <!-- row 3: 근무형태 / 근무주기 / 주간전종인원 / 야간전종인원 -->
-            <FlexRow class="divide-x divide-[var(--Border_gray03)]">
-              <FlexCol>
+              <FlexCol :size="{default: 3, '950>': 6}">
                 <FlexRow class="h-full divide-x divide-[var(--Border_gray03)]">
-                  <FlexCol :class="cellLabel" style="--flex-col-min-w: 0">근무형태</FlexCol>
-                  <FlexCol :class="cellValue" style="--flex-col-min-w: 0">
-                    <SelectField v-model="dept.workType" :options="workTypeOptions" size="sm" trigger-class="w-full max-w-[16rem]" class="!space-y-0" placeholder="선택" />
+                  <FlexCol :size="{ default: 'content' }" :class="cellLabel">급지</FlexCol>
+                  <FlexCol :size="{ default: 'full' }" :class="cellValue">
+                    <Stepper v-model="dept.gradeLevel" :min="1" :max="9" label="급지" class="w-[12rem]" />
+                    <label class="text-[1.4rem] text-[var(--Text-body_1)]">정원</label>
+                    <InputField2 v-model="dept.capacity" size="sm" input-class="w-16" class="!space-y-0" />
+                    <span class="text-[1.3rem] text-[var(--Text-body_2)] whitespace-nowrap">
+                      경찰관 현원 {{ dept.currentHeadcount }}명
+                    </span>
+                  </FlexCol>
+                </FlexRow>
+              </FlexCol>
+              <FlexCol :size="{default: 3, '950>': 6}">
+                <FlexRow class="h-full divide-x divide-[var(--Border_gray03)]">
+                  <FlexCol :size="{ default: 'content' }" :class="cellLabel">부서명</FlexCol>
+                  <FlexCol :size="{ default: 'full' }" :class="cellValue">{{ dept.deptName }}</FlexCol>
+                </FlexRow>
+              </FlexCol>
+              <FlexCol :size="{default: 3, '950>': 6}">
+                <FlexRow class="h-full divide-x divide-[var(--Border_gray03)]">
+                  <FlexCol :size="{ default: '100' }" :class="cellLabel">개소년도</FlexCol>
+                  <FlexCol :size="{ default: 'full' }" :class="cellValue">
+                    <DatePicker v-model="dept.openYear" size="sm" input-class="w-full max-w-[16rem]" class="!space-y-0" />
+                  </FlexCol>
+                </FlexRow>
+              </FlexCol>
+              <FlexCol :size="{default: 3, '950>': 6}">
+                <FlexRow class="h-full divide-x divide-[var(--Border_gray03)]">
+                  <FlexCol :size="{ default: 'content' }" :class="cellLabel">급지</FlexCol>
+                  <FlexCol :size="{ default: 'full' }" :class="cellValue">
+                    <Stepper v-model="dept.gradeLevel" :min="1" :max="9" label="급지" class="w-[12rem]" />
+                    <label class="text-[1.4rem] text-[var(--Text-body_1)]">정원</label>
+                    <InputField2 v-model="dept.capacity" size="sm" input-class="w-16" class="!space-y-0" />
+                    <span class="text-[1.3rem] text-[var(--Text-body_2)] whitespace-nowrap">
+                      경찰관 현원 {{ dept.currentHeadcount }}명
+                    </span>
+                  </FlexCol>
+                </FlexRow>
+              </FlexCol>
+              <FlexCol :size="{default: 3, '950>': 6}">
+                <FlexRow class="h-full divide-x divide-[var(--Border_gray03)]">
+                  <FlexCol :size="{ default: 'content' }" :class="cellLabel">급지</FlexCol>
+                  <FlexCol :size="{ default: 'full' }" :class="cellValue">
+                    <Stepper v-model="dept.gradeLevel" :min="1" :max="9" label="급지" class="w-[12rem]" />
+                    <label class="text-[1.4rem] text-[var(--Text-body_1)]">정원</label>
+                    <InputField2 v-model="dept.capacity" size="sm" input-class="w-16" class="!space-y-0" />
+                    <span class="text-[1.3rem] text-[var(--Text-body_2)] whitespace-nowrap">
+                      경찰관 현원 {{ dept.currentHeadcount }}명
+                    </span>
                   </FlexCol>
                 </FlexRow>
               </FlexCol>
               <FlexCol>
                 <FlexRow class="h-full divide-x divide-[var(--Border_gray03)]">
-                  <FlexCol :class="cellLabel" style="--flex-col-min-w: 0">근무주기</FlexCol>
-                  <FlexCol :class="cellValue" style="--flex-col-min-w: 0">
-                    <InputField2 v-model="dept.workCycle" size="sm" class="!space-y-0 flex-1" />
-                  </FlexCol>
-                </FlexRow>
-              </FlexCol>
-              <FlexCol>
-                <FlexRow class="h-full divide-x divide-[var(--Border_gray03)]">
-                  <FlexCol :class="cellLabel" style="--flex-col-min-w: 0">주간전종인원</FlexCol>
-                  <FlexCol :class="cellValue" style="--flex-col-min-w: 0">
-                    <InputField2 v-model="dept.dayShiftCount" size="sm" class="!space-y-0 flex-1" />
-                  </FlexCol>
-                </FlexRow>
-              </FlexCol>
-              <FlexCol>
-                <FlexRow class="h-full divide-x divide-[var(--Border_gray03)]">
-                  <FlexCol :class="cellLabel" style="--flex-col-min-w: 0">야간전종인원</FlexCol>
-                  <FlexCol :class="cellValue" style="--flex-col-min-w: 0">
-                    <InputField2 v-model="dept.nightShiftCount" size="sm" class="!space-y-0 flex-1" />
+                  <FlexCol :size="{ default: 'content' }" :class="cellLabel">급지</FlexCol>
+                  <FlexCol :size="{ default: 'full' }" :class="cellValue">
+                    <Stepper v-model="dept.gradeLevel" :min="1" :max="9" label="급지" class="w-[12rem]" />
+                    <label class="text-[1.4rem] text-[var(--Text-body_1)]">정원</label>
+                    <InputField2 v-model="dept.capacity" size="sm" input-class="w-16" class="!space-y-0" />
+                    <span class="text-[1.3rem] text-[var(--Text-body_2)] whitespace-nowrap">
+                      경찰관 현원 {{ dept.currentHeadcount }}명
+                    </span>
                   </FlexCol>
                 </FlexRow>
               </FlexCol>

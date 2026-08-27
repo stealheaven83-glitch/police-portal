@@ -1,0 +1,174 @@
+<script setup lang="ts">
+import { provide, ref } from 'vue'
+import { toast } from 'vue-sonner'
+import PageHeader from '@/components/custom/title/PageHeader.vue'
+import PageTitle from '@/components/custom/title/PageTitle.vue'
+import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
+import InputField2 from '@/components/custom/input/InputField2.vue'
+import { Button } from '@/components/custom/button'
+import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import LayoutSplit from '@/components/custom/content-layout/layoutSplit.vue'
+import LayoutHeader from '@/components/custom/content-layout/layoutHeader.vue'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
+import { usePermissionManagement, PermissionManagementKey, type PermissionRow } from './composable/PC-COM-2204'
+import DepartmentSearchDialog from './components/DepartmentSearchDialog.vue'
+import AllUsersDialog from './components/AllUsersDialog.vue'
+import styles from './style/PC-COM-2204.module.css'
+
+defineOptions({ name: 'PcCom2204' })
+
+useSideMenuSetup('systemAdmin')
+
+const navItems = [
+  { label: '홈', path: '/' },
+  { label: '시스템관리', path: '/com' },
+  { label: '시스템운영관리', path: '/com' },
+  { label: '권한관리' },
+]
+
+const store = usePermissionManagement()
+provide(PermissionManagementKey, store)
+
+const { permissions, activePermission, activePermissionKey, menuPermissions, selectPermission, addPermission, openDeptSearch } =
+  store
+
+const permissionKeyword = ref('')
+const searchIcon = '/portal/asset/images/icon/ico_seach_black_20.svg'
+
+const permissionColumns: TabulatorGridColumn[] = [
+  { title: '권한ID', field: 'id', width: 100, hozAlign: 'center' },
+  { title: '권한명', field: 'name', width: 168, cellType: 'input', hozAlign: 'center' },
+  {
+    title: '비고',
+    field: 'deptNote',
+    width: 130,
+    hozAlign: 'center',
+    cellType: 'button',
+    buttonVariant: 'tertiary',
+    buttonSize: 'xs',
+    // 비어있으면 "부서 조회" 버튼, 이미 지정돼있으면 그 요약 텍스트만(버튼 테두리 없이) 보여준다
+    buttonVisible: (row) => !(row as PermissionRow).deptNote,
+    buttonLabel: (row) => (row as PermissionRow).deptNote || '부서 조회',
+    onButtonClick: (row) => openDeptSearch((row as PermissionRow).rowKey),
+  },
+]
+
+function onPermissionRowClick(_e: Event, row: any) {
+  selectPermission((row.getData() as PermissionRow).rowKey)
+}
+
+const permissionGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
+function onDeleteSelectedPermissions() {
+  permissionGridRef.value?.deleteSelected()
+  toast.success('삭제되었습니다.')
+}
+
+function onSavePermissions() {
+  toast.success('저장되었습니다.')
+}
+
+const menuColumns: TabulatorGridColumn[] = [
+  { title: '메뉴ID', field: 'menuId', width: 100, hozAlign: 'center' },
+  {
+    title: '메뉴명',
+    columns: [
+      { title: '', field: 'level1', hozAlign: 'left' },
+      { title: '', field: 'level2', hozAlign: 'left' },
+      { title: '', field: 'level3', hozAlign: 'left' },
+    ],
+  },
+  { title: '전체', field: 'all', width: 70, hozAlign: 'center', cellType: 'checkbox' },
+  { title: '읽기', field: 'read', width: 70, hozAlign: 'center', cellType: 'checkbox' },
+  { title: '편집', field: 'edit', width: 70, hozAlign: 'center', cellType: 'checkbox' },
+  { title: '출력', field: 'print', width: 70, hozAlign: 'center', cellType: 'checkbox' },
+  { title: '엑셀', field: 'excel', width: 70, hozAlign: 'center', cellType: 'checkbox' },
+]
+
+function onSaveMenuPermissions() {
+  toast.success('저장되었습니다.')
+}
+
+useBottomTabSetup({
+  value: 'PC-COM-2204',
+  label: '권한관리',
+  path: '/views/com/PC-COM-2204',
+  componentName: 'PcCom2204',
+  closable: true,
+})
+</script>
+
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="권한 관리" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+
+  <LayoutSplit :count="2" :widths="[42, 62]" :min-widths="[30, 40]" class="!mt-0">
+    <template #layout-1>
+      <LayoutHeader title="권한설정">
+        <template #right>
+          <Button type="button" class="w-25" variant="tertiary2" size="sm" @click="onDeleteSelectedPermissions">선택삭제</Button>
+          <Button type="button" class="w-25" variant="secondary" size="sm" @click="addPermission">추가</Button>
+          <Button type="button" class="w-25" variant="primary" size="sm" @click="onSavePermissions">저장</Button>
+        </template>
+      </LayoutHeader>
+      <div class="py-5 px-6">
+        <div class="flex justify-end">
+          <InputField2
+            v-model="permissionKeyword"
+            size="sm"
+            inputClass="w-60"
+            placeholder="권한 조회"
+            :icon="searchIcon"
+            icon-class="size-5"
+            icon-label="검색"
+            search
+          />
+        </div>
+        <TabulatorGrid
+          ref="permissionGridRef"
+          v-model:data="permissions"
+          :columns="permissionColumns"
+          select-mode="checkbox"
+          min-height="40rem"
+          class="mt-4"
+          :row-class="(row: any) => (row.rowKey === activePermissionKey ? styles.activeRow : undefined)"
+          placeholder="등록된 권한이 없습니다"
+          @row-click="onPermissionRowClick"
+        />
+      </div>
+    </template>
+
+    <template #layout-2>
+      <LayoutHeader title="메뉴별 권한설정">
+        <template #center>
+          <span class="group-gap2">
+            <span class="dept-name">권한ID</span>
+            <span class="text-[var(--Base--point)] font-semibold">{{ activePermission?.id }}</span>
+            <span class="dept-name">권한명</span>
+            <span>{{ activePermission?.name }}</span>
+          </span>
+        </template>
+        <template #right>
+          <Button type="button" variant="primary" size="sm" @click="onSaveMenuPermissions">저장</Button>
+        </template>
+      </LayoutHeader>
+      <div class="p-4">
+        <TabulatorGrid
+          v-model:data="menuPermissions"
+          :columns="menuColumns"
+          min-height="40rem"
+          placeholder="메뉴 정보가 없습니다"
+        />
+      </div>
+    </template>
+  </LayoutSplit>
+
+  <DepartmentSearchDialog />
+  <AllUsersDialog />
+</template>

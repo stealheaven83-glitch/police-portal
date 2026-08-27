@@ -1,0 +1,14 @@
+/* 권한 목록 그리드에서 "지금 오른쪽 패널에 보이는 행"을 표시하는 강조 스타일.
+   체크박스 선택(다중, 선택삭제용)과는 별개 개념이라 공용 .tabulator-selected 를 못 쓴다.
+   1rem = 10px 기준 (전역 리셋). */
+.activeRow {
+  background-color: var(--Surface-primary);
+}
+
+/* tabulator-cell 은 Tabulator 가 런타임에 붙이는 진짜 전역 클래스라 :global() 로 빠져나가야
+   실제 DOM 클래스와 매칭된다 — CSS Modules 는 기본적으로 이 파일의 모든 클래스 셀렉터를
+   해시로 스코프하기 때문. */
+.activeRow :global(.tabulator-cell) {
+  color: var(--Base-primary);
+  font-weight: 700;
+}

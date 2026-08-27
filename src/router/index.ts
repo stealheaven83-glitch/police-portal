@@ -136,6 +136,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/views/com/PC-COM-2204',
+            name: 'PC-COM-2204',
+            component: () => import('../views/com/PC-COM-2204/PC-COM-2204.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '권한 관리',
+            }
+        },
+        {
             path: '/',
             name: 'home',
             component: () => import('../views/Main.vue'),

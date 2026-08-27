@@ -503,13 +503,27 @@ function inputCellFormatter(columnKey: string) {
  * (클래스만 복사하지 않고 컴포넌트를 그대로 쓰므로 Button 스펙이 바뀌면 함께 반영됨)
  * ------------------------------------------------------------------ */
 function buttonCellFormatter(col: TabulatorGridColumn, columnKey: string) {
-  return (cell: any) =>
-    mountCell(cell, columnKey, 'grid-button-cell', () => {
+  return (cell: any) => {
       const rowData = cell.getRow().getData()
       // 라벨은 고정 문자열뿐 아니라 행 데이터로 만들어 쓸 수도 있다(셀 값을 버튼 텍스트로 쓰는 경우 등)
       const label = typeof col.buttonLabel === 'function' ? col.buttonLabel(rowData, cell) : col.buttonLabel
 
-      return h(
+    // buttonVisible 이 false 인 행은 버튼 모양(테두리/배경) 없이 라벨 텍스트만 보여준다.
+    // 클릭 핸들러는 그대로 살려서, "값이 없으면 버튼으로 고르고 값이 생기면 그 값 자체를
+    // 눌러서 다시 바꾸는" 패턴을 Vue 컴포넌트를 새로 mount 하지 않고도 구현할 수 있게 한다.
+    if (col.buttonVisible?.(rowData) === false) {
+      const span = document.createElement('span')
+      span.textContent = label ?? ''
+      span.style.cursor = 'pointer'
+      span.addEventListener('click', (e) => {
+        e.stopPropagation()
+        col.onButtonClick?.(rowData, cell)
+      })
+      return span
+    }
+
+    return mountCell(cell, columnKey, 'grid-button-cell', () =>
+      h(
         Button,
         {
           variant: col.buttonVariant ?? 'tertiary',
@@ -522,8 +536,9 @@ function buttonCellFormatter(col: TabulatorGridColumn, columnKey: string) {
           },
         },
         () => label ?? '버튼',
+      ),
       )
-    })
+  }
 }
 
 /* ------------------------------------------------------------------ *

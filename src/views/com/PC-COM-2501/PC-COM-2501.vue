@@ -7,10 +7,13 @@ import SelectField from '@/components/custom/select/SelectField.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useAppVersionList, searchConditionOptions } from './composable/PC-COM-2501'
 
 defineOptions({ name: 'PcCom2501' })
+
+useSideMenuSetup('systemAdmin')
 
 const navItems = [
   { label: '홈', path: '/' },
