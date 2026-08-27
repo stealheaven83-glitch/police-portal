@@ -87,7 +87,7 @@
 .noticeHeader {
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 0.8rem;
 }
 
 .notice img {
@@ -99,6 +99,7 @@
 .noticeTitle {
   font-size: 1.5rem;
   font-weight: 700;
+  line-height: 1;
   color: #fff;
 }
 
@@ -173,11 +174,6 @@
   margin-bottom: 1.2rem;
 }
 
-.certBtns {
-  display: flex;
-  gap: 1.2rem;
-}
-
 .certBtn {
   flex: 1 1 0;
 }
@@ -185,14 +181,17 @@
 /*
   -------------------------------------------------------------- 공인인증서 등록 팝업(PM-COM-0102)
   GenericDialog2(공통 컴포넌트)는 건드리지 않는다. 제목↔본문 간격(24px)·본문↔버튼 간격(20px)은
-  GenericDialog2 자체의 헤더 margin-bottom(10px)/푸터 margin-top(10px) 위에, 여기 이 팝업이
+  GenericDialog2 자체의 헤더 margin-bottom(mb-4)/푸터 margin-top(mt-4) 위에, 여기 이 팝업이
   직접 그리는 엘리먼트(.dialogBody, .dialogSubmitBtn)에 "부족한 만큼"만 추가로 얹어서 맞춘다.
+
+  주의: mb-4/mt-4 는 Tailwind 유틸리티라 --spacing: 0.4rem 보정으로 62.5% 리셋과 무관하게
+  항상 16px 로 고정된다(이 파일의 순수 rem 값처럼 1rem=10px 로 스케일되지 않음).
 */
 .dialogBody {
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  margin-top: 1.4rem; /* GenericDialog2 헤더의 10px + 14px = 24px (제목 ↔ 아이디) */
+  margin-top: 0.8rem; /* GenericDialog2 헤더의 16px + 8px = 24px (제목 ↔ 아이디) */
 }
 
 .pwField {
@@ -237,7 +236,7 @@
 
 .dialogSubmitBtn {
   width: 100%;
-  margin-top: 1rem; /* GenericDialog2 푸터의 10px + 10px = 20px (비밀번호 ↔ 로그인 버튼) */
+  margin-top: 0.4rem; /* GenericDialog2 푸터의 16px + 4px = 20px (비밀번호 ↔ 로그인 버튼) */
 }
 
 /* -------------------------------------------------------------- 반응형 */
@@ -246,7 +245,7 @@
     padding: 0;
   }
 
-  .card {
+  .loginCard {
     flex-direction: column;
     max-width: none;
     min-height: 100vh;
@@ -266,9 +265,5 @@
 
   .formArea {
     padding: 3.2rem 2.4rem 4rem;
-  }
-
-  .certBtns {
-    flex-direction: column;
   }
 }

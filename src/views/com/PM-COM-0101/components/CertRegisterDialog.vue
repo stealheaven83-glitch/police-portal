@@ -6,6 +6,7 @@
         label="아이디"
         label-position="top"
         label-class="text-[1.5rem] font-normal text-[var(--Text-body_1)]"
+        class="space-y-0!"
         placeholder="아이디를 입력하세요"
         clearable
         size="md"
@@ -61,10 +62,9 @@
         variant="primary"
         size="md"
         :class="styles.dialogSubmitBtn"
-        :disabled="!canRegister"
         @click="onRegister"
       >
-        로그인
+        공인인증서 등록
       </Button>
     </template>
   </GenericDialog2>
@@ -85,7 +85,7 @@ import styles from '../style/PM-COM-0101.module.css'
 const props = defineProps<{ open: boolean }>()
 const emit = defineEmits<{ (e: 'update:open', value: boolean): void }>()
 
-const { userId, password, pwVisible, canRegister, register, reset } = useCertRegister()
+const { userId, password, pwVisible, register, reset } = useCertRegister()
 
 function onUpdateOpen(value: boolean) {
   emit('update:open', value)

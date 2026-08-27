@@ -49,21 +49,14 @@
             <Checkbox v-model="saveId" label="아이디 저장" :disabled="locked" />
           </div>
 
-          <Button type="submit" variant="primary" size="md" :class="styles.submitBtn" :disabled="!canSubmit">
-            공인인증서 등록
+          <Button type="submit" variant="primary" size="md" :class="styles.submitBtn">
+            로그인
           </Button>
         </form>
 
         <div :class="styles.certSection">
           <p :class="styles.certTitle">행정전자서명 로그인</p>
-          <div :class="styles.certBtns">
-            <Button type="button" variant="tertiary2" size="sm" :class="styles.certBtn" @click="certDialogOpen = true">
-              공인인증서 등록
-            </Button>
-            <Button type="button" variant="secondary" size="sm" :class="styles.certBtn" @click="onCertLogin">
-              공인인증서 로그인
-            </Button>
-          </div>
+          <ButtonGroup :items="certButtons" class="gap-3 max-md:flex-col" />
         </div>
       </div>
     </div>
@@ -78,7 +71,7 @@ import { useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import { Checkbox } from '@/components/custom/checkbox'
-import { Button } from '@/components/custom/button'
+import { Button, ButtonGroup, type ButtonCaseItem } from '@/components/custom/button'
 import { useAutoTrigger, type ScreenTriggerMap } from '@/composables/useAutoTrigger'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import CertRegisterDialog from './components/CertRegisterDialog.vue'
@@ -92,7 +85,7 @@ defineOptions({
 
 const router = useRouter()
 
-const { userId, password, saveId, locked, canSubmit, submit } = useLogin()
+const { userId, password, saveId, locked, submit } = useLogin()
 
 async function onSubmit() {
   await submit(() => {
@@ -111,6 +104,11 @@ function onCertLogin() {
 }
 
 const certDialogOpen = ref(false)
+
+const certButtons: ButtonCaseItem[] = [
+  { key: 'register', label: '공인인증서 등록', variant: 'tertiary2', size: 'sm', class: styles.certBtn, onClick: () => (certDialogOpen.value = true) },
+  { key: 'login', label: '공인인증서 로그인', variant: 'secondary', size: 'sm', class: styles.certBtn, onClick: onCertLogin },
+]
 
 /**
  * 화면ID(PM-COM-0101/0102) ↔ 공인인증서 등록 팝업 상태 동기화 (PC-LPO-0701/0702 와 동일 패턴).
