@@ -8,7 +8,7 @@ import InputField2 from '@/components/custom/input/InputField2.vue'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import LayoutSplit from '@/components/custom/content-layout/layoutSplit.vue'
-import LayoutHeader from '@/components/custom/content-layout/layoutHeader.vue'
+import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { usePermissionManagement, PermissionManagementKey, type PermissionRow } from './composable/PC-COM-2204'
@@ -22,8 +22,8 @@ useSideMenuSetup('systemAdmin')
 
 const navItems = [
   { label: '홈', path: '/' },
-  { label: '시스템관리', path: '/com' },
-  { label: '시스템운영관리', path: '/com' },
+  { label: '시스템관리' },
+  { label: '시스템운영관리' },
   { label: '권한관리' },
 ]
 
@@ -59,7 +59,12 @@ function onPermissionRowClick(_e: Event, row: any) {
 }
 
 const permissionGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
+const selectedPermissionCount = ref(0)
 function onDeleteSelectedPermissions() {
+  if (!selectedPermissionCount.value) {
+    toast.warning('삭제할 권한을 선택해 주세요.')
+    return
+  }
   permissionGridRef.value?.deleteSelected()
   toast.success('삭제되었습니다.')
 }
@@ -110,20 +115,22 @@ useBottomTabSetup({
 
   <LayoutSplit :count="2" :widths="[42, 62]" :min-widths="[30, 40]" class="!mt-0">
     <template #layout-1>
-      <LayoutHeader title="권한설정">
-        <template #right>
+      <LayoutPanel title="권한설정">
+        <template #actions>
           <Button type="button" class="w-25" variant="tertiary2" size="sm" @click="onDeleteSelectedPermissions">선택삭제</Button>
           <Button type="button" class="w-25" variant="secondary" size="sm" @click="addPermission">추가</Button>
           <Button type="button" class="w-25" variant="primary" size="sm" @click="onSavePermissions">저장</Button>
         </template>
-      </LayoutHeader>
-      <div class="py-5 px-6">
+
         <div class="flex justify-end">
           <InputField2
             v-model="permissionKeyword"
             size="sm"
-            inputClass="w-60"
+            input-class="w-60"
+            class="!space-y-0"
             placeholder="권한 조회"
+            label="권한 조회어"
+            label-class="sr-only"
             :icon="searchIcon"
             icon-class="size-5"
             icon-label="검색"
@@ -135,17 +142,18 @@ useBottomTabSetup({
           v-model:data="permissions"
           :columns="permissionColumns"
           select-mode="checkbox"
-          min-height="40rem"
-          class="mt-4"
+          class="mt-4 flex-1"
+          height="100%"
           :row-class="(row: any) => (row.rowKey === activePermissionKey ? styles.activeRow : undefined)"
           placeholder="등록된 권한이 없습니다"
           @row-click="onPermissionRowClick"
+          @row-selection-changed="selectedPermissionCount = $event.length"
         />
-      </div>
+      </LayoutPanel>
     </template>
 
     <template #layout-2>
-      <LayoutHeader title="메뉴별 권한설정">
+      <LayoutPanel title="메뉴별 권한설정">
         <template #center>
           <span class="group-gap2">
             <span class="dept-name">권한ID</span>
@@ -154,18 +162,18 @@ useBottomTabSetup({
             <span>{{ activePermission?.name }}</span>
           </span>
         </template>
-        <template #right>
+        <template #actions>
           <Button type="button" variant="primary" size="sm" @click="onSaveMenuPermissions">저장</Button>
         </template>
-      </LayoutHeader>
-      <div class="p-4">
+
         <TabulatorGrid
+          :class="[styles.menuGrid, 'flex-1']"
           v-model:data="menuPermissions"
           :columns="menuColumns"
-          min-height="40rem"
+          height="100%"
           placeholder="메뉴 정보가 없습니다"
         />
-      </div>
+      </LayoutPanel>
     </template>
   </LayoutSplit>
 

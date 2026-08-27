@@ -12,3 +12,16 @@
   color: var(--Base-primary);
   font-weight: 700;
 }
+
+/*
+ * "메뉴명" 그룹 헤더 밑에 생기는 서브헤더 줄(level1/level2/level3, 전부 title 빈 문자열)을
+ * 시각적으로 없앤다. 컬럼 구조(level1/level2/level3 개별 필드)는 기획 스펙이라 그대로 두고,
+ * 높이만 0으로 접어서 헤더가 한 줄로 보이게 한다.
+ * Tabulator 가 그룹 헤더 높이를 JS 로 인라인 계산해서 넣어주므로 !important 로 덮는다.
+ */
+.menuGrid :global(.tabulator-col-group-cols) {
+  height: 0 !important;
+  min-height: 0 !important;
+  border-top: none !important;
+  overflow: hidden;
+}

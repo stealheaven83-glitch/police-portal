@@ -6,6 +6,9 @@
   -->
   <section class="layoutPanel" :aria-labelledby="titleId">
     <LayoutHeader :title="title" :as="as" :title-id="titleId">
+      <template v-if="$slots.center" #center>
+        <slot name="center" />
+      </template>
       <template v-if="$slots.actions" #right>
         <slot name="actions" />
       </template>
