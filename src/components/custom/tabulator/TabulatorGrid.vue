@@ -956,6 +956,16 @@ defineExpose({
   selectAll: () => table?.selectRow(),
   deselectAll: () => table?.deselectRow(),
   selectRow: (index: any) => table?.selectRow(index),
+  /**
+   * 조건에 맞는 행만 선택 상태로 만든다(기존 선택은 해제).
+   * 다른 목록에서 고른 값에 맞춰 체크 상태를 맞출 때 쓴다.
+   */
+  selectWhere: (match: (rowData: any) => boolean) => {
+    table?.deselectRow()
+    table?.getRows().forEach((row: any) => {
+      if (match(row.getData())) row.select()
+    })
+  },
 
   /* 컬럼 */
   showColumn: (field: string) => table?.showColumn(field),

@@ -280,6 +280,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/component/tree-view',
+            name: 'tree-view',
+            component: () => import('../views/component-sample/treeView.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'TreeView 가이드'
+            }
+        },
+        {
             path: '/component/tree',
             name: 'tree',
             component: () => import('../views/component-sample/Tree.vue'),
@@ -579,6 +588,15 @@ const router = createRouter({
                 title: 'Info Table'
             }
         },
+        {
+            path: '/treeView',
+            name: 'treeView',
+            component: () => import('../views/component-sample/treeView.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Info Table'
+            }
+        },        
         {
             path: '/component/flex-grid',
             name: 'flex-grid',

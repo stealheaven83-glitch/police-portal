@@ -469,7 +469,7 @@ const worklist = ref([
   { id: 360, category: '스마트워크', depth1: '', depth2: '시스템 모니터링', depth3: '', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
   { id: 361, category: '스마트워크', depth1: '', depth2: '', depth3: 'ETL 작업조회', depth4: '', depth5: '', screenName: 'ETL 작업조회', screenId: 'PC-COM-2701', path: '', status: '대기' },
   { id: 362, category: '스마트워크', depth1: '', depth2: '시스템 모니터링 관리', depth3: '', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
-  { id: 363, category: '스마트워크', depth1: '', depth2: '', depth3: '중요정보 변경이력관리', depth4: '', depth5: '', screenName: '중요정보 변경 이력관리', screenId: 'PC-COM-2301', path: '/views/com/PC-COM-2301', status: '대기' },
+  { id: 363, category: '스마트워크', depth1: '', depth2: '', depth3: '중요정보 변경이력관리', depth4: '', depth5: '', screenName: '중요정보 변경 이력관리', screenId: 'PC-COM-2301', path: '/views/com/PC-COM-2301', status: '완료' },
   { id: 364, category: '스마트워크', depth1: '', depth2: '홈페이지 관리', depth3: '', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
   { id: 365, category: '스마트워크', depth1: '', depth2: '', depth3: '게시판관리', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
   { id: 366, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '목록', depth5: '', screenName: '게시판관리 화면', screenId: 'PC-COM-2401', path: '/views/com/PC-COM-2401', status: '대기' },
