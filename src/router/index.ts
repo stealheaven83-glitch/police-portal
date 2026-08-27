@@ -491,6 +491,31 @@ const router = createRouter({
             }
         },
         {
+            path: '/views/com/PM-COM-0101',
+            name: 'PM-COM-0101',
+            component: () => import('../views/com/PM-COM-0101/PM-COM-0101.vue'),
+            meta: {
+                layout: 'DefaultLayout',
+                title: '로그인',
+                // PM-COM-0101(로그인) ↔ PM-COM-0102(공인인증서 등록 팝업) 은 같은 컴포넌트라
+                // screenGroup 을 공통으로 줘서 팝업 오픈/URL 동기화 시 리마운트되지 않게 한다.
+                // (PC-LPO-0701~0714 와 동일 패턴, Layout.vue 참고)
+                screenGroup: 'PM-COM-0101',
+            }
+        },
+        {
+            // PM-COM-0101 과 같은 파일을 가리킨다 — useAutoTrigger 로 이 화면ID에 진입하면
+            // "공인인증서 등록" 팝업이 바로 열린 상태로 보인다.
+            path: '/views/com/PM-COM-0102',
+            name: 'PM-COM-0102',
+            component: () => import('../views/com/PM-COM-0101/PM-COM-0101.vue'),
+            meta: {
+                layout: 'DefaultLayout',
+                title: '공인인증서 등록',
+                screenGroup: 'PM-COM-0101',
+            }
+        },
+        {
             path: '/views/com/PC-COM-2201',
             name: 'PC-COM-2201',
             component: () => import('../views/com/PC-COM-2201/PC-COM-2201.vue'),
@@ -608,7 +633,7 @@ const router = createRouter({
                 layout: 'MainLayout',
                 title: 'Info Table'
             }
-        },        
+        },
         {
             path: '/component/flex-grid',
             name: 'flex-grid',
