@@ -580,6 +580,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/component/flex-grid',
+            name: 'flex-grid',
+            component: () => import('../views/component-sample/flex-grid.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Flex Grid'
+            }
+        },
+        {
             path: '/:pathMatch(.*)*',
             name: 'notFound',
             component: Error404
