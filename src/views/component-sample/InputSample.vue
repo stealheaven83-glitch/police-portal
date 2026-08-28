@@ -13,7 +13,7 @@
       </div>
 
       <!-- Section 1: 기본 구조 -->
-      <section class="space-y-4">
+      <!-- <section class="space-y-4">
         <h2 class="text-2xl font-semibold">기본 구조</h2>
         <div class="text-gray-500">
           <span class="text-primary font-medium">InputField</span> 하나로 레이블, 입력 필드(플레이스홀더),
@@ -38,10 +38,10 @@
           <li><b>도움말 [선택]</b> — 입력 방식 또는 입력할 내용에 대한 도움말 (<code>description</code>)</li>
           <li><b>에러 메시지</b> — 입력한 내용에 오류가 있을 경우 안내 (<code>error</code>)</li>
         </ol>
-      </section>
+      </section> -->
 
       <!-- Section 2: 이름 (기본 텍스트 + 필수 에러 처리) -->
-      <section class="space-y-4 pt-10">
+      <!-- <section class="space-y-4 pt-10">
         <h2 class="text-2xl font-semibold">이름</h2>
         <div class="text-gray-500">기본 텍스트 입력입니다. 필수 항목으로, 미입력 시 에러 메시지를 표시합니다.</div>
 
@@ -55,10 +55,10 @@
             @blur="validateName"
           />
         </div>
-      </section>
+      </section> -->
 
       <!-- Section 3: 전화번호 (3개 필드 분리, 각각 InputField) -->
-      <section class="space-y-4 pt-10">
+      <!-- <section class="space-y-4 pt-10">
         <h2 class="text-2xl font-semibold">전화번호</h2>
         <div class="text-gray-500">3개의 필드로 분리하여 각각 InputField 로 구성했습니다. 숫자만 입력되며 자리수를 제한합니다.</div>
 
@@ -98,10 +98,10 @@
           </div>
           <p v-if="phoneError" class="text-sm text-destructive">{{ phoneError }}</p>
         </div>
-      </section>
+      </section> -->
 
       <!-- Section 4: 이메일 (주소 앞 + host 분리, 각각 InputField) -->
-      <section class="space-y-4 pt-10">
+      <!-- <section class="space-y-4 pt-10">
         <h2 class="text-2xl font-semibold">이메일</h2>
         <div class="text-gray-500">이메일 주소(앞)와 host(도메인)를 분리하여 각각 InputField 로 구성했습니다.</div>
 
@@ -127,10 +127,10 @@
           <p v-if="emailError" class="text-sm text-destructive">{{ emailError }}</p>
           <p v-else-if="fullEmail" class="text-sm text-muted-foreground">입력된 이메일: {{ fullEmail }}</p>
         </div>
-      </section>
+      </section> -->
 
       <!-- Section 5: 기타 정보 (도움말 + 글자수 카운터) -->
-      <section class="space-y-4 pt-10">
+      <!-- <section class="space-y-4 pt-10">
         <h2 class="text-2xl font-semibold">기타 정보</h2>
         <div class="text-gray-500">도움말과 글자수 카운터를 함께 제공하는 입력입니다. 최대 100자까지 입력할 수 있습니다.</div>
 
@@ -144,10 +144,10 @@
             show-count
           />
         </div>
-      </section>
+      </section> -->
 
       <!-- Section 6: 상태 (Disabled / Readonly) -->
-      <section class="space-y-4 pt-10">
+      <!-- <section class="space-y-4 pt-10">
         <h2 class="text-2xl font-semibold">입력 상태</h2>
         <div class="text-gray-500">비활성화(disabled)와 읽기 전용(readonly) 상태 예시입니다.</div>
 
@@ -159,12 +159,12 @@
             <InputField label="읽기 전용" model-value="수정할 수 없는 값" readonly />
           </div>
         </div>
-      </section>
+      </section> -->
 
 
       <section class="space-y-4 pt-10">
         <h2 class="text-2xl font-semibold">커스텀(InputField2 컴포넌트 사용)</h2>
-        <div class="text-gray-500">InputField2</div>
+        <div class="text-gray-500">InputField</div>
         <div class="text-red-500 font-semibold text-2xl">반드시 클리어버튼 들어가야함!! 꼭 clearble 옵션 넣어주세요</div>
         <div>
           <div class="w-[480px] mb-3">

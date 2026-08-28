@@ -1,9 +1,6 @@
-import { computed, reactive, ref, type InjectionKey } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { toast } from 'vue-sonner'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
-// 런타임 import 를 하면 PM-PUB-0102 가 이 파일의 옵션 목록을 되가져오면서 순환 참조가 된다.
-// 타입만 필요하므로 import type 으로 가져와 런타임 의존을 끊는다.
-import type { useDiagnosisDetail } from './PM-PUB-0102'
 
 export interface SelectOption {
   label: string
@@ -119,11 +116,12 @@ export const typeOptions: SelectOption[] = [
 
 export const reasonOptions: SelectOption[] = [
   { label: '전체', value: 'all' },
-  { label: '주민요청', value: 'request' },
-  { label: '침입범죄발생', value: 'intrusion' },
-  { label: '취약지역으로 판단', value: 'vulnerable' },
-  { label: '관서장지시', value: 'order' },
-  { label: '지역안전순찰', value: 'patrol' },
+  { label: '주민요청', value: 'patrol' },
+  { label: '침입범죄발생', value: 'report' },
+  { label: '취약지역으로', value: 'request' },
+  { label: '판단', value: 'request' },
+  { label: '관서장지시', value: 'request' },
+  { label: '지역안전순찰', value: 'request' },
 ]
 
 export const notifiedOptions: SelectOption[] = [
@@ -231,12 +229,3 @@ export function useDiagnosisList() {
     openNew,
   }
 }
-
-/**
- * PM-PUB-0101.vue 에서 useDiagnosisList() 를 한 번만 호출해 provide 하고,
- * 팝업(components/)은 이 키로 inject 해서 같은 인스턴스를 공유한다.
- * (각자 useDiagnosisList() 를 다시 부르면 상태가 따로 생겨 목록과 어긋난다)
- */
-export type DiagnosisListStore = ReturnType<typeof useDiagnosisList> &
-  ReturnType<typeof useDiagnosisDetail>
-export const DiagnosisListKey: InjectionKey<DiagnosisListStore> = Symbol('PM-PUB-0101-diagnosis-list')
