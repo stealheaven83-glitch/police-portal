@@ -641,7 +641,24 @@ function badgeCellFormatter(col: TabulatorGridColumn, columnKey: string) {
  * `columnKey` 는 셀에 마운트한 Vue 트리를 (행, 컬럼) 단위로 추적하기 위한 키다.
  * field 가 없는 컬럼(버튼 등)도 있어서 위치 기반으로 만든다.
  */
+/*
+ * 공용 테마(tabulator-theme.css) 셀이 display:inline-flex + justify-content:center로 고정되어 있어서,
+ * Tabulator 자체의 hozAlign(text-align만 넣어줌)으로는 left/right가 적용이 안된다.
+ * hozAlign:'left'/'right' 인 컬럼엔 justify-content 를 되돌리는 클래스를 자동으로 붙여서,
+ * 화면마다 이 클래스를 직접 만들 필요 없이 hozAlign 만으로 의도한 정렬이 나오게 한다.
+ */
+function withAlignClass(built: Record<string, any>): Record<string, any> {
+  const align = built.hozAlign
+  if (align !== 'left' && align !== 'right') return built
+  const alignClass = align === 'left' ? 'align-left' : 'align-right'
+  return { ...built, cssClass: built.cssClass ? `${built.cssClass} ${alignClass}` : alignClass }
+}
+
 function buildColumn(col: TabulatorGridColumn, columnKey: string): Record<string, any> {
+  return withAlignClass(buildColumnInner(col, columnKey))
+}
+
+function buildColumnInner(col: TabulatorGridColumn, columnKey: string): Record<string, any> {
   const {
     cellType,
     buttonLabel,

@@ -18,16 +18,6 @@
   margin: 1.6rem 0;
 }
 
-/*
- * TabulatorGrid 의 hozAlign:'left' 는 셀에 text-align:left 만 넣어주는데, 셀 자체가
- * (공용 tabulator-theme.css 기준) display:inline-flex 라 text-align 이 먹지 않고
- * justify-content:center 가 그대로 적용돼 긴 주소 텍스트가 좌우 양쪽에서 잘린다.
- * 컬럼의 cssClass 로 이 클래스를 셀에 얹어 justify-content 만 좌측으로 되돌린다.
- */
-.leftAlignCell {
-  justify-content: flex-start !important;
-}
-
 /* -------------------------------------------------------------- 범죄예방진단 현황 신규 팝업(PM-PUB-0114) */
 .dialogSection + .dialogSection {
   margin-top: 2.4rem;

@@ -28,6 +28,26 @@ const router = createRouter({
             }
         },
         {
+            path: '/views/lpo/PM-LPO-0106',
+            name: 'PM-LPO-0106',
+            component: () => import('../views/lpo/PM-LPO-0106/PM-LPO-0106.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '알림',
+                screenGroup: 'PM-LPO-0106',
+            }
+        },
+        {
+            path: '/views/lpo/PM-LPO-0107',
+            name: 'PM-LPO-0107',
+            component: () => import('../views/lpo/PM-LPO-0106/PM-LPO-0106.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '알림 상세',
+                screenGroup: 'PM-LPO-0106',
+            }
+        },
+        {
             path: '/views/lpo/PC-LPO-0701',
             name: 'PC-LPO-0701',
             component: () => import('../views/lpo/PC-LPO-0701/PC-LPO-0701.vue'),
@@ -672,6 +692,15 @@ const router = createRouter({
             meta: {
                 layout: 'MainLayout',
                 title: 'Flex Grid'
+            }
+        },
+        {
+            path: '/component/filter-chip',
+            name: 'filter-chip',
+            component: () => import('../views/component-sample/FilterChip.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Filter Chip'
             }
         },
         {

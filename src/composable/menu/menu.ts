@@ -29,7 +29,8 @@ import {
   ChevronDownIcon,
   Heading,
   PanelTop,
-  Tag
+  Tag,
+  ListFilter
 } from 'lucide-vue-next';
 import { useAuthStore } from '@/stores/auth/useAuth';
 import { toast } from 'vue-sonner';
@@ -236,6 +237,11 @@ export const mainLayoutConfig: LayoutConfig = {
           path: '/component/flex-grid',
           title: 'Flex Grid',
           icon: Square,
+        },
+        {
+          path: '/component/filter-chip',
+          title: 'Filter Chip',
+          icon: ListFilter,
         },
       ]
     }

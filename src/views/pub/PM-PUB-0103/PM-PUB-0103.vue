@@ -234,15 +234,15 @@ const listColumns: TabulatorGridColumn[] = [
   { title: '상호명', field: 'bizName', hozAlign: 'center' },
   { title: '총점', field: 'score', width: 70, hozAlign: 'center' },
   { title: '진단자', field: 'diagnoser', hozAlign: 'center' },
-  { title: '기본주소', field: 'baseAddress', widthGrow: 2, hozAlign: 'left', cssClass: styles.leftAlignCell },
-  { title: '상세주소', field: 'detailAddress', widthGrow: 2, hozAlign: 'left', cssClass: styles.leftAlignCell },
+  { title: '기본주소', field: 'baseAddress', widthGrow: 2, hozAlign: 'left' },
+  { title: '상세주소', field: 'detailAddress', widthGrow: 2, hozAlign: 'left' },
   { title: '현금다액업소', field: 'cashIntensive', width: 110, hozAlign: 'center' },
 ]
 
 const historyColumns: TabulatorGridColumn[] = [
   { title: '진단일자', field: 'diagnosedAt', hozAlign: 'center' },
   { title: '상호명', field: 'bizName', hozAlign: 'center' },
-  { title: '주소', field: 'address', widthGrow: 2, hozAlign: 'left', cssClass: styles.leftAlignCell },
+  { title: '주소', field: 'address', widthGrow: 2, hozAlign: 'left' },
   { title: '우편희망', field: 'mailRequested', hozAlign: 'center' },
   { title: '우편상태', field: 'mailStatus', hozAlign: 'center' },
   { title: '진단자', field: 'diagnoser', hozAlign: 'center' },
