@@ -47,31 +47,6 @@
 
 /* ────────────────────────────────── 간소화 상세 팝업 (PM-PUB-0102) */
 
-.dialogSectionTitle {
-  margin: 2.4rem 0 0.8rem;
-  font-size: 1.7rem;
-  font-weight: 700;
-  color: var(--Text-body_0);
-}
-
-.dialogSectionTitle:first-child {
-  margin-top: 0;
-}
-
-.dialogSubTitle {
-  margin: 1.6rem 0 0.8rem;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--Text-body_0);
-}
-
-/* 지표 값 칸 — 시안처럼 등급과 수치를 구분선으로 나눈다 */
-.statGrade {
-  min-width: 6rem;
-  margin-right: 1.2rem;
-  padding-right: 1.2rem;
-  border-right: 1px solid var(--Border_gray03);
-}
 
 /*
  * 예방자료 표. 문항이 길어 InfoTable 기본 라벨 폭(14rem)으로는 글자가 뭉치므로 넓힌다.
