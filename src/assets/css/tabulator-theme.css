@@ -181,7 +181,15 @@
   justify-content: center;
   height: 4.8rem;
 }
-
+/*
+ * 마지막 열 오른쪽 세로선 제거.
+ * Tabulator 는 셀(div) 뒤마다 리사이즈 핸들(span.tabulator-col-resize-handle)을 끼워 넣어서
+ * 행의 마지막 자식은 셀이 아니라 span 이다 — :last-child 로는 마지막 셀이 절대 안 잡힌다.
+ * 핸들은 span, 셀은 div 라 :last-of-type 이면 마지막 셀을 정확히 집는다.
+ */
+.tabulator .tabulator-row .tabulator-cell:last-of-type {
+  border-right: 0;
+}
 .tabulator-row.tabulator-selected .tabulator-cell {
   color: var(--Text-body_0);
   font-weight: 400;

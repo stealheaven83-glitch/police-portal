@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, reactive, ref, type InjectionKey } from 'vue'
 import type { TreeNode } from '@/components/custom/tree'
 
 /** 부서 트리 한 노드 */
@@ -201,3 +201,80 @@ export function useUserAuthManage() {
     checkedAuthCodes,
   }
 }
+
+/* ------------------------------------------------------------------ *
+ * 사용자 정보 팝업 (PC-COM-2202)
+ * ------------------------------------------------------------------ */
+
+export interface UserDetail {
+  /** 사용자 No (시스템 내부 번호) */
+  userNo: string
+  userId: string
+  name: string
+  agency: string
+  dept: string
+  /** 비밀번호 변경일자 */
+  pwChangedAt: string
+  /** 경비전화 */
+  officePhone: string
+  mobile: string
+  /** 사용여부 — Y | N */
+  use: string
+}
+
+function createUserDetail(): UserDetail {
+  return {
+    userNo: '',
+    userId: '',
+    name: '',
+    agency: '',
+    dept: '',
+    pwChangedAt: '',
+    officePhone: '',
+    mobile: '',
+    use: 'Y',
+  }
+}
+
+export function useUserDetail() {
+  const detailOpen = ref(false)
+  const detailForm = reactive<UserDetail>(createUserDetail())
+
+  /**
+   * 목록에서 고른 사용자로 팝업을 채운다.
+   * TODO: 실제로는 사용자ID로 상세를 조회해 와야 한다. 지금은 목록 값 + 목업으로 채운다.
+   */
+  function openUserDetail(user: UserRow) {
+    Object.assign(detailForm, createUserDetail(), {
+      userNo: String(100071757 + user.no),
+      userId: user.userId,
+      name: user.name,
+      agency: user.agency,
+      dept: user.dept,
+      pwChangedAt: '2026-05-11',
+      officePhone: '0600',
+      mobile: '01012345678',
+      use: user.use === '사용' ? 'Y' : 'N',
+    })
+    detailOpen.value = true
+  }
+
+  function closeUserDetail() {
+    detailOpen.value = false
+  }
+
+  return {
+    detailOpen,
+    detailForm,
+    openUserDetail,
+    closeUserDetail,
+  }
+}
+
+/**
+ * PC-COM-2201.vue 에서 컴포저블을 합쳐 한 번만 만들고 provide 하면,
+ * 팝업(components/)은 이 키로 inject 해서 같은 상태를 쓴다.
+ */
+export type UserManageStore = ReturnType<typeof useUserAuthManage> &
+  ReturnType<typeof useUserDetail>
+export const UserManageKey: InjectionKey<UserManageStore> = Symbol('PC-COM-2201-user-manage')

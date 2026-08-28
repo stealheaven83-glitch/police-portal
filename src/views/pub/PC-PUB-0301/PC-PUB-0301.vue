@@ -32,7 +32,7 @@ const store = usePublicSafetyStore()
 const department = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
 const groupTypeFilter = ref('all')
 const groupTypeFilterOptions = [{ label: '전체', value: 'all' }, ...groupTypeOptions]
-const advancedSearchOpen = ref(true)
+const advancedSearchOpen = ref(false)
 
 const rows = computed(() => {
   if (groupTypeFilter.value === 'all') return store.groups.value

@@ -567,6 +567,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/views/com/PC-COM-2203',
+            name: 'PC-COM-2203',
+            component: () => import('../views/com/PC-COM-2203/PC-COM-2203.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '메뉴 관리'
+            }
+        },
+        {
             path: '/views/com/PC-COM-2201',
             name: 'PC-COM-2201',
             component: () => import('../views/com/PC-COM-2201/PC-COM-2201.vue'),

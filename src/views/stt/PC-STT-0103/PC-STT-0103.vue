@@ -191,7 +191,7 @@ function onSelectRow(payload: { index: number; item: PersonnelRow }) {
 // ]
 
 const vIf = ref(false);
-const advancedSearchOpen = ref(true);
+const advancedSearchOpen = ref(false);
 
 </script>
 

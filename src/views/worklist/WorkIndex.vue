@@ -458,7 +458,7 @@ const worklist = ref([
   { id: 349, category: '스마트워크', depth1: '', depth2: '', depth3: '사용자 권한관리', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
   { id: 350, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '상세내역', depth5: '', screenName: '사용자 권한관리 상세화면', screenId: 'PC-COM-2201', path: '/views/com/PC-COM-2201', status: '완료' },
   { id: 351, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '', depth5: '사용자정보 팝업창', screenName: '사용자 정보 상세 팝업창', screenId: 'PC-COM-2202', path: '', status: '대기' },
-  { id: 352, category: '스마트워크', depth1: '', depth2: '', depth3: '메뉴관리', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
+  { id: 352, category: '스마트워크', depth1: '', depth2: '', depth3: '메뉴관리', depth4: '', depth5: '', screenName: '', screenId: '', path: '/views/com/PC-COM-2203', status: '대기' },
   { id: 353, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '상세내역', depth5: '', screenName: '메뉴관리 화면', screenId: 'PC-COM-2203', path: '', status: '대기' },
   { id: 354, category: '스마트워크', depth1: '', depth2: '', depth3: '권한관리', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
   { id: 355, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '상세내역', depth5: '', screenName: '권한관리 화면', screenId: 'PC-COM-2204', path: '', status: '대기' },

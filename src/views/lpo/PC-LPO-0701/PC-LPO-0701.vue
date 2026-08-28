@@ -23,7 +23,7 @@ import MaintenanceHistoryDialog from './components/MaintenanceHistoryDialog.vue'
 import { useEquipmentList, categoryTabs, EquipmentListKey } from './composable/PC-LPO-0701'
 import type { EquipmentListRow } from './composable/PC-LPO-0701'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
-import styles from './style/PC-LPO-0701.module.css'
+// import styles from './style/PC-LPO-0701.module.css'
 
 // KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!) — useBottomTabSetup 의 componentName 과 일치해야 한다.
 // 0701~0714 가 이 컴포넌트 하나를 screenGroup 으로 공유하므로(router/index.ts 참고), 탭도
@@ -43,7 +43,7 @@ const selectItem = [
   { label: 'select3', value: 'select3' },
 ]
 
-const advancedSearchOpen = ref(true);
+const advancedSearchOpen = ref(false);
 
 const department = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
 
@@ -297,7 +297,7 @@ useBottomTabSetup({
     </template>
   </PageHeader>
 
-  <div class="toolbar">
+
     <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
     <template #department>
       <span class="dept-name">부서</span>
@@ -319,9 +319,9 @@ useBottomTabSetup({
       <Button variant="secondary" size="sm" class="w-25">조회</Button>
     </template>
   </SearchWrapper>
-  </div>
 
-  <Tabs v-model="activeCategory" class="mt-4">
+
+  <Tabs v-model="activeCategory">
     <TabsList variant="fill" :grow="true">
       <TabsTrigger v-for="tab in categoryTabs" :key="tab.value" :value="tab.value">{{ tab.label }}</TabsTrigger>
     </TabsList>

@@ -8,7 +8,7 @@
     <PortalHeader :show-banner="false" />
     <main class="work-main">
       <SideMenu v-if="sideMenuStore.visible" />
-      <div class="flex-1 min-w-0 relative pr-10 flex flex-col pb-[4px] pl-[36px]">
+      <div class="flex-1 min-w-0 relative pr-10 flex flex-col pb-[4px] pl-[36px] pb-[32px]">
          <!--
            화면 내용. .wrap 이 화면 높이로 잠겨 있으므로 넘치는 내용은 이 래퍼가 스크롤한다.
            바깥 컬럼이 아니라 안쪽 래퍼가 스크롤을 맡는 이유는, 탭 바가 컬럼에 absolute 로

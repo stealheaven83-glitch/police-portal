@@ -66,7 +66,7 @@ function createMockRows(): AccidentVolunteerRow[] {
 
 export function useAccidentVolunteerStatus() {
   const department = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
-  const advancedSearchOpen = ref(true)
+  const advancedSearchOpen = ref(false)
 
   const dateFrom = ref('')
   const dateTo = ref('')

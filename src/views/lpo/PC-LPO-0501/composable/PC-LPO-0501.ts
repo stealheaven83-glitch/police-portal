@@ -62,7 +62,7 @@ function createMockRows(): DispatchAllowanceRow[] {
 
 export function useDispatchAllowanceList() {
   const department = ref<DepartmentValue>({ level1: 'hq', level2: 'central-report', level3: 'front-line' })
-  const advancedSearchOpen = ref(true)
+  const advancedSearchOpen = ref(false)
 
   const dateFrom = ref('2026-07-16')
   const dateTo = ref('')

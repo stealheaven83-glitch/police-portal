@@ -5,7 +5,7 @@
       2행: 페이지 버튼(전체 폭, 가운데)
     md(768px) 이상에서는 시안대로 한 줄 3분할(1fr auto 1fr)이라 페이저가 바 정중앙에 온다.
   -->
-  <div class="grid w-full grid-cols-2 items-center gap-y-3 md:grid-cols-[1fr_auto_1fr] md:gap-y-0">
+  <div class="grid w-full grid-cols-2 items-center gap-y-3 md:grid-cols-[1fr_auto_1fr] md:gap-y-0 -mb-[8px]">
     <div class="order-1 min-w-0 justify-self-start truncate text-sm">
       총 <span class="font-bold">{{ totalElements }}</span>건 / 현재 {{ rangeStart }}-{{ rangeEnd }}
     </div>

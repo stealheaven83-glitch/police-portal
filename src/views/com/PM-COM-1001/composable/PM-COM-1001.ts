@@ -110,7 +110,7 @@ function createMockRows(): NoticeRow[] {
 
 export function useNoticeList() {
   const department = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
-  const advancedSearchOpen = ref(true)
+  const advancedSearchOpen = ref(false)
 
   const authorFilter = ref('writer')
   const authorKeyword = ref('')

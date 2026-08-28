@@ -15,7 +15,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 </script>
 
 <template>
-  <TabsRoot v-bind="forwarded" :class="cn('w-full', props.class)">
+  <TabsRoot v-bind="forwarded" :class="cn('w-full mb-[20px]', props.class)">
     <slot />
   </TabsRoot>
 </template>

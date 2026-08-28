@@ -32,7 +32,7 @@ const groupTypeFilter = ref('all')
 const groupFilter = ref('all')
 const dateFrom = ref('')
 const dateTo = ref('')
-const advancedSearchOpen = ref(true)
+const advancedSearchOpen = ref(false)
 
 const groupTypeFilterOptions = [{ label: '전체', value: 'all' }, ...groupTypeOptions]
 const groupFilterOptions = computed(() => [{ label: '전체', value: 'all' }, ...store.groupOptions.value])
