@@ -320,8 +320,7 @@ useBottomTabSetup({
     </template>
   </SearchWrapper>
 
-
-  <Tabs v-model="activeCategory">
+  <Tabs v-model="activeCategory" class="my-5">
     <TabsList variant="fill" :grow="true">
       <TabsTrigger v-for="tab in categoryTabs" :key="tab.value" :value="tab.value">{{ tab.label }}</TabsTrigger>
     </TabsList>

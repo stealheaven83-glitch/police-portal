@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, inject, ref, type StyleValue } from 'vue'
+import { computed, inject, ref, useSlots, Comment, Text, type StyleValue } from 'vue'
+import { cn } from '@/lib/utils'
 import styles from './FlexGrid.module.css'
 import { FLEX_ROW_WIDTH_KEY } from './flexGridContext'
 
@@ -44,6 +45,17 @@ import { FLEX_ROW_WIDTH_KEY } from './flexGridContext'
  * flex-grow:1 이라 강제개행으로 어느 줄에 남겨지든 그 줄의 남는 공간을 알아서 흡수해 빈 틈을
  * 없앤다. 프레임워크가 알아서 'full'을 끼워주진 않으니, grow:0 size 만 나열하고 'full' 을
  * 안 두면(예: 고정 4 + 4 + 4) 이 보장이 깨진다.
+ *
+ * ── type: 라벨-값 표 스타일 ────────────────────────────────────────────────
+ * type 을 주면 InfoTable/InfoField 와 똑같은 "라벨-값" 표 모양이 컴포넌트 안에서 붙는다
+ * (호출부에서 회색 라벨칸을 매번 다시 칠하지 않게 하려는 것 — CLAUDE.md §1).
+ * - type="title": 회색 라벨 칸. size 를 안 주면 InfoField 와 같은 14rem 고정폭
+ *   (`--flex-title-w` 로 폭만 조절 가능, size 를 주면 size 가 이긴다).
+ *   `for` 를 주면 진짜 <label for> 로 렌더링해 입력요소와 연결하고, `required` 를 주면
+ *   필수 표시 점을 붙인다.
+ * - type="value": 흰 값 칸. 남는 폭 전부를 차지하고, 슬롯에 컨트롤 없이 글자만 들어오면
+ *   공통 텍스트 스타일이 자동으로 붙는다. 값 영역에 컨트롤이 여러 줄이면 layout="column".
+ * type 을 안 주면 예전 그대로 스타일 없는 순수 레이아웃 칸이다(기존 화면 영향 없음).
  */
 type SizeKeyword = 'content' | 'full'
 // (string & {}) 는 'content'/'full' 리터럴 자동완성은 살리면서 임의의 CSS 길이 문자열도
@@ -52,9 +64,19 @@ type SizeValue = number | SizeKeyword | (string & {})
 
 interface Props {
   size?: SizeValue | Record<string, SizeValue>
+  /** 'title' = 회색 라벨 칸, 'value' = 흰 값 칸. 안 주면 스타일 없는 순수 레이아웃 칸 */
+  type?: 'title' | 'value'
+  /** type="value" 에서 컨트롤을 가로로 나열할지(기본) 세로로 쌓을지 */
+  layout?: 'row' | 'column'
+  /** type="title" 에서 연결할 입력요소 id — 주면 <label for> 로 렌더링한다 */
+  for?: string
+  /** type="title" 에서 필수 항목 점 표시 */
+  required?: boolean
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  layout: 'row',
+})
 
 const rowWidth = inject(FLEX_ROW_WIDTH_KEY, ref(0))
 
@@ -106,12 +128,45 @@ const colStyle = computed<StyleValue | undefined>(() => {
     typeof resolved === 'number' ? `0 0 ${(resolved / UNIT) * 100}%` :
     `0 0 ${resolved}`
 
+  // size 는 inline style 이라 type 의 클래스 flex(14rem 등)보다 항상 우선한다.
   return { flex, minWidth: '0' }
 })
+
+// type 스타일. type 이 없으면 예전처럼 .col 만 붙는다.
+const typeClass = computed(() => {
+  if (props.type === 'title') return styles.title
+  if (props.type === 'value') return cn(styles.value, props.layout === 'column' && styles.valueColumn)
+  return undefined
+})
+
+const slots = useSlots()
+
+/**
+ * 값 칸에 컨트롤 없이 글자만 들어왔는지 판별한다(InfoField 와 같은 처리).
+ * 글자만 있으면 화면마다 span 에 클래스를 붙이지 않아도 공통 텍스트 스타일이 자동으로 붙는다.
+ * (슬롯 내용은 반응형 소스가 아니라 computed 로 캐싱하면 갱신되지 않으므로 렌더마다 계산한다)
+ */
+function isTextOnly() {
+  const nodes = slots.default?.() ?? []
+  const meaningful = nodes.filter(
+    (node) => node.type !== Comment && !(node.type === Text && !String(node.children ?? '').trim()),
+  )
+  return meaningful.length > 0 && meaningful.every((node) => node.type === Text)
+}
 </script>
 
 <template>
-  <div :class="styles.col" :style="colStyle">
-    <slot />
+  <div :class="cn(styles.col, typeClass)" :style="colStyle">
+    <!-- 라벨 칸: for 를 주면 진짜 <label for> 로 입력요소와 연결된다 -->
+    <template v-if="type === 'title'">
+      <label v-if="props.for" :for="props.for"><slot /></label>
+      <slot v-else />
+      <span v-if="required" :class="styles.requiredDot" />
+    </template>
+
+    <!-- 값 칸: 글자만 들어오면 공통 텍스트 스타일을 자동으로 입힌다 -->
+    <span v-else-if="type === 'value' && isTextOnly()" :class="styles.valueText"><slot /></span>
+
+    <slot v-else />
   </div>
 </template>
