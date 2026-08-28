@@ -7,21 +7,34 @@ import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import { Button } from '@/components/custom/button'
 import TableWrapper from '@/components/custom/table/TableWrapper.vue'
-import RequestDetailDialog from './components/RequestDetailDialog.vue'
+import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import {
   useRequestManagementForm,
   periodTypeOptions,
   receiptTypeOptions,
   pageSizeOptions,
 } from './composable/PM-FLP-0101.ts'
-import type { RequestRow } from './composable/PM-FLP-0101.ts'
 import styles from './style/PM-FLP-0101.module.css'
+
+// KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수, useBottomTabSetup 의 componentName 과 일치)
+defineOptions({ name: 'PmFlp0101' })
 
 const navItems = [
   { label: '홈', path: '/' },
   { label: '탄력순찰' },
   { label: '요청관리' },
 ]
+
+// TODO: '탄력순찰' 도메인 LNB 프리셋이 아직 없어 useSideMenuSetup 은 생략 —
+// 기본 localPoliceMenu 프리셋으로 뜬다(menu-tab-guide.md §3.2, CLAUDE.md 1번 항목: 없는 패턴은
+// 조용히 새로 만들지 않고 알린다). 프리셋 생기면 여기 useSideMenuSetup('...') 추가할 것.
+useBottomTabSetup({
+  value: 'PM-FLP-0101',
+  label: '요청관리',
+  path: '/views/flp/PM-FLP-0101',
+  componentName: 'PmFlp0101',
+  closable: true,
+})
 
 const listColumns = [
   { key: 'id', label: '관리번호', width: '11rem' },
@@ -54,17 +67,10 @@ const {
   dateFrom,
   dateTo,
   receiptType,
-  selectedRow,
-  detailOpen,
   search,
   registerRow,
-  selectRow,
   downloadExcel,
 } = useRequestManagementForm()
-
-function onSelectRow(payload: { index: number; item: RequestRow }) {
-  selectRow(payload)
-}
 
 function onItemsPerPageChange(value: number) {
   pageSize.value = String(value)
@@ -145,12 +151,10 @@ function onItemsPerPageChange(value: number) {
           :total-elements="filteredRows.length"
           :total-pages="totalPages"
           :current-page="currentPage"
-          selectable
           empty-title="조회된 요청이 없습니다"
           empty-description="검색 조건을 변경해 다시 조회해 주세요."
           @page-change="(page) => (currentPage = page)"
           @update:items-per-page="onItemsPerPageChange"
-          @select-row="onSelectRow"
         >
           <template #cell-requestPeriod="{ item }">
             {{ item.requestPeriodFrom }} ~ {{ item.requestPeriodTo }}
@@ -159,6 +163,4 @@ function onItemsPerPageChange(value: number) {
       </div>
     </div>
   </section>
-
-  <RequestDetailDialog v-model:open="detailOpen" :row="selectedRow" />
 </template>

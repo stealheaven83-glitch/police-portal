@@ -1,4 +1,5 @@
 import { computed, ref } from 'vue'
+import { toast } from 'vue-sonner'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 
 export interface SelectOption {
@@ -111,9 +112,6 @@ export function useRequestManagementForm() {
     return filteredRows.value.slice(start, start + itemsPerPage.value)
   })
 
-  const selectedRow = ref<RequestRow | null>(null)
-  const detailOpen = ref(false)
-
   function matchesDateRange(row: RequestRow) {
     if (!dateFrom.value && !dateTo.value) return true
     const target = periodType.value === 'request' ? row.requestPeriodFrom : row.receivedAt
@@ -166,11 +164,7 @@ export function useRequestManagementForm() {
     }
     allRows.value = [newRow, ...allRows.value]
     search()
-  }
-
-  function selectRow(payload: { index: number; item: RequestRow }) {
-    selectedRow.value = payload.item
-    detailOpen.value = true
+    toast.success('등록되었습니다.')
   }
 
   const EXCEL_COLUMNS: { key: keyof RequestRow; label: string }[] = [
@@ -225,12 +219,9 @@ export function useRequestManagementForm() {
     dateFrom,
     dateTo,
     receiptType,
-    selectedRow,
-    detailOpen,
     search,
     resetSearch,
     registerRow,
-    selectRow,
     downloadExcel,
   }
 }
