@@ -62,7 +62,7 @@ function createMockRows(days: number): DispatchSummaryRow[] {
 
 export function useDispatchSummaryMonthly() {
   const department = ref<DepartmentValue>({ level1: 'hq', level2: 'central-report', level3: 'front-line' })
-  const advancedSearchOpen = ref(true)
+  const advancedSearchOpen = ref(false)
 
   const workYear = ref(2026)
   const workMonth = ref(8)

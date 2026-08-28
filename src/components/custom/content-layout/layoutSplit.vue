@@ -76,7 +76,6 @@ const minSizeOf = (i: number) =>
  */
 .splitLayout {
   height: var(--split-height, 90rem);
-  margin-top: var(--split-margin-top, 2rem);
   border: 1px solid var(--Border_gray0);
   border-bottom: 0;
   border-radius: 1rem 1rem 0 0;

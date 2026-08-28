@@ -104,7 +104,7 @@ function createMockRows(): HandoverStatusRow[] {
 
 export function useHandoverStatus() {
   const department = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
-  const advancedSearchOpen = ref(true)
+  const advancedSearchOpen = ref(false)
 
   const workYear = ref('2026')
   const workMonth = ref('4')

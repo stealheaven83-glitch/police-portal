@@ -1,4 +1,4 @@
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, type InjectionKey } from 'vue'
 import { toast } from 'vue-sonner'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 
@@ -229,3 +229,14 @@ export function useDiagnosisList() {
     openNew,
   }
 }
+
+/*
+ * PM-PUB-0101.vue 가 목록·상세 컴포저블을 합쳐 한 번만 만들고 provide 하면,
+ * 팝업(components/)은 이 키로 inject 해서 같은 상태를 쓴다.
+ *
+ * useDiagnosisDetail 은 타입만 필요하다 — 런타임으로 import 하면 PM-PUB-0102 가
+ * 이 파일의 옵션 목록을 되가져오면서 순환 참조가 되어 초기화 순서가 꼬인다.
+ */
+export type DiagnosisListStore = ReturnType<typeof useDiagnosisList> &
+  ReturnType<typeof import('./PM-PUB-0102').useDiagnosisDetail>
+export const DiagnosisListKey: InjectionKey<DiagnosisListStore> = Symbol('PM-PUB-0101-diagnosis-list')

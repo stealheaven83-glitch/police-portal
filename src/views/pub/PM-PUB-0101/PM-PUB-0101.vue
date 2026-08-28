@@ -129,7 +129,6 @@ useBottomTabSetup({
     SearchWrapper 루트에 flex-1 이 걸려 있어 WorkLayout 의 세로 flex 컬럼에 그대로 놓으면
     검색영역이 남는 높이를 다 먹는다. 블록 래퍼로 한 겹 감싸 높이를 auto 로 묶어둔다.
   -->
-  <div :class="styles.searchArea">
     <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
       <template #department>
         <span class="dept-name">부서</span>
@@ -199,7 +198,6 @@ useBottomTabSetup({
         <Button variant="secondary" size="sm" class="w-25" @click="search">조회</Button>
       </template>
     </SearchWrapper>
-  </div>
 
   <div class="list-actions"> 
     <Button type="button" variant="tertiary2" size="sm" @click="onDownloadExcel">

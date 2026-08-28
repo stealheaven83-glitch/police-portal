@@ -285,7 +285,7 @@ function createHistoryRows(row: CpoDiagnosisRow | null): CpoHistoryRow[] {
  */
 export function useCpoList() {
   /** 시안은 상세조회가 펼쳐진 상태로 열린다 */
-  const advancedSearchOpen = ref(true)
+  const advancedSearchOpen = ref(false)
 
   const searchForm = ref<CpoSearchForm>({
     department: { level1: 'hq', level2: 'all', level3: 'all' },

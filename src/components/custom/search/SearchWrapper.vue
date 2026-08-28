@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col gap-3 flex-1 min-w-0">
+    <div class="flex flex-col gap-3 w-full min-w-0 mb-[20px]">
       <div v-if="$slots.department || collapsible" class="flex items-center gap-6 ">
         <div :class="cn('flex items-center gap-2', props.departmentClass)">
           <slot name="department" />
@@ -45,7 +45,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 /** form 슬롯(상세조회 영역) 펼침 상태. v-model:expanded 로 상위에서 제어 가능 */
-const expanded = defineModel<boolean>('expanded', { default: true })
+const expanded = defineModel<boolean>('expanded', { default: false })
 
 function toggle() {
   expanded.value = !expanded.value

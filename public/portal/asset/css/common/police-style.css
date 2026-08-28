@@ -1056,7 +1056,7 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   display: flex;
   justify-content: flex-end;
   gap: 0.8rem;
-  margin: 0 0 2rem;
+  margin: 0 0 2rem 0;
 }
 
 .grid-wrap{
