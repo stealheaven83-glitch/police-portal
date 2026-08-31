@@ -659,6 +659,60 @@ const router = createRouter({
             }
         },
         {
+            path: '/views/pub/PC-PUB-0301',
+            name: 'PC-PUB-0301',
+            component: () => import('../views/pub/PC-PUB-0301/PC-PUB-0301.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '단체정보리스트'
+            }
+        },
+        {
+            path: '/views/pub/PC-PUB-0302',
+            name: 'PC-PUB-0302',
+            component: () => import('../views/pub/PC-PUB-0302/PC-PUB-0302.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '단체정보상세'
+            }
+        },
+        {
+            path: '/views/pub/PC-PUB-0303',
+            name: 'PC-PUB-0303',
+            component: () => import('../views/pub/PC-PUB-0303/PC-PUB-0303.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '단체정보등록'
+            }
+        },
+        {
+            path: '/views/pub/PM-PUB-0304',
+            name: 'PM-PUB-0304',
+            component: () => import('../views/pub/PM-PUB-0304/PM-PUB-0304.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '단체활동기록'
+            }
+        },
+        {
+            path: '/views/pub/PC-PUB-0306',
+            name: 'PC-PUB-0306',
+            component: () => import('../views/pub/PC-PUB-0306/PC-PUB-0306.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '단체현황'
+            }
+        },
+        {
+            path: '/views/pub/PC-PUB-0307',
+            name: 'PC-PUB-0307',
+            component: () => import('../views/pub/PC-PUB-0307/PC-PUB-0307.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '활동현황'
+            }
+        },
+        {
             path: '/views/stt/PC-STT-0103',
             name: 'PC-STT-0103',
             component: () => import('../views/stt/PC-STT-0103/PC-STT-0103.vue'),

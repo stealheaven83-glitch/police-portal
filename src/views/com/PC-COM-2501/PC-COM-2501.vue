@@ -80,7 +80,7 @@ useBottomTabSetup({
     height="100%"
     min-height="40rem"
     placeholder="등록된 앱 버전이 없습니다"
-    show-pagination
+    show-pagination="false"
     :items-per-page="10"
   />
 </template>

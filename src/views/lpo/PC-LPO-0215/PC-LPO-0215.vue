@@ -49,6 +49,7 @@ const columns: TabulatorGridColumn[] = [
   { title: '근무(사고)시간', field: 'workTime', hozAlign: 'center' },
   { title: '사유(구분)', field: 'reason', hozAlign: 'center' },
   { title: '취소', field: 'cancelNote', hozAlign: 'center' },
+  
 ]
 
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
@@ -109,9 +110,11 @@ useBottomTabSetup({
     :columns="columns"
     :data="rows"
     height="100%"
-    min-height="30rem"
     placeholder="조회된 내역이 없습니다"
     show-pagination
+<<<<<<< Updated upstream
     :items-per-page="10"
+=======
+>>>>>>> Stashed changes
   />
 </template>

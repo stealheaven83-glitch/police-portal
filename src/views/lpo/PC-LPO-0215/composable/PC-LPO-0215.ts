@@ -25,6 +25,43 @@ export const typeFilterOptions = [
 
 function createMockRows(): AccidentVolunteerRow[] {
   return [
+    
+      {
+      no: 3,
+      type: '자원근무',
+      dept: '본청 중앙학교 실습부서',
+      workDate: '2026-07-15',
+      shift: '주',
+      affDept: '본청 중앙학교 실습부서',
+      name: '[경사] 홍길동',
+      workTime: '전일',
+      reason: '연가',
+      cancelNote: '',
+    },
+    {
+      no: 2,
+      type: '사고자',
+      dept: '본청 중앙학교 실습부서',
+      workDate: '2026-07-15',
+      shift: '주',
+      affDept: '본청 중앙학교 실습부서',
+      name: '[경사] 홍길동',
+      workTime: '08:00~10:00',
+      reason: '병가',
+      cancelNote: '',
+    },
+    {
+      no: 1,
+      type: '자원근무',
+      dept: '본청 중앙학교 실습부서',
+      workDate: '2026-07-15',
+      shift: '주',
+      affDept: '본청 중앙학교 실습부서',
+      name: '[경사] 홍길동',
+      workTime: '전일',
+      reason: '연가',
+      cancelNote: '취소 2026-07-16',
+    },
     {
       no: 3,
       type: '자원근무',
