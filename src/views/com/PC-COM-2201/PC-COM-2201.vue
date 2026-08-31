@@ -23,8 +23,6 @@ import {
 } from './composable/PC-COM-2201'
 import styles from './style/PC-COM-2201.module.css'
 
-// KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!)
-// BottomTabItem.componentName 과 일치해야 하고, 다른 화면과 겹치면 캐시가 뒤섞인다.
 defineOptions({ name: 'PcCom2201' })
 
 const navItems = [
@@ -38,7 +36,10 @@ const dialog = useDialog()
 const {
   deptTree,
   selectedDept,
+  editingDept,
   addDept,
+  commitDeptName,
+  cancelDeptEdit,
   removeDept,
   searchField,
   searchKeyword,
@@ -56,6 +57,18 @@ const treeRef = ref<InstanceType<typeof TreeView> | null>(null)
 /** TreeView 는 범용 TreeNode 를 넘기므로 이 화면의 DeptNode 로 좁혀 받는다 */
 function onDeptClick(node: TreeNode) {
   selectedDept.value = node as DeptNode
+}
+
+/**
+ * 추가한 노드의 입력창에서 이름을 확정했을 때.
+ * 이름을 안 적고 빠져나가면 빈 노드가 지워지므로 그때는 저장 안내를 하지 않는다.
+ */
+function onDeptRename(node: TreeNode, name: string) {
+  if (commitDeptName(node as DeptNode, name)) toast.success('저장되었습니다.')
+}
+
+function onDeptRenameCancel(node: TreeNode) {
+  cancelDeptEdit(node as DeptNode)
 }
 
 async function onDeptRemove() {
@@ -150,29 +163,35 @@ useBottomTabSetup({
     <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
   </div>
 
-  <LayoutSplite :count="3" :widths="[24, 52, 24]" :class="styles.split">
+  <LayoutSplite :count="3" :widths="[24, 52, 24]">
     <!-- ── 부서 ─────────────────────────────── -->
     <template #layout-1>
-      <LayoutPanel title="부서">
+      <LayoutPanel title="부서" no-padding>
         <template #actions>
-          <Button type="button" variant="tertiary2" size="sm" @click="onDeptRemove">삭제</Button>
-          <Button type="button" variant="secondary" size="sm" @click="addDept">추가</Button>
+          <Button type="button" variant="tertiary2" size="sm" @click="onDeptRemove" class="min-w-[40px]">삭제</Button>
+          <Button type="button" variant="secondary" size="sm" @click="addDept" class="min-w-[40px]">추가</Button>
         </template>
 
         <div class="btn-tree">
           <Button type="button" variant="text" size="sm" @click="treeRef?.openAll()">
+            <img src="/portal/asset/images/icon/ico_plus.svg" alt="" aria-hidden="true" />
             모두 확장
           </Button>
           <Button type="button" variant="text" size="sm" @click="treeRef?.closeAll()">
+            <img src="/portal/asset/images/icon/ico_minus.svg" alt="" aria-hidden="true" />
             모두 축소
           </Button>
         </div>
           <TreeView
             ref="treeRef"
             v-model="deptTree"
+            show-icon
+            :editing-node="editingDept"
             :class="styles.tree"
             :draggable="false"
             @node-click="onDeptClick"
+            @node-rename="onDeptRename"
+            @node-rename-cancel="onDeptRenameCancel"
           />
       </LayoutPanel>
     </template>
@@ -206,6 +225,7 @@ useBottomTabSetup({
               search
               @icon-click="searchUsers"
               @keyup.enter="searchUsers"
+              clearable
             />
           </div>
         </template>
@@ -240,6 +260,7 @@ useBottomTabSetup({
             icon-class="size-6"
             icon-label="권한 조회"
             search
+            clearable
           />
         </template>
 

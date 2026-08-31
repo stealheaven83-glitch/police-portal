@@ -138,6 +138,7 @@ useBottomTabSetup({
           inputClass="w-100"
           placeholder="검색어를 입력해주세요."
           @keyup.enter="search"
+          clearable
         />
       </div>
     </template>

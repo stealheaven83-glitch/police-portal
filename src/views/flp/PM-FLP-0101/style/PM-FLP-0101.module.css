@@ -1,17 +1,1 @@
 /* 요청관리 전용 스타일. 1rem = 10px 기준(전역 리셋). */
-
-/*
- * '도움말' 버튼에 해당하는 공용 컴포넌트가 custom/·ui/ 어디에도 없다.
- * 규칙대로 임의로 만들지 않고 자리만 표시해 둔다 — 컴포넌트가 생기면 이 자리를 그대로 교체한다.
- */
-.missingComponent {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.2rem 0.8rem;
-  border: 1px dashed var(--Border_gray03);
-  border-radius: var(--Radius-small3);
-  font-size: 1.3rem;
-  line-height: 1.5;
-  color: var(--Text-body_2);
-  white-space: nowrap;
-}

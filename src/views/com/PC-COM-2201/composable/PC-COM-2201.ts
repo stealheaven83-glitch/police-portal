@@ -119,18 +119,41 @@ export function useUserAuthManage() {
   /** 트리에서 고른 부서. 사용자목록 조회 조건이 된다 */
   const selectedDept = ref<DeptNode | null>(null)
 
-  let deptSeq = 1
+  /** 이름을 입력받는 중인 노드. TreeView 가 이 노드만 입력창으로 바꿔 그린다 */
+  const editingDept = ref<DeptNode | null>(null)
 
+  /**
+   * 고른 부서 아래(고른 게 없으면 최상위)에 이름 없는 노드를 만들고 입력창을 연다.
+   * editingDept 에는 넣은 객체가 아니라 "배열에서 다시 꺼낸" 것을 담아야 한다 —
+   * ref 배열에 넣는 순간 반응형 프록시로 감싸여서, 템플릿이 받는 노드와 === 로 안 맞는다.
+   */
   function addDept() {
-    // 고른 부서가 있으면 그 아래로, 없으면 최상위에 추가한다
     const parent = selectedDept.value
-    if (parent) {
-      if (!parent.children) parent.children = []
-      parent.children.push({ name: `새 부서 ${deptSeq++}` })
-      parent.open = true
-      return
+    const siblings = parent ? (parent.children ??= []) : deptTree.value
+    siblings.push({ name: '' })
+    if (parent) parent.open = true
+    editingDept.value = siblings[siblings.length - 1]
+  }
+
+  /**
+   * 입력한 이름을 확정한다. 저장했으면 true.
+   * 이름이 비어 있으면 방금 만든 빈 노드가 남으니 지운다.
+   */
+  function commitDeptName(node: DeptNode, name: string): boolean {
+    const trimmed = name.trim()
+    editingDept.value = null
+    if (!trimmed) {
+      removeDept(node)
+      return false
     }
-    deptTree.value.push({ name: `새 부서 ${deptSeq++}` })
+    node.name = trimmed
+    return true
+  }
+
+  /** 입력을 취소한다. 아직 이름이 없는 새 노드는 같이 지운다 */
+  function cancelDeptEdit(node: DeptNode) {
+    editingDept.value = null
+    if (!node.name.trim()) removeDept(node)
   }
 
   /** 트리에서 노드를 찾아 지운다(하위 포함) */
@@ -188,7 +211,10 @@ export function useUserAuthManage() {
   return {
     deptTree,
     selectedDept,
+    editingDept,
     addDept,
+    commitDeptName,
+    cancelDeptEdit,
     removeDept,
     searchField,
     searchKeyword,

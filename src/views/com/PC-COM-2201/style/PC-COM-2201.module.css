@@ -4,24 +4,15 @@
  * 3분할(부서 · 사용자목록 · 권한목록)이라 한 칸이 좁다.
  * 좌우 배치가 유지되는 넓은 화면에서만 기본 높이보다 조금 낮춘다.
  */
-.split {
-  --split-height: 78rem;
-  --split-margin-top: 0;
-}
 
-/* 부서 트리 위의 '모두 확장 / 모두 축소' 줄 */
+/*
+ * 부서 트리 위의 '모두 확장 / 모두 축소' 줄.
+ * 가로 분할·구분선·버튼 높이는 공통 .btn-tree(police-style.css)가 잡는다.
+ * 원본 퍼블리싱 CSS 는 손대지 않기로 되어 있어, 트리와 나누는 아래 선만 여기서 더한다.
+ * (module.css 는 layer 밖이라 layer(police) 안의 .btn-tree 보다 우선한다)
+ */
 .treeToolbar {
-  display: flex;
-  align-items: stretch;
   border-bottom: 1px solid var(--Border_gray02);
-}
-
-.treeToolbar > * {
-  flex: 1;
-}
-
-.treeToolbar > * + * {
-  border-left: 1px solid var(--Border_gray02);
 }
 
 /*

@@ -98,8 +98,7 @@ useBottomTabSetup({
     <template #right>
       <div class="group-gap2">
         <Breadcrumb :items="navItems" />
-        <!-- '도움말' 버튼 공용 컴포넌트가 custom/·ui/ 에 없어 자리만 표시한다 -->
-        <span :class="styles.missingComponent">컴포넌트 없음</span>
+        
       </div>
     </template>
   </PageHeader>

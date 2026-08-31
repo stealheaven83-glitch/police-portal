@@ -114,6 +114,10 @@ function selectChild(event: MouseEvent, child: SideMenuItem) {
 .left-menu .lnb .depth1 .depth1-item {
   border-bottom: 1px solid var(--Border_gray03);
 }
+
+.left-menu .lnb .depth1 .depth1-item:last-child{
+  border-bottom:0;
+}
 .left-menu .lnb .depth1 .depth1-item .depth1-btn.is-open {
   border-bottom: 2px solid var(--Border_primary);
 }

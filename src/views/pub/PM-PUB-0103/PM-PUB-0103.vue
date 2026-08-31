@@ -15,7 +15,7 @@
     </template>
     <template #form>
       <div class="search-area">
-        <InputField2 v-model="searchForm.detailAddress" label="상세주소" size="sm" inputClass="w-40" />
+        <InputField2 v-model="searchForm.detailAddress" label="상세주소" size="sm" inputClass="w-70" />
         <SelectField
           v-model="searchForm.sortBy"
           label="정렬기준"
