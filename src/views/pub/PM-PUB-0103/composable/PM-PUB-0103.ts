@@ -113,6 +113,12 @@ export const previousCrimeDamageOptions: SelectOption[] = [
   { label: '없음', value: 'no' },
 ]
 
+/** 신규 등록 카드의 현금다액업소 여부 — 검색조건의 cashOptions(해당/해당없음)와 달리 기획서 표기가 여/부다 */
+export const cashIntensiveOptions: SelectOption[] = [
+  { label: '여', value: 'y' },
+  { label: '부', value: 'n' },
+]
+
 export const improvementStatusOptions: SelectOption[] = [
   { label: '예정', value: 'planned' },
   { label: '진행중', value: 'inProgress' },
@@ -179,6 +185,7 @@ export interface NewDiagnosisForm {
   detailAddress: string
   district: string
   districtOffice: string
+  cashIntensive: string
   reason: string
   bizName: string
   houseOwner: string
@@ -207,6 +214,7 @@ function createEmptyNewDiagnosisForm(): NewDiagnosisForm {
     detailAddress: '',
     district: '',
     districtOffice: '',
+    cashIntensive: 'y',
     reason: '',
     bizName: '',
     houseOwner: '',
@@ -309,13 +317,10 @@ export function useCpoList() {
   const selectedRow = ref<CpoDiagnosisRow | null>(null)
   const historyRows = ref<CpoHistoryRow[]>([])
 
-  /** 좌측 선택 행이 바뀌면 우측 이력을 새로 채운다(직접 편집 가능한 로컬 상태) */
-  watch(selectedRow, (row) => {
-    historyRows.value = createHistoryRows(row)
-  })
-
+  /** 좌측 행을 다시 클릭한 경우에도 우측 이력을 확실히 새로 채운다. */
   function selectRow(row: CpoDiagnosisRow | null) {
     selectedRow.value = row
+    historyRows.value = createHistoryRows(row)
   }
 
   function search() {
@@ -325,6 +330,14 @@ export function useCpoList() {
 
   /** 신규 등록 팝업(PM-PUB-0114) 상태 */
   const newDiagnosisDialogOpen = ref(false)
+  const newHistoryDialogOpen = ref(false)
+  const detailDialogOpen = ref(false)
+  const photoDialogOpen = ref(false)
+  const simpleNoticeDialogOpen = ref(false)
+  const diagnosisHistoryDialogOpen = ref(false)
+  const keepResultDialogOpen = ref(false)
+  const cpoResultDialogOpen = ref(false)
+  const mailNoticeDialogOpen = ref(false)
   const newDiagnosisForm = reactive<NewDiagnosisForm>(createEmptyNewDiagnosisForm())
   const assessmentValues = reactive<Record<string, number>>(createEmptyAssessmentValues())
 
@@ -339,6 +352,116 @@ export function useCpoList() {
     Object.assign(newDiagnosisForm, createEmptyNewDiagnosisForm())
     Object.assign(assessmentValues, createEmptyAssessmentValues())
     newDiagnosisDialogOpen.value = true
+  }
+
+  /** 목록/이력에서 선택한 진단 건을 긴 공용 진단 폼에 채운다. */
+  function loadDiagnosis(row: CpoDiagnosisRow) {
+    Object.assign(newDiagnosisForm, createEmptyNewDiagnosisForm(), {
+      type: typeOptions.find((option) => option.label === row.type)?.value ?? 'etc',
+      diagnosisDate: '2026-06-16',
+      address: row.baseAddress,
+      detailAddress: row.detailAddress,
+      district: 'daecheong',
+      districtOffice: row.dept,
+      cashIntensive: row.cashIntensive === '해당' ? 'y' : 'n',
+      reason: 'patrol',
+      bizName: row.bizName,
+      houseOwner: '성명불상',
+      applicant: '홍길동',
+      contact: '01012342341',
+      householdCount: 4,
+      floorCount: 6,
+      moveInYear: 1999,
+      crimePreventionStatus: 'continue',
+      previousCrimeDamage: 'no',
+      damageCount: 3,
+      note: '시골 농촌지역으로 파출소 근처에 있어 대체로 위험성이 없는 편임.',
+      emailNotify: true,
+    })
+    Object.assign(assessmentValues, createEmptyAssessmentValues())
+    for (const item of buildingAssessmentRows) {
+      assessmentValues[item.key] = item.type === 'radio' ? 3 : 4
+    }
+    assessmentValues.cctvCount = 2
+    assessmentValues.surveillanceFacilityCount = 1
+    assessmentValues.streetLightMaxDistance = 20
+    assessmentValues.streetLightLux = 20
+    assessmentValues.buildingMinDistance = 10
+    for (const item of extraAssessmentRows) assessmentValues[item.key] = 4
+  }
+
+  function getActiveDiagnosis() {
+    const row = selectedRow.value ?? rows.value[0] ?? null
+    if (row && selectedRow.value?.no !== row.no) selectRow(row)
+    return row
+  }
+
+  function openNewHistory() {
+    const row = getActiveDiagnosis()
+    if (!row) {
+      toast.warning('진단 건을 먼저 선택해 주세요.')
+      return
+    }
+    loadDiagnosis(row)
+    newHistoryDialogOpen.value = true
+  }
+
+  function openDetail(row?: CpoDiagnosisRow | null) {
+    const target = row ?? getActiveDiagnosis()
+    if (!target) return
+    if (selectedRow.value?.no !== target.no) selectRow(target)
+    loadDiagnosis(target)
+    detailDialogOpen.value = true
+  }
+
+  function saveNewHistory() {
+    const row = getActiveDiagnosis()
+    if (!row) return
+    historyRows.value = [
+      {
+        id: Date.now(),
+        diagnosedAt: newDiagnosisForm.diagnosisDate || '2026-06-16',
+        bizName: newDiagnosisForm.bizName || row.bizName,
+        address: `${newDiagnosisForm.address || row.baseAddress} ${newDiagnosisForm.detailAddress || row.detailAddress}`,
+        mailRequested: newDiagnosisForm.emailNotify ? '예' : '아니오',
+        mailStatus: '미발송',
+        diagnoser: '홍길동',
+      },
+      ...historyRows.value,
+    ]
+    newHistoryDialogOpen.value = false
+    toast.success('범죄예방진단 이력이 등록되었습니다.')
+  }
+
+  function saveDetail() {
+    detailDialogOpen.value = false
+    toast.success('범죄예방진단 상세내용이 저장되었습니다.')
+  }
+
+  function openPhotoData() {
+    getActiveDiagnosis()
+    photoDialogOpen.value = true
+  }
+
+  /**
+   * 상세(PM-PUB-0107)에서 '사진자료' 로 진입하는 경로.
+   * 기획서상 사진자료는 별도 화면ID(PM-PUB-0108)라, 상세 팝업을 겹쳐 두지 않고 닫아
+   * useAutoTrigger 역방향 동기화가 화면ID를 PM-PUB-0108 로 바꾸게 한다
+   * (두 팝업이 동시에 열려 있으면 어느 화면ID 조건도 완전히 일치하지 않아 0107 에 머문다).
+   */
+  function openPhotoDataFromDetail() {
+    detailDialogOpen.value = false
+    openPhotoData()
+  }
+
+  function openSimpleNoticeData() {
+    getActiveDiagnosis()
+    simpleNoticeDialogOpen.value = true
+  }
+
+  function openDiagnosisHistory() {
+    getActiveDiagnosis()
+    diagnosisHistoryDialogOpen.value = true
   }
 
   function cancelNewDiagnosis() {
@@ -366,25 +489,28 @@ export function useCpoList() {
     toast.success('등록되었습니다.')
   }
 
-  function openNewHistory() {
-    // TODO: 진단통보 이력 신규 등록 팝업 연결
-    toast.info('이력 등록 화면은 준비 중입니다.')
-  }
-
   function printKeep() {
-    // TODO: 범죄예방진단결과(보관용) 출력 연동
-    toast.info('보관용 진단결과를 준비 중입니다.')
+    getActiveDiagnosis()
+    keepResultDialogOpen.value = true
   }
 
   function printCpoConfirm() {
-    // TODO: 범죄예방진단결과(CPO확인용) 출력 연동
-    toast.info('CPO확인용 진단결과를 준비 중입니다.')
+    const row = getActiveDiagnosis()
+    if (row) loadDiagnosis(row)
+    cpoResultDialogOpen.value = true
   }
 
   function sendNotice() {
-    // TODO: 진단통보 우편 발송 연동
-    toast.info('진단통보 우편 발송은 준비 중입니다.')
+    getActiveDiagnosis()
+    mailNoticeDialogOpen.value = true
   }
+
+  /** 화면ID로 팝업에 직접 진입한 경우에도 상세 폼에 대표 진단 건을 채운다. */
+  watch([newHistoryDialogOpen, detailDialogOpen, cpoResultDialogOpen], (states, previous) => {
+    if (!states.some((state, index) => state && !previous?.[index])) return
+    const row = getActiveDiagnosis()
+    if (row) loadDiagnosis(row)
+  })
 
   return {
     advancedSearchOpen,
@@ -395,6 +521,14 @@ export function useCpoList() {
     selectRow,
     search,
     newDiagnosisDialogOpen,
+    newHistoryDialogOpen,
+    detailDialogOpen,
+    photoDialogOpen,
+    simpleNoticeDialogOpen,
+    diagnosisHistoryDialogOpen,
+    keepResultDialogOpen,
+    cpoResultDialogOpen,
+    mailNoticeDialogOpen,
     newDiagnosisForm,
     assessmentValues,
     totalScore,
@@ -402,6 +536,13 @@ export function useCpoList() {
     cancelNewDiagnosis,
     saveNewDiagnosis,
     openNewHistory,
+    saveNewHistory,
+    openDetail,
+    saveDetail,
+    openPhotoData,
+    openPhotoDataFromDetail,
+    openSimpleNoticeData,
+    openDiagnosisHistory,
     printKeep,
     printCpoConfirm,
     sendNotice,

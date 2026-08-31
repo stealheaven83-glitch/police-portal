@@ -1,16 +1,16 @@
 <template>
-  <GenericDialog2 v-model:open="open" title="범죄예방진단 현황 신규" :size="800" show-close-button>
+  <GenericDialog2 v-model:open="open" :title="title" :size="800" show-close-button>
     <section :class="styles.dialogSection">
       <div class="pop-title-sub"><h2>범죄예방진단 카드</h2></div>
       <InfoTable :columns="2" popup :class="styles.cardTable">
-        <InfoField label="부서" full>
+        <InfoField label="부서" full :class="styles.inlineActionField">
           <DepartmentCascadeSelect
             v-model="form.department"
             size="sm"
             select-class="w-full"
             :class="styles.departmentSelectGroup"
           />
-          <Button type="button" variant="secondary" size="xs" @click="onOpenSimpleNoticeData">
+          <Button type="button" variant="secondary" size="sm" @click="onOpenSimpleNoticeData">
             간이진단통보자료
           </Button>
         </InfoField>
@@ -26,14 +26,22 @@
             placeholder="선택"
           />
         </InfoField>
-        <InfoField for="new-diagnosis-date" label="진단일자">
+        <InfoField for="new-diagnosis-date" label="진단일자" :class="styles.inlineActionField">
           <DatePicker
             id="new-diagnosis-date"
             v-model="form.diagnosisDate"
             size="sm"
-            class="!space-y-0 flex-1"
+            class="!space-y-0 flex-1 min-w-0"
             placeholder="YYYY.MM.DD"
+            clearable
           />
+          <Button type="button" variant="secondary" size="sm" @click="onOpenPhotoData">사진자료</Button>
+        </InfoField>
+
+        <InfoField label="현금다액업소 여부" full>
+          <RadioGroup v-model="form.cashIntensive" :class="infoTableStyles['info-table-radio']">
+            <RadioGroupItem v-for="opt in cashIntensiveOptions" :key="opt.value" :value="opt.value" :label="opt.label" />
+          </RadioGroup>
         </InfoField>
 
         <div :class="styles.addressGrid">
@@ -53,16 +61,20 @@
               icon-label="주소 검색"
               search
               @icon-click="onSearchAddress"
-            />
-            <InputField2
-              id="new-diagnosis-detail-address"
-              v-model="form.detailAddress"
-              size="sm"
-              :class="['!space-y-0', styles.detailAddress]"
-              input-class="w-full"
-              aria-label="상세주소"
               clearable
             />
+            <div :class="styles.detailAddressRow">
+              <InputField2
+                id="new-diagnosis-detail-address"
+                v-model="form.detailAddress"
+                size="sm"
+                class="!space-y-0 flex-1 min-w-0"
+                input-class="w-full"
+                aria-label="상세주소"
+                clearable
+              />
+              <Button type="button" variant="secondary" size="sm" @click="onOpenHistory">이력보기</Button>
+            </div>
           </InfoField>
 
           <InfoField
@@ -189,7 +201,7 @@
       <div class="pop-title-lv2"><h3>1) 건물특성</h3></div>
       <InfoTable :columns="1" popup :class="styles.buildingTable">
           <InfoField v-for="row in buildingAssessmentRows" :key="row.key" :label="row.label" full>
-            <RadioGroup v-if="row.type === 'radio'" :model-value="assessment[row.key]" :class="infoTableStyles['info-table-radio']" @update:model-value="(v) => (assessment[row.key] = Number(v))">
+            <RadioGroup v-if="row.type === 'radio'" :model-value="assessment[row.key]" :class="infoTableStyles['info-table-radio']" @update:model-value="(v: unknown) => (assessment[row.key] = Number(v))">
               <RadioGroupItem :value="3" label="양호(3)" />
               <RadioGroupItem :value="2" label="보통(2)" />
               <RadioGroupItem :value="1" label="위험(1)" />
@@ -228,9 +240,9 @@
       </div>
 
       <div :class="styles.totalScoreRow">
-        <span>총점</span>
+        <span :class="styles.totalScoreLabel">총점</span>
         <span :class="styles.totalScoreValue">{{ totalScore }}</span>
-        <span>점</span>
+        <span :class="styles.totalScoreUnit">점</span>
       </div>
     </section>
 
@@ -246,6 +258,7 @@
               :class="styles.improvementDate"
               input-class="w-full"
               placeholder="YYYY.MM.DD"
+              clearable
             />
             <SelectField
               v-model="form.improvementStatus"
@@ -261,7 +274,7 @@
       </InfoTable>
     </section>
 
-    <section :class="styles.dialogSection">
+    <section :class="[styles.dialogSection, styles.noteSection]">
       <div class="pop-title-sub"><h2>착안사항</h2></div>
       <TextareaField v-model="form.note" class="w-full !space-y-0" textarea-class="w-full" :height="80" aria-label="착안사항" />
     </section>
@@ -271,22 +284,21 @@
     </section>
 
     <template #footer>
+      <Button v-if="showPrint" type="button" class="mr-auto" variant="tertiary2" size="md" @click="emit('print')">인쇄</Button>
       <Button type="button" variant="tertiary2" size="md" @click="onCancel">취소</Button>
-      <Button type="button" variant="primary" size="md" @click="onSave">저장</Button>
+      <Button type="button" variant="primary" size="md" @click="onSave">{{ saveText }}</Button>
     </template>
   </GenericDialog2>
 
-  <EmptyStubDialog
+  <AddressSearchDialog
     v-model:open="addressSearchOpen"
-    title="주소 검색"
-    description="도로명/지번 주소를 검색해 자동으로 입력합니다."
+    @select="onSelectAddress"
   />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
-import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
 import { Button } from '@/components/custom/button'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
 import Input from '@/components/custom/input/Input.vue'
@@ -298,11 +310,12 @@ import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
 import { Checkbox } from '@/components/custom/checkbox'
-import { toast } from 'vue-sonner'
+import AddressSearchDialog from '@/views/pub/components/AddressSearchDialog.vue'
 import {
   typeOptions,
   diagnosisReasonOptions,
   districtOptions,
+  cashIntensiveOptions,
   crimePreventionStatusOptions,
   previousCrimeDamageOptions,
   improvementStatusOptions,
@@ -318,9 +331,17 @@ interface Props {
   form: NewDiagnosisForm
   assessment: Record<string, number>
   totalScore: number
+  title?: string
+  saveText?: string
+  showPrint?: boolean
 }
 
-defineProps<Props>()
+const {
+  form,
+  title = '범죄예방진단 신규',
+  saveText = '저장',
+  showPrint = false,
+} = defineProps<Props>()
 
 const open = defineModel<boolean>('open', { default: false })
 const addressSearchOpen = ref(false)
@@ -328,6 +349,10 @@ const addressSearchOpen = ref(false)
 const emit = defineEmits<{
   (e: 'save'): void
   (e: 'cancel'): void
+  (e: 'print'): void
+  (e: 'open-simple-notice'): void
+  (e: 'open-photo'): void
+  (e: 'open-history'): void
 }>()
 
 /** 검색조건의 '전체' 옵션은 신규 등록 폼에는 맞지 않는다 */
@@ -338,9 +363,20 @@ function onSearchAddress() {
   addressSearchOpen.value = true
 }
 
+function onSelectAddress(address: string) {
+  form.address = address
+}
+
 function onOpenSimpleNoticeData() {
-  // TODO: 간이진단통보자료(PM-PUB-0115) 팝업 연동
-  toast.info('간이진단통보자료는 준비 중입니다.')
+  emit('open-simple-notice')
+}
+
+function onOpenPhotoData() {
+  emit('open-photo')
+}
+
+function onOpenHistory() {
+  emit('open-history')
 }
 
 function onCancel() {

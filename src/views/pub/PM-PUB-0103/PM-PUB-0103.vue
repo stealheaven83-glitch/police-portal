@@ -14,8 +14,8 @@
       <DepartmentCascadeSelect v-model="searchForm.department" size="sm" />
     </template>
     <template #form>
-      <div class="search-area">
-        <InputField2 v-model="searchForm.detailAddress" label="상세주소" size="sm" inputClass="w-70" />
+      <div class="search-area" :class="styles.searchArea">
+        <InputField2 v-model="searchForm.detailAddress" label="상세주소" size="sm" inputClass="w-40" clearable />
         <SelectField
           v-model="searchForm.sortBy"
           label="정렬기준"
@@ -24,8 +24,8 @@
           size="sm"
           triggerClass="w-30"
         />
-        <InputField2 v-model="searchForm.managementNo" label="관리번호" size="sm" inputClass="w-32" />
-        <InputField2 v-model="searchForm.bizName" label="상호명" size="sm" inputClass="w-32" />
+        <InputField2 v-model="searchForm.managementNo" label="관리번호" size="sm" inputClass="w-32" clearable />
+        <InputField2 v-model="searchForm.bizName" label="상호명" size="sm" inputClass="w-32" clearable />
         <SelectField
           v-model="searchForm.type"
           label="유형"
@@ -59,12 +59,9 @@
           triggerClass="w-30"
         />
         <div class="flex items-center">
-          <span class="text-[1.5rem] mr-3">진단일자</span>
-          <div :class="styles.dateRange">
-            <DatePicker v-model="searchForm.diagnosedFrom" size="sm" inputClass="w-40" placeholder="YYYY.MM.DD" />
-            <span aria-hidden="true">~</span>
-            <DatePicker v-model="searchForm.diagnosedTo" size="sm" inputClass="w-40" placeholder="YYYY.MM.DD" />
-          </div>
+          <DatePicker label="진단일자" labelPosition="left" size="sm" inputClass="w-[160px]" clearable></DatePicker>
+          <span class="px-3">~</span>
+          <DatePicker size="sm" inputClass="w-[160px]" clearable></DatePicker>
         </div>
         <SelectField
           v-model="searchForm.reason"
@@ -74,7 +71,7 @@
           size="sm"
           triggerClass="w-50"
         />
-        <InputField2 v-model="searchForm.diagnoser" label="진단자" size="sm" inputClass="w-30" />
+        <InputField2 v-model="searchForm.diagnoser" label="진단자" size="sm" inputClass="w-30" clearable />
       </div>
     </template>
     <template #btns>
@@ -82,7 +79,7 @@
     </template>
   </SearchWrapper>
 
-  <div class="list-actions" :class="styles.listActions">
+  <div class="list-actions">
     <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel(true)">
       <Download :size="16" aria-hidden="true" />
       엑셀다운로드 (헤더+값)
@@ -118,6 +115,8 @@
           show-pagination
           :items-per-page="10"
           @row-selection-changed="onRowSelectionChanged"
+          @row-click="onDiagnosisRowClick"
+          @row-dbl-click="onDiagnosisRowDoubleClick"
         />
       </LayoutPanel>
     </template>
@@ -144,11 +143,60 @@
 
   <NewDiagnosisDialog
     v-model:open="newDiagnosisDialogOpen"
+    title="범죄예방진단 현황 신규"
     :form="newDiagnosisForm"
     :assessment="assessmentValues"
     :total-score="totalScore"
     @save="saveNewDiagnosis"
     @cancel="cancelNewDiagnosis"
+    @open-simple-notice="openSimpleNoticeData"
+    @open-photo="openPhotoData"
+    @open-history="openDiagnosisHistory"
+  />
+
+  <NewDiagnosisDialog
+    v-model:open="newHistoryDialogOpen"
+    title="범죄예방진단 이력 신규"
+    :form="newDiagnosisForm"
+    :assessment="assessmentValues"
+    :total-score="totalScore"
+    @save="saveNewHistory"
+    @cancel="newHistoryDialogOpen = false"
+    @open-simple-notice="openSimpleNoticeData"
+    @open-photo="openPhotoData"
+    @open-history="openDiagnosisHistory"
+  />
+
+  <DiagnosisDetailDialog
+    v-model:open="detailDialogOpen"
+    :form="newDiagnosisForm"
+    :assessment="assessmentValues"
+    :total-score="totalScore"
+    :diagnosis="selectedRow"
+    @save="saveDetail"
+    @cancel="detailDialogOpen = false"
+    @print="printDetail"
+    @open-photo="openPhotoDataFromDetail"
+  />
+
+  <PhotoDataDialog v-model:open="photoDialogOpen" v-model:note="newDiagnosisForm.note" />
+  <SimpleNoticeDataDialog v-model:open="simpleNoticeDialogOpen" :diagnosis="selectedRow" />
+  <DiagnosisHistoryDialog v-model:open="diagnosisHistoryDialogOpen" :diagnosis="selectedRow" :rows="historyRows" />
+  <KeepResultDialog v-model:open="keepResultDialogOpen" :diagnosis="selectedRow" />
+  <CpoResultDialog
+    v-model:open="cpoResultDialogOpen"
+    :diagnosis="selectedRow"
+    :rows="rows"
+    :form="newDiagnosisForm"
+    :assessment="assessmentValues"
+    :total-score="totalScore"
+    @open-simple-notice="openSimpleNoticeData"
+    @open-history="openDiagnosisHistory"
+  />
+  <MailNoticeDialog
+    v-model:open="mailNoticeDialogOpen"
+    :diagnosis="selectedRow"
+    :note="newDiagnosisForm.note"
   />
 </template>
 
@@ -169,6 +217,13 @@ import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import NewDiagnosisDialog from './components/NewDiagnosisDialog.vue'
+import DiagnosisDetailDialog from './components/DiagnosisDetailDialog.vue'
+import PhotoDataDialog from './components/PhotoDataDialog.vue'
+import SimpleNoticeDataDialog from './components/SimpleNoticeDataDialog.vue'
+import DiagnosisHistoryDialog from './components/DiagnosisHistoryDialog.vue'
+import KeepResultDialog from './components/KeepResultDialog.vue'
+import CpoResultDialog from './components/CpoResultDialog.vue'
+import MailNoticeDialog from './components/MailNoticeDialog.vue'
 import { useAutoTrigger, type ScreenTriggerMap } from '@/composables/useAutoTrigger'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
@@ -182,6 +237,7 @@ import {
   cashOptions,
   reasonOptions,
   type CpoDiagnosisRow,
+  type CpoHistoryRow,
 } from './composable/PM-PUB-0103'
 import styles from './style/PM-PUB-0103.module.css'
 
@@ -201,10 +257,19 @@ const {
   advancedSearchOpen,
   searchForm,
   rows,
+  selectedRow,
   historyRows,
   selectRow,
   search,
   newDiagnosisDialogOpen,
+  newHistoryDialogOpen,
+  detailDialogOpen,
+  photoDialogOpen,
+  simpleNoticeDialogOpen,
+  diagnosisHistoryDialogOpen,
+  keepResultDialogOpen,
+  cpoResultDialogOpen,
+  mailNoticeDialogOpen,
   newDiagnosisForm,
   assessmentValues,
   totalScore,
@@ -212,6 +277,13 @@ const {
   cancelNewDiagnosis,
   saveNewDiagnosis,
   openNewHistory,
+  saveNewHistory,
+  openDetail,
+  saveDetail,
+  openPhotoData,
+  openPhotoDataFromDetail,
+  openSimpleNoticeData,
+  openDiagnosisHistory,
   printKeep,
   printCpoConfirm,
   sendNotice,
@@ -241,7 +313,16 @@ const listColumns: TabulatorGridColumn[] = [
 
 const historyColumns: TabulatorGridColumn[] = [
   { title: '진단일자', field: 'diagnosedAt', hozAlign: 'center' },
-  { title: '상호명', field: 'bizName', hozAlign: 'center' },
+  {
+    title: '상호명',
+    field: 'bizName',
+    hozAlign: 'center',
+    cellType: 'button',
+    buttonVariant: 'link',
+    buttonSize: 'xxs',
+    buttonLabel: (row) => String((row as CpoHistoryRow).bizName),
+    onButtonClick: () => openDetail(selectedRow.value),
+  },
   { title: '주소', field: 'address', widthGrow: 2, hozAlign: 'left' },
   { title: '우편희망', field: 'mailRequested', hozAlign: 'center' },
   { title: '우편상태', field: 'mailStatus', hozAlign: 'center' },
@@ -264,6 +345,23 @@ function onRowSelectionChanged(selected: any[]) {
   selectRow(row ?? null)
 }
 
+function getRowData(row: any): CpoDiagnosisRow | undefined {
+  return row && typeof row.getData === 'function' ? row.getData() : row
+}
+
+function onDiagnosisRowClick(_event: Event, row: any) {
+  const data = getRowData(row)
+  if (data) selectRow(data)
+}
+
+function onDiagnosisRowDoubleClick(_event: Event, row: any) {
+  openDetail(getRowData(row))
+}
+
+function printDetail() {
+  window.print()
+}
+
 function onDeleteSelectedHistory() {
   historyGridRef.value?.deleteSelected()
 }
@@ -275,15 +373,37 @@ function onDownloadExcel(withHeader: boolean) {
 }
 
 /**
- * 화면ID(PM-PUB-XXXX) ↔ 신규 등록 팝업 상태 양방향 동기화 (PC-LPO-0701/0702 와 동일 패턴).
- *   PM-PUB-0103 : 목록만(신규 등록 팝업 닫힘)
- *   PM-PUB-0114 : 목록 + 신규 등록 팝업(newDiagnosisDialogOpen) 열림
- * 워크리스트에서 PM-PUB-0114 로 바로 들어오면 팝업이 열린 채로 보이고, "신규" 버튼을 눌러
- * 팝업을 열면 주소창이 자동으로 PM-PUB-0114 로 바뀐다(router.replace, 히스토리는 안 쌓임).
+ * 기획서 화면ID ↔ 목록 위에 열리는 각 팝업 상태를 양방향으로 동기화한다.
+ * URL로 직접 진입해도 해당 팝업이 열리고, 화면 버튼으로 단독 팝업을 열면 같은 화면ID로 바뀐다.
+ * 긴 폼에서 사진/이력 같은 하위 팝업을 겹쳐 여는 동안에는 부모 화면ID를 유지한다.
  */
+const dialogStates = {
+  keep: keepResultDialogOpen,
+  cpo: cpoResultDialogOpen,
+  historyNew: newHistoryDialogOpen,
+  detail: detailDialogOpen,
+  photo: photoDialogOpen,
+  noticeData: simpleNoticeDialogOpen,
+  history: diagnosisHistoryDialogOpen,
+  newDiagnosis: newDiagnosisDialogOpen,
+  mail: mailNoticeDialogOpen,
+}
+
+function screenState(active?: keyof typeof dialogStates) {
+  return Object.entries(dialogStates).map(([name, state]) => [state, name === active] as const)
+}
+
 const screenTriggers: ScreenTriggerMap = {
-  'PM-PUB-0103': [[newDiagnosisDialogOpen, false]],
-  'PM-PUB-0114': [[newDiagnosisDialogOpen, true]],
+  'PM-PUB-0103': screenState(),
+  'PM-PUB-0104': screenState('keep'),
+  'PM-PUB-0105': screenState('cpo'),
+  'PM-PUB-0106': screenState('historyNew'),
+  'PM-PUB-0107': screenState('detail'),
+  'PM-PUB-0108': screenState('photo'),
+  'PM-PUB-0109': screenState('noticeData'),
+  'PM-PUB-0110': screenState('history'),
+  'PM-PUB-0114': screenState('newDiagnosis'),
+  'PM-PUB-0115': screenState('mail'),
 }
 useAutoTrigger(screenTriggers)
 

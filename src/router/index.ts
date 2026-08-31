@@ -644,9 +644,59 @@ const router = createRouter({
             component: () => import('../views/pub/PM-PUB-0103/PM-PUB-0103.vue'),
             meta: {
                 layout: 'WorkLayout',
-                title: '간이 범죄예방진단'
+                title: 'CPO 입력 · 관리',
+                // Layout.vue 가 <component :key="route.meta.screenGroup ?? route.fullPath">로 렌더링한다.
+                // 0103(목록)과 0104~0115 관련 팝업은 같은 컴포넌트가 useAutoTrigger 로 URL↔팝업 상태를
+                // 동기화하는데, key 가 화면ID마다 바뀌면 이동할 때마다 KeepAlive 가 비활성/재활성되어
+                // 팝업 닫기가 중간에 끊긴다. screenGroup 을 공통으로 줘서 key 가 안 바뀌게 한다
+                // (PC-LPO-0701·PC-COM-2204·PM-COM-0101 과 동일 패턴).
+                screenGroup: 'PM-PUB-0103',
             }
          },
+        {
+            path: '/views/pub/PM-PUB-0104',
+            alias: '/views/pub/PC-PUB-0104',
+            name: 'PM-PUB-0104',
+            component: () => import('../views/pub/PM-PUB-0103/PM-PUB-0103.vue'),
+            meta: { layout: 'WorkLayout', title: '범죄예방진단결과 (보관용)', screenGroup: 'PM-PUB-0103' }
+        },
+        {
+            path: '/views/pub/PM-PUB-0105',
+            alias: '/views/pub/PC-PUB-0105',
+            name: 'PM-PUB-0105',
+            component: () => import('../views/pub/PM-PUB-0103/PM-PUB-0103.vue'),
+            meta: { layout: 'WorkLayout', title: '범죄예방진단결과 (CPO확인용)', screenGroup: 'PM-PUB-0103' }
+        },
+        {
+            path: '/views/pub/PM-PUB-0106',
+            name: 'PM-PUB-0106',
+            component: () => import('../views/pub/PM-PUB-0103/PM-PUB-0103.vue'),
+            meta: { layout: 'WorkLayout', title: '범죄예방진단 이력 신규', screenGroup: 'PM-PUB-0103' }
+        },
+        {
+            path: '/views/pub/PM-PUB-0107',
+            name: 'PM-PUB-0107',
+            component: () => import('../views/pub/PM-PUB-0103/PM-PUB-0103.vue'),
+            meta: { layout: 'WorkLayout', title: '범죄예방진단 상세', screenGroup: 'PM-PUB-0103' }
+        },
+        {
+            path: '/views/pub/PM-PUB-0108',
+            name: 'PM-PUB-0108',
+            component: () => import('../views/pub/PM-PUB-0103/PM-PUB-0103.vue'),
+            meta: { layout: 'WorkLayout', title: '사진자료', screenGroup: 'PM-PUB-0103' }
+        },
+        {
+            path: '/views/pub/PM-PUB-0109',
+            name: 'PM-PUB-0109',
+            component: () => import('../views/pub/PM-PUB-0103/PM-PUB-0103.vue'),
+            meta: { layout: 'WorkLayout', title: '간이진단통보자료', screenGroup: 'PM-PUB-0103' }
+        },
+        {
+            path: '/views/pub/PM-PUB-0110',
+            name: 'PM-PUB-0110',
+            component: () => import('../views/pub/PM-PUB-0103/PM-PUB-0103.vue'),
+            meta: { layout: 'WorkLayout', title: '범죄예방진단 이력보기', screenGroup: 'PM-PUB-0103' }
+        },
         {
             // PM-PUB-0103 과 같은 파일을 가리킨다 — useAutoTrigger 로 이 화면ID에 진입하면
             // "범죄예방진단 현황 신규" 팝업이 바로 열린 상태로 보인다(PC-LPO-0701/0702 와 동일 패턴).
@@ -655,7 +705,8 @@ const router = createRouter({
             component: () => import('../views/pub/PM-PUB-0103/PM-PUB-0103.vue'),
             meta: {
                 layout: 'WorkLayout',
-                title: '범죄예방진단 현황 신규'
+                title: '범죄예방진단 현황 신규',
+                screenGroup: 'PM-PUB-0103',
             }
         },
         {
@@ -711,6 +762,12 @@ const router = createRouter({
                 layout: 'WorkLayout',
                 title: '활동현황'
             }
+        },
+        {
+            path: '/views/pub/PM-PUB-0115',
+            name: 'PM-PUB-0115',
+            component: () => import('../views/pub/PM-PUB-0103/PM-PUB-0103.vue'),
+            meta: { layout: 'WorkLayout', title: '진단통보(우편 발송)', screenGroup: 'PM-PUB-0103' }
         },
         {
             path: '/views/stt/PC-STT-0103',
