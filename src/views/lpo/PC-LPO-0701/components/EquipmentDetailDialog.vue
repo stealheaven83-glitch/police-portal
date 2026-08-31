@@ -183,9 +183,9 @@ function onSave() {
     </FlexRow>
 
     <template #footer>
-      <Button type="button" class="w-25" variant="tertiary2" size="md" @click="detailDialogOpen = false">닫기</Button>
-      <Button type="button" class="w-25" variant="tertiary2" size="md" :disabled="detail.id == null" @click="deleteDetail">삭제</Button>
-      <Button type="button" class="w-25" variant="primary" size="md" @click="onSave">저장</Button>
+      <Button type="button" variant="tertiary2" size="md" @click="detailDialogOpen = false">닫기</Button>
+      <Button type="button" variant="tertiary2" size="md" :disabled="detail.id == null" @click="deleteDetail">삭제</Button>
+      <Button type="button" variant="primary" size="md" @click="onSave">저장</Button>
     </template>
   </GenericDialog2>
 </template>

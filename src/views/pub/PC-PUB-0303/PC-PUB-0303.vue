@@ -63,8 +63,8 @@ useBottomTabSetup({
 
   <div :class="styles.pageActions">
     <div :class="styles.pageActionButtons">
-      <Button type="button" variant="tertiary2" size="sm" class="w-25" @click="goList">목록</Button>
-      <Button type="button" variant="primary" size="sm" class="w-25" @click="onSave">저장</Button>
+      <Button type="button" variant="tertiary2" size="sm" @click="goList">목록</Button>
+      <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
     </div>
   </div>
 

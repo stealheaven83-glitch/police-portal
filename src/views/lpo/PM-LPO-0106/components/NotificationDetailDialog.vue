@@ -9,8 +9,8 @@
     </InfoTable>
 
     <template #footer>
-      <Button type="button" class="w-25" variant="tertiary2" size="md" @click="onDelete">삭제</Button>
-      <Button type="button" class="w-25" variant="primary" size="md" @click="onConfirm">확인</Button>
+      <Button type="button" variant="tertiary2" size="md" @click="onDelete">삭제</Button>
+      <Button type="button" variant="primary" size="md" @click="onConfirm">확인</Button>
     </template>
   </GenericDialog2>
 </template>

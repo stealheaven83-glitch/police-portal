@@ -118,7 +118,7 @@ useBottomTabSetup({
       </div>
     </template>
     <template #btns>
-      <Button variant="secondary" size="sm" class="w-25">조회</Button>
+      <Button variant="secondary" size="sm">조회</Button>
     </template>
   </SearchWrapper>
 
@@ -137,7 +137,7 @@ useBottomTabSetup({
   />
 
   <div class="list-actions">
-    <Button type="button" variant="tertiary2" size="sm" class="w-25" @click="onDeleteSelected">삭제</Button>
-    <Button type="button" variant="primary" size="sm" class="w-25" @click="onRegister">등록</Button>
+    <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelected">삭제</Button>
+    <Button type="button" variant="primary" size="sm" @click="onRegister">등록</Button>
   </div>
 </template>

@@ -128,7 +128,7 @@ function openAssignCell(rowLabel: string, slot: string) {
     </div>
     <div class="flex gap-3">
       <Button type="button" variant="tertiary2" size="sm" class="w-30" @click="openManageDialog('甲지 일괄 출력')">甲지 일괄 출력</Button>
-      <Button type="button" variant="tertiary2" size="sm" class="w-25" @click="onPrint">인쇄</Button>
+      <Button type="button" variant="tertiary2" size="sm" @click="onPrint">인쇄</Button>
     </div>
   </div>
 
@@ -152,12 +152,12 @@ function openAssignCell(rowLabel: string, slot: string) {
     </div>
 
     <div class="group-gap3">
-      <Button type="button" class="w-25" variant="tertiary2" size="sm" @click="resetScheduleGrid">甲지 초기화</Button>
-      <Button type="button" class="w-25" variant="secondary" size="sm" @click="openManageDialog('순찰구역 관리')">순찰구역</Button>
-      <Button type="button" class="w-25" variant="secondary" size="sm" @click="openManageDialog('교대복구')">교대복구</Button>
-      <Button type="button" class="w-25" variant="secondary" size="sm" @click="openManageDialog('근무관리')">근무관리</Button>
-      <Button type="button" class="w-25" variant="secondary" size="sm" @click="openManageDialog('시간관리')">시간관리</Button>
-      <Button type="button" class="w-25" variant="primary" size="sm" @click="onSave">저장</Button>
+      <Button type="button" variant="tertiary2" size="sm" @click="resetScheduleGrid">甲지 초기화</Button>
+      <Button type="button" variant="secondary" size="sm" @click="openManageDialog('순찰구역 관리')">순찰구역</Button>
+      <Button type="button" variant="secondary" size="sm" @click="openManageDialog('교대복구')">교대복구</Button>
+      <Button type="button" variant="secondary" size="sm" @click="openManageDialog('근무관리')">근무관리</Button>
+      <Button type="button" variant="secondary" size="sm" @click="openManageDialog('시간관리')">시간관리</Button>
+      <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
     </div>
   </div>
 

@@ -40,9 +40,9 @@ const { etcDetail, etcDetailDialogOpen, saveEtcDetail, deleteEtcDetail } = store
     </InfoTable>
 
     <template #footer>
-      <Button type="button" class="w-25" variant="tertiary2" size="md" @click="etcDetailDialogOpen = false">닫기</Button>
-      <Button type="button" class="w-25" variant="tertiary2" size="md" :disabled="etcDetail.id == null" @click="deleteEtcDetail">삭제</Button>
-      <Button type="button" class="w-25" variant="primary" size="md" @click="saveEtcDetail">저장</Button>
+      <Button type="button" variant="tertiary2" size="md" @click="etcDetailDialogOpen = false">닫기</Button>
+      <Button type="button" variant="tertiary2" size="md" :disabled="etcDetail.id == null" @click="deleteEtcDetail">삭제</Button>
+      <Button type="button" variant="primary" size="md" @click="saveEtcDetail">저장</Button>
     </template>
   </GenericDialog2>
 </template>

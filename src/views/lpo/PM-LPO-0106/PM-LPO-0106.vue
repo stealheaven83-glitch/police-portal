@@ -142,7 +142,7 @@ useBottomTabSetup({
       </div>
     </template>
     <template #btns>
-      <Button type="button" variant="secondary" size="sm" class="w-25" @click="search">조회</Button>
+      <Button type="button" variant="secondary" size="sm" @click="search">조회</Button>
     </template>
   </SearchWrapper>
 

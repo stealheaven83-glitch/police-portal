@@ -222,7 +222,7 @@ async function onDelete() {
     </InfoTable>
 
     <template #footer>
-      <Button type="button" variant="tertiary2" size="md" class="w-25" @click="closeDetail">
+      <Button type="button" variant="tertiary2" size="md" @click="closeDetail">
         닫기
       </Button>
       <!-- 신규 등록 중에는 지울 대상이 없다 -->
@@ -231,12 +231,12 @@ async function onDelete() {
         type="button"
         variant="tertiary2"
         size="md"
-        class="w-25"
+       
         @click="onDelete"
       >
         삭제
       </Button>
-      <Button type="button" variant="primary" size="md" class="w-25" @click="onSave">저장</Button>
+      <Button type="button" variant="primary" size="md" @click="onSave">저장</Button>
     </template>
   </GenericDialog2>
 </template>

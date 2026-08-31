@@ -58,12 +58,12 @@ const maintenanceGridColumns: TabulatorGridColumn[] = [
 
     <template #footer>
       <div class="btn-wrap">
-        <Button type="button" class="w-25" variant="tertiary2" size="md" @click="onPrint">인쇄</Button>
+        <Button type="button" variant="tertiary2" size="md" @click="onPrint">인쇄</Button>
         <div class="btn-wrap-group">
-          <Button type="button" class="w-25" variant="tertiary2" size="md" @click="maintenanceDialogOpen = false">닫기</Button>
-          <Button type="button" class="w-25" variant="tertiary2" size="md" @click="maintenanceDialogOpen = false">삭제</Button>
-          <Button type="button" class="w-25" variant="secondary" size="md" @click="addMaintenanceRow">신규</Button>
-          <Button type="button" class="w-25" variant="primary" size="md" @click="saveMaintenanceHistory">저장</Button>
+          <Button type="button" variant="tertiary2" size="md" @click="maintenanceDialogOpen = false">닫기</Button>
+          <Button type="button" variant="tertiary2" size="md" @click="maintenanceDialogOpen = false">삭제</Button>
+          <Button type="button" variant="secondary" size="md" @click="addMaintenanceRow">신규</Button>
+          <Button type="button" variant="primary" size="md" @click="saveMaintenanceHistory">저장</Button>
         </div>
       </div>
     </template>

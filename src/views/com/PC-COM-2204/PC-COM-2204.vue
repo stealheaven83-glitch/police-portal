@@ -142,9 +142,9 @@ useBottomTabSetup({
     <template #layout-1>
       <LayoutPanel title="권한설정">
         <template #actions>
-          <Button type="button" class="w-25" variant="tertiary2" size="sm" @click="onDeleteSelectedPermissions">선택삭제</Button>
-          <Button type="button" class="w-25" variant="secondary" size="sm" @click="addPermission">추가</Button>
-          <Button type="button" class="w-25" variant="primary" size="sm" @click="onSavePermissions">저장</Button>
+          <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelectedPermissions">선택삭제</Button>
+          <Button type="button" variant="secondary" size="sm" @click="addPermission">추가</Button>
+          <Button type="button" variant="primary" size="sm" @click="onSavePermissions">저장</Button>
         </template>
 
         <div class="flex justify-end">
@@ -188,7 +188,7 @@ useBottomTabSetup({
           </span>
         </template>
         <template #actions>
-          <Button type="button" class="w-25" variant="primary" size="sm" @click="onSaveMenuPermissions">저장</Button>
+          <Button type="button" variant="primary" size="sm" @click="onSaveMenuPermissions">저장</Button>
         </template>
 
         <TabulatorGrid

@@ -147,7 +147,7 @@ useBottomTabSetup({
   </PageHeader>
 
   <div class="list-actions">
-    <Button type="button" variant="primary" size="sm" class="w-25" @click="onSave">저장</Button>
+    <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
   </div>
 
   <LayoutSplite :count="3" :widths="[24, 52, 24]" :class="styles.split">

@@ -350,10 +350,10 @@ onBeforeUnmount(store.revokePhotoUrls)
     </InfoTable>
 
     <template #footer>
-      <Button type="button" variant="tertiary2" size="md" class="w-25" @click="closeDetail">
+      <Button type="button" variant="tertiary2" size="md" @click="closeDetail">
         취소
       </Button>
-      <Button type="button" variant="primary" size="md" class="w-25" @click="saveDetail">
+      <Button type="button" variant="primary" size="md" @click="saveDetail">
         저장
       </Button>
     </template>
