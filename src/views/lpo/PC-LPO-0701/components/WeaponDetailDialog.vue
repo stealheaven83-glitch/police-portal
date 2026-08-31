@@ -94,10 +94,10 @@ const { weaponDetail, weaponDetailDialogOpen, addWeaponHandler, saveWeaponDetail
     </div>
     
     <template #footer>
-      <Button type="button" class="w-25" variant="tertiary2" size="md" @click="weaponDetailDialogOpen = false">닫기</Button>
-      <Button type="button" class="w-25" variant="tertiary2" size="md" :disabled="weaponDetail.id == null" @click="deleteWeaponDetail">삭제</Button>
-      <Button type="button" class="w-25" variant="secondary" size="md" @click="addWeaponHandler">담당자추가</Button>
-      <Button type="button" class="w-25" variant="primary" size="md" @click="saveWeaponDetail">저장</Button>
+      <Button type="button" variant="tertiary2" size="md" @click="weaponDetailDialogOpen = false">닫기</Button>
+      <Button type="button" variant="tertiary2" size="md" :disabled="weaponDetail.id == null" @click="deleteWeaponDetail">삭제</Button>
+      <Button type="button" variant="secondary" size="md" @click="addWeaponHandler">담당자추가</Button>
+      <Button type="button" variant="primary" size="md" @click="saveWeaponDetail">저장</Button>
     </template>
   </GenericDialog2>
 </template>

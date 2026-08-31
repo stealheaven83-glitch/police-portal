@@ -28,7 +28,7 @@ const {
         :class="styles.searchInput"
         @keyup.enter="searchVehicle112"
       />
-      <Button type="button" variant="secondary" size="sm" class="w-25" @click="searchVehicle112">조회</Button>
+      <Button type="button" variant="secondary" size="sm" @click="searchVehicle112">조회</Button>
     </div>
 
     <div :class="styles.vehicleTableWrap">
@@ -64,8 +64,8 @@ const {
     </div>
 
     <template #footer>
-      <Button type="button" class="w-25" variant="tertiary2" size="md" @click="vehicle112DialogOpen = false">닫기</Button>
-      <Button type="button" class="w-25" variant="primary" size="md" :disabled="selectedVehicle112Id == null" @click="assignVehicle112">
+      <Button type="button" variant="tertiary2" size="md" @click="vehicle112DialogOpen = false">닫기</Button>
+      <Button type="button" variant="primary" size="md" :disabled="selectedVehicle112Id == null" @click="assignVehicle112">
         차량지정
       </Button>
     </template>

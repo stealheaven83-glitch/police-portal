@@ -129,7 +129,7 @@ const vIf = ref(false);
       </div>
     </template>
     <template #btns>
-      <Button variant="secondary" size="sm" class="w-25">검색</Button>
+      <Button variant="secondary" size="sm">검색</Button>
     </template>
   </SearchWrapper>
   <button @click="vIf = true">클릭</button>

@@ -42,7 +42,7 @@
       </div>
     </template>
     <template #btns>
-      <Button variant="secondary" size="sm" class="w-25">조회</Button>
+      <Button variant="secondary" size="sm">조회</Button>
     </template>
   </SearchWrapper>
   <LayoutSplite :count="2" :widths="[50, 50 ]"  :resizable="false">

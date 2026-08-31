@@ -78,7 +78,7 @@
       </div>
     </template>
     <template #btns>
-      <Button variant="secondary" size="sm" class="w-25" @click="search">조회</Button>
+      <Button variant="secondary" size="sm" @click="search">조회</Button>
     </template>
   </SearchWrapper>
 
@@ -104,7 +104,7 @@
     <template #layout-1>
       <LayoutPanel title="범죄예방진단 현황">
         <template #actions>
-          <Button type="button" variant="primary" size="sm" class="w-25" @click="openNewDiagnosis">신규</Button>
+          <Button type="button" variant="primary" size="sm" @click="openNewDiagnosis">신규</Button>
         </template>
         <TabulatorGrid
           ref="listGridRef"
@@ -126,7 +126,7 @@
       <LayoutPanel title="범죄예방진단 이력">
         <template #actions>
           <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelectedHistory">선택삭제</Button>
-          <Button type="button" variant="primary" size="sm" class="w-25" @click="openNewHistory">신규</Button>
+          <Button type="button" variant="primary" size="sm" @click="openNewHistory">신규</Button>
         </template>
         <TabulatorGrid
           ref="historyGridRef"

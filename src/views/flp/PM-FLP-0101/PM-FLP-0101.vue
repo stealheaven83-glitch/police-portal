@@ -143,7 +143,7 @@ useBottomTabSetup({
     </template>
 
     <template #btns>
-      <Button type="button" variant="secondary" size="sm" class="w-25" @click="onSearch">
+      <Button type="button" variant="secondary" size="sm" @click="onSearch">
         조회
       </Button>
     </template>
@@ -154,7 +154,7 @@ useBottomTabSetup({
       <Download :size="16" aria-hidden="true" />
       엑셀다운로드
     </Button>
-    <Button type="button" variant="primary" size="sm" class="w-25" @click="onCreate">신규</Button>
+    <Button type="button" variant="primary" size="sm" @click="onCreate">신규</Button>
   </div>
 
   <TabulatorGrid

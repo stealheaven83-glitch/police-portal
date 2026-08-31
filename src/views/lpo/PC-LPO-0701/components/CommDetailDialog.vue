@@ -71,9 +71,9 @@ const { commDetail, commDetailDialogOpen, saveCommDetail, deleteCommDetail } = s
     </InfoTable>
 
     <template #footer>
-      <Button type="button" class="w-25" variant="tertiary2" size="md" @click="commDetailDialogOpen = false">취소</Button>
-      <Button type="button" class="w-25" variant="tertiary2" size="md" :disabled="commDetail.id == null" @click="deleteCommDetail">삭제</Button>
-      <Button type="button" class="w-25" variant="primary" size="md" @click="saveCommDetail">저장</Button>
+      <Button type="button" variant="tertiary2" size="md" @click="commDetailDialogOpen = false">취소</Button>
+      <Button type="button" variant="tertiary2" size="md" :disabled="commDetail.id == null" @click="deleteCommDetail">삭제</Button>
+      <Button type="button" variant="primary" size="md" @click="saveCommDetail">저장</Button>
     </template>
   </GenericDialog2>
 </template>

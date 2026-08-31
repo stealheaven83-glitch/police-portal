@@ -316,7 +316,7 @@ useBottomTabSetup({
       </div>
     </template>
     <template #btns>
-      <Button variant="secondary" size="sm" class="w-25">조회</Button>
+      <Button variant="secondary" size="sm">조회</Button>
     </template>
   </SearchWrapper>
 
@@ -327,8 +327,8 @@ useBottomTabSetup({
   </Tabs>
 
   <div class="list-actions">
-    <Button type="button" variant="tertiary2" size="sm" class="w-25" @click="onPrint">인쇄</Button>
-    <Button type="button" variant="primary" size="sm" class="w-25" @click="onNew">신규</Button>
+    <Button type="button" variant="tertiary2" size="sm" @click="onPrint">인쇄</Button>
+    <Button type="button" variant="primary" size="sm" @click="onNew">신규</Button>
   </div>
 
   <!--

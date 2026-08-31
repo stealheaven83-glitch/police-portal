@@ -59,10 +59,10 @@ async function onSave() {
     </InfoTable>
 
     <template #footer>
-      <Button type="button" variant="tertiary2" size="md" class="w-25" @click="closeUserDetail">
+      <Button type="button" variant="tertiary2" size="md" @click="closeUserDetail">
         닫기
       </Button>
-      <Button type="button" variant="primary" size="md" class="w-25" @click="onSave">저장</Button>
+      <Button type="button" variant="primary" size="md" @click="onSave">저장</Button>
     </template>
   </GenericDialog2>
 </template>

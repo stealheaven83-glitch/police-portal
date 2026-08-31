@@ -195,7 +195,7 @@ useBottomTabSetup({
         </div>
       </template>
       <template #btns>
-        <Button variant="secondary" size="sm" class="w-25" @click="search">조회</Button>
+        <Button variant="secondary" size="sm" @click="search">조회</Button>
       </template>
     </SearchWrapper>
 
@@ -204,7 +204,7 @@ useBottomTabSetup({
       <Download :size="16" aria-hidden="true" />
       엑셀다운로드
     </Button>
-    <Button type="button" variant="primary" size="sm" class="w-25" @click="openNew">신규</Button>
+    <Button type="button" variant="primary" size="sm" @click="openNew">신규</Button>
   </div>
 
   <!--

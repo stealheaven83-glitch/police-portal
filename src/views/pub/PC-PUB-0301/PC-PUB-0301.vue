@@ -115,13 +115,13 @@ useBottomTabSetup({
         </div>
       </template>
       <template #btns>
-        <Button variant="secondary" size="sm" class="w-25">조회</Button>
+        <Button variant="secondary" size="sm">조회</Button>
       </template>
     </SearchWrapper>
   </div>
 
   <div :class="styles.listActions">
-    <Button type="button" variant="primary" size="sm" class="w-25" @click="openNew">신규</Button>
+    <Button type="button" variant="primary" size="sm" @click="openNew">신규</Button>
   </div>
 
   <TabulatorGrid

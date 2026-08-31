@@ -91,10 +91,10 @@ async function handleConfirm() {
     />
 
     <template #footer>
-      <Button type="button" class="w-25" variant="tertiary2" size="md" @click="workerAddDialogOpen = false">
+      <Button type="button" variant="tertiary2" size="md" @click="workerAddDialogOpen = false">
         닫기
       </Button>
-      <Button type="button" class="w-25" variant="primary" size="md" @click="handleConfirm">
+      <Button type="button" variant="primary" size="md" @click="handleConfirm">
         저장
       </Button>
     </template>

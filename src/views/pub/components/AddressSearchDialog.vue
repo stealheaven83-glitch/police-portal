@@ -65,7 +65,7 @@ function select(address: string) {
     </ul>
 
     <template #footer>
-      <Button type="button" class="w-25" variant="tertiary2" size="md" @click="emit('update:open', false)">닫기</Button>
+      <Button type="button" variant="tertiary2" size="md" @click="emit('update:open', false)">닫기</Button>
     </template>
   </GenericDialog2>
 </template>

@@ -59,9 +59,9 @@ const unitLabel = computed(() => ammoUnitOptions.find((o) => o.value === ammoDet
     </InfoTable>
 
     <template #footer>
-      <Button type="button" class="w-25" variant="tertiary2" size="md" @click="ammoDetailDialogOpen = false">닫기</Button>
-      <Button type="button" class="w-25" variant="tertiary2" size="md" :disabled="ammoDetail.id == null" @click="deleteAmmoDetail">삭제</Button>
-      <Button type="button" class="w-25" variant="primary" size="md" @click="saveAmmoDetail">저장</Button>
+      <Button type="button" variant="tertiary2" size="md" @click="ammoDetailDialogOpen = false">닫기</Button>
+      <Button type="button" variant="tertiary2" size="md" :disabled="ammoDetail.id == null" @click="deleteAmmoDetail">삭제</Button>
+      <Button type="button" variant="primary" size="md" @click="saveAmmoDetail">저장</Button>
     </template>
   </GenericDialog2>
 </template>
