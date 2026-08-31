@@ -5,14 +5,28 @@
 
 ## 0. 같이 볼 문서
 - `menu-tab-guide.md` — LNB/하단탭/KeepAlive 연동 가이드. 새 화면 만들 때 반드시 같이 본다.
+- `screen-id-map.md` — **화면명·Figma 프레임 이름 → 화면ID 대응표(284개). 새 화면은 여기서
+  시작한다.** 화면ID가 정해져야 폴더·라우트·`defineOptions` 이름이 정해진다(§2·§4·§5).
+  **번호로 유추하면 틀린다** — Figma `06_장비관리`는 `PC-LPO-07xx`다.
+  ⚠ 표가 284행이라 **통째로 읽지 말고 `grep -n "무기" screen-id-map.md` 로 찾는다.**
+- `docs/figma-access.md` — Figma 파일키·페이지ID·접근 함정(페이지 목록 조회가 깨져 있다).
+- `component-guide.md` — **케이스별 "이럴 땐 이 컴포넌트" 표.** §1 재사용 원칙의 실행 편이라
+  화면에 뭘 붙일지 정할 때마다 본다. Figma instance 이름 → 코드 역인덱스, **공통 CSS 클래스**(§12),
+  이름이 비슷한 형제 구분표도 여기 있다.
 
 ## 1. 컴포넌트 재사용
-- 찾는 순서: `src/components/custom/**` → `src/components/ui/**`. 둘 다 없으면(예: 주소검색 팝업)
+- 찾는 순서: `src/components/custom/**` → `src/components/ui/**`. 둘 다 없으면
   **새로 만들기 전에 없다는 걸 눈에 띄게 알린다** — 혼자 판단해 만들지 않는다.
 - **3명이 동시 작업이라 컴포넌트/CSS 목록이 세션 사이에도 계속 는다.** 새 화면 시작 시점에
   `custom/**`·`ui/**` 디렉터리를 그 자리에서 다시 나열하고 `police-style.css`도 처음부터 다시
   읽는다. "저번 목록에 없었으니 없다"고 기억으로 판단하지 않는다(그 사이 추가됐을 수 있다).
 - 쓰기 전에 실제 props/경로를 다시 확인한다(팀원이 라이브러리를 계속 바꾼다, 기억에 의존 금지).
+- **이름 끝에 `2`가 있으면 `2`가 정본이다** — `InputField2`(38개 화면) vs `InputField`(1),
+  `GenericDialog2`(19) vs `GenericDialog`(1). 구버전에 deprecated 표시가 없어서 파일만 봐선
+  구분되지 않는다. `AlertDialog2`·`ConfirmDialog2`도 마찬가지.
+- **뭘 고를지는 `component-guide.md`를 본다.** 디렉터리 나열로는 폴더명만 나와서
+  `custom/empty`가 "데이터 없음"인지, `Chip`과 `FilterChip`이 뭐가 다른지 알 수 없다.
+  이름이 비슷한 형제(Badge/Tag/Chip/FilterChip, Alert/InfoBox/CriticalAlert 등) 구분 기준도 거기 있다.
 
 ### 인라인 스타일 금지 — 전부 CSS Modules(`*.module.css`)
 컴포넌트가 노출한 CSS 변수(`--flex-col-min-w` 등)를 호출부에서 바꿀 때도 인라인
@@ -44,18 +58,18 @@
   기존은 차차 정리.
 
 ### CSS도 컴포넌트와 같은 원칙 — 그 화면 전용이 아니면 새로 만들지 않는다
-이미 있는지 순서대로 확인:
-1. **디자인 토큰**: `public/portal/asset/css/common/police-style.css`(index.html →
-   `/portal/police-entry.css`로 전역 로드됨, 페이지에서 import 안 함). `--Text-body_0/1/2`,
-   `--Base-primary`, `--Surface-primary`, `--Border_gray01/02/03`, `--Button-*` 등. hex 하드코딩
-   말고 `var(--Text-body_1)`처럼 가져다 쓴다.
-2. **공통 유틸/레이아웃 클래스**(같은 파일): `.btn-wrap`, `.btn-wrap-group`, `.search-area`,
-   `.list-actions`, `.layout-wrap`, `.grid-wrap`, `.al`/`.ac`/`.ar`(정렬), `.hide`/`.show`,
-   `.blind`(sr-only) 등 — 같은 역할 클래스를 새로 만들기 전에 먼저 뒤진다.
-3. **컴포넌트 레벨 공통 CSS**: 라벨-값 표(등록/상세)는
+새로 만들기 전에 **이 순서로** 이미 있는지 확인한다:
+1. **디자인 토큰** — `public/portal/asset/css/common/police-style.css`(전역 로드됨, 페이지에서
+   import 안 함). 색·모서리는 hex 하드코딩 말고 `var(--Text-body_1)`처럼 토큰을 쓴다.
+2. **공통 유틸/레이아웃 클래스** — 같은 파일에 `.search-area` `.list-actions` `.btn-wrap` 같은
+   것들이 있다. 같은 역할의 클래스를 새로 만들기 전에 먼저 뒤진다.
+3. **컴포넌트 레벨 공통 CSS** — 라벨-값 표는
    `src/components/custom/info-table/InfoTable.module.css`, 그리드는
    `src/assets/css/tabulator-theme.css`(그리드에 전역 적용됨, 다시 스타일링 불필요).
 4. 여기까지 없을 때만 화면 전용 `style/PC-XXX-NNNN.module.css`.
+
+**토큰명·유틸 클래스 전체 목록은 `component-guide.md` §12에 표로 있다** — 1·2번을 확인할 때
+`police-style.css`(1500줄)를 직접 뒤지지 말고 그 표를 먼저 본다.
 (`krds.min.css`는 파일만 있고 로드 안 됨 — 참고 대상 아님.)
 
 ## 1-1. 새 화면 기준 파일 — "제일 비슷한 거 찾기"를 매번 새로 하지 않는다
@@ -80,6 +94,7 @@
 필드 오접근 버그·저장 시 불필요 confirm 수정). 기준 파일이 바뀌면 표도 갱신.
 
 ## 2. 화면 폴더 구조
+화면ID(`PC-XXX-NNNN`)는 **`screen-id-map.md`에서 찾는다 — 직접 정하지 않는다.**
 ```
 views/{domain}/PC-XXX-NNNN/
   PC-XXX-NNNN.vue
@@ -128,6 +143,7 @@ rows.value = rows.value.map((r, i) => (i === idx ? updated : r))
 ```
 
 ## 4. 라우터 등록
+- 화면ID는 `screen-id-map.md` 기준(IA 284개 전수). Figma 메뉴 번호로 유추하면 어긋난다.
 - `src/router/index.ts`에 `path:'/views/{domain}/{화면ID}'`, `name:'{화면ID}'`,
   `meta:{ layout:'WorkLayout', title:'...' }`.
 - 화면ID 많은 화면군은 배열+`.map()`으로 반복 등록(0701~0714 참고). 필요하면 `screenGroup` meta도
@@ -214,7 +230,55 @@ function onSave() {
   `r.id === form.id && r.category === 'xxx'`처럼 스코프를 항상 같이 확인.
 
 ## 9. 기획서/디자인 확인
-- Figma MCP가 rate limit에 자주 걸린다 — 그땐 사용자가 주는 스크린샷/이미지로 작업(PDF는 poppler
-  미설치로 이 환경에서 못 읽으니 이미지로 요청).
+
+### 기획서는 스크린샷 말고 원본 파일로 받는다
+`draft/기획서/`에 둔다(개인 작업공간, git 미추적 — §10). 스크린샷은 대화로 들어올 때 축소돼서
+화면ID 같은 작은 글씨를 못 읽는다(실제로 1316px 표가 301px로 줄어 판독 불가였다).
+
+**xlsx·pptx·docx는 전부 zip이라 압축을 풀어 XML을 직접 읽으면 된다.** 의존성 필요 없다.
+- ❌ `python` — 이 환경에선 Windows 스토어 스텁이라 실행 안 됨
+- ❌ `npx xlsx-cli` — 빈 출력만 나옴
+- ✅ `cp f.xlsx t.zip && unzip -q t.zip -d x` 후 XML 파싱. 구현 예: `docs/parse-ia.js`
+
+| 파일 | 어디를 읽나 |
+|---|---|
+| **xlsx** | `x/xl/worksheets/sheet1.xml` + `x/xl/sharedStrings.xml`. 문자열 셀은 `t="s"`이고 `<v>`가 sharedStrings 인덱스 |
+| **pptx** | `x/ppt/slides/slideN.xml`의 `<a:t>`가 텍스트. `x/ppt/media/`에 **원본 해상도 이미지**가 그대로 들어있어 Read 로 볼 수 있다 |
+
+⚠ xlsx 함정: 빈 셀은 `<c r="B4" s="5"/>` 자기완결형이다. 정규식을 `<c ...>([\s\S]*?)</c>` 로만
+쓰면 다음 셀의 `</c>`까지 삼켜서 **값이 엉뚱한 행/열에 박힌다**(실제로 겪음).
+`(?:\/>|>([\s\S]*?)<\/c>)` 로 분기해야 한다. 병합 셀은 `<mergeCell ref="A1:A5">`를 읽어
+좌상단 값을 범위 전체에 복사한다(Depth 트리 컬럼 복원에 필요).
+
+(PDF만 못 읽는다 — poppler 미설치. PDF는 이미지로 요청한다.)
+
+### 기획서에서 어떤 화면인지 특정되지 않으면 **반드시 물어본다**
+기획서를 읽어 화면명을 뽑았으면 `screen-id-map.md`에서 화면ID를 찾는다(`grep`). 다음 중
+하나라도 해당하면 **추측해서 만들지 말고 멈추고 사용자에게 되묻는다:**
+- 기획서의 화면명이 `screen-id-map.md`에 **없다**
+- 비슷한 이름이 **여러 개** 걸려서 어느 것인지 확정되지 않는다
+  (예: "인사관리"는 `PC-LPO-0801`과 `PC-STT-0103` 둘 다 있다)
+- 기획서에 화면이 여러 개 들어 있는데 **어느 것을 만들지 지시가 없다**
+
+되물을 때는 이렇게 한다 — 찾은 후보를 같이 보여주고 **화면ID 또는 정확한 화면명**을 달라고 한다:
+> 기획서에서 "무기 목록"을 읽었는데 `screen-id-map.md`에서 확정이 안 됩니다.
+> 후보: `PC-LPO-0706`(무기 탭 › 목록) / `PC-LPO-0707`(무기 탭 › 등록/상세/수정)
+> 어느 화면ID로 만들까요?
+
+**왜 멈춰야 하나:** 화면ID가 틀리면 폴더명·라우트 path/name·`screenGroup`·`defineOptions`·
+module.css 파일명이 **전부 같이 틀어진다**(§2·§4·§5). 나중에 여섯 군데를 고쳐야 하고,
+`defineOptions`가 어긋나면 KeepAlive가 조용히 깨져서 발견도 늦다. 만들기 전에 묻는 게 훨씬 싸다.
+화면ID 체계는 기획서 소관이라 **새 ID를 임의로 만들어내면 안 된다**(`screen-id-map.md` 참고).
+
+### Figma
+- 파일키·페이지ID·접근 함정은 `docs/figma-access.md` 참고.
+- Figma MCP가 rate limit에 자주 걸린다 — 그땐 사용자가 주는 스크린샷/이미지로 작업.
 - 라벨/옵션값이 애매하면(저해상도, OCR 불확실 등) 조용히 추측만 하지 말고 합리적으로 구현한 뒤
   **어떤 가정을 했는지 결과 보고에 명시**해 사용자가 바로잡게 한다.
+
+## 10. 문서·산출물 위치
+- **`docs/`** — 팀이 공유하는 산출물. 커밋한다.
+- **`draft/`** — 개인 작업공간. `.gitignore`에 있어 git이 추적하지 않는다. 기획서 원본,
+  임시 산출물, 대용량 파일을 둔다.
+- draft/에 만든 것 중 팀이 봐야 하는 게 생기면 **docs/로 옮기고 참조를 고친다** — draft/에 둔 채
+  문서에서 참조하면 다른 사람이 pull해도 파일이 없어 링크가 깨진다.

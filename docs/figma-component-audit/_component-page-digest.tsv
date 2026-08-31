@@ -1,0 +1,305 @@
+count	type	name	props	nodeId
+9915	SET	table	Title:T Body:T Show badge__number:B Type(2) Contents(11) Hover(2)	288:27085
+2445	SET	table_2	Title:T Body:T Type(2) style(10)	10024:68802
+1443	SET	LNB Menu	more:B new:B 2 depth:T 3 depth:T 4 depth:T shape(3) on/ off(3) Type(2)	9935:34366
+1124	SET	button	Label:T Show left icon:B Show right icon:B ↪️ swap(r):I ↪️ swap(l):I Type(4) Size(5) State(4)	305:2236
+818	SET	radio_button	label:T Help text:B Label:B Size(2) Check(2) State(2)	313:27198
+454	SET	icon_size	{icon}:I size(6)	285:704
+446	SET	badge	Label:T Type(3) Color(8) State(2) Size(3)	361:44254
+352	SET	checkbox	label:T Help text:B Label:B Size(2) Check(3) State(2)	309:25967
+303	CMP	Input Label	필수항목:B Label:T	10509:84341
+263	CMP	scroll-bar		9995:33856
+230	SET	Text Field	Icon:B Text:T TXT:B Time:B 단위:B X ico:B icon:I Status(5)	10392:61444
+208	SET	text_input	Placeholder:T ↪️Label:T Alert:B Label:B Icon:B Hint:B Size(2) Style(2) State(6)	286:25890
+197	SET	selectbox	Placeholder:T ↪️Label:T Hint:B Label:B Alert:B Size(2) Style(2) State(6)	288:26192
+173	SET	header_templet__pc	Property 1(2)	10572:41456
+154	SET	footer_tab	Property 1(2)	10528:49846
+150	CMP	Page Title	Title:T	10017:2972
+149	CMP	1 depth Ti		10024:27686
+124	CMP	.section_header	Description:T Title:T	4828:141070
+115	SET	   	Property 1(2)	10601:106296
+87	CMP	+ -		10763:114205
+86	SET	check list	Property 1(4)	10635:71234
+84	SET	Grid Title	Title:T 검색조건:B 추가 버튼:B 삭제 버튼:B 저장 버튼:B Property 1(3)	10392:53449
+82	SET	file_upload__atomic__pc	Text:T error:T State(5)	343:55064
+80	CMP	pagination bar	Total:B	10574:59017
+80	SET	text_area	Placeholder:T Show label:B Show counter:B Hint:B Alert:B State(6)	343:43306
+79	SET	Popup Title	X:B Title:T Property 1(2)	10607:49243
+75	SET	button_text	label:T Show left icon:B Show right icon:B ↪️ swap(l_l):I ↪️ swap(r_l):I Size(4) State(4)	300:26102
+72	SET	Grid Handler	Property 1(2)	10020:28972
+59	SET	부서영역	3:B 상세조회:B Property 1(2)	11453:112276
+56	SET	button_link	label:T Show right icon:B ↪️ swap(r):I Type(3) Size(3) State(5)	306:26203
+56	SET	Memo Li	파일:B 이름:B Property 1(3)	10034:69145
+54	SET	accordion	Contents:B Title:T Size(2) State(2) Type(2)	360:44958
+52	SET	select_text	Size(4) State(4)	288:27269
+51	SET	tab	Swipe_right:B Swipe_left:B Style(2) Type(2) Size(3)	340:31866
+50	SET	list	Level_1:T Level_2:T Level_3:T Level(3) Type(2)	324:52107
+48	CMP	text + input	제목:T 오른쪽:B 왼쪽:B 단위:T	10951:72248
+45	CMP	icon/ellipsis_horizontal		340:49792
+44	CMP	icon/arrow-right		324:55026
+40	CMP	날짜	Label 1:B Label 2:B	10910:71204
+34	SET	radio_button + input	radio:B Property 1(2)	10619:37387
+33	CMP	icon/btn-more		338:30937
+33	SET	date_input	Placeholder:T Icon:B Label:B Hint:B Alert:B ↪️Label:T Size(2) Style(2) State(6)	343:43744
+33	SET	bed	Property 1(2)	10951:65233
+32	SET	header__mo	Text:T Type(6)	1402:69675
+31	CMP	stitle badge	제목:T	10601:105231
+30	SET	utility_dropdown__atomic	Icon_right:B Label:T state(4)	391:27862
+30	SET	accordion__mo	Contents:B Title:T Size(2) State(2) Type(2)	2201:113291
+28	CMP	caption_car		12222:108165
+27	SET	input_message__atomic	Alert:T Hint:T Type(4)	1408:38848
+26	CMP	Adress input		10708:44187
+26	SET	toggle_switch	Label:B ↪️Label:T Size(3) State(2) Select(2)	306:27125
+26	SET	search__pc	Lable:T Advanced Search:B Label:B Alert:B ↪️Hint:T Scope Filter:B Size(3) State(5)	723:16041
+26	SET	Accordion	title:T btn:B +, -:B Property 1(2)	11313:134984
+24	CMP	CI		9175:27649
+23	CMP	pagination__pc	Input_button:B	340:49944
+23	SET	contextual_help_trigger	Type(3) State(3)	1249:53394
+23	CMP	icon/arrow-left		324:55025
+23	CMP	icon/inquiry		1101:23520
+22	CMP	icon/edit		2252:41633
+22	SET	list_group	Type(2) Level(3)	727:14880
+22	CMP	Popup Grid Title	Btn:B Title:T	10607:49168
+20	SET	utility_dropdown_font_size__atomic	Size(5) Selecet(2)	393:25984
+20	SET	carousel__atomic	type(5) state(4)	343:23703
+19	CMP	icon/close		346:27353
+18	SET	main_menu_bar__atomic__pc	Label:T State(4)	317:46423
+18	CMP	icon/reset		391:28383
+18	CMP	photo	삭제:B	11125:91687
+17	SET	breadcrumb	4depth:B 3depth:B 2depth:B 1depth:B Size(2) Type(3)	342:41806
+17	SET	chip__single	Icon:B Label:T Size(3) State(3)	317:5069
+16	SET	alert	2-contents:T 1-contents:T Title:T State(4) Size(2)	343:54539
+16	SET	tag	Delete:B Link-label:T Label:T Type(2) Size(3) State(3)	306:26553
+13	CMP	icon/printer		1101:23499
+12	CMP	step_indicator__mo		343:53986
+11	SET	tooltip__plan	Label:T arrow:B Arrow(3) Direction(4)	3331:128231
+11	CMP	icon/calendar		343:49357
+10	SET	header_menu__atomic	Lable:T Icon:I Type(1) State(3)	322:41847
+10	CMP	main_menu	Menu-open:B menu-open_type:I	324:59689
+10	CMP	bullet		3380:60982
+10	CMP	icon/search		285:726
+9	CMP	utility_dropdown	Bottom:B Top:B	393:25068
+9	SET	header_utility_small__atomic	Type(2)	424:61163
+9	CMP	footer__pc	Related Site:B Identifier-in:B Identifier-out:B	340:30856
+9	SET	main_menu_open_title__atomic__pc	Label:T Icon:B State(3)	324:51952
+9	SET	spinner	Size(3)	343:42756
+9	SET	contextual_help	Contents:T Title:T Show button:B Arrow(3) Direction(2)	343:54748
+9	SET	top_button	Type(2)	4171:163147
+9	CMP	icon/arrow-down		288:27152
+9	SET	card	Tag:B Check-box:B Button:B Title:T Description:T Badge:B Sub button:B Metadata:B Type(2) Image(2)	1496:30842
+9	SET	modal	Button:B Title:T Scroll-bar:B Size(3)	1037:37636
+9	SET	tag__list	Size(3)	1037:36138
+9	SET	chip__multi	Label:T Size(3) State(3)	306:26726
+9	SET	FilterChip	Icon:B Label:T Size(2) State(2)	12627:158259
+9	CMP	divider		10180:4108
+8	SET	main_menu_open_2depth__atomic__pc	Shortcut button:B Label:T Depth button:B state(4) More depth(2)	4638:142619
+8	SET	main_menu_open_2depth_bar__atomic__pc	Shortcut button:B Label:T Depth button:B state(4) More depth(2)	325:27367
+8	SET	infobox	title:T body:T Type(2) Size(2)	343:54598
+8	SET	progress_bar	Alert:B Size(2) State(3)	4107:97921
+8	SET	carousel__dot	Type(5) color(2)	343:23518
+8	SET	radio_button__list	Size(2)	315:27045
+7	SET	footer__mo	Related Site:B Social:B Identifier-black:B Identifier_white:B Type(1)	1548:41060
+7	SET	coach_mark	Title:T Step:T Arrow(3) Direction(2)	3985:95855
+7	SET	tooltip__rich	Contents:T Title:T Show button:B Arrow(3) Direction(2)	3331:45986
+7	CMP	icon/round_check		725:17849
+7	CMP	icon/curser		3260:143835
+7	SET	Star	Property 1(2)	10024:28755
+7	CMP	필수입력		13116:19531
+6	SET	open_panel	Type(2)	360:44770
+6	SET	calendar	Date picker button:B input:B Type(2)	343:51868
+6	CMP	No Data		10373:41131
+6	SET	tab__mo	Swipe_right:B Swipe_left:B Style(2) Type(1)	1656:52201
+6	CMP	btn search		11710:112375
+6	CMP	MapPin		12231:108199
+5	SET	critical_alerts	Text:T Type(3)	343:54455
+5	CMP	icon/check_circle		359:45137
+5	CMP	icon/share		1101:23476
+5	CMP	icon/Arrow / Down_SM		10424:57526
+5	SET	file_upload__atomic__mo	Text:T error:T State(5)	359:45385
+5	CMP	S_title	BTN. 1:B BTN. 2:B BTN. 3:B	10780:96374
+4	CMP	masthead__pc		343:54100
+4	SET	identifier__pc	Type(2)	343:55136
+4	SET	main_menu_open_last_depth__atomic__pc	Icon:B Label:T bullet:B state(4)	324:52010
+4	SET	side_navigation	Title:B Type(2)	393:29718
+4	CMP	pagination__mo	Input_button:B	340:50158
+4	CMP	icon/arrow-sort-both		1420:77015
+4	SET	badge__number	Type(2) Number(2)	361:44245
+4	CMP	carousel__number		1170:66159
+4	SET	checkbox__item	Size(2) Select(3) State(2)	306:26713
+4	SET	checkbox__list	Size(2)	309:26481
+3	CMP	masthead__mo		343:54218
+3	CMP	header__pc		322:41730
+3	SET	main_menu__mo	Utility_bottom:B Anchor:B Header:B Type(3)	398:27627
+3	SET	main_menu_open_sub_title__atomic__pc	Icon:B Label:T State(3)	325:30378
+3	SET	main_menu_open_title__atomic__mo	Label:T Icon:B State(3)	394:26277
+3	SET	main_menu_open_2depth_bar__atomic__mo	Icon:B Label:T state(3)	394:25520
+3	SET	main_menu_open_2depth__atomic__mo	Icon:B Label:T state(3)	394:25608
+3	SET	main_menu_open_last_depth__atomic__mo	Icon:B Label:T state(3)	394:25563
+3	CMP	dummy-image		338:49841
+3	SET	critical_alerts__mo	Text:T Type(3)	1726:81137
+3	SET	user_feedback__pc	Title:T Type(3)	724:15059
+3	SET	user_feedback__mo	Title:T Type(3)	725:16228
+3	CMP	icon/download		359:44616
+3	CMP	icon/ellipsis_vertical		1516:42074
+3	CMP	icon/open-new-window		325:27584
+3	CMP	icon/setting		2252:41622
+3	CMP	icon/->		13069:97667
+3	SET	carousel__arrow	Type(2) Size(4)	343:24138
+3	SET	disclosure	Title:T State(2)	343:42471
+3	CMP	radio_button__sorting		1055:38179
+2	SET	identifier__mo	Type(2)	344:44372
+2	SET	main_menu_open	4depth:B Type(3) Banner(3)	324:53004
+2	CMP	in_page_navigation	Button:B ↪️Description:B	336:45270
+2	SET	step_indicator__pc	↪️1-label:T ↪️2-label:T ↪️3-label:T ↪️4-label:T ↪️5-label:T ↪️6-label:T ↪️7-label:T Step7:B Step6:B Step5:B Step4:B Step3:B Step2:B Step1:B Type(2)	343:53899
+2	SET	home_indicator__atomic	Type(2)	1574:71103
+2	SET	bottom_sheet	Height(2)	1545:35095
+2	CMP	icon/flag		887:44026
+2	CMP	icon/globe		2973:4343
+2	CMP	icon/logout		393:791
+2	CMP	icon/token_number		3427:73205
+2	SET	badge__dot	Type(2)	361:44242
+2	SET	radio_button__item	Size(2) Check(2) State(2)	313:27161
+2	SET	date_input__unit	Input_message:B Unit_label:B Size(2)	2893:141217
+2	SET	date_input_period__unit	input_message:B Unit_label:B ↪️Label:T Size(2)	2893:143254
+2	CMP	Mous cursor		10013:3011
+1	CMP	dummy-text		343:53347
+1	CMP	tab_bars__mo		4932:97639
+1	CMP	icon/blank		284:25377
+1	CMP	icon/accessibility		2973:4349
+1	CMP	icon/analytics		2252:41626
+1	CMP	icon/annotation		1101:23510
+1	CMP	icon/arrow-drop-down		1420:77013
+1	CMP	icon/arrow-drop-up		1420:77014
+1	CMP	icon/arrow-top		288:27153
+1	CMP	icon/attach		2252:41636
+1	CMP	icon/bookmarks		2252:41628
+1	CMP	icon/btn-shortcut		357:27016
+1	CMP	icon/call		1101:23517
+1	CMP	icon/certification_finanace		2252:41650
+1	CMP	icon/certification_mobile		2252:41649
+1	CMP	icon/certification_simple		2252:41619
+1	CMP	icon/certified		4581:30026
+1	CMP	icon/delete		317:27348
+1	CMP	icon/document		4037:47048
+1	CMP	icon/document-check		2252:41634
+1	CMP	icon/dummy		1446:129192
+1	CMP	icon/ecg_heart		2252:41629
+1	CMP	icon/emergency		2577:123198
+1	CMP	icon/exclamation		1009:36374
+1	CMP	icon/expand_less		343:53171
+1	CMP	icon/expand_more		343:53149
+1	CMP	icon/face_sad		424:11726
+1	CMP	icon/face_smile		424:11725
+1	CMP	icon/facebook		2365:45334
+1	CMP	icon/filter		3863:102843
+1	CMP	icon/government		288:25968
+1	CMP	icon/guide_check		725:17460
+1	CMP	icon/headphones		2252:41635
+1	CMP	icon/heart		1101:23484
+1	CMP	icon/home		342:41582
+1	CMP	icon/identity		2252:41625
+1	CMP	icon / img		338:31684
+1	CMP	icon/instagram		2365:45205
+1	CMP	icon/join		1101:23469
+1	CMP	icon/kakao_story		2365:45467
+1	CMP	icon/kakaotalk_channel		2365:45470
+1	CMP	icon/location_away		2252:41627
+1	CMP	icon/login		393:790
+1	CMP	icon/login_id_password		2252:41620
+1	CMP	icon/mail		1101:23494
+1	CMP	icon/map		2252:41624
+1	CMP	icon/menu		1402:48365
+1	CMP	icon/multi		1101:23487
+1	CMP	icon/myinfo		2252:41637
+1	CMP	icon/naver_blog		2365:45464
+1	CMP	icon/new_folder		2252:41623
+1	CMP	icon/panel_close		361:47734
+1	CMP	icon/panel_open		361:47733
+1	CMP	icon/pdf		1277:15728
+1	CMP	icon/play		343:23702
+1	CMP	icon/popover_info		1249:46817
+1	CMP	icon/popover_help		3324:143764
+1	CMP	icon/scrap		1101:23507
+1	CMP	icon/stat-down		2252:41630
+1	CMP	icon/stat-up		2252:41631
+1	CMP	icon/stop		343:23682
+1	CMP	icon/nonmember		2252:41621
+1	CMP	icon/system-danger		288:25974
+1	CMP	icon/system-info		353:44315
+1	CMP	icon/system-success		353:44314
+1	CMP	icon/system-warning		353:44316
+1	CMP	icon/time		393:28518
+1	CMP	icon/top		4037:47010
+1	CMP	icon/trophy		2252:41632
+1	CMP	icon/upload		359:44615
+1	CMP	icon/view_all		393:620
+1	CMP	icon/view-mode		2087:86508
+1	CMP	icon/visibility		393:645
+1	CMP	icon/visibility_off		393:679
+1	CMP	icon/X_twitter		2365:45207
+1	CMP	icon/youtube		2365:45206
+1	CMP	icon/token_palette		3364:143875
+1	CMP	icon/token_padding		3512:25170
+1	CMP	icon/token_gap		3512:25225
+1	CMP	icon/token_typo		3512:25286
+1	CMP	icon/token_radius		3516:25117
+1	CMP	icon/token_typo_box		3517:25101
+1	CMP	icon/figma_library		3862:69842
+1	CMP	icon/figma_filter		3862:69843
+1	CMP	icon/figma_open		3862:69845
+1	CMP	icon/figma-mode		3866:59045
+1	CMP	icon/figma_spread		3954:37721
+1	CMP	icon/figma_blur		3959:37835
+1	CMP	icon/figma_shadow		3975:26120
+1	CMP	icon/figma_transparency		3975:26193
+1	CMP	icon/copy		4021:24846
+1	CMP	icon/component		4663:136708
+1	CMP	icon/document_fill		4830:44543
+1	CMP	icon/atomic		4830:45411
+1	CMP	icon/elevation		5176:120701
+1	CMP	icon/Plus		10091:24634
+1	CMP	icon/Minus		10091:24633
+1	CMP	icon/magaphone		9917:3856
+1	CMP	icon/Check		10034:69757
+1	CMP	icon/Arrow / Up_SM		10424:57942
+1	CMP	icon/ Arrow / Right_SM		10424:57945
+1	CMP	icon/ Arrow / Left_SM		10424:57947
+1	CMP	icon/arrow-first		10577:62435
+1	CMP	icon/arrow-end		10577:62434
+0	SET	bottom Tab	Property 1(2)	10528:5573
+0	SET	bottom Tab-top	Property 1(2)	10528:49904
+0	CMP	related_site_open		1176:66448
+0	SET	footer_relatedsite_box__atomic	Label:T State(3)	337:34843
+0	SET	footer_relatedsite_box__atomic	Icon:B Label:T state(4)	1046:15852
+0	SET	footer_copyright__atomic	Type(2)	337:34853
+0	SET	social	name(7)	337:34801
+0	CMP	footer_copyright__atomic__mo		1548:41650
+0	CMP	skip_link		343:54442
+0	SET	main_menu_open_simple	Type(2) banner(3)	4638:159952
+0	CMP	main_menu_header__mo	Search:B Menu:B	1446:85516
+0	SET	main_menu_2depth_open__atomic__mo	State(2)	398:26645
+0	CMP	main_menu_1depth_open__atomic__mo	Banner:B	398:27011
+0	SET	breadcrumb__atomic	Home:T Depth:T Type(3) State(3)	340:31501
+0	CMP	side_navigation_1depth_title		333:50252
+0	SET	side_navigation_2depth__atomic	Icon:B Label:T state(5)	331:31035
+0	SET	side_navigation_2depth_open__atomic	State(2)	398:26168
+0	SET	side_navigation_3depth__atomic	Label:T State(3)	331:30943
+0	SET	side_navigation_last_depth__atomic	Icon:B Label:T state(4)	333:32099
+0	SET	in_page_navigation__atomic	Label:T State(4)	333:51836
+0	SET	pagination__atomic	Number:T State(5) Type(6) Size(2)	340:31025
+0	SET	tab_bars__atomic__mo	Label:T Style(2) State(3)	4932:91874
+0	SET	step_indicator__atomic	State(3) Last-item(2)	343:53442
+0	SET	bottom_sheet__atomic	Type(2)	5120:3302
+0	CMP	getting_started_guide		1161:24205
+0	CMP	icon/pin		10941:74172
+0	SET	container	Image:B Button:B Badge:B Size(3)	1530:57544
+0	SET	calendar_header__atoimc	Label:T State(5)	343:51967
+0	SET	calendar_d__atoimc	Date:T State(9)	343:51983
+0	SET	swiper__atomic	Type(3) Arrow(2)	1029:33703
+0	SET	list__atomic_bullet	unordered(2) Level(3)	324:52117
+0	SET	tab__atomic	Label:T Type(2) State(5) Style(2)	340:31816
+0	SET	tab_fill__atomic	Label:T State(5) Position(3)	1369:24481
+0	SET	tab__atomic__mo	Label:T Type(1) State(5) Style(2)	1656:52217
+0	SET	radio_button__sorting__atomic	State(4) Size(2)	1055:38347
+0	SET	search__mo	Lable:T Advanced Search:B Label:B Alert:B ↪️Hint:T Size(2) State(4)	1482:27845
+0	SET	상세조회	Property 1(2)	11430:99092

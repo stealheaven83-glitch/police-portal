@@ -17,6 +17,8 @@ export const switchVariants = cva(
       size: {
         default: "w-[32px] h-[20px] border-3",
         lg: "w-[40px] h-[24px] border-4",
+        // Figma: toggle_switch Size=xlarge (트랙 64x32, 안쪽 여백 4px)
+        xl: "w-[64px] h-[32px] border-4",
       },
     },
     defaultVariants: {
@@ -34,6 +36,7 @@ export const switchThumbVariants = cva(
       size: {
         default: "size-4 data-[state=checked]:translate-x-[10px]",
         lg: "size-5 data-[state=checked]:translate-x-[12px]",
+        xl: "size-6 data-[state=checked]:translate-x-[32px]",
       },
     },
     defaultVariants: {
@@ -49,7 +52,8 @@ export const switchIconVariants = cva(
     variants: {
       size: {
         default: "size-2.5",
-        lg: "size-3"
+        lg: "size-3",
+        xl: "size-3.5"
       },
     },
     defaultVariants: {

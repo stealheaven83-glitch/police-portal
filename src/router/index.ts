@@ -713,6 +713,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/component/new-components',
+            name: 'newComponents',
+            component: () => import('../views/component-sample/NewComponents.vue'),
+            meta: {
+                layout: 'MainLayout',
+                title: 'Figma 신규 컴포넌트'
+            }
+        },
+        {
             path: '/:pathMatch(.*)*',
             name: 'notFound',
             component: Error404

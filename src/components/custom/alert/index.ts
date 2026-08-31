@@ -66,3 +66,21 @@ export const alertTitleVariants = cva(
 )
 
 export type AlertVariants = VariantProps<typeof alertVariants>
+
+export { default as CriticalAlert } from "./CriticalAlert.vue"
+
+// Figma: critical_alerts (Type=[emergency|safety|info]) — 좌측 색 배지
+export const criticalAlertBadgeVariants = cva(
+  "flex h-12 shrink-0 items-center gap-1 rounded-[var(--Radius-medium2)] px-2.5 py-2 text-white",
+  {
+    variants: {
+      type: {
+        emergency: "bg-[var(--danger)]",
+        safety: "bg-[var(--success)]",
+        info: "bg-[var(--Alert-info-icon)]",
+      },
+    },
+    defaultVariants: { type: "emergency" },
+  },
+)
+export type CriticalAlertVariants = VariantProps<typeof criticalAlertBadgeVariants>

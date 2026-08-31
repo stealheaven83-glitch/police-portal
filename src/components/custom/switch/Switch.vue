@@ -66,7 +66,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     v-if="label"
     :class="cn(
       'select-none text-[#1E2124] peer-disabled:text-[#8A949E] peer-disabled:cursor-not-allowed', 
-      props.size === 'lg' ? 'text-[17px]' : 'text-[15px]',
+      props.size === 'xl' ? 'text-[19px]' : props.size === 'lg' ? 'text-[17px]' : 'text-[15px]',
       props.labelClass
     )"
   >

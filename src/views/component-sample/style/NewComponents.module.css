@@ -1,0 +1,78 @@
+/* Figma 신규 컴포넌트 13종 확인용 샘플 화면 전용 스타일 */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  padding: 3.2rem;
+}
+
+.pageTitle {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+}
+
+.pageDesc {
+  font-size: 1.5rem;
+  color: var(--Text-body_2);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  padding-bottom: 3.2rem;
+  border-bottom: 1px solid var(--Border_gray03);
+}
+
+.sectionTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+}
+
+.sectionMeta {
+  font-size: 1.3rem;
+  color: var(--Text-body_2);
+}
+
+/* 변형들을 나란히 늘어놓는 행 */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1.6rem;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+/* 폭이 정해진 컴포넌트(인포박스·카드·진행바)를 담는 칸 */
+.box {
+  width: 48rem;
+  max-width: 100%;
+}
+
+.narrowBox {
+  width: 24rem;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  gap: 2.4rem;
+}
+
+/* 스피너·NoData처럼 배경 대비가 필요한 것 */
+.stage {
+  display: flex;
+  align-items: center;
+  gap: 3.2rem;
+  padding: 2.4rem;
+  border: 1px solid var(--Border_gray03);
+  border-radius: 0.8rem;
+  background: var(--Background-gray01);
+}
