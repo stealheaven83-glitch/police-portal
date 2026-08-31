@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, provide } from 'vue'
-import { cn } from '@/lib/utils'
 import styles from './FlexGrid.module.css'
 import { FLEX_ROW_WIDTH_KEY } from './flexGridContext'
 
@@ -15,16 +14,10 @@ import { FLEX_ROW_WIDTH_KEY } from './flexGridContext'
  * size prop 이 breakpoint 객체({ default, '761<' 등})일 때 이 폭을 기준으로 값을 고른다.
  * 행마다 한 번만 관찰하고 그 결과를 자식들이 공유하므로, FlexCol 개수만큼 옵저버가 늘어나지 않는다.
  *
- * type="table" 를 주면 InfoTable 과 같은 표 바깥 테두리(위/왼쪽)를 두른다 — 라벨-값 칸들을
- * 감싸는 가장 바깥 FlexRow 에만 준다. 각 칸의 아래 구분선은 FlexCol 의 type="title"/"value"
- * 가 스스로 그리므로 여기서 신경 쓸 필요가 없다.
+ * FlexRow 자신은 테두리를 그리지 않는다 — 순수 레이아웃 컨테이너다. 테두리 담당은 이렇게 나뉜다:
+ * - 표 바깥 테두리(위/왼쪽) → FlexGrid `type="table"`
+ * - 각 칸 아래 구분선       → FlexCol
  */
-interface Props {
-  type?: 'table'
-}
-
-const props = defineProps<Props>()
-
 const rootEl = ref<HTMLElement | null>(null)
 const width = ref(0)
 
@@ -46,7 +39,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="rootEl" :class="cn(styles.row, props.type === 'table' && styles.table)">
+  <div ref="rootEl" :class="styles.row">
     <slot />
   </div>
 </template>

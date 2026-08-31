@@ -5,8 +5,6 @@ import InputField2 from '@/components/custom/input/InputField2.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import Stepper from '@/components/custom/input/Stepper.vue'
-import { Button } from '@/components/custom/button'
-import Icon from '@/components/custom/icon/Icon.vue'
 
 const form = reactive({
   name: '',
@@ -38,16 +36,6 @@ const dept = reactive({
   dayShiftCount: '',
   nightShiftCount: '',
 })
-
-const regionOptions = [
-  { label: '1지역', value: 'r1' },
-  { label: '2지역', value: 'r2' },
-]
-
-const workTypeOptions = [
-  { label: '상시', value: 'always' },
-  { label: '교대', value: 'shift' },
-]
 
 // table cell 처럼 보이게 하는 라벨/값 셀 공통 class. size:'content'/'full' 을 쓰므로
 // min-width 오버라이드나 flex-none 을 따로 줄 필요가 없다(FlexCol 이 알아서 처리).
@@ -214,59 +202,7 @@ const cellValue = 'flex items-center flex-wrap gap-2 px-3 py-2 bg-white'
           </FlexRow>
         </section>
 
-        <!-- type: 라벨-값 표 스타일 -->
-        <section class="space-y-4">
-          <h2 class="text-xl font-semibold border-b pb-2">type: InfoTable 과 같은 라벨-값 표</h2>
-          <p class="text-muted-foreground text-sm">
-            위 "content/full" 예시처럼 라벨칸을 화면에서 매번 회색으로 칠하지 않아도 됩니다.
-            <code>type="title"</code>이면 회색 라벨칸(<code>InfoField</code>의 라벨과 같은 배경/패딩/폰트,
-            size 를 안 주면 14rem 고정폭), <code>type="value"</code>면 흰 값칸(남는 폭 전부)이 됩니다.
-            칸 아래 구분선은 각 칸이 스스로 그리고, 표 바깥 테두리(위/왼쪽)는 감싸는
-            <code>&lt;FlexRow type="table"&gt;</code>가 그립니다. <code>required</code>를 주면 필수 점이,
-            <code>for</code>를 주면 진짜 <code>&lt;label for&gt;</code>로 렌더링됩니다. 값칸에 컨트롤 없이
-            글자만 넣으면 공통 텍스트 스타일이 자동으로 붙습니다.
-          </p>
-          <FlexRow type="table">
-            <FlexCol :size="12">
-              <FlexRow>
-                <FlexCol type="title" required>부서명</FlexCol>
-                <FlexCol type="value">{{ dept.deptName }}</FlexCol>
-              </FlexRow>
-            </FlexCol>
-            <FlexCol :size="{ default: 6, '600>=': 12 }">
-              <FlexRow>
-                <FlexCol type="title" for="sample-open-year">개소년도</FlexCol>
-                <FlexCol type="value">
-                  <DatePicker id="sample-open-year" v-model="dept.openYear" size="sm" input-class="w-full" class="!space-y-0 flex-1" />
-                </FlexCol>
-              </FlexRow>
-            </FlexCol>
-            <FlexCol :size="{ default: 6, '600>=': 12 }">
-              <FlexRow>
-                <FlexCol type="title" for="sample-capacity">정원</FlexCol>
-                <FlexCol type="value">
-                  <InputField2 id="sample-capacity" v-model="dept.capacity" size="sm" class="!space-y-0 flex-1" />
-                </FlexCol>
-              </FlexRow>
-            </FlexCol>
-            <FlexCol :size="12">
-              <FlexRow>
-                <FlexCol type="title" for="sample-address">주소</FlexCol>
-                <FlexCol type="value" layout="column">
-                  <InputField2 id="sample-address" v-model="dept.addressRoad" size="sm" class="!space-y-0 w-full" placeholder="도로명 주소" />
-                  <InputField2 v-model="dept.addressDetail" size="sm" class="!space-y-0 w-full" placeholder="상세 주소" />
-                </FlexCol>
-              </FlexRow>
-            </FlexCol>
-          </FlexRow>
-          <p class="text-muted-foreground text-sm">
-            라벨칸 폭만 바꾸고 싶으면 <code>size</code>를 주거나(<code>:size="'20rem'"</code>) 감싸는 쪽
-            CSS 에서 <code>--flex-title-w</code>를 재정의합니다. 구분선·배경 같은 그 화면만의 변형은
-            화면 <code>module.css</code> 클래스를 <code>:class</code>로 덧입힙니다.
-          </p>
-        </section>
-
-        <!-- size + 자동분배 혼합, 하나의 FlexRow 안에서 자동 줄바꿈 -->
+        <!-- size 있는 칸 + size 없는 칸 혼합 -->
         <section class="space-y-4 pb-6">
           <h2 class="text-xl font-semibold border-b pb-2">size 있는 칸 + 없는 칸 혼합 / 줄마다 FlexRow 안 나눠도 되는지</h2>
           <p class="text-muted-foreground text-sm">
