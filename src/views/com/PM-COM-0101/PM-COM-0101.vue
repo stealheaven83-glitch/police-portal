@@ -1,25 +1,25 @@
 <template>
-  <div :class="styles.loginPage">
-    <div :class="styles.loginCard">
+  <div :class="styles['login-page']">
+    <div :class="styles['login-card']">
       <div :class="styles.brand" aria-label="지역경찰포털 안내">
-        <div :class="styles.brandInner">
+        <div :class="styles['brand-inner']">
           <img :class="styles.logo" src="/portal/asset/images/img/img_logo_white.svg" alt="지역경찰포털" />
         </div>
 
         <div :class="styles.notice">
-          <div :class="styles.noticeHeader">
+          <div :class="styles['notice-header']">
             <img src="/portal/asset/images/icon/icon_info_white.svg" alt="" />
-            <p :class="styles.noticeTitle">안내사항</p>
+            <p :class="styles['notice-title']">안내사항</p>
           </div>
-          <ul :class="styles.noticeList">
+          <ul :class="styles['notice-list']">
             <li>아이디와 비밀번호는 [공조 조회 시스템]에서 찾을 수 있습니다.</li>
             <li>로그인 5회 실패 시 계정이 잠기게 됩니다. 잠금 해제는 관리자에게 문의 바랍니다.</li>
           </ul>
         </div>
       </div>
 
-      <div :class="styles.formArea">
-        <h1 :class="styles.formTitle">로그인</h1>
+      <div :class="styles['form-area']">
+        <h1 :class="styles['form-title']">로그인</h1>
         <form :class="styles.form" @submit.prevent="onSubmit">
           <InputField2
             v-model="userId"
@@ -45,17 +45,17 @@
             :disabled="locked"
           />
 
-          <div :class="styles.saveIdRow">
+          <div :class="styles['save-id-row']">
             <Checkbox v-model="saveId" label="아이디 저장" :disabled="locked" />
           </div>
 
-          <Button type="submit" variant="primary" size="md" :class="styles.submitBtn">
+          <Button type="submit" variant="primary" size="md" :class="styles['submit-btn']">
             로그인
           </Button>
         </form>
 
-        <div :class="styles.certSection">
-          <p :class="styles.certTitle">행정전자서명 로그인</p>
+        <div :class="styles['cert-section']">
+          <p :class="styles['cert-title']">행정전자서명 로그인</p>
           <ButtonGroup :items="certButtons" class="gap-3 max-md:flex-col" />
         </div>
       </div>
@@ -106,8 +106,8 @@ function onCertLogin() {
 const certDialogOpen = ref(false)
 
 const certButtons: ButtonCaseItem[] = [
-  { key: 'register', label: '공인인증서 등록', variant: 'tertiary2', size: 'sm', class: styles.certBtn, onClick: () => (certDialogOpen.value = true) },
-  { key: 'login', label: '공인인증서 로그인', variant: 'secondary', size: 'sm', class: styles.certBtn, onClick: onCertLogin },
+  { key: 'register', label: '공인인증서 등록', variant: 'tertiary2', size: 'sm', class: styles['cert-btn'], onClick: () => (certDialogOpen.value = true) },
+  { key: 'login', label: '공인인증서 로그인', variant: 'secondary', size: 'sm', class: styles['cert-btn'], onClick: onCertLogin },
 ]
 
 /**

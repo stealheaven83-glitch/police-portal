@@ -1,6 +1,6 @@
 <template>
   <GenericDialog2 :open="open" title="공인인증서 등록" :size="560" @update:open="onUpdateOpen">
-    <div :class="styles.dialogBody">
+    <div :class="styles['dialog-body']">
       <InputField2
         v-model="userId"
         label="아이디"
@@ -13,9 +13,9 @@
         autocomplete="username"
       />
 
-      <div :class="styles.pwField">
-        <Label :class="styles.pwLabel" for="cert-password">비밀번호</Label>
-        <div :class="styles.pwWrap">
+      <div :class="styles['pw-field']">
+        <Label :class="styles['pw-label']" for="cert-password">비밀번호</Label>
+        <div :class="styles['pw-wrap']">
           <Input
             id="cert-password"
             v-model="password"
@@ -23,9 +23,9 @@
             placeholder="비밀번호를 입력하세요"
             size="md"
             autocomplete="new-password"
-            :class="styles.pwInput"
+            :class="styles['pw-input']"
           />
-          <div :class="styles.pwIcons">
+          <div :class="styles['pw-icons']">
             <button
               v-if="password"
               type="button"
@@ -61,7 +61,7 @@
         type="button"
         variant="primary"
         size="md"
-        :class="styles.dialogSubmitBtn"
+        :class="styles['dialog-submit-btn']"
         @click="onRegister"
       >
         공인인증서 등록
