@@ -22,7 +22,9 @@
 .dialogSection + .dialogSection {
   margin-top: 2.4rem;
 }
-
+.dialog-wrap .pop-title-sub:first-child{
+  margin-top: 0;
+}
 /* InfoTable 공통 확장 변수로 섹션별 라벨 열 너비만 조정한다. */
 .cardTable,
 .generalTable {

@@ -1051,7 +1051,9 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   width: 2.4rem;
   height: 2.4rem;
 }
-
+.dialog-wrap .pop-title-sub:first-child{
+  margin-top: 0;
+}
 .list-actions {
   display: flex;
   justify-content: flex-end;

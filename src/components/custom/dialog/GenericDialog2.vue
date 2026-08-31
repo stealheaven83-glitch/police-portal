@@ -94,10 +94,10 @@ function handleCancel() {
 </script>
 
 <template>
-  <Dialog :open="open" @update:open="handleOpenChange">
+  <Dialog :open="open" @update:open="handleOpenChange" class="">
     <DialogContent
       :show-close-button="showCloseButton"
-      class="px-10 py-6 gap-0 flex flex-col max-h-[85dvh]"
+      class="dialog-wrap px-10 py-6 gap-0 flex flex-col max-h-[85dvh]"
       :class="sizeClass"
       :style="sizeStyle"
       @pointer-down-outside="(e: Event) => persistent && e.preventDefault()"
