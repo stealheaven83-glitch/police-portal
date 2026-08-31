@@ -128,10 +128,24 @@ export const menuTabSampleMenu: SideMenuConfig = {
   ],
 }
 
+/** 탄력순찰 LNB */
+export const flexiblePatrolMenu: SideMenuConfig = {
+  title: '탄력순찰',
+  activeChild: '요청관리',
+  // 시안의 4개 항목 모두 하위가 없는 1뎁스라 항목 자체가 링크다
+  items: [
+    { name: '요청관리', path: '/request-manage' },
+    { name: '범죄 안전 지도' },
+    { name: '탄력순찰 이행현황' },
+    { name: '탄력순찰 이행실적' },
+  ],
+}
+
 const PRESETS: Record<SideMenuPresetKey, SideMenuConfig> = {
   localPolice: localPoliceMenu,
   publicSafety: publicSafetyMenu,
   systemAdmin: systemAdminMenu,
+  flexiblePatrol: flexiblePatrolMenu,
   menuTabSample: menuTabSampleMenu,
 }
 

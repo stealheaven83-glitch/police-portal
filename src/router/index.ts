@@ -14,6 +14,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/request-manage',
+            name: 'request-manage',
+            component: () => import('../views/RequestManage/RequestManage.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '요청관리',
+            }
+        },
+        {
             path: '/login',
             name: 'login',
             component: () => import('../views/Login.vue'),

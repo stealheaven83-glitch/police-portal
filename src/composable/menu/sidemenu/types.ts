@@ -26,3 +26,4 @@ export type SideMenuPresetKey =
   | 'publicSafety'
   | 'systemAdmin'
   | 'menuTabSample'
+  | 'flexiblePatrol'

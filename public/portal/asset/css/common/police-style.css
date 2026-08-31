@@ -1101,6 +1101,9 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
 }
 
 @media (max-width: 1200px) {
+  .main-menu{
+    display:none;
+  }
   .search-wrap .keyword .keyword-list {
     flex-wrap: wrap;
     gap: 0.2rem 2rem;
