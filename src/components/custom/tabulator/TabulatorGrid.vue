@@ -30,7 +30,12 @@ import { Switch } from '@/components/custom/switch'
 import { Badge } from '@/components/custom/badge'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import Input from '@/components/custom/input/Input.vue'
-import type { PageSizeOption, TabulatorGridColumn, TabulatorGridLayout } from '.'
+import type {
+  PageSizeOption,
+  TabulatorGridColumn,
+  TabulatorGridLayout,
+  TabulatorGridResponsiveLayout,
+} from '.'
 
 /**
  * Tabulator 기반 공용 데이터 그리드.
@@ -80,6 +85,7 @@ interface Props {
   /** 행 높이(px) */
   rowHeight?: number
   layout?: TabulatorGridLayout
+  responsiveLayout?: TabulatorGridResponsiveLayout
   /** true 면 맨 앞에 일괄 선택 체크박스 컬럼을 자동으로 추가 (= selectMode: 'checkbox' 와 같음) */
   selectable?: boolean
   /**
@@ -152,6 +158,7 @@ const props = withDefaults(defineProps<Props>(), {
   // 시안의 표는 모두 컨테이너 폭을 컬럼 비율로 나눠 갖는다(= fitColumns).
   // 컬럼 이동·폭 조절은 시안 어디에도 없으므로 기본은 꺼둔다.
   layout: 'fitColumns',
+  responsiveLayout: 'collapse',
   selectable: false,
   selectMode: 'none',
   placeholder: '데이터가 없습니다',
@@ -775,6 +782,7 @@ onMounted(() => {
     data: clone(props.data),
     reactiveData: false,
     layout: props.layout,
+    responsiveLayout: props.responsiveLayout,
     resizableColumns: props.resizableColumns,
     resizableRows: props.resizableRows,
     movableColumns: props.movableColumns,

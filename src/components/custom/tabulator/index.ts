@@ -5,6 +5,7 @@ export { default as TabulatorGrid } from "./TabulatorGrid.vue"
 
 /** 그리드 레이아웃 모드 (Tabulator layout 옵션) */
 export type TabulatorGridLayout = "fitColumns" | "fitData" | "fitDataFill" | "fitDataStretch"
+export type TabulatorGridResponsiveLayout = "hide" | "collapse"
 
 /** 셀에 넣을 수 있는 커스텀 셀 종류 */
 export type TabulatorCellType = "date" | "input" | "button" | "select" | "switch" | "checkbox" | "badge"
