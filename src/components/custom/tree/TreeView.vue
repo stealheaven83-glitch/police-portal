@@ -253,6 +253,7 @@ defineExpose({
   border: 1px solid var(--Border_gray03);
   border-radius: 0.8rem;
   background: #fff;
+  overflow:scroll-y;
 }
 
 .treeRow {
@@ -370,6 +371,10 @@ defineExpose({
   border:0!important;
   border-top:6px solid rgba(0, 0, 0, 0.04) !important;
   border-radius:0!important;
+  overflow: auto;
+  flex:1;
+  scrollbar-width: thin;
+    scrollbar-color: #BACBDE #F4F5F6;
 }
 .btn-tree{
   display:flex;

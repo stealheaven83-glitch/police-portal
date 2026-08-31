@@ -72,6 +72,40 @@ function createDeptTree(): DeptNode[] {
         { name: '지역경찰포털' },
       ],
     },
+        {
+      name: '지역경찰포털',
+      open: true,
+      children: [
+        { name: '본청' },
+        {
+          name: '경찰대학',
+          open: true,
+          children: [
+            { name: '지역경찰포털' },
+            {
+              name: '지역경찰포털',
+              open: true,
+              children: [
+                {
+                  name: '경찰대학',
+                  open: true,
+                  children: [
+                    { name: '경찰대학 교수부' },
+                    { name: '경찰대학 교무처' },
+                    { name: '경찰대학 운영지원과' },
+                  ],
+                },
+                { name: '중앙경찰학교', children: [{ name: '교무과' }] },
+                { name: '경찰수사연수원', children: [{ name: '교육지원과' }] },
+                { name: '지역경찰포털' },
+              ],
+            },
+          ],
+        },
+        { name: '지역경찰포털' },
+        { name: '지역경찰포털' },
+      ],
+    },
   ]
 }
 
