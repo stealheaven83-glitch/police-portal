@@ -75,6 +75,8 @@ export function useAccidentVolunteerStatus() {
 
   const allRows = ref<AccidentVolunteerRow[]>(createMockRows())
 
+  // 지금은 입력값이 바뀌면 즉시 걸러진다(목업). 조회 버튼으로 커밋하는 방식이 필요해지면
+  // 입력값과 "적용된 값"을 분리하고 search() 에서만 옮긴다 — PC-COM-2402 참고.
   const rows = computed(() => {
     return allRows.value.filter((row) => {
       if (typeFilter.value !== 'all' && row.type !== typeFilter.value) return false

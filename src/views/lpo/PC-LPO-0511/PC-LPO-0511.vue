@@ -9,10 +9,14 @@ import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascad
 import SelectField from '@/components/custom/select/SelectField.vue'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useDispatchSummaryDaily, applicantOptions, applyTypeOptions } from './composable/PC-LPO-0511'
 
 defineOptions({ name: 'PcLpo0511' })
+
+useSideMenuSetup({ ...localPoliceMenu, openIndex: 3, activeChild: '승인관리' })
 
 const navItems = [
   { label: '홈', path: '/' },

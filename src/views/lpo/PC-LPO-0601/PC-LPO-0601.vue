@@ -8,6 +8,10 @@ import DepartmentInfoSection from './components/DepartmentInfoSection.vue'
 import DistrictInfoSection from './components/DistrictInfoSection.vue'
 import { useJurisdictionStatusForm } from './composable/useJurisdictionStatusForm.ts'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
+
+useSideMenuSetup({ ...localPoliceMenu, openIndex: 4, activeChild: '관내현황' })
 
 const navItems = [
   { label: '홈', path: '/' },

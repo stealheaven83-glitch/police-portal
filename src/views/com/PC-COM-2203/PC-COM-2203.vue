@@ -10,6 +10,7 @@ import { TreeView, type TreeNode } from '@/components/custom/tree'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { useDialog } from '@/composable/dialog/dialog'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { systemAdminMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useMenuManage, channelOptions, type MenuNode, type MenuRow } from './composable/PC-COM-2203'
 import styles from './style/PC-COM-2203.module.css'
@@ -102,7 +103,7 @@ async function onSave() {
 }
 
 // 사이드메뉴(시스템 관리 LNB) 설정 — 활성 항목은 라우트 경로로 자동 매칭된다
-useSideMenuSetup('systemAdmin')
+useSideMenuSetup({ ...systemAdminMenu, openIndex: 0, activeChild: '메뉴관리' })
 
 // 탭 추가 및 활성화
 useBottomTabSetup({

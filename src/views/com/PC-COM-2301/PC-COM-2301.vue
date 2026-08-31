@@ -37,12 +37,16 @@ import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { systemAdminMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 
 // KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!)
 defineOptions({
   name: 'PcCom2301',
 })
+
+useSideMenuSetup({ ...systemAdminMenu, openIndex: 1, activeChild: '시스템 모니터링' })
 
 const navItems = [
   { label: '홈', path: '/' },

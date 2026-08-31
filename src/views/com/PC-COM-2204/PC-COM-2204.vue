@@ -11,6 +11,7 @@ import LayoutSplit from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
 import { useAutoTrigger, type ScreenTriggerMap } from '@/composables/useAutoTrigger'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { systemAdminMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { usePermissionManagement, PermissionManagementKey, type PermissionRow } from './composable/PC-COM-2204'
 import DepartmentSearchDialog from './components/DepartmentSearchDialog.vue'
@@ -19,7 +20,7 @@ import styles from './style/PC-COM-2204.module.css'
 
 defineOptions({ name: 'PcCom2204' })
 
-useSideMenuSetup('systemAdmin')
+useSideMenuSetup({ ...systemAdminMenu, openIndex: 0, activeChild: '권한관리' })
 
 const navItems = [
   { label: '홈', path: '/' },

@@ -19,6 +19,10 @@ import { useWorkSchedule, WorkScheduleKey, timeSlots, teamOptions } from './comp
 import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutHeader from '@/components/custom/content-layout/layoutHeader.vue'
 import WorkerAddDialog from './components/WorkerAddDialog.vue'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
+
+useSideMenuSetup({ ...localPoliceMenu, openIndex: 1, activeChild: '근무일지(甲)' })
 
 const navItems = [
   { label: '홈', path: '/' },

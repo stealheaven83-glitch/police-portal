@@ -11,16 +11,27 @@ import InputField2 from '@/components/custom/input/InputField2.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useAccidentVolunteerStatus, typeFilterOptions } from './composable/PC-LPO-0215'
 
 defineOptions({ name: 'PcLpo0215' })
 
+/**
+ * LNB. 문자열 키(useSideMenuSetup('localPolice'))로 부르면 프리셋 기본값
+ * (openIndex:0 / activeChild:'메모')이 그대로 적용돼 엉뚱한 메뉴가 활성으로 표시된다.
+ * 화면마다 위치가 다르므로 프리셋을 인라인으로 펼쳐 동기 경로로 준다 — CLAUDE.md §5.
+ * 이 화면은 items[1] '근무일지' > '근무일지(甲)'.
+ */
+useSideMenuSetup({ ...localPoliceMenu, openIndex: 1, activeChild: '근무일지(甲)' })
+
+// 브레드크럼: 실제 라우트가 있는 항목만 path 를 준다. 없는 경로(/lpo 등)를 넣으면 죽은 링크가 된다.
 const navItems = [
   { label: '홈', path: '/' },
-  { label: '지역경찰', path: '/lpo' },
-  { label: '근무일지', path: '/lpo' },
-  { label: '근무일지(甲)', path: '/lpo' },
+  { label: '지역경찰' },
+  { label: '근무일지' },
+  { label: '근무일지(甲)' },
   { label: '사고자/자원근무자현황' },
 ]
 
@@ -64,28 +75,26 @@ useBottomTabSetup({
       <Breadcrumb :items="navItems" />
     </template>
   </PageHeader>
-  <div>
-    <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
-      <template #department>
-        <span class="dept-name">부서</span>
-        <DepartmentCascadeSelect v-model="department" size="sm" />
-      </template>
-      <template #form>
-        <div class="search-area">
-          <div class="group-gap2">
-            <DatePicker v-model="dateFrom" label="근무일자" size="sm" inputClass="w-40" />
-            <span aria-hidden="true">~</span>
-            <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
-          </div>
-          <SelectField v-model="typeFilter" label="구분" :options="typeFilterOptions" size="sm" triggerClass="w-37" />
-          <InputField2 v-model="nameFilter" label="이름" size="sm" inputClass="w-[13.3rem]" />
+  <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
+    <template #department>
+      <span class="dept-name">부서</span>
+      <DepartmentCascadeSelect v-model="department" size="sm" />
+    </template>
+    <template #form>
+      <div class="search-area">
+        <div class="group-gap2">
+          <DatePicker v-model="dateFrom" label="근무일자" size="sm" inputClass="w-40" />
+          <span aria-hidden="true">~</span>
+          <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
         </div>
-      </template>
-      <template #btns>
-        <Button variant="secondary" size="sm">조회</Button>
-      </template>
-    </SearchWrapper>
-  </div>
+        <SelectField v-model="typeFilter" label="구분" :options="typeFilterOptions" size="sm" triggerClass="w-37" />
+        <InputField2 v-model="nameFilter" label="이름" size="sm" inputClass="w-40" />
+      </div>
+    </template>
+    <template #btns>
+      <Button variant="secondary" size="sm">조회</Button>
+    </template>
+  </SearchWrapper>
 
   <div class="list-actions">
     <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
@@ -102,5 +111,7 @@ useBottomTabSetup({
     height="100%"
     min-height="30rem"
     placeholder="조회된 내역이 없습니다"
+    show-pagination
+    :items-per-page="10"
   />
 </template>

@@ -28,9 +28,13 @@ import {
 import type { PersonnelListRow } from './composable/PC-LPO-0801'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import styles from './style/PC-LPO-0801.module.css'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 
 // KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!) — useBottomTabSetup 의 componentName 과 일치해야 한다.
 defineOptions({ name: 'PcLpo0801' })
+
+useSideMenuSetup({ ...localPoliceMenu, openIndex: 6, activeChild: '인사관리' })
 
 const navItems = [
   { label: '홈', path: '/' },
@@ -130,7 +134,7 @@ useBottomTabSetup({
   <div :class="styles.toolbar">
     <div :class="styles.toolbarTop">
       <div :class="styles.searchRow">
-        <span :class="styles.searchLabel">부서</span>
+        <span class="dept-name">부서</span>
         <DepartmentCascadeSelect v-model="department" :tree="departmentTree" size="sm" :select-class="styles.select" />
       </div>
       <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>

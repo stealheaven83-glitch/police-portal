@@ -17,6 +17,10 @@ import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
 import { useMemoList, sortOptions } from './composable/useMemoList'
 import type { MemoSort } from './composable/useMemoList'
 import styles from './style/PM-LPO-0101.module.css'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
+
+useSideMenuSetup({ ...localPoliceMenu, openIndex: 0, activeChild: '메모' })
 
 const navItems = [
   { label: '홈', path: '/' },

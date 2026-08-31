@@ -22,6 +22,8 @@ import EtcDetailDialog from './components/EtcDetailDialog.vue'
 import MaintenanceHistoryDialog from './components/MaintenanceHistoryDialog.vue'
 import { useEquipmentList, categoryTabs, EquipmentListKey } from './composable/PC-LPO-0701'
 import type { EquipmentListRow } from './composable/PC-LPO-0701'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 // import styles from './style/PC-LPO-0701.module.css'
 
@@ -29,6 +31,8 @@ import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 // 0701~0714 가 이 컴포넌트 하나를 screenGroup 으로 공유하므로(router/index.ts 참고), 탭도
 // 어느 화면ID로 들어오든 항상 이 하나의 "장비관리" 탭으로 고정한다.
 defineOptions({ name: 'PcLpo0701' })
+
+useSideMenuSetup({ ...localPoliceMenu, openIndex: 5, activeChild: '개인장비' })
 
 const navItems = [
   { label: '홈', path: '/' },

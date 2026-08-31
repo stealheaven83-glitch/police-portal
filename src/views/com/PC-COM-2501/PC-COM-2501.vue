@@ -8,12 +8,13 @@ import InputField2 from '@/components/custom/input/InputField2.vue'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { systemAdminMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useAppVersionList, searchConditionOptions } from './composable/PC-COM-2501'
 
 defineOptions({ name: 'PcCom2501' })
 
-useSideMenuSetup('systemAdmin')
+useSideMenuSetup({ ...systemAdminMenu, openIndex: 3, activeChild: '앱관리' })
 
 const navItems = [
   { label: '홈', path: '/' },

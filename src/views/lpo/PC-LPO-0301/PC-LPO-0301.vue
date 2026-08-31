@@ -8,10 +8,14 @@ import SelectField from '@/components/custom/select/SelectField.vue'
 import { Checkbox } from '@/components/custom/checkbox'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useHandoverStatus, yearOptions, monthOptions } from './composable/PC-LPO-0301'
 
 defineOptions({ name: 'PcLpo0301' })
+
+useSideMenuSetup({ ...localPoliceMenu, openIndex: 2, activeChild: '인수인계 현황' })
 
 const navItems = [
   { label: '홈', path: '/' },

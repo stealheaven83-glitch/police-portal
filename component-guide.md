@@ -327,11 +327,21 @@ hex를 직접 쓰지 않는다. `var(--Text-body_1)`, `var(--Base-primary)`, `va
 `var(--Surface-primary)`, `var(--Radius-medium3)`, `var(--Alert-danger-surface)` 등이 있다.
 대응 토큰이 정말 없을 때만 hex(선례: `Badge.vue`의 `#fff6e5`).
 
-### 그래도 없을 때
+### 그래도 없을 때 — **화면 전용으로 만들지 말고 공통에 추가한다**
 
-1. 라벨-값 표 → `custom/info-table/InfoTable.module.css` (이미 공통)
-2. 그리드 → `src/assets/css/tabulator-theme.css` (전역 적용, 다시 스타일링 불필요)
-3. 여기까지 없을 때만 화면 전용 `style/PC-XXX-NNNN.module.css`
+"최대한 공통을 활용한다"는 **① 있으면 쓴다 + ② 없으면 공통에 만든다** 두 가지다(CLAUDE.md §1).
+②를 빠뜨리고 화면 module.css에 만들면, 다음 화면이 같은 걸 또 만들어 값이 갈라진다.
+
+| 만들려는 것 | 어디에 |
+|---|---|
+| 색·크기·모서리 값 | `police-style.css`에 **토큰(`--Xxx`)으로** 추가. 화면에 hex 박지 않는다 |
+| 역할 있는 레이아웃·유틸 클래스 | `police-style.css`에 **공통 클래스로** 추가 (`.btn-wrap` 등과 같은 결로 명명) |
+| 특정 컴포넌트에 딸린 스타일 | 그 컴포넌트 폴더의 `*.module.css` |
+| 라벨-값 표 관련 | `custom/info-table/InfoTable.module.css` (이미 공통) |
+| 그리드 관련 | `src/assets/css/tabulator-theme.css` (전역 적용, 다시 스타일링 불필요) |
+| **화면 전용** `style/PC-XXX-NNNN.module.css` | **예외적으로만** — 그 화면에서만 의미가 있고 다른 화면에 옮겨 붙일 수 없는 것. **애매하면 공통으로 만든다** |
+
+공통에 추가했으면 **위 §12 표에 한 줄 추가**한다 — 그래야 다음 사람이 찾아 쓴다.
 
 > 화면 템플릿에 테일윈드 유틸(`flex`, `mt-4`)을 직접 쓰지 않는다 — CLAUDE.md §1.
 > 재사용 컴포넌트(`src/components/**`) 내부는 무관하다.

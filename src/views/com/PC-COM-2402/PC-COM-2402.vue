@@ -8,6 +8,7 @@ import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { systemAdminMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import PopupNoticeDialog from './components/PopupNoticeDialog.vue'
 import {
@@ -62,7 +63,7 @@ const columns: TabulatorGridColumn[] = [
 ]
 
 // 사이드메뉴(시스템 관리 LNB) 설정 — 활성 항목은 라우트 경로로 자동 매칭된다
-useSideMenuSetup('systemAdmin')
+useSideMenuSetup({ ...systemAdminMenu, openIndex: 2, activeChild: '팝업 관리' })
 
 // 탭 추가 및 활성화
 useBottomTabSetup({
