@@ -134,7 +134,7 @@ export const flexiblePatrolMenu: SideMenuConfig = {
   activeChild: '요청관리',
   // 시안의 4개 항목 모두 하위가 없는 1뎁스라 항목 자체가 링크다
   items: [
-    { name: '요청관리', path: '/request-manage' },
+    { name: '요청관리', path: '/views/flp/PM-FLP-0101' },
     { name: '범죄 안전 지도' },
     { name: '탄력순찰 이행현황' },
     { name: '탄력순찰 이행실적' },

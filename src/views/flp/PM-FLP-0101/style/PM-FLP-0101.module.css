@@ -1,125 +1,17 @@
-/* 요청관리 페이지 전용 레이아웃. 1rem = 10px 기준 (전역 리셋). */
+/* 요청관리 전용 스타일. 1rem = 10px 기준(전역 리셋). */
 
-.toolbar {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-  padding: 1.6rem 2rem;
-  border: 1px solid var(--Border_gray03, #e6e8ea);
-  border-radius: 0.8rem;
-  background: var(--Background-gray01, #f5f6f8);
-}
-
-.toolbarRow {
-  display: flex;
-  flex-wrap: wrap;
+/*
+ * '도움말' 버튼에 해당하는 공용 컴포넌트가 custom/·ui/ 어디에도 없다.
+ * 규칙대로 임의로 만들지 않고 자리만 표시해 둔다 — 컴포넌트가 생기면 이 자리를 그대로 교체한다.
+ */
+.missingComponent {
+  display: inline-flex;
   align-items: center;
-  gap: 1.6rem 2rem;
-}
-
-.field {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-}
-
-.fieldLabel {
-  flex-shrink: 0;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--Text-body_0, #1e2124);
+  padding: 0.2rem 0.8rem;
+  border: 1px dashed var(--Border_gray03);
+  border-radius: var(--Radius-small3);
+  font-size: 1.3rem;
+  line-height: 1.5;
+  color: var(--Text-body_2);
   white-space: nowrap;
-}
-
-.select {
-  width: 14rem;
-  max-width: 100%;
-}
-
-.dateRangeGroup {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-}
-
-.dateInput {
-  width: 15rem;
-  max-width: 100%;
-}
-
-.dateSeparator {
-  color: var(--Text-body_2, #58616a);
-}
-
-.toolbarActions {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  margin-left: auto;
-}
-
-/* -------------------------------------------------------------- 목록 패널 */
-.panel {
-  margin-top: 2rem;
-  border: 1px solid var(--Border_gray03, #e6e8ea);
-  border-radius: 0.8rem;
-  overflow: hidden;
-  background: #fff;
-}
-
-.panelHead {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.2rem;
-  padding: 1.2rem 1.6rem;
-  border-bottom: 1px solid var(--Border_gray03, #e6e8ea);
-  background: var(--Background-gray01, #f5f6f8);
-}
-
-.panelTitle {
-  font-size: 1.7rem;
-  font-weight: 700;
-  color: var(--Text-body_0, #1e2124);
-}
-
-.panelBody {
-  padding: 1.6rem;
-  overflow-x: auto;
-}
-
-.tableScroll {
-  min-width: 90rem;
-}
-
-/* -------------------------------------------------------------- 반응형 */
-@media (max-width: 75rem) {
-  .toolbarActions {
-    margin-left: 0;
-    width: 100%;
-    justify-content: flex-end;
-  }
-}
-
-@media (max-width: 40rem) {
-  .toolbarRow {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .field {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .select,
-  .dateInput {
-    width: 100%;
-  }
-
-  .panelHead {
-    flex-direction: column;
-    align-items: stretch;
-  }
 }

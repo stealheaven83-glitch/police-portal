@@ -890,7 +890,7 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
 }
 .rowgroup.service .service-col .service-bnr {
   flex: 1;
-  padding: 2.8rem 2.4rem 2rem 3.2rem;
+  padding: 2.8rem 3.2rem 2rem 3.2rem;
   border-radius: 3.2rem;
   background: var(--Background-main-card);
 }
@@ -959,8 +959,12 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   font-weight: 700;
   line-height: 1;
 }
-.rowgroup.service .service-col .service-bnr .title i {
+.rowgroup.service .service-col .service-bnr.note .title i {
+  margin-top: -1.6rem;
   text-align: right;
+}
+.rowgroup.service .service-col .service-bnr i{
+  text-align:right;
 }
 .rowgroup.service .service-col.first {
   flex: 1;

@@ -1,19 +1,19 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { Download } from 'lucide-vue-next'
+import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
+import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
+import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
-import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import { Button } from '@/components/custom/button'
-import TableWrapper from '@/components/custom/table/TableWrapper.vue'
+import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
-import {
-  useRequestManagementForm,
-  periodTypeOptions,
-  receiptTypeOptions,
-  pageSizeOptions,
-} from './composable/PM-FLP-0101.ts'
+import { useRequestManage, periodTypeOptions, receiptTypeOptions } from './composable/PM-FLP-0101'
 import styles from './style/PM-FLP-0101.module.css'
 
 // KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수, useBottomTabSetup 의 componentName 과 일치)
@@ -25,9 +25,62 @@ const navItems = [
   { label: '요청관리' },
 ]
 
-// TODO: '탄력순찰' 도메인 LNB 프리셋이 아직 없어 useSideMenuSetup 은 생략 —
-// 기본 localPoliceMenu 프리셋으로 뜬다(menu-tab-guide.md §3.2, CLAUDE.md 1번 항목: 없는 패턴은
-// 조용히 새로 만들지 않고 알린다). 프리셋 생기면 여기 useSideMenuSetup('...') 추가할 것.
+const {
+  rows,
+  department,
+  advancedSearchOpen,
+  periodType,
+  dateFrom,
+  dateTo,
+  receiptType,
+  search,
+  createEmptyRow,
+} = useRequestManage()
+
+/**
+ * 컬럼이 16개라 컨테이너 폭에 나눠 담으면 글자가 뭉개진다.
+ * layout="fitDataFill" + 컬럼마다 고정 width 로 가로 스크롤을 쓴다(CLAUDE.md §6).
+ */
+const columns: TabulatorGridColumn[] = [
+  { title: '관리번호', field: 'id', width: 120, hozAlign: 'center' },
+  { title: '접수일자', field: 'receivedAt', width: 120, hozAlign: 'center' },
+  { title: '요청기간', field: 'requestPeriod', width: 200, hozAlign: 'center' },
+  { title: '요청시간', field: 'requestTime', width: 100, hozAlign: 'center' },
+  { title: '주소(지번)', field: 'addressJibun', width: 240, hozAlign: 'center' },
+  { title: '주소(도로명)', field: 'addressRoad', width: 220, hozAlign: 'center' },
+  { title: '요청건수', field: 'requestCount', width: 100, hozAlign: 'center' },
+  { title: '순찰요청사항', field: 'patrolRequest', width: 180, hozAlign: 'center' },
+  { title: '순찰사유', field: 'patrolReason', width: 180, hozAlign: 'center' },
+  { title: '신고건수', field: 'reportCount', width: 100, hozAlign: 'center' },
+  { title: '핫스팟', field: 'hotspot', width: 100, hozAlign: 'center' },
+  { title: '경력수요형태', field: 'demandType', width: 140, hozAlign: 'center' },
+  { title: '경력수요인원', field: 'demandPersonnel', width: 130, hozAlign: 'center' },
+  { title: '이메일', field: 'email', width: 200, hozAlign: 'center' },
+  { title: '등록자', field: 'registrant', width: 100, hozAlign: 'center' },
+  { title: '등록일', field: 'registeredAt', width: 120, hozAlign: 'center' },
+]
+
+const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
+
+function onSearch() {
+  search()
+  gridRef.value?.setPage(1)
+}
+
+function onDownloadExcel() {
+  const today = new Date().toISOString().slice(0, 10)
+  gridRef.value?.download('csv', `요청관리_${today}.csv`)
+}
+
+/** 신규는 별도 등록 화면 없이 목록 맨 위에 빈 행을 붙인다(맨 위라 1페이지에 그대로 보인다) */
+async function onCreate() {
+  await gridRef.value?.addRow(createEmptyRow(), true)
+  gridRef.value?.setPage(1)
+  toast.success('신규 요청이 등록되었습니다.')
+}
+
+useSideMenuSetup('flexiblePatrol')
+
 useBottomTabSetup({
   value: 'PM-FLP-0101',
   label: '요청관리',
@@ -35,47 +88,6 @@ useBottomTabSetup({
   componentName: 'PmFlp0101',
   closable: true,
 })
-
-const listColumns = [
-  { key: 'id', label: '관리번호', width: '11rem' },
-  { key: 'receivedAt', label: '접수일자', width: '11rem' },
-  { key: 'requestPeriod', label: '요청기간', width: '18rem' },
-  { key: 'requestTime', label: '요청시간', width: '9rem' },
-  { key: 'addressJibun', label: '주소(지번)', width: '22rem' },
-  { key: 'addressRoad', label: '주소(도로명)', width: '20rem' },
-  { key: 'requestCount', label: '요청건수', width: '8rem' },
-  { key: 'patrolRequest', label: '순찰요청사항', width: '18rem' },
-  { key: 'patrolReason', label: '순찰사유', width: '18rem' },
-  { key: 'reportCount', label: '신고건수', width: '8rem' },
-  { key: 'hotspot', label: '핫스팟', width: '8rem' },
-  { key: 'demandType', label: '경력수요형태', width: '12rem' },
-  { key: 'demandPersonnel', label: '경력수요인원', width: '10rem' },
-  { key: 'email', label: '이메일', width: '16rem' },
-  { key: 'registrant', label: '등록자', width: '9rem' },
-  { key: 'registeredAt', label: '등록일', width: '11rem' },
-]
-
-const {
-  filteredRows,
-  pagedRows,
-  pageSize,
-  itemsPerPage,
-  currentPage,
-  totalPages,
-  department,
-  periodType,
-  dateFrom,
-  dateTo,
-  receiptType,
-  search,
-  registerRow,
-  downloadExcel,
-} = useRequestManagementForm()
-
-function onItemsPerPageChange(value: number) {
-  pageSize.value = String(value)
-  currentPage.value = 1
-}
 </script>
 
 <template>
@@ -84,83 +96,77 @@ function onItemsPerPageChange(value: number) {
       <PageTitle title="요청관리" />
     </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
+      <div class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <!-- '도움말' 버튼 공용 컴포넌트가 custom/·ui/ 에 없어 자리만 표시한다 -->
+        <span :class="styles.missingComponent">컴포넌트 없음</span>
+      </div>
     </template>
   </PageHeader>
 
-  <div :class="styles.toolbar">
-    <div :class="styles.toolbarRow">
-      <div :class="styles.field">
-        <span :class="styles.fieldLabel">부서</span>
-        <DepartmentCascadeSelect v-model="department" size="sm" :select-class="styles.select" />
-      </div>
+  <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
+    <template #department>
+      <span class="dept-name">부서</span>
+      <DepartmentCascadeSelect v-model="department" size="sm" />
+    </template>
 
-      <div :class="styles.field">
-        <label :class="styles.fieldLabel" for="request-period-type">기간구분</label>
+    <template #form>
+      <div class="search-area">
         <SelectField
-          id="request-period-type"
           v-model="periodType"
+          label="기간구분"
           :options="periodTypeOptions"
           size="sm"
-          :trigger-class="styles.select"
-          class="!space-y-0"
+          trigger-class="w-37"
         />
-      </div>
 
-      <div :class="styles.field">
-        <span :class="styles.fieldLabel">기간</span>
-        <div :class="styles.dateRangeGroup">
-          <DatePicker v-model="dateFrom" size="sm" :input-class="styles.dateInput" class="!space-y-0" placeholder="YYYY.MM.DD" />
-          <span :class="styles.dateSeparator" aria-hidden="true">~</span>
-          <DatePicker v-model="dateTo" size="sm" :input-class="styles.dateInput" class="!space-y-0" placeholder="YYYY.MM.DD" />
+        <div class="group-gap2">
+          <DatePicker v-model="dateFrom" label="기간" size="sm" input-class="w-40" />
+          <span aria-hidden="true">~</span>
+          <DatePicker
+            v-model="dateTo"
+            label="기간 종료일"
+            label-class="sr-only"
+            size="sm"
+            input-class="w-40"
+          />
         </div>
-      </div>
 
-      <div :class="styles.field">
-        <label :class="styles.fieldLabel" for="request-receipt-type">접수구분</label>
         <SelectField
-          id="request-receipt-type"
           v-model="receiptType"
+          label="접수구분"
           :options="receiptTypeOptions"
           size="sm"
-          :trigger-class="styles.select"
-          class="!space-y-0"
+          trigger-class="w-37"
         />
       </div>
+    </template>
 
-      <div :class="styles.toolbarActions">
-        <Button type="button" variant="secondary" size="sm" @click="search">조회</Button>
-        <Button type="button" variant="primary" size="sm" @click="registerRow">등록</Button>
-      </div>
-    </div>
+    <template #btns>
+      <Button type="button" variant="secondary" size="sm" class="w-25" @click="onSearch">
+        조회
+      </Button>
+    </template>
+  </SearchWrapper>
+
+  <div class="list-actions">
+    <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
+      <Download :size="16" aria-hidden="true" />
+      엑셀다운로드
+    </Button>
+    <Button type="button" variant="primary" size="sm" class="w-25" @click="onCreate">신규</Button>
   </div>
 
-  <section :class="styles.panel" aria-labelledby="request-list-heading">
-    <div :class="styles.panelHead">
-      <h3 id="request-list-heading" :class="styles.panelTitle">요청관리</h3>
-      <Button type="button" variant="tertiary2" size="sm" @click="downloadExcel">엑셀다운로드</Button>
-    </div>
-
-    <div :class="styles.panelBody">
-      <div :class="styles.tableScroll">
-        <TableWrapper
-          :columns="listColumns"
-          :items="pagedRows"
-          :items-per-page="itemsPerPage"
-          :items-per-page-options="pageSizeOptions"
-          :total-elements="filteredRows.length"
-          :total-pages="totalPages"
-          :current-page="currentPage"
-          empty-title="조회된 요청이 없습니다"
-          empty-description="검색 조건을 변경해 다시 조회해 주세요."
-          @page-change="(page) => (currentPage = page)"
-          @update:items-per-page="onItemsPerPageChange"
-        >
-          <template #cell-requestPeriod="{ item }">
-            {{ item.requestPeriodFrom }} ~ {{ item.requestPeriodTo }}
-          </template>
-        </TableWrapper>
-      </div>
-    </div>
-  </section>
+  <TabulatorGrid
+    ref="gridRef"
+    v-model:data="rows"
+    class="flex-1"
+    :columns="columns"
+    layout="fitDataFill"
+    height="100%"
+    min-height="30rem"
+    placeholder="조회된 요청이 없습니다"
+    show-pagination
+    :items-per-page="10"
+  />
 </template>

@@ -1,17 +1,27 @@
-import { computed, ref } from 'vue'
-import { toast } from 'vue-sonner'
+import { ref } from 'vue'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
+
+/**
+ * 탄력순찰 > 요청관리 화면 상태.
+ * 화면(.vue)에는 조립만 남기고 옵션·목업·조회/등록 로직은 전부 여기로 뺀다.
+ */
 
 export interface SelectOption {
   label: string
   value: string
 }
 
+/** 접수구분 */
 export type ReceiptType = 'internal' | 'external' | 'crime-analysis'
 
+/** 요청관리 목록 한 행 */
 export interface RequestRow {
+  /** 관리번호 */
   id: string
   receivedAt: string
+  /** 그리드에 그대로 보여줄 '시작 ~ 종료' 문자열 */
+  requestPeriod: string
+  /** 기간 조회에 쓰는 원본 값 */
   requestPeriodFrom: string
   requestPeriodTo: string
   requestTime: string
@@ -30,9 +40,12 @@ export interface RequestRow {
   receiptType: ReceiptType
 }
 
+/** 기간구분 — 어떤 날짜를 기간 조건으로 볼지 */
 export const periodTypeOptions: SelectOption[] = [
-  { label: '접수', value: 'receipt' },
-  { label: '요청', value: 'request' },
+  // Select 의 value 에는 빈 문자열을 못 쓴다(CLAUDE.md §8) — '전체'도 실제 문자열로
+  { label: '전체', value: 'all' },
+  { label: '접수일자', value: 'receipt' },
+  { label: '요청기간', value: 'request' },
 ]
 
 export const receiptTypeOptions: SelectOption[] = [
@@ -42,186 +55,157 @@ export const receiptTypeOptions: SelectOption[] = [
   { label: '범죄분석', value: 'crime-analysis' },
 ]
 
-export const pageSizeOptions: SelectOption[] = [
-  { label: '10건씩 보기', value: '10' },
-  { label: '20건씩 보기', value: '20' },
-  { label: '50건씩 보기', value: '50' },
-]
-
 const DISTRICTS = ['중구 대청동', '서구 동대신동', '동구 초량동', '영도구 봉래동', '부산진구 부전동']
 const ROADS = ['망양로', '중앙대로', '구덕로', '태종로', '가야대로']
-const REASONS = ['순찰강화 및 적발필요', '민원인 요청지역 잦은 순찰', '야간 취약지역 순찰', '축제/행사 대비 순찰']
-const HOTSPOTS = ['BLUE', 'RED', 'YELLOW', '']
+const REQUESTS = [
+  '민원인 요청지역 야간 집중순찰 요망',
+  '등하교 시간대 통학로 순찰 요망',
+  '공원 주변 취객 관련 순찰 요망',
+]
+const REASONS = [
+  '범죄발생전력(절도·폭력 다발지역)',
+  '순찰강화 및 적발필요',
+  '야간 취약지역 순찰',
+  '축제/행사 대비 순찰',
+]
+const HOTSPOTS = ['BLUE', 'RED', 'YELLOW', '-']
 const DEMAND_TYPES = ['경력수요강화', '경력수요유지', '경력수요완화']
 const RECEIPT_TYPES: ReceiptType[] = ['internal', 'external', 'crime-analysis']
 
+/** 시안의 '총 195건'을 그대로 재현한다 */
 const TOTAL_MOCK_ROWS = 195
 
-function pad(n: number) {
-  return String(n).padStart(2, '0')
+function pad(value: number) {
+  return String(value).padStart(2, '0')
 }
 
+function toDateString(date: Date) {
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+}
+
+/** TODO: API 연동 전까지 쓰는 목업 */
 function buildMockRows(): RequestRow[] {
-  return Array.from({ length: TOTAL_MOCK_ROWS }, (_, i) => {
-    const no = TOTAL_MOCK_ROWS - i
-    const day = (i % 27) + 1
-    const month = (i % 12) + 1
+  return Array.from({ length: TOTAL_MOCK_ROWS }, (_, index) => {
+    const month = (index % 12) + 1
+    const day = (index % 27) + 1
     const receivedAt = `2026-${pad(month)}-${pad(day)}`
-    const toDay = Math.min(day + 26, 28)
+    const from = `2026-${pad(month)}-${pad(Math.min(day + 1, 28))}`
+    const to = `2026-${pad(month)}-${pad(Math.min(day + 26, 28))}`
+    const district = DISTRICTS[index % DISTRICTS.length]
+
     return {
-      id: String(21307894 - i),
+      id: String(21307894 - index),
       receivedAt,
-      requestPeriodFrom: `2026-${pad(month)}-${pad(Math.min(day + 1, 28))}`,
-      requestPeriodTo: `2026-${pad(month)}-${pad(toDay)}`,
-      requestTime: `${pad((i % 24))}:${pad((i * 7) % 60)}`,
-      addressJibun: `부산광역시 ${DISTRICTS[i % DISTRICTS.length]} 4가 ${(i % 90) + 1}-${(i % 20) + 1}`,
-      addressRoad: `부산광역시 ${DISTRICTS[i % DISTRICTS.length].split(' ')[0]} ${ROADS[i % ROADS.length]} ${(i % 400) + 1}`,
-      requestCount: (i % 5) + 1,
-      patrolRequest: '민원인 요청지역 어쩌고저쩌고',
-      patrolReason: REASONS[i % REASONS.length],
-      reportCount: i % 4,
-      hotspot: HOTSPOTS[i % HOTSPOTS.length],
-      demandType: DEMAND_TYPES[i % DEMAND_TYPES.length],
-      demandPersonnel: (i % 6) + 1,
-      email: `officer${no}@police.go.kr`,
+      requestPeriod: `${from} ~ ${to}`,
+      requestPeriodFrom: from,
+      requestPeriodTo: to,
+      requestTime: `${pad(index % 24)}~${pad((index % 24) + 3)}`,
+      addressJibun: `부산광역시 ${district} 4가 ${(index % 90) + 1}-${(index % 20) + 1}`,
+      addressRoad: `부산광역시 ${district.split(' ')[0]} ${ROADS[index % ROADS.length]} ${(index % 400) + 1}`,
+      requestCount: (index % 5) + 1,
+      patrolRequest: REQUESTS[index % REQUESTS.length],
+      patrolReason: REASONS[index % REASONS.length],
+      reportCount: index % 4,
+      hotspot: HOTSPOTS[index % HOTSPOTS.length],
+      demandType: DEMAND_TYPES[index % DEMAND_TYPES.length],
+      demandPersonnel: (index % 6) + 1,
+      email: `officer${TOTAL_MOCK_ROWS - index}@police.go.kr`,
       registrant: '홍길동',
       registeredAt: receivedAt,
-      receiptType: RECEIPT_TYPES[i % RECEIPT_TYPES.length],
+      receiptType: RECEIPT_TYPES[index % RECEIPT_TYPES.length],
     }
   })
 }
 
-export function useRequestManagementForm() {
+export function useRequestManage() {
   const allRows = ref<RequestRow[]>(buildMockRows())
-  const filteredRows = ref<RequestRow[]>(allRows.value)
+  /** 조회 결과 = 그리드에 그리는 목록. 배열은 항상 재할당한다(CLAUDE.md §3) */
+  const rows = ref<RequestRow[]>(allRows.value)
 
-  const department = ref<DepartmentValue>({ level1: 'busan', level2: 'busan-central', level3: 'all' })
-  const periodType = ref('receipt')
-  const dateFrom = ref('')
-  const dateTo = ref('')
+  /* ── 조회 조건 ─────────────────────────────── */
+  /** 시안 기본값: 본청 / 전체 / 전체 */
+  const department = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
+  /** 상세조회(회색 영역) 펼침 상태 — 시안은 펼쳐진 상태다 */
+  const advancedSearchOpen = ref(true)
+  const periodType = ref('all')
+  const dateFrom = ref('2026-07-16')
+  const dateTo = ref('2026-07-16')
   const receiptType = ref('all')
 
-  const pageSize = ref('10')
-  const itemsPerPage = computed(() => Number(pageSize.value))
-  const currentPage = ref(1)
-  const totalPages = computed(() =>
-    Math.max(1, Math.ceil(filteredRows.value.length / itemsPerPage.value)),
-  )
-  const pagedRows = computed(() => {
-    const start = (currentPage.value - 1) * itemsPerPage.value
-    return filteredRows.value.slice(start, start + itemsPerPage.value)
-  })
-
-  function matchesDateRange(row: RequestRow) {
+  function matchesPeriod(row: RequestRow) {
+    if (periodType.value === 'all') return true
     if (!dateFrom.value && !dateTo.value) return true
-    const target = periodType.value === 'request' ? row.requestPeriodFrom : row.receivedAt
-    if (dateFrom.value && target < dateFrom.value) return false
-    if (dateTo.value && target > dateTo.value) return false
+
+    // 접수일자는 하루, 요청기간은 구간이라 겹치는지를 본다
+    if (periodType.value === 'receipt') {
+      if (dateFrom.value && row.receivedAt < dateFrom.value) return false
+      if (dateTo.value && row.receivedAt > dateTo.value) return false
+      return true
+    }
+    if (dateFrom.value && row.requestPeriodTo < dateFrom.value) return false
+    if (dateTo.value && row.requestPeriodFrom > dateTo.value) return false
     return true
   }
 
   function search() {
-    filteredRows.value = allRows.value.filter((row) => {
-      const matchesReceipt = receiptType.value === 'all' || row.receiptType === receiptType.value
-      return matchesReceipt && matchesDateRange(row)
-    })
-    currentPage.value = 1
+    rows.value = allRows.value.filter(
+      (row) =>
+        (receiptType.value === 'all' || row.receiptType === receiptType.value) && matchesPeriod(row),
+    )
   }
 
   function resetSearch() {
-    department.value = { level1: 'busan', level2: 'busan-central', level3: 'all' }
-    periodType.value = 'receipt'
+    department.value = { level1: 'hq', level2: 'all', level3: 'all' }
+    periodType.value = 'all'
     dateFrom.value = ''
     dateTo.value = ''
     receiptType.value = 'all'
     search()
   }
 
-  /** 입력/설정 없이 즉시 빈 행을 목록 맨 앞에 등록 */
-  function registerRow() {
-    const today = new Date()
-    const todayStr = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`
-    const nextId = String(Math.max(...allRows.value.map((r) => Number(r.id))) + 1)
+  /* ── 신규 등록 ─────────────────────────────── */
+  /** 그리드 맨 위에 붙일 빈 행. 관리번호만 채워서 내려준다 */
+  function createEmptyRow(): RequestRow {
+    const now = new Date()
+    const today = toDateString(now)
+    const nextId = String(Math.max(...allRows.value.map((row) => Number(row.id))) + 1)
+
     const newRow: RequestRow = {
       id: nextId,
-      receivedAt: todayStr,
-      requestPeriodFrom: todayStr,
-      requestPeriodTo: todayStr,
-      requestTime: `${pad(today.getHours())}:${pad(today.getMinutes())}`,
+      receivedAt: today,
+      requestPeriod: `${today} ~ ${today}`,
+      requestPeriodFrom: today,
+      requestPeriodTo: today,
+      requestTime: `${pad(now.getHours())}~${pad(now.getHours() + 1)}`,
       addressJibun: '',
       addressRoad: '',
       requestCount: 0,
       patrolRequest: '',
       patrolReason: '',
       reportCount: 0,
-      hotspot: '',
+      hotspot: '-',
       demandType: '',
       demandPersonnel: 0,
       email: '',
       registrant: '홍길동',
-      registeredAt: todayStr,
+      registeredAt: today,
       receiptType: 'internal',
     }
+
     allRows.value = [newRow, ...allRows.value]
-    search()
-    toast.success('등록되었습니다.')
-  }
-
-  const EXCEL_COLUMNS: { key: keyof RequestRow; label: string }[] = [
-    { key: 'id', label: '관리번호' },
-    { key: 'receivedAt', label: '접수일자' },
-    { key: 'requestPeriodFrom', label: '요청기간(시작)' },
-    { key: 'requestPeriodTo', label: '요청기간(종료)' },
-    { key: 'requestTime', label: '요청시간' },
-    { key: 'addressJibun', label: '주소(지번)' },
-    { key: 'addressRoad', label: '주소(도로명)' },
-    { key: 'requestCount', label: '요청건수' },
-    { key: 'patrolRequest', label: '순찰요청사항' },
-    { key: 'patrolReason', label: '순찰사유' },
-    { key: 'reportCount', label: '신고건수' },
-    { key: 'hotspot', label: '핫스팟' },
-    { key: 'demandType', label: '경력수요형태' },
-    { key: 'demandPersonnel', label: '경력수요인원' },
-    { key: 'email', label: '이메일' },
-    { key: 'registrant', label: '등록자' },
-    { key: 'registeredAt', label: '등록일' },
-  ]
-
-  /** xlsx 등 별도 라이브러리 없이 CSV(엑셀에서 바로 열리는 포맷)로 현재 조회 결과를 내려받는다. */
-  function downloadExcel() {
-    const escapeCell = (value: unknown) => `"${String(value ?? '').replace(/"/g, '""')}"`
-    const header = EXCEL_COLUMNS.map((c) => escapeCell(c.label)).join(',')
-    const body = filteredRows.value
-      .map((row) => EXCEL_COLUMNS.map((c) => escapeCell(row[c.key])).join(','))
-      .join('\r\n')
-    const csv = `﻿${header}\r\n${body}`
-
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `요청관리_${new Date().toISOString().slice(0, 10)}.csv`
-    document.body.appendChild(link)
-    link.click()
-    link.remove()
-    URL.revokeObjectURL(url)
+    return newRow
   }
 
   return {
-    filteredRows,
-    pagedRows,
-    pageSize,
-    itemsPerPage,
-    currentPage,
-    totalPages,
+    rows,
     department,
+    advancedSearchOpen,
     periodType,
     dateFrom,
     dateTo,
     receiptType,
     search,
     resetSearch,
-    registerRow,
-    downloadExcel,
+    createEmptyRow,
   }
 }

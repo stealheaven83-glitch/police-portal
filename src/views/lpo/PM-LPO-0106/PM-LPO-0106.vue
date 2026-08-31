@@ -1,49 +1,23 @@
-<template>
-  <PageHeader>
-    <template #left>
-      <PageTitle title="알림" />
-    </template>
-    <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
-  </PageHeader>
-
-  <div :class="styles.listToolbar">
-    <FilterChipGroup v-model="status" :items="statusItems" />
-    <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelected">
-      선택 삭제
-    </Button>
-  </div>
-
-  <TabulatorGrid
-    ref="gridRef"
-    class="mt-5 flex-1"
-    :columns="columns"
-    :data="displayRows"
-    select-mode="checkbox"
-    height="100%"
-    min-height="40rem"
-    placeholder="알림이 없습니다"
-    show-pagination
-    :items-per-page="10"
-  />
-
-  <NotificationDetailDialog v-model:open="detailDialogOpen" :row="detailRow" @delete="onDeleteOne" />
-</template>
-
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
+import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
+import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
+import SelectField from '@/components/custom/select/SelectField.vue'
+import InputField2 from '@/components/custom/input/InputField2.vue'
 import { Button } from '@/components/custom/button'
-import { FilterChipGroup, type FilterChipItem } from '@/components/custom/filter-chip'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { useAutoTrigger, type ScreenTriggerMap } from '@/composables/useAutoTrigger'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
-import { useDialog } from '@/composable/dialog/dialog'
 import NotificationDetailDialog from './components/NotificationDetailDialog.vue'
-import { useNotificationList, type NotificationRow } from './composable/PM-LPO-0106'
+import {
+  useNotificationList,
+  searchConditionOptions,
+  statusOptions,
+  type NotificationRow,
+} from './composable/PM-LPO-0106'
 import styles from './style/PM-LPO-0106.module.css'
 
 defineOptions({
@@ -57,15 +31,7 @@ const navItems = [
   { label: '알림' },
 ]
 
-const { status, counts, displayRows, findRow, markRead, deleteRows } = useNotificationList()
-const dialog = useDialog()
-
-/** 상태별 필터 칩 - 알림 개수 표시 + 선택 시 그 상태값으로 목록을 필터링 */
-const statusItems = computed<FilterChipItem[]>(() => [
-  { key: 'all', label: '전체', count: counts.value.all },
-  { key: 'unread', label: '안읽음', count: counts.value.unread },
-  { key: 'read', label: '읽음', count: counts.value.read },
-])
+const { searchForm, displayRows, search, findRow, markRead, deleteRows } = useNotificationList()
 
 /** 기획서: 내용은 첫줄 1줄만 표시, 길면 말줄임(css ellipsis) 처리 */
 function contentPreview(row: NotificationRow) {
@@ -101,22 +67,19 @@ const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const detailDialogOpen = ref(false)
 const detailRow = ref<NotificationRow | null>(null)
 
-async function onDeleteSelected() {
+function onDeleteSelected() {
   const selected = (gridRef.value?.getSelectedData() ?? []) as NotificationRow[]
   if (!selected.length) {
-    await dialog.alert({ title: '안내', description: '삭제할 항목을 선택해주세요.' })
+    toast.warning('삭제할 알림을 선택해 주세요.')
     return
   }
-  const { confirmed } = await dialog.confirm({
-    title: '알림 삭제',
-    description: '선택한 알림을 삭제하시겠습니까?',
-  })
-  if (!confirmed) return
   deleteRows(selected.map((row) => row.id))
+  toast.success('삭제되었습니다.')
 }
 
 function onDeleteOne(id: number) {
   deleteRows([id])
+  toast.success('삭제되었습니다.')
 }
 
 /**
@@ -140,3 +103,65 @@ useBottomTabSetup({
   componentName: 'PmLpo0106',
 })
 </script>
+
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="알림" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+
+  <SearchWrapper>
+    <template #form>
+      <div class="search-area">
+        <SelectField
+          v-model="searchForm.status"
+          label="상태"
+          :options="statusOptions"
+          size="sm"
+          triggerClass="w-35"
+        />
+        <SelectField
+          v-model="searchForm.condition"
+          label="검색조건"
+          :options="searchConditionOptions"
+          size="sm"
+          triggerClass="w-35"
+        />
+        <InputField2
+          v-model="searchForm.keyword"
+          label="검색어"
+          size="sm"
+          inputClass="w-100"
+          placeholder="검색어를 입력해주세요."
+          @keyup.enter="search"
+        />
+      </div>
+    </template>
+    <template #btns>
+      <Button type="button" variant="secondary" size="sm" class="w-25" @click="search">조회</Button>
+    </template>
+  </SearchWrapper>
+
+  <div class="list-actions">
+    <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelected">선택 삭제</Button>
+  </div>
+
+  <TabulatorGrid
+    ref="gridRef"
+    class="flex-1"
+    :columns="columns"
+    :data="displayRows"
+    select-mode="checkbox"
+    height="100%"
+    min-height="40rem"
+    placeholder="알림이 없습니다"
+    show-pagination
+    :items-per-page="10"
+  />
+
+  <NotificationDetailDialog v-model:open="detailDialogOpen" :row="detailRow" @delete="onDeleteOne" />
+</template>
