@@ -13,7 +13,7 @@
         <slot name="actions" />
       </template>
     </LayoutHeader>
-    <div class="layoutPanelBody">
+    <div class="layoutPanelBody" :class="{ 'no-padding': noPadding }">
       <slot />
     </div>
   </section>
@@ -28,10 +28,13 @@ interface Props {
   title: string
   /** 제목 태그. 화면 제목(h1) 바로 아래 영역이면 기본값 h2 그대로 둔다 */
   as?: 'h2' | 'h3' | 'h4'
+  /** 본문 안쪽 여백을 없앤다. 그리드가 패널 가장자리까지 붙어야 하는 화면에서만 준다 */
+  noPadding?: boolean
 }
 
 withDefaults(defineProps<Props>(), {
   as: 'h2',
+  noPadding: false,
 })
 
 /** section 이 제목을 가리키게 할 id. 같은 화면에 패널이 여러 개여도 겹치지 않는다 */
@@ -58,6 +61,11 @@ const titleId = useId()
   flex-direction: column;
   overflow: hidden;
   padding: 2rem;
+}
+
+/* 호출부가 :no-padding 으로 켠다. 기본은 위 padding 그대로 */
+.layoutPanelBody.no-padding {
+  padding: 0;
 }
 
 @media (max-width: 48rem) {

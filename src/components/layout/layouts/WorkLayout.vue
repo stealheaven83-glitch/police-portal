@@ -8,7 +8,7 @@
     <PortalHeader :show-banner="false" />
     <main class="work-main">
       <SideMenu v-if="sideMenuStore.visible" />
-      <div class="flex-1 min-w-0 relative pr-10 flex flex-col pb-[4px] pl-[36px] pb-[32px]">
+      <div class="work-body flex-1 min-w-0 relative pr-10 flex flex-col pb-[4px] pl-[36px] pb-[32px]">
          <!--
            화면 내용. .wrap 이 화면 높이로 잠겨 있으므로 넘치는 내용은 이 래퍼가 스크롤한다.
            바깥 컬럼이 아니라 안쪽 래퍼가 스크롤을 맡는 이유는, 탭 바가 컬럼에 absolute 로
@@ -77,5 +77,14 @@ defineSlots<{
   background: #EEF2F7;
   border-top: 1px solid #CDD1D5;
 }
+/*
+ * LayoutSplite(분할 레이아웃)를 쓰는 화면은 스플릿이 아래 끝까지 닿아야 해서
+ * 본문 아래 여백(pb-[32px])을 뺀다. 화면마다 플래그를 넘기지 않아도 되게
+ * :has 로 스플릿이 들어왔는지 직접 본다.
+ */
+.work-body:has(.splitLayout) {
+  padding-bottom: 4px;
+}
+
 /* 탭 바 자체의 스타일은 BottomTab.vue 가 들고 있다 */
 </style>
