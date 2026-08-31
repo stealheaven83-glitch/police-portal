@@ -11,12 +11,12 @@
           :to="item.path"
           class="breadcrumb__link"
         >
-          <span v-if="index === 0" class="icon-home" aria-hidden="true"> <img
-    v-if="index === 0"
-    :src="homeIcon"
-    alt=""
-    class="w-4 h-4"
-  /></span>
+        <span v-if="index === 0" class="icon-home" aria-hidden="true"> <img
+          v-if="index === 0"
+          :src="homeIcon"
+          alt=""
+          class="w-4 h-4"
+        /></span>
           {{ item.label }}
         </router-link>
         <span 
@@ -25,11 +25,11 @@
           class="breadcrumb__link"
         >
           <span v-if="index === 0" class="icon-home" aria-hidden="true"> <img
-    v-if="index === 0"
-    :src="homeIcon"
-    alt=""
-    class="w-4 h-4"
-  /></span>
+          v-if="index === 0"
+          :src="homeIcon"
+          alt=""
+          class="w-4 h-4"
+        /></span>
           {{ item.label }}
         </span>
       </li>
