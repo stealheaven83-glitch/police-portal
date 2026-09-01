@@ -809,6 +809,25 @@ const router = createRouter({
             }
         },
         {
+            path: '/views/pub/PM-PUB-0414',
+            name: 'PM-PUB-0414',
+            component: () => import('../views/pub/PM-PUB-0414/PM-PUB-0414.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '정신응급대응팀'
+            }
+        },
+        {
+            // 목록 화면(PM-PUB-0414)의 '신규' 버튼으로 들어간다 — LNB 항목은 따로 없다.
+            path: '/views/pub/PC-PUB-0415',
+            name: 'PC-PUB-0415',
+            component: () => import('../views/pub/PC-PUB-0415/PC-PUB-0415.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '정신응급대응팀 등록'
+            }
+        },
+        {
             path: '/views/stt/PC-STT-0103',
             name: 'PC-STT-0103',
             component: () => import('../views/stt/PC-STT-0103/PC-STT-0103.vue'),

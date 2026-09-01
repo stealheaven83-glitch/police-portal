@@ -1387,6 +1387,14 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   margin-top:4px;
 }
 
+/*폼·패널 위 안내 문구 (※ 로 시작하는 주의사항 한 줄)*/
+.form-note{
+  margin-bottom: 1.2rem;
+  line-height: 1.5;
+  font-size: 1.4rem;
+  color: var(--Text-body_2);
+}
+
 /*dark-theme*/
 html.theme-dark body{
   background:#000;
