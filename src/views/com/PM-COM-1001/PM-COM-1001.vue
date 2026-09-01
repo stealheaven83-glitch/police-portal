@@ -18,7 +18,7 @@ defineOptions({ name: 'PmCom1001' })
 
 const navItems = [
   { label: '홈', path: '/' },
-  { label: '게시판', path: '/com' },
+  { label: '게시판' },
   { label: '공지사항' },
 ]
 

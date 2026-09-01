@@ -36,7 +36,7 @@ useSideMenuSetup({ ...localPoliceMenu, openIndex: 5, activeChild: '개인장비'
 
 const navItems = [
   { label: '홈', path: '/' },
-  { label: '지역경찰', path: '/lpo' },
+  { label: '지역경찰' },
   { label: '장비관리' },
 ]
 

@@ -26,8 +26,8 @@ defineOptions({
 
 const navItems = [
   { label: '홈', path: '/' },
-  { label: '지역경찰', path: '/lpo' },
-  { label: '개인수첩', path: '/lpo' },
+  { label: '지역경찰' },
+  { label: '개인수첩' },
   { label: '알림' },
 ]
 

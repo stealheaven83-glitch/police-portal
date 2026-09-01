@@ -19,8 +19,8 @@ useSideMenuSetup({ ...localPoliceMenu, openIndex: 2, activeChild: '인수인계 
 
 const navItems = [
   { label: '홈', path: '/' },
-  { label: '지역경찰', path: '/lpo' },
-  { label: '인수인계', path: '/lpo' },
+  { label: '지역경찰' },
+  { label: '인수인계' },
   { label: '월별인수인계현황' },
 ]
 

@@ -15,7 +15,7 @@ useSideMenuSetup({ ...localPoliceMenu, openIndex: 4, activeChild: '관내현황'
 
 const navItems = [
   { label: '홈', path: '/' },
-  { label: '지역경찰', path: '/lpo' },
+  { label: '지역경찰' },
   { label: '관내현황' },
 ]
 

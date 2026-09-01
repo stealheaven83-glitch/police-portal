@@ -26,9 +26,9 @@ useSideMenuSetup({ ...localPoliceMenu, openIndex: 1, activeChild: '근무일지(
 
 const navItems = [
   { label: '홈', path: '/' },
-  { label: '지역경찰', path: '/lpo' },
-  { label: '근무일지', path: '/lpo' },
-  { label: '근무일지(甲)', path: '/lpo' },
+  { label: '지역경찰' },
+  { label: '근무일지' },
+  { label: '근무일지(甲)' },
   { label: '근무지정표작성' },
 ]
 

@@ -199,6 +199,19 @@ rows.value = rows.value.map((r, i) => (i === idx ? updated : r))
 - (검토됨·미적용: 각 폴더가 자기 라우트를 `route.ts`로 export하고 `router/index.ts`가
   `import.meta.glob`으로 자동 수집 — 이 파일에 손이 자주 가 동시 작업 시 git 충돌이 잦아서.)
 
+### 브레드크럼 `path` — 라우터에 실재하는 것만 준다 (화면 유형 무관, 전부 해당)
+`Breadcrumb`의 `navItems`에서 **`path`는 실제 라우트가 있을 때만** 쓴다. 없으면 라벨만 둔다.
+```ts
+const navItems = [
+  { label: '홈', path: '/' },   // 라우터에 있음 → path OK
+  { label: '지역경찰' },         // '/lpo' 같은 도메인 경로는 라우트가 아니다 → 라벨만
+  { label: '인사관리' },
+]
+```
+`/lpo` `/pub` `/com` `/stt` `/flp` 는 **전부 라우터에 없다.** 도메인은 URL 구획일 뿐 랜딩 화면이
+아니다. 넣으면 클릭해도 아무 데도 안 가는 죽은 링크가 된다. 기존 화면 11곳에 이 패턴이 남아
+있으니 **이웃 화면을 복사할 때 같이 딸려오지 않게 확인한다.**
+
 ## 5. LNB/하단탭 — `menu-tab-guide.md` 같이 볼 것
 - `defineOptions({ name:'XxxYyy' })` 필수 — `useBottomTabSetup`의 `componentName`과 정확히 일치해야
   KeepAlive가 걸린다.
@@ -211,6 +224,13 @@ rows.value = rows.value.map((r, i) => (i === idx ? updated : r))
   useSideMenuSetup({ ...publicSafetyMenu, activeChild:'단체정보리스트', openIndex:2 })
   ```
   (프리셋 문자열 키는 기본 activeChild와 화면이 정확히 일치할 때만 그대로 쓴다.)
+- **`openIndex`·`activeChild` 값은 `presets.ts`를 열어 대조한다 — 추측하지 않는다.**
+  - `openIndex` = 그 화면이 속한 **최상위 `items` 배열의 0-based 인덱스**. 세어서 구한다.
+  - `activeChild` = 그 그룹 `children` 중 해당 항목의 `name`과 **정확히 같은 문자열**.
+  - **가장 확실한 대조 방법은 `path`다.** 메뉴 항목에 `path: '/views/lpo/PC-LPO-0801'`처럼
+    화면 경로가 적혀 있으면 그게 정답이다. `grep -n "PC-LPO-0801" presets.ts` 로 찾는다.
+  - 자식이 하나뿐인 그룹(`관내현황`, `인사관리`, `앱 관리` 등)도 **그룹은 그룹이다.**
+    `openIndex: -1`(아무것도 안 펼침)로 두면 그 그룹이 닫힌 채 렌더된다 — 실제로 겪은 오류다.
 
 ## 6. TabulatorGrid 주의
 - 체크박스 다중선택+추가/선택삭제(`select-mode="checkbox"` + `ref.addRow(data,top)` /
@@ -265,6 +285,18 @@ function onSave() {
   confirm 쓰는데 이것도 규칙상 위반, 미수정).
 - **`dialog.alert()`**는 그냥 지나치면 안 되는 버튼 하나짜리 강제 확인(예: 필수입력 누락을 모달로
   막는 PC-COM-2402 `PopupNoticeDialog`). 단순 성공/경고엔 과함 — toast를 쓴다.
+
+### ⚠ 기획서가 이 규칙과 다르게 지정하면 — **기획서를 따르되 반드시 표시한다**
+기획서에 `[A01] 저장 컨펌창`, `[A02] 확인 알림창`처럼 컨펌/알림창이 **명시돼 있으면 그대로
+만든다.** 퍼블은 기획서가 계약이고, 위 규칙은 "기획서에 지정이 없을 때의 기본값"이다.
+
+다만 **코드에 근거를 남기고 결과 보고에도 명시한다:**
+```ts
+// 기획서 [A01] 저장 컨펌창 — §7 기본(toast)과 다르지만 기획서 지정을 따름
+const ok = await dialog.confirm({ title: '저장 하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
+```
+표시가 없으면 다음 사람이 **규칙 위반으로 오해해 되돌린다**(실제로 그럴 뻔했다).
+반대로 기획서에 아무 언급이 없으면 위 기본값(toast)을 쓴다 — 임의로 컨펌창을 붙이지 않는다.
 
 ## 8. 자주 겪는 함정
 - **Select/SelectItem의 value에 빈 문자열(`''`) 못 씀.** "전체" 같은 sentinel은 `'all'`처럼 실제

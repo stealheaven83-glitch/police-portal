@@ -20,8 +20,8 @@ useSideMenuSetup({ ...localPoliceMenu, openIndex: 3, activeChild: '승인관리'
 
 const navItems = [
   { label: '홈', path: '/' },
-  { label: '지역경찰', path: '/lpo' },
-  { label: '출동수당', path: '/lpo' },
+  { label: '지역경찰' },
+  { label: '출동수당' },
   { label: '출동수당 취합(일별)' },
 ]
 
