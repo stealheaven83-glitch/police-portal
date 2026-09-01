@@ -770,6 +770,17 @@ const router = createRouter({
             meta: { layout: 'WorkLayout', title: '진단통보(우편 발송)', screenGroup: 'PM-PUB-0103' }
         },
         {
+            // 기획서(주취자.pptx)에는 화면ID가 PC-PUB-0409 로 적혀 있으나 screen-id-map.md 기준은 PM-PUB-0409.
+            path: '/views/pub/PM-PUB-0409',
+            alias: '/views/pub/PC-PUB-0409',
+            name: 'PM-PUB-0409',
+            component: () => import('../views/pub/PM-PUB-0409/PM-PUB-0409.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '주취자 센터 병상 현황'
+            }
+        },
+        {
             path: '/views/stt/PC-STT-0103',
             name: 'PC-STT-0103',
             component: () => import('../views/stt/PC-STT-0103/PC-STT-0103.vue'),

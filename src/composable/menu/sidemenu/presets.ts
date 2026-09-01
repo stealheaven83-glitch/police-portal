@@ -78,7 +78,15 @@ export const publicSafetyMenu: SideMenuConfig = {
       ],
     },
     { name: '해바라기센터', children: [{ name: '센터현황' }] },
-    { name: '보호조치 대응팀', children: [{ name: '대응팀 현황' }] },
+    {
+      name: '보호조치 대응팀',
+      children: [
+        { name: '주취자 센터 병상 현황', path: '/views/pub/PM-PUB-0409' },
+        { name: '주취자 센터관리' },
+        { name: '주취자 입퇴소 현황' },
+        { name: '정신 응급 대응팀' },
+      ],
+    },
     { name: '보고서', children: [{ name: '보고서 목록' }] },
   ],
 }
