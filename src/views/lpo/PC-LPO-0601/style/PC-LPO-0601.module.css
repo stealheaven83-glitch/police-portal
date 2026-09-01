@@ -1,0 +1,138 @@
+/*
+ * 관내현황 (PC-LPO-0601) 화면 전용 레이아웃.
+ * 1rem = 10px (전역 리셋). 색·모서리는 police-style.css 토큰 사용.
+ * 섹션 제목 바(.form-section-title), 검색영역(.search-area) 등 공통 클래스는 전역에서 온다.
+ */
+
+/* 상단 회색영역 우측 — 수정일 + 인쇄/저장 버튼 */
+.toolbarBtns {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  white-space: nowrap;
+}
+
+.editMeta {
+  font-size: 1.4rem;
+  color: var(--Text-body_2);
+}
+
+/* 섹션 사이 간격 */
+.section {
+  margin-bottom: 2.4rem;
+}
+
+/* InfoField(full) 안에서 라벨+좁은 입력을 여러 개 나열할 때 (인구·가구 항목) */
+.metricRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem 2rem;
+  width: 100%;
+}
+
+.metric {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.metric > label {
+  font-size: 1.5rem;
+  color: var(--Text-body_1);
+  white-space: nowrap;
+}
+
+.metricInput {
+  width: 12rem;
+}
+
+/* 유연파출소 / 중심관서 — 체크박스 + 셀렉트 + 선택목록 한 줄 */
+.stationRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.2rem;
+  width: 100%;
+}
+
+.stationPicked {
+  font-size: 1.5rem;
+  color: var(--Text-body_1);
+}
+
+.selectSm {
+  width: 20rem;
+}
+
+/* 순찰차별 관할구역 — 값 영역에 들어가는 표 */
+.patrolTableWrap {
+  width: 100%;
+  overflow-x: auto;
+  border-top: 0.2rem solid var(--Text-body_0);
+}
+
+.patrolTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 72rem;
+}
+
+.patrolTable th,
+.patrolTable td {
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid var(--Border_gray03);
+  font-size: 1.4rem;
+  color: var(--Text-body_1);
+  text-align: center;
+  vertical-align: middle;
+}
+
+.patrolTable th {
+  background: var(--Background-gray01);
+  color: var(--Text-body_0);
+  font-weight: 600;
+}
+
+.patrolTable tbody tr {
+  cursor: pointer;
+}
+
+.patrolTable tbody tr:hover {
+  background: var(--Surface-primary);
+}
+
+.patrolDetailCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.patrolDetailText {
+  flex: 1;
+  text-align: left;
+}
+
+/* 치안센터 / 연혁 섹션 제목 우측 버튼 묶음 + 펼침 토글 */
+.gridActions {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.collapseBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  border: 1px solid var(--Border_gray02);
+  border-radius: var(--Radius-medium3, 0.6rem);
+  background: #fff;
+  color: var(--Text-body_1);
+}
+
+.gridWrap {
+  margin-top: 1.6rem;
+}
