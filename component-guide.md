@@ -303,7 +303,9 @@ CLAUDE.md §1의 CSS 우선순위 ①②를 실행으로 옮긴 것 — 같은 �
 | 이럴 때 | 클래스 | 실제 |
 |---|---|---|
 | 검색 영역 배경+간격 | `.search-area` | flex-wrap, gap 1.6/3.6rem, 회색 배경 (18개 화면) |
+| 검색 폼 없이 부서 선택만 있는 줄 | `.dept-area` | flex-wrap, gap 1.2rem, 아래 여백 2rem (PC-PUB-0301) |
 | 그리드 위 우측 버튼줄 | `.list-actions` | flex, 우측 정렬, gap 0.8rem, 아래 여백 2rem (17개) |
+| 상세 화면 구역 제목 줄(연파랑 바+우측 버튼) | `.section-bar` / `.section-bar-actions` | radius 0.8rem, --Surface-primary 배경, 제목 1.7rem bold (PC-PUB-0302) |
 | 좌우 양끝 배치 버튼줄 | `.btn-wrap` | flex, space-between, 100% |
 | 버튼 몇 개 묶기 | `.btn-wrap-group` | flex, gap 0.5rem |
 | 폼 아래 가운데 버튼줄(저장 등) | `.form-actions` | flex, 가운데 정렬, gap 0.8rem, 위 여백 2rem |

@@ -92,7 +92,6 @@ async function onDeleteSelected() {
 async function onSave() {
   const result = await dialog.confirm({
     title: '저장하시겠습니까?',
-    description: '변경한 메뉴 정보를 저장합니다.',
     btnOk: '확인',
     btnCancel: '취소',
   })
@@ -146,7 +145,6 @@ useBottomTabSetup({
             ref="treeRef"
             v-model="menuTree"
             :selected="selectedMenu"
-
             :draggable="false"
             show-icon
             @update:selected="onMenuSelected"

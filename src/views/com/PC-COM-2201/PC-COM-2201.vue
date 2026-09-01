@@ -47,10 +47,10 @@ const {
   deptTree,
   selectedDept,
   editingDept,
-  addDept,
+  createDeptNode,
+  beginDeptEdit,
   commitDeptName,
   cancelDeptEdit,
-  removeDept,
   searchField,
   searchKeyword,
   users,
@@ -72,15 +72,23 @@ function onDeptSelected(node: TreeNode | null) {
 }
 
 /**
- * 추가한 노드의 입력창에서 이름을 확정했을 때.
- * 이름을 안 적고 빠져나가면 방금 만든 빈 노드는 composable 이 지운다.
+ * 고른 부서 아래(고른 게 없으면 최상위)에 새 노드를 넣고 그 자리에 입력창을 연다.
+ * 트리 구조 변경은 TreeView 를 거쳐야 화면에 반영된다(he-tree 가 데이터 배열을
+ * deep 없이 감시해서, 배열을 직접 고치면 다시 그리지 않는다).
  */
+function onDeptAdd() {
+  const node = createDeptNode()
+  treeRef.value?.addNode(node, selectedDept.value)
+  beginDeptEdit(node)
+}
+
+/** 이름을 확정했을 때. 이름을 안 적고 빠져나가면 방금 만든 빈 노드를 도로 뺀다 */
 function onDeptRename(node: TreeNode, name: string) {
-  commitDeptName(node as DeptNode, name)
+  if (!commitDeptName(node as DeptNode, name)) treeRef.value?.removeNode(node)
 }
 
 function onDeptRenameCancel(node: TreeNode) {
-  cancelDeptEdit(node as DeptNode)
+  if (cancelDeptEdit(node as DeptNode)) treeRef.value?.removeNode(node)
 }
 
 async function onDeptRemove() {
@@ -91,14 +99,14 @@ async function onDeptRemove() {
 
   const result = await dialog.confirm({
     title: `'${selectedDept.value.name}' 부서를 삭제하시겠습니까?`,
-    description: '하위 부서도 함께 삭제됩니다.',
     btnOk: '확인',
     btnCancel: '취소',
   })
   if (!result.confirmed) return
 
-  removeDept(selectedDept.value)
+  treeRef.value?.removeNode(selectedDept.value)
   selectedDept.value = null
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
 /* ── 사용자목록 ───────────────────────────── */
@@ -156,8 +164,16 @@ async function syncAuthChecks() {
 watch([selectedUser, auths], syncAuthChecks)
 
 /* ── 저장 ─────────────────────────────────── */
-function onSave() {
+async function onSave() {
+  const result = await dialog.confirm({
+    title: '저장하시겠습니까?',
+    btnOk: '확인',
+    btnCancel: '취소',
+  })
+  if (!result.confirmed) return
+
   // TODO: API 연동 (선택 사용자 + checkedAuthCodes 전송)
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
 }
 
 // 사이드메뉴(시스템 관리 LNB) 설정 — 활성 항목은 라우트 경로로 자동 매칭된다
@@ -193,7 +209,7 @@ useBottomTabSetup({
       <LayoutPanel title="부서" no-padding>
         <template #actions>
           <Button type="button" variant="tertiary2" size="sm" @click="onDeptRemove" class="min-w-[40px]">삭제</Button>
-          <Button type="button" variant="secondary" size="sm" @click="addDept" class="min-w-[40px]">추가</Button>
+          <Button type="button" variant="secondary" size="sm" @click="onDeptAdd" class="min-w-[40px]">추가</Button>
         </template>
 
         <div class="btn-tree">

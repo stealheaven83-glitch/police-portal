@@ -13,6 +13,11 @@ interface Props {
   label?: string
   for?: string
   full?: boolean
+  /**
+   * 세로로 두 행을 차지한다(주소처럼 값 영역에 입력이 두 줄 들어가는 칸).
+   * 옆 칸들은 CSS Grid 자동 배치로 알아서 다음 행에 채워진다. 1열로 접히는 좁은 화면에서는 해제된다.
+   */
+  rowSpan?: 2
   layout?: 'row' | 'column'
   class?: string
 }
@@ -41,7 +46,7 @@ function isTextOnly() {
 </script>
 
 <template>
-  <div :class="cn(styles.field, props.full && styles.fieldFull, props.class)">
+  <div :class="cn(styles.field, props.full && styles.fieldFull, props.rowSpan === 2 && styles.fieldRowSpan2, props.class)">
     <label v-if="props.for" :class="styles.label" :for="props.for">
       <slot name="label">{{ label }}</slot>
     </label>

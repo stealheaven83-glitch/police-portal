@@ -78,11 +78,11 @@ useBottomTabSetup({
   </PageHeader>
 
   <div :class="styles.pageActions">
-    <p :class="styles.deptLabel">부서: {{ form.dept }}</p>
+    <p :class="styles.deptLabel"><span :class="styles.deptLabelPrefix">부서:</span> {{ form.dept }}</p>
     <div :class="styles.pageActionButtons">
-      <Button type="button" variant="tertiary2" size="sm" @click="goList">목록</Button>
-      <Button type="button" variant="tertiary2" size="sm" :disabled="form.id == null" @click="onDelete">삭제</Button>
-      <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
+      <Button type="button" variant="tertiary2" size="sm" class="w-40" @click="goList">목록</Button>
+      <Button type="button" variant="tertiary2" size="sm" class="w-40" :disabled="form.id == null" @click="onDelete">삭제</Button>
+      <Button type="button" variant="primary" size="sm" class="w-40" @click="onSave">저장</Button>
     </div>
   </div>
 

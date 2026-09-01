@@ -1,26 +1,16 @@
 /* 방범협력단체 - 단체정보 상세/등록 공용 폼. 1rem = 10px 기준(전역 리셋). */
 
-.requiredDot {
-  margin-left: 0.2rem;
-  color: var(--Base--point);
-}
-
-.requiredDot::before {
-  content: '';
-  display: block;
-  width: 0.6rem;
-  height: 0.6rem;
-  background: var(--Base--point);
-  border-radius: 50%;
-}
-
-.legend {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
+.formTitle {
   margin-bottom: 1.2rem;
-  font-size: 1.3rem;
-  color: var(--Base--point, #d32f2f);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+}
+
+/* 시안의 라벨 열은 120px — InfoTable 기본값(14rem)보다 좁다 */
+.infoTable {
+  --info-label-w: 12rem;
 }
 
 .row {
@@ -30,42 +20,37 @@
   width: 100%;
 }
 
+/* 구성인원: 합계 · 남자 스테퍼 · 여자 스테퍼 */
+.memberRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+}
+
+.memberGroup {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
 .memberTotal {
-  font-weight: 600;
-  color: var(--Text-body_0, #1e2124);
+  color: var(--Text-body_0);
   white-space: nowrap;
+}
+
+/* 주소가 두 행을 차지해 비는 칸. 1열로 접히면 빈 줄이 되므로 감춘다 */
+@media (max-width: 62.5rem) {
+  .emptyField {
+    display: none;
+  }
 }
 
 .section {
   margin-top: 2.4rem;
 }
 
-.sectionHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-
-.sectionTitle {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--Text-body_0, #1e2124);
-}
-
-.sectionActions {
-  display: flex;
-  gap: 0.8rem;
-}
-
 .sectionGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2.4rem;
-}
-
-@media (max-width: 64rem) {
-  .sectionGrid {
-    grid-template-columns: 1fr;
-  }
+  margin-top: 1.6rem;
 }

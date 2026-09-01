@@ -40,6 +40,11 @@
   grid-column: 1 / -1;
 }
 
+/* 주소처럼 값 영역이 두 줄인 칸. 옆 칸들은 그리드 자동 배치로 다음 행에 채워진다 */
+.fieldRowSpan2 {
+  grid-row: span 2;
+}
+
 .label {
   display: flex;
   align-items: center;
@@ -346,6 +351,11 @@
   /* 900px: 2단 -> 1단 */
   .grid {
     grid-template-columns: 1fr;
+  }
+
+  /* 1열로 접히면 행 병합을 풀어야 옆에 빈 칸이 생기지 않는다 */
+  .fieldRowSpan2 {
+    grid-row: auto;
   }
 }
 

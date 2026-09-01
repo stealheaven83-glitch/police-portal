@@ -13,10 +13,19 @@ import '@he-tree/vue/style/default.css'
 import { cn } from '@/lib/utils'
 import { Checkbox } from '@/components/custom/checkbox'
 import Input from '@/components/custom/input/Input.vue'
+import iconClear from '@/assets/icon/_delete.svg?url'
 
 /* 폴더 아이콘(퍼블리싱 asset). 접기/펼치기 아이콘은 .treeToggle 배경으로 넣는다 */
 const treeOpenIcon = '/portal/asset/images/icon/ico_tree_open.svg'
 const treeCloseIcon = '/portal/asset/images/icon/ico_tree_close.svg'
+
+/*
+ * 계층선의 x 시작점 — 부모 토글 동그라미의 중심에 맞춘다.
+ *   .treeRow 왼쪽 여백 0.6rem(6px) + 동그라미(.treeToggle 1.8rem) 반지름 9px = 15px
+ * he-tree 기본값은 8px 이라 그대로 두면 선이 동그라미보다 7px 왼쪽에 그려진다.
+ * 동그라미 크기나 행 여백을 바꾸면 이 값도 같이 맞춘다.
+ */
+const treeLineOffset = 15
 
 /**
  * 트리 뷰 (@he-tree/vue 래퍼).
@@ -153,6 +162,16 @@ function isEditing(node: TreeNode) {
   return !!props.editingNode && toRaw(props.editingNode) === toRaw(node)
 }
 
+/**
+ * 입력값만 지우고 입력창은 그대로 둔다.
+ * 버튼에 mousedown.prevent 를 걸어 포커스가 빠지지 않게 해야 한다 —
+ * 포커스가 빠지면 blur 가 먼저 돌아 빈 이름으로 확정돼 버린다.
+ */
+function clearEditingName() {
+  editingName.value = ''
+  ;(editInputRef.value?.$el as HTMLInputElement | undefined)?.focus()
+}
+
 /** Enter·포커스아웃으로 확정. 확정 직후 오는 blur 는 editingNode 가 이미 비어 걸러진다 */
 function commitEdit(node: TreeNode) {
   if (!isEditing(node)) return
@@ -174,6 +193,29 @@ function getCheckedNodes(): TreeNode[] {
 }
 
 defineExpose({
+  /**
+   * 노드 추가. parent 를 안 주면 최상위에 붙는다.
+   *
+   * 트리 데이터 배열을 직접 push 하면 화면에 안 나타난다 — he-tree 는 트리 데이터를
+   * deep 없이 감시해서(BaseTree 의 valueComputed watch), 중첩 배열을 제자리에서 고치면
+   * 내부 stats 를 다시 만들지 않기 때문이다. he-tree 의 add 는 stats 와 원본 데이터를
+   * 함께 갱신하면서 다른 노드의 펼침 상태도 유지한다.
+   */
+  addNode: (node: TreeNode, parent: TreeNode | null = null, index?: number) => {
+    const tree = treeRef.value
+    if (!tree) return
+    const parentStat = parent ? tree.getStat(parent) : null
+    tree.add(node, parentStat, index)
+    // 접힌 부모 밑에 넣으면 보이지 않으니 펼쳐 준다
+    if (parentStat) parentStat.open = true
+  },
+  /** 노드 삭제(하위 포함). 지웠으면 true. 배열 splice 가 아닌 이유는 addNode 주석 참고 */
+  removeNode: (node: TreeNode) => {
+    const tree = treeRef.value
+    if (!tree) return false
+    const stat = tree.getStat(node)
+    return stat ? tree.remove(stat) : false
+  },
   /** 전체 펼치기 */
   openAll: () => treeRef.value?.openAll(),
   /** 전체 접기 */
@@ -192,6 +234,7 @@ defineExpose({
       v-model="treeData"
       :tree-line="treeLine"
       :indent="indent"
+      :tree-line-offset="treeLineOffset"
       :children-key="childrenKey"
       :each-droppable="() => draggable"
       :each-draggable="() => draggable"
@@ -234,18 +277,29 @@ defineExpose({
 
           <slot name="label" :node="node" :stat="stat">
             <!-- 이름을 입력받는 동안에는 라벨 대신 입력창을 둔다 -->
-            <Input
-              v-if="isEditing(node)"
-              ref="editInputRef"
-              v-model="editingName"
-              size="sm"
-              autofocus
-              class="treeEditInput"
-              aria-label="이름 입력"
-              @keyup.enter="commitEdit(node)"
-              @keyup.esc="cancelEdit(node)"
-              @blur="commitEdit(node)"
-            />
+            <div v-if="isEditing(node)" class="treeEdit">
+              <Input
+                ref="editInputRef"
+                v-model="editingName"
+                size="sm"
+                autofocus
+                class="treeEditInput"
+                aria-label="이름 입력"
+                @keyup.enter="commitEdit(node)"
+                @keyup.esc="cancelEdit(node)"
+                @blur="commitEdit(node)"
+              />
+              <button
+                v-if="editingName"
+                type="button"
+                class="treeEditClear"
+                aria-label="입력값 지우기"
+                @mousedown.prevent
+                @click="clearEditingName"
+              >
+                <img :src="iconClear" alt="" />
+              </button>
+            </div>
             <button v-else type="button" class="treeLabel" @click="onSelect(node, stat)">
               <!--
                 펼친 노드는 열린 폴더, 접힌 노드는 닫힌 폴더.
@@ -277,8 +331,9 @@ defineExpose({
  * 패널 안에 넣었을 때의 테두리 제거·스크롤(overflow/flex/scrollbar)은
  * police-style.css 의 공통 .treeView 가 덮어쓴다.
  */
+
 .treeView {
-  padding: 1.2rem 1.6rem;
+  padding: 1.2rem 2.4rem;
   border-radius: 0.8rem;
   background: #fff;
 }
@@ -297,30 +352,56 @@ defineExpose({
 }
 
 .treeToggle {
+  position: relative;
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
   width: 1.8rem;
   height: 1.8rem;
-  border: 1px solid #58616A;
+  border: 1px solid #33363D;
   border-radius: 50%;
-  background: #fff no-repeat center / 1.2rem auto;
+  background: #fff;
   cursor: pointer;
 }
 
-.treeToggle--open {
-  background-image: url('/portal/asset/images/icon/ico_minus-tree.svg');
-  background-size: 9.25px auto;
-  background-position: center center;
-
+/*
+ * ＋/－ 는 아이콘 이미지 대신 가상요소로 그린다.
+ * 이미지일 때는 background-position 으로 맞춰야 해서 원 중앙에서 쉽게 어긋났다.
+ * translate(-50%, -50%) 로 두 막대를 원의 정중앙에 둔다.
+ */
+.treeToggle--open::before,
+.treeToggle--closed::before,
+.treeToggle--closed::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background:#33363D;
 }
 
-.treeToggle--closed {
-  background-image: url('/portal/asset/images/icon/ico_plus_tree.svg');
-  background-size: 10px auto;
-  background-position: center center;
+/* 가로 막대 — 펼침(－)과 접힘(＋)이 함께 쓴다 */
+.treeToggle--open::before,
+.treeToggle--closed::before {
+  width: 0.9rem;
+  height: 1px;
+}
 
+/* 세로 막대 — 접힘일 때만 더해져 ＋ 가 된다 */
+.treeToggle--closed::after {
+  width: 1px;
+  height: 0.9rem;
+  top: calc(50% - 0.45rem);
+  left: 8px; 
+
+}
+.treeToggle--closed::before{
+  left: calc(50% - 0.4rem) 
+  
+}
+
+.treeToggle--open:before{
+  left: calc(50% - 0.4rem) 
 }
 
 /* 하위가 없는 노드는 자리만 차지한다 — 동그라미까지 그리면 접을 수 있는 것처럼 보인다 */
@@ -350,9 +431,35 @@ defineExpose({
 }
 
 /* 라벨 자리에 들어가는 입력창 — 남는 폭을 다 쓴다 */
+/* 입력창 + 지우기 버튼. 버튼이 입력창 오른쪽 안쪽에 겹쳐 앉는다 */
+.treeEdit {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+}
+
 .treeEditInput {
   flex: 1;
   min-width: 0;
+  padding-right: 3.2rem;
+}
+
+.treeEditClear {
+  position: absolute;
+  top: 50%;
+  right: 0.8rem;
+  display: flex;
+  width: 1.6rem;
+  height: 1.6rem;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.treeEditClear img {
+  width: 100%;
+  height: 100%;
 }
 
 .treeLabelText {
@@ -363,8 +470,8 @@ defineExpose({
 
 .treeIcon {
   flex-shrink: 0;
-  width: 2rem;
-  height: 2rem;
+  width: 2.4rem;
+  height: 2.4rem;
 }
 
 /* 선택된 노드는 색으로 구분한다 */

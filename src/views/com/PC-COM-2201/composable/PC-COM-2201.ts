@@ -156,48 +156,39 @@ export function useUserAuthManage() {
   /** 이름을 입력받는 중인 노드. TreeView 가 이 노드만 입력창으로 바꿔 그린다 */
   const editingDept = ref<DeptNode | null>(null)
 
-  /**
-   * 고른 부서 아래(고른 게 없으면 최상위)에 이름 없는 노드를 만들고 입력창을 연다.
-   * editingDept 에는 넣은 객체가 아니라 "배열에서 다시 꺼낸" 것을 담아야 한다 —
-   * ref 배열에 넣는 순간 반응형 프록시로 감싸여서, 템플릿이 받는 노드와 === 로 안 맞는다.
+  /*
+   * 트리에 노드를 넣고 빼는 일은 화면이 TreeView 의 addNode/removeNode 로 한다.
+   * 여기서 deptTree 배열을 직접 고치면 he-tree 가 화면을 다시 그리지 않는다
+   * (트리 데이터를 deep 없이 감시해서 중첩 배열의 제자리 수정은 감지되지 않는다).
+   * 이 컴포저블은 "무엇을 넣을지"와 이름 입력 상태만 들고 있는다.
    */
-  function addDept() {
-    const parent = selectedDept.value
-    const siblings = parent ? (parent.children ??= []) : deptTree.value
-    siblings.push({ name: '' })
-    if (parent) parent.open = true
-    editingDept.value = siblings[siblings.length - 1]
+
+  /** 이름을 아직 안 정한 새 부서 노드 */
+  function createDeptNode(): DeptNode {
+    return { name: '' }
+  }
+
+  /** 이 노드의 입력창을 연다 */
+  function beginDeptEdit(node: DeptNode) {
+    editingDept.value = node
   }
 
   /**
    * 입력한 이름을 확정한다. 저장했으면 true.
-   * 이름이 비어 있으면 방금 만든 빈 노드가 남으니 지운다.
+   * 이름이 비면 false — 방금 만든 빈 노드는 화면이 트리에서 뺀다.
    */
   function commitDeptName(node: DeptNode, name: string): boolean {
     const trimmed = name.trim()
     editingDept.value = null
-    if (!trimmed) {
-      removeDept(node)
-      return false
-    }
+    if (!trimmed) return false
     node.name = trimmed
     return true
   }
 
-  /** 입력을 취소한다. 아직 이름이 없는 새 노드는 같이 지운다 */
-  function cancelDeptEdit(node: DeptNode) {
+  /** 입력을 취소한다. 아직 이름이 없는 새 노드면 true — 화면이 트리에서 뺀다 */
+  function cancelDeptEdit(node: DeptNode): boolean {
     editingDept.value = null
-    if (!node.name.trim()) removeDept(node)
-  }
-
-  /** 트리에서 노드를 찾아 지운다(하위 포함) */
-  function removeDept(target: DeptNode, nodes: DeptNode[] = deptTree.value): boolean {
-    const index = nodes.indexOf(target)
-    if (index > -1) {
-      nodes.splice(index, 1)
-      return true
-    }
-    return nodes.some((node) => node.children && removeDept(target, node.children))
+    return !node.name.trim()
   }
 
   /* ── 사용자목록 ────────────────────────── */
@@ -252,10 +243,10 @@ export function useUserAuthManage() {
     deptTree,
     selectedDept,
     editingDept,
-    addDept,
+    createDeptNode,
+    beginDeptEdit,
     commitDeptName,
     cancelDeptEdit,
-    removeDept,
     searchField,
     searchKeyword,
     users,

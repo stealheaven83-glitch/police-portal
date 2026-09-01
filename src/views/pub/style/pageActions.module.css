@@ -5,18 +5,26 @@
   align-items: center;
   justify-content: space-between;
   gap: 1.2rem;
-  margin-bottom: 1.6rem;
+  padding: 0.8rem 0 1.6rem;
+  margin-bottom: 2.4rem;
+  border-bottom: 1px solid var(--Text-body_0);
 }
 
 .deptLabel {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--Text-body_0, #1e2124);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+}
+
+/* "부서:" 앞머리만 연한 회색 — 뒤따르는 부서명이 강조되게 */
+.deptLabelPrefix {
+  color: var(--Text-body_2);
 }
 
 .pageActionButtons {
   display: flex;
-  gap: 0.8rem;
+  gap: 1.2rem;
   margin-left: auto;
 }
 

@@ -1354,6 +1354,39 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   line-height: var(--tw-leading, var(--text-sm--line-height));
 }
 
+/*검색 폼 없이 부서 선택만 있는 상단 영역 (SearchWrapper 를 쓰지 않는 화면) */
+.dept-area{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:1.2rem;
+  margin:0 0 2rem 0;
+}
+
+/*상세 화면 구역 제목 줄 — 연한 파랑 바 + 우측 액션 버튼 */
+.section-bar{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:1.6rem;
+  padding:1.2rem 2.4rem;
+  border-radius:0.8rem;
+  background:var(--Surface-primary);
+}
+.section-bar > h2,
+.section-bar > h3{
+  flex:1 0 0;
+  min-width:0;
+  font-size:1.7rem;
+  font-weight:700;
+  line-height:1.5;
+  color:var(--Text-body_0);
+}
+.section-bar-actions{
+  display:flex;
+  gap:1.2rem;
+}
+
 /*하단 탭메뉴 */
 .tab-ul li{
   display:flex;
@@ -1529,13 +1562,13 @@ html.theme-dark .rowgroup.notice .notice-list .noticeSwiper .swiper-nav .slide-a
   flex: 1;
   min-height: 0;
   overflow: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #BACBDE #F4F5F6;
+  scrollbar-width: thin;
+  scrollbar-color: #BACBDE #F4F5F6;
+  border-top:6px solid #F5F5F5;
 
 }
 .btn-tree{
   display:flex;
-  gap:0.8rem;
   border-bottom:1px solid var(--Border_gray02);
 }
 
@@ -1549,6 +1582,13 @@ html.theme-dark .rowgroup.notice .notice-list .noticeSwiper .swiper-nav .slide-a
   border-left:1px solid var(--Border_gray02);
 }
 
-.btn-tree .plus{
-
+/*
+ * 트리 한 줄 높이. he-tree 가 만드는 노드 안쪽 래퍼다.
+ * 가로 계층선이 .tree-node 의 세로 중앙(top:50%)에 그려지므로,
+ * 행 내용도 같은 중앙에 와야 선과 아이콘이 어긋나지 않는다.
+ */
+.tree-node-inner {
+  display: flex;
+  align-items: center;
+  height: 4.2rem;
 }
