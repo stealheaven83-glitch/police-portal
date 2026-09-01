@@ -28,6 +28,7 @@ import {
 import type { PersonnelListRow } from './composable/PC-LPO-0801'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import styles from './style/PC-LPO-0801.module.css'
+import infoStyles from '@/components/custom/info-table/InfoTable.module.css'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 
@@ -220,14 +221,14 @@ useBottomTabSetup({
               </InfoField>
 
               <InfoField label="성별">
-                <RadioGroup v-model="detail.gender" class="flex gap-4">
+                <RadioGroup v-model="detail.gender" :class="infoStyles['info-table-radio']">
                   <RadioGroupItem value="male" label="남" />
                   <RadioGroupItem value="female" label="여" />
                 </RadioGroup>
               </InfoField>
 
               <InfoField label="동명여부">
-                <RadioGroup v-model="detail.duplicateName" class="flex gap-4">
+                <RadioGroup v-model="detail.duplicateName" :class="infoStyles['info-table-radio']">
                   <RadioGroupItem value="none" label="없음" />
                   <RadioGroupItem value="exists" label="있음" />
                 </RadioGroup>
@@ -259,7 +260,7 @@ useBottomTabSetup({
               </InfoField>
 
               <InfoField label="직책" full>
-                <RadioGroup v-model="detail.position" class="flex flex-wrap gap-4">
+                <RadioGroup v-model="detail.position" :class="infoStyles['info-table-radio']">
                   <RadioGroupItem
                     v-for="opt in positionOptions"
                     :key="opt.value"
@@ -292,7 +293,7 @@ useBottomTabSetup({
               </InfoField>
 
               <InfoField label="근무">
-                <RadioGroup v-model="detail.workType" class="flex flex-wrap gap-4">
+                <RadioGroup v-model="detail.workType" :class="infoStyles['info-table-radio']">
                   <RadioGroupItem value="center" label="치안센터 전담근무자" />
                   <RadioGroupItem value="day" label="주간근무자" />
                 </RadioGroup>
@@ -327,14 +328,14 @@ useBottomTabSetup({
                 <InputField2
                   v-model="detail.addressRoad"
                   size="sm"
-                  class="!space-y-0 flex-1 min-w-[16rem]"
+                  class="!space-y-0 flex-1 min-w-64"
                   placeholder="도로명주소"
                 />
                 <Button type="button" variant="tertiary2" size="sm" @click="addressSearchOpen = true">주소검색</Button>
                 <InputField2
                   v-model="detail.addressDetail"
                   size="sm"
-                  class="!space-y-0 flex-1 min-w-[16rem]"
+                  class="!space-y-0 flex-1 min-w-64"
                   placeholder="상세주소"
                 />
               </InfoField>
@@ -352,7 +353,7 @@ useBottomTabSetup({
   <section :class="styles.transferSection" aria-labelledby="transfer-heading">
     <div :class="[styles.panelHead, 'rounded-t-lg border']">
       <h3 id="transfer-heading" :class="styles.panelTitle">전입 전출 현황</h3>
-      <div class="flex gap-2">
+      <div class="btn-wrap-group">
         <Button type="button" variant="tertiary2" size="xs" @click="removeSelectedTransfers">삭제</Button>
         <Button type="button" variant="primary" size="xs" @click="addTransferRow">신규</Button>
       </div>
