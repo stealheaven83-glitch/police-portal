@@ -51,6 +51,18 @@
   `custom/empty`가 "데이터 없음"인지, `Chip`과 `FilterChip`이 뭐가 다른지 알 수 없다.
   이름이 비슷한 형제(Badge/Tag/Chip/FilterChip, Alert/InfoBox/CriticalAlert 등) 구분 기준도 거기 있다.
 
+### ⚠ 남이 만든 파일과 코드가 겹쳐도 — **합치지 않는다**
+위의 '공통에 만들어라'는 **내가 새로 만들 때** 얘기다. **이미 동료 파일에 있는 것과 내 것이
+중복되는 상황은 반대다** — 통합하지 말고 중복인 채로 둔다.
+
+- 예: `PM-PUB-0409` 컴포저블의 `regionOptions` 18개 지역 목록이
+  `views/pub/composable/drunkCenter.ts` 와 겹쳤다 → **합치지 않고 각자 뒀다.**
+- **왜**: 3명이 동시 작업이라 남의 파일을 건드리면 pull 때 충돌이 난다. 중복 제거로 얻는 이득보다
+  충돌 해소 비용이 크다.
+- 공유 파일(`router/index.ts`, `presets.ts` 등)을 꼭 고쳐야 하면 기존 줄을 **바꾸지 말고
+  추가만** 한다 — 이름·순서·구조는 그대로 두고 필요한 속성만 붙인다(§4 는 아예 건드리지 말라고 한다).
+- 통합이 정말 필요해 보이면 **실행하지 말고 인계 메모(§11)에 한 줄로 알리기만** 한다.
+
 ### 인라인 스타일 금지 — 전부 CSS Modules(`*.module.css`)
 컴포넌트가 노출한 CSS 변수(`--flex-col-min-w` 등)를 호출부에서 바꿀 때도 인라인
 (`style="--flex-col-min-w:0"`)으로 덮지 않는다. `layoutSplit.vue` 방식대로 화면 `module.css`에
