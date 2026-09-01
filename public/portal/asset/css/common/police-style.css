@@ -1508,3 +1508,30 @@ html.theme-dark .rowgroup.notice .notice-list .noticeSwiper .swiper-nav .slide-a
   gap: 0.8rem;
 }
 
+.tree-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #BACBDE #F4F5F6;
+
+}
+.btn-tree{
+  display:flex;
+  gap:0.8rem;
+  border-bottom:1px solid var(--Border_gray02);
+}
+
+.btn-tree button{
+  padding:0.85rem 1rem; 
+  flex:1;
+  height:4rem;
+  border-radius:0!important;
+}
+.btn-tree button + button{
+  border-left:1px solid var(--Border_gray02);
+}
+
+.btn-tree .plus{
+
+}

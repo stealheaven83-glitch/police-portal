@@ -112,9 +112,6 @@ useBottomTabSetup({
     height="100%"
     placeholder="조회된 내역이 없습니다"
     show-pagination
-<<<<<<< Updated upstream
     :items-per-page="10"
-=======
->>>>>>> Stashed changes
   />
 </template>

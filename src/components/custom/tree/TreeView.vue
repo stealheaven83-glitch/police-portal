@@ -248,12 +248,15 @@ defineExpose({
 </template>
 
 <style scoped>
+/*
+ * 기본 카드 모양만 여기서 잡는다.
+ * 패널 안에 넣었을 때의 테두리 제거·스크롤(overflow/flex/scrollbar)은
+ * police-style.css 의 공통 .treeView 가 덮어쓴다.
+ */
 .treeView {
   padding: 1.2rem 1.6rem;
-  border: 1px solid var(--Border_gray03);
   border-radius: 0.8rem;
   background: #fff;
-  overflow:scroll-y;
 }
 
 .treeRow {
@@ -367,35 +370,11 @@ defineExpose({
   opacity: 1;
 }
 
-.treeView {
-  border:0!important;
-  border-top:6px solid rgba(0, 0, 0, 0.04) !important;
-  border-radius:0!important;
-  overflow: auto;
-  flex:1;
-  scrollbar-width: thin;
-    scrollbar-color: #BACBDE #F4F5F6;
-}
-.btn-tree{
-  display:flex;
-  gap:0.8rem;
-  border-bottom:1px solid var(--Border_gray02);
-}
-
-.btn-tree button{
-  padding:0.85rem 1rem; 
-  flex:1;
-  height:4rem;
-  border-radius:0!important;
-}
-.btn-tree button + button{
-  border-left:1px solid var(--Border_gray02);
-}
-
-
 /* 드래그 중 드롭 위치 표시 */
 :deep(.he-tree-drag-placeholder) {
   background: var(--Surface-primary);
   border: 1px dashed var(--Border_primary);
 }
+
+
 </style>

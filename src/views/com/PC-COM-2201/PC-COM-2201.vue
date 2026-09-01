@@ -21,7 +21,7 @@ import {
   type DeptNode,
   type UserRow,
 } from './composable/PC-COM-2201'
-import styles from './style/PC-COM-2201.module.css'
+
 
 defineOptions({ name: 'PcCom2201' })
 
@@ -182,17 +182,18 @@ useBottomTabSetup({
             모두 축소
           </Button>
         </div>
+        <div class="tree-scroll">
           <TreeView
             ref="treeRef"
             v-model="deptTree"
             show-icon
             :editing-node="editingDept"
-            :class="styles.tree"
             :draggable="false"
             @node-click="onDeptClick"
             @node-rename="onDeptRename"
             @node-rename-cancel="onDeptRenameCancel"
           />
+        </div>
       </LayoutPanel>
     </template>
 
@@ -200,7 +201,7 @@ useBottomTabSetup({
     <template #layout-2>
       <LayoutPanel title="사용자목록">
         <template #actions>
-          <div :class="styles.panelSearch">
+          <div class="group-gap2">
             <SelectField
               v-model="searchField"
               :options="searchFieldOptions"

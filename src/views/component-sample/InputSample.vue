@@ -172,13 +172,13 @@
             <InputField2 id="input11" placeholder="플레이스홀더" clearable></InputField2>
           </div>
           <div class="w-[480px] mb-3">
-            <InputField2 label="사이즈 md" placeholder="플레이스홀더" size="md" label-position="left"></InputField2>
+            <InputField2 label="사이즈 md" placeholder="플레이스홀더" size="md" label-position="left" clearable></InputField2>
           </div>
           <div class="w-[480px] mb-3">
             <InputField2 label="사이즈 sm" placeholder="플레이스홀더" size="sm" clearable></InputField2>
           </div>
           <div class="w-[480px] mb-3">
-            <InputField2 label="설명버튼" description="안녕?"></InputField2>
+            <InputField2 label="설명버튼" description="안녕?" clearable></InputField2>
           </div>
           <div class="w-[480px] mb-3">
             <InputField2 label="아이콘 있을 때" :icon="sampleIcon" iconClass="size-8" clearable></InputField2>

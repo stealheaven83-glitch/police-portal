@@ -13,7 +13,6 @@ import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { systemAdminMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useMenuManage, channelOptions, type MenuNode, type MenuRow } from './composable/PC-COM-2203'
-import styles from './style/PC-COM-2203.module.css'
 
 // KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!)
 // BottomTabItem.componentName 과 일치해야 하고, 다른 화면과 겹치면 캐시가 뒤섞인다.
@@ -27,7 +26,8 @@ const navItems = [
 ]
 
 const dialog = useDialog()
-const { menuTree, selectedMenu, selectMenu, rows, createEmptyRow } = useMenuManage()
+const { menuTree, selectedMenu, selectMenu, addMenuNode, removeMenuNode, rows, createEmptyRow } =
+  useMenuManage()
 
 const treeRef = ref<InstanceType<typeof TreeView> | null>(null)
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
@@ -125,26 +125,28 @@ useBottomTabSetup({
     </template>
   </PageHeader>
 
-  <LayoutSplite :count="2" :widths="[24, 76]" :class="styles.split">
+  <LayoutSplite :count="2" :widths="[24, 76]" >
     <!-- ── 메뉴 트리 ────────────────────────── -->
     <template #layout-1>
-      <LayoutPanel title="메뉴">
-        <div :class="styles.treeToolbar">
+      <LayoutPanel title="메뉴" no-padding>
+        <div class="btn-tree">
           <Button type="button" variant="text" size="sm" @click="treeRef?.openAll()">
-            ＋ 모두 확장
+            <img src="/portal/asset/images/icon/ico_plus.svg" alt="" aria-hidden="true" />
+            모두 확장
           </Button>
           <Button type="button" variant="text" size="sm" @click="treeRef?.closeAll()">
-            − 모두 축소
+            <img src="/portal/asset/images/icon/ico_minus.svg" alt="" aria-hidden="true" />
+            모두 축소
           </Button>
         </div>
 
         <!-- 메뉴가 깊고 이름이 길어 이 패널 안에서만 스크롤한다 -->
-        <div :class="styles.treeScroll">
+        <div class="tree-scroll">
           <TreeView
             ref="treeRef"
             v-model="menuTree"
             :selected="selectedMenu"
-            :class="styles.tree"
+
             :draggable="false"
             show-icon
             @update:selected="onMenuSelected"
