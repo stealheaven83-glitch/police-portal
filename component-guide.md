@@ -306,6 +306,7 @@ CLAUDE.md §1의 CSS 우선순위 ①②를 실행으로 옮긴 것 — 같은 �
 | 그리드 위 우측 버튼줄 | `.list-actions` | flex, 우측 정렬, gap 0.8rem, 아래 여백 2rem (17개) |
 | 좌우 양끝 배치 버튼줄 | `.btn-wrap` | flex, space-between, 100% |
 | 버튼 몇 개 묶기 | `.btn-wrap-group` | flex, gap 0.5rem |
+| 폼 아래 가운데 버튼줄(저장 등) | `.form-actions` | flex, 가운데 정렬, gap 0.8rem, 위 여백 2rem |
 | 가로 묶음(간격만) | `.group-gap1/2/3` | flex + align-center + gap 1/2/3단계 |
 | 스크롤되는 본문 영역 | `.layout-wrap` | padding 2rem 2.4rem, overflow-y auto |
 | 그리드 위 여백 | `.grid-wrap` | margin-top 2rem |

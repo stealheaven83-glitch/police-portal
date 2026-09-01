@@ -1104,6 +1104,15 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   align-items: center;
 }
 
+/*등록/상세 폼 아래 가운데 정렬 버튼줄 (저장 등)*/
+.form-actions{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
 @media (max-width: 1200px) {
   .main-menu{
     display:none;
