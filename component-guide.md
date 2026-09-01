@@ -175,7 +175,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | 제목·설명·태그를 묶은 카드 | `custom/card/Card.vue` |
 | 접었다 펴는 여러 항목 | `custom/accordion/` |
 | 접었다 펴는 한 덩어리("더보기") | `custom/disclosure/Disclosure.vue` |
-| 아이콘 | `custom/icon/Icon.vue` (등록된 것) 또는 `lucide-vue-next` |
+| 아이콘 | **Figma 것을 `icons.ts` 에 등록해 `<Icon name="…" />`** — 없을 때만 `lucide-vue-next` (CLAUDE.md §9) |
 
 ---
 
@@ -379,8 +379,21 @@ Figma 값을 그대로 px로 쓰면 10배로 뜬다.
 `public/portal/asset/css/common/police-style.css` 의 토큰을 쓴다(§12). 대응 토큰이 정말 없을
 때만 hex — 선례는 `Badge.vue` 의 `#fff6e5`.
 
-### 아이콘
-`lucide-vue-next` 를 쓴다. `custom/icon/Icon.vue` 는 자체 svg 6개뿐이라 대부분 안 맞는다.
+### 아이콘 — Figma 것을 가져온다
+**PPT 이미지를 보고 `lucide-vue-next` 에서 비슷한 걸 고르지 않는다.** Figma 에 아이콘이
+130개 등록돼 있고 그게 확정본이다(CLAUDE.md §9).
+
+```
+Figma 프레임에서 아이콘 확인 → get_design_context 응답의 asset URL 로 SVG 내려받기
+  → src/assets/images/icons/ 에 저장
+  → src/components/custom/icon/icons.ts 에 등록
+  → <Icon name="..." :size="20" /> 로 사용
+```
+
+지금 `icons.ts` 에 6개뿐이라 기존 화면들이 lucide 로 때우고 있다(23곳).
+**새로 만드는 화면부터는 Figma 아이콘을 등록해서 쓴다** — 등록하면 다음 화면이 재사용한다.
+이것도 공통화다(§1). Figma 에 없는 아이콘만 `lucide-vue-next` 를 쓰고, 그 사실을 인계 메모에
+남긴다(CLAUDE.md §11).
 
 ### 재사용 컴포넌트 안에서는 테일윈드를 써도 된다
 CLAUDE.md §1이 금지하는 건 **화면(`views/**`) 템플릿**이다. `src/components/**` 내부는 고칠 곳이
