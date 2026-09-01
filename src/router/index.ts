@@ -781,6 +781,34 @@ const router = createRouter({
             }
         },
         {
+            path: '/views/pub/PM-PUB-0411',
+            name: 'PM-PUB-0411',
+            component: () => import('../views/pub/PM-PUB-0411/PM-PUB-0411.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '주취자 센터관리'
+            }
+        },
+        {
+            // 목록 화면(PM-PUB-0411)의 '등록' 버튼으로 들어간다 — LNB 항목은 따로 없다.
+            path: '/views/pub/PC-PUB-0412',
+            name: 'PC-PUB-0412',
+            component: () => import('../views/pub/PC-PUB-0412/PC-PUB-0412.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '주취자센터 등록'
+            }
+        },
+        {
+            path: '/views/pub/PC-PUB-0413',
+            name: 'PC-PUB-0413',
+            component: () => import('../views/pub/PC-PUB-0413/PC-PUB-0413.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '주취자 입퇴소 현황'
+            }
+        },
+        {
             path: '/views/stt/PC-STT-0103',
             name: 'PC-STT-0103',
             component: () => import('../views/stt/PC-STT-0103/PC-STT-0103.vue'),

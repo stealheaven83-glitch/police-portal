@@ -132,13 +132,13 @@ async function onDelete() {
 /*
  * 프리셋 문자열 키를 넘기면 비동기 로드라 같은 tick 에 activeChild 를 덮어쓸 때 경합이 난다.
  * 이미 로드된 publicSafetyMenu 를 인라인으로 펼쳐 동기 경로를 탄다 — CLAUDE.md §5.
- * items[4] = '보호조치 대응팀' > '주취자센터관리'.
+ * items[4] = '보호조치 대응팀' > '주취자 센터관리'.
  */
-useSideMenuSetup({ ...publicSafetyMenu, openIndex: 4, activeChild: '주취자센터관리' })
+useSideMenuSetup({ ...publicSafetyMenu, openIndex: 4, activeChild: '주취자 센터관리' })
 
 useBottomTabSetup({
   value: 'PM-PUB-0411',
-  label: '주취자센터관리',
+  label: '주취자 센터관리',
   path: '/views/pub/PM-PUB-0411',
   componentName: 'PmPub0411',
   closable: true,

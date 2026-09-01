@@ -81,8 +81,8 @@ function onSave() {
   Object.assign(form, createEmptyCenterForm())
 }
 
-// items[4] = '보호조치 대응팀' > '주취자센터관리' (등록은 LNB 항목이 따로 없다)
-useSideMenuSetup({ ...publicSafetyMenu, openIndex: 4, activeChild: '주취자센터관리' })
+// items[4] = '보호조치 대응팀' > '주취자 센터관리' (등록은 LNB 항목이 따로 없다)
+useSideMenuSetup({ ...publicSafetyMenu, openIndex: 4, activeChild: '주취자 센터관리' })
 
 useBottomTabSetup({
   value: 'PC-PUB-0412',

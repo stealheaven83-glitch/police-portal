@@ -82,8 +82,8 @@ export const publicSafetyMenu: SideMenuConfig = {
       name: '보호조치 대응팀',
       children: [
         { name: '주취자 센터 병상 현황', path: '/views/pub/PM-PUB-0409' },
-        { name: '주취자 센터관리' },
-        { name: '주취자 입퇴소 현황' },
+        { name: '주취자 센터관리', path: '/views/pub/PM-PUB-0411' },
+        { name: '주취자 입퇴소 현황', path: '/views/pub/PC-PUB-0413' },
         { name: '정신 응급 대응팀' },
       ],
     },

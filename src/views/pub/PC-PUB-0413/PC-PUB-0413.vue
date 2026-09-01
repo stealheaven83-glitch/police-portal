@@ -70,12 +70,12 @@ const columns: TabulatorGridColumn[] = [
   { title: '퇴소일시', field: 'dischargedAt', width: 150, hozAlign: 'center' },
 ]
 
-// items[4] = '보호조치 대응팀' > '주취자입퇴소현황'
-useSideMenuSetup({ ...publicSafetyMenu, openIndex: 4, activeChild: '주취자입퇴소현황' })
+// items[4] = '보호조치 대응팀' > '주취자 입퇴소 현황'
+useSideMenuSetup({ ...publicSafetyMenu, openIndex: 4, activeChild: '주취자 입퇴소 현황' })
 
 useBottomTabSetup({
   value: 'PC-PUB-0413',
-  label: '주취자입퇴소현황',
+  label: '주취자 입퇴소 현황',
   path: '/views/pub/PC-PUB-0413',
   componentName: 'PcPub0413',
   closable: true,
