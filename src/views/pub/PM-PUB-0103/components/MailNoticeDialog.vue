@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { toast } from 'vue-sonner'
+import { useDialog } from '@/composable/dialog/dialog'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import type { CpoDiagnosisRow } from '../composable/PM-PUB-0103'
@@ -8,6 +8,7 @@ import styles from '../style/PM-PUB-0103.module.css'
 
 const props = defineProps<{ diagnosis?: CpoDiagnosisRow | null; note?: string }>()
 const open = defineModel<boolean>('open', { default: false })
+const dialog = useDialog()
 
 const score = computed(() => props.diagnosis?.score ?? 42)
 const resultRows = [
@@ -19,9 +20,9 @@ const resultRows = [
   ['상가 내부 CCTV 및 반사경', '양호(3)'],
 ]
 
-function send() {
+async function send() {
+  await dialog.alert({ title: '등록 되었습니다.' })
   open.value = false
-  toast.success('우편발송이 신청되었습니다.')
 }
 </script>
 

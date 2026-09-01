@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { toast } from 'vue-sonner'
+import { useDialog } from '@/composable/dialog/dialog'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
 import Stepper from '@/components/custom/input/Stepper.vue'
@@ -26,10 +26,11 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{ (e: 'open-simple-notice'): void; (e: 'open-history'): void }>()
 const open = defineModel<boolean>('open', { default: false })
+const dialog = useDialog()
 
-function save() {
+async function save() {
+  await dialog.alert({ title: '등록 되었습니다.' })
   open.value = false
-  toast.success('CPO 확인용 진단결과가 저장되었습니다.')
 }
 </script>
 
@@ -68,9 +69,12 @@ function save() {
 
         <div class="pop-title-lv2"><h3>일반현황</h3></div>
         <InfoTable :columns="2" popup>
-          <InfoField label="진단사유">{{ form.reason || '기타' }}</InfoField><InfoField label="상호명">{{ diagnosis?.bizName ?? '가나다라' }}</InfoField>
-          <InfoField label="가옥주">{{ form.houseOwner || '-' }}</InfoField><InfoField label="신청자">{{ form.applicant || '-' }}</InfoField>
-          <InfoField label="연락처">{{ form.contact || '-' }}</InfoField><InfoField label="피해 횟수"><Stepper v-model="form.damageCount" :min="0" /></InfoField>
+          <InfoField label="진단사유">{{ form.reason || '기타' }}</InfoField>
+          <InfoField label="상호명">{{ diagnosis?.bizName ?? '가나다라' }}</InfoField>
+          <InfoField label="가옥주">{{ form.houseOwner || '-' }}</InfoField>
+          <InfoField label="신청자">{{ form.applicant || '-' }}</InfoField>
+          <InfoField label="연락처">{{ form.contact || '-' }}</InfoField>
+          <InfoField label="피해 횟수"><Stepper v-model="form.damageCount" :min="0" /></InfoField>
         </InfoTable>
 
         <div class="pop-title-sub"><h2>범죄예방진단 항목 및 진단결과</h2></div>
@@ -78,7 +82,9 @@ function save() {
         <InfoTable :columns="1" popup :class="styles.buildingTable">
           <InfoField v-for="row in buildingAssessmentRows" :key="row.key" :label="row.label" full>
             <RadioGroup v-if="row.type === 'radio'" :model-value="assessment[row.key]" :class="infoTableStyles['info-table-radio']" @update:model-value="(value) => (assessment[row.key] = Number(value))">
-              <RadioGroupItem :value="3" label="양호(3)" /><RadioGroupItem :value="2" label="보통(2)" /><RadioGroupItem :value="1" label="위험(1)" />
+              <RadioGroupItem :value="3" label="양호(3)" />
+              <RadioGroupItem :value="2" label="보통(2)" />
+              <RadioGroupItem :value="1" label="위험(1)" />
             </RadioGroup>
             <template v-else><Stepper v-model="assessment[row.key]" :min="0" class="w-30 shrink-0" /><span>{{ row.unit }}</span></template>
           </InfoField>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { toast } from 'vue-sonner'
+import { useDialog } from '@/composable/dialog/dialog'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
@@ -10,6 +10,7 @@ import styles from '../style/PM-PUB-0103.module.css'
 
 const props = defineProps<{ diagnosis?: CpoDiagnosisRow | null }>()
 const open = defineModel<boolean>('open', { default: false })
+const dialog = useDialog()
 const result = ref('')
 const action = ref('')
 
@@ -19,9 +20,9 @@ watch(open, (value) => {
   action.value = ''
 })
 
-function save() {
+async function save() {
+  await dialog.alert({ title: '등록 되었습니다.' })
   open.value = false
-  toast.success('보관용 진단결과가 저장되었습니다.')
 }
 </script>
 
@@ -29,8 +30,10 @@ function save() {
   <GenericDialog2 v-model:open="open" title="범죄예방진단결과 (보관용)" :size="800" show-close-button>
     <div class="pop-title-sub"><h2>범죄예방진단 경찰관</h2></div>
     <InfoTable :columns="2" popup :class="styles.keepPersonTable">
-      <InfoField label="부서">부산청 부산서부서 경찰서</InfoField><InfoField label="계급">경사</InfoField>
-      <InfoField label="성명">홍길동</InfoField><InfoField label="일시">2026-05-01</InfoField>
+      <InfoField label="부서">부산청 부산서부서 경찰서</InfoField>
+      <InfoField label="계급">경사</InfoField>
+      <InfoField label="성명">홍길동</InfoField>
+      <InfoField label="일시">2026-05-01</InfoField>
     </InfoTable>
     <div class="pop-title-sub" :class="styles.keepSectionHeading"><h2>결과(건축물에 대한 위험성 총평)</h2></div>
     <TextareaField v-model="result" class="w-full !space-y-0" textarea-class="w-full" :height="96" />

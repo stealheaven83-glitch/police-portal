@@ -61,12 +61,8 @@ function onFileSelected(photo: PhotoSlot, event: Event) {
 }
 
 async function save() {
-  const { confirmed } = await dialog.confirm({
-    title: '등록 되었습니다.',
-    btnOk: '확인',
-    btnCancel: '취소',
-  })
-  if (confirmed) open.value = false
+  await dialog.alert({ title: '등록 되었습니다.' })
+  open.value = false
 }
 
 onBeforeUnmount(() => photos.value.forEach((photo) => photo.preview && URL.revokeObjectURL(photo.preview)))

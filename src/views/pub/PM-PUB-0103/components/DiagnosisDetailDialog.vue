@@ -187,14 +187,30 @@
 
         <div class="pop-title-lv2"><h3>2) 인구 사회학적 특성</h3></div>
         <InfoTable :columns="2" popup>
-          <InfoField label="인구 밀도"><div :class="styles.referenceValueGrid"><span>보통</span><span>6729</span></div></InfoField>
-          <InfoField label="지역 결속력"><div :class="styles.referenceValueGrid"><span>보통</span><span>111</span></div></InfoField>
-          <InfoField label="기초생활수급자수"><div :class="styles.referenceValueGrid"><span>보통</span><span>111</span></div></InfoField>
-          <InfoField label="1인가구 비율"><div :class="styles.referenceValueGrid"><span>위험</span><span>0</span></div></InfoField>
-          <InfoField label="외국인 비율"><div :class="styles.referenceValueGrid"><span>양호</span><span>0</span></div></InfoField>
-          <InfoField label="관리대상자수"><div :class="styles.referenceValueGrid"><span>위험</span><span>0</span></div></InfoField>
-          <InfoField label="풍속업소 수"><div :class="styles.referenceValueGrid"><span>보통</span><span>173</span></div></InfoField>
-          <InfoField label="설문조사 결과"><div :class="styles.referenceValueGrid"><span>보통</span><span>0</span></div></InfoField>
+          <InfoField label="인구 밀도">
+            <div :class="styles.referenceValueGrid"><span>보통</span><span>6729</span></div>
+          </InfoField>
+          <InfoField label="지역 결속력">
+            <div :class="styles.referenceValueGrid"><span>보통</span><span>111</span></div>
+          </InfoField>
+          <InfoField label="기초생활수급자수">
+            <div :class="styles.referenceValueGrid"><span>보통</span><span>111</span></div>
+          </InfoField>
+          <InfoField label="1인가구 비율">
+            <div :class="styles.referenceValueGrid"><span>위험</span><span>0</span></div>
+          </InfoField>
+          <InfoField label="외국인 비율">
+            <div :class="styles.referenceValueGrid"><span>양호</span><span>0</span></div>
+          </InfoField>
+          <InfoField label="관리대상자수">
+            <div :class="styles.referenceValueGrid"><span>위험</span><span>0</span></div>
+          </InfoField>
+          <InfoField label="풍속업소 수">
+            <div :class="styles.referenceValueGrid"><span>보통</span><span>173</span></div>
+          </InfoField>
+          <InfoField label="설문조사 결과">
+            <div :class="styles.referenceValueGrid"><span>보통</span><span>0</span></div>
+          </InfoField>
         </InfoTable>
       </div>
     </section>

@@ -1,5 +1,6 @@
 import { computed, reactive, ref, watch } from 'vue'
 import { toast } from 'vue-sonner'
+import { useDialog } from '@/composable/dialog/dialog'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 
 export interface SelectOption {
@@ -292,6 +293,8 @@ function createHistoryRows(row: CpoDiagnosisRow | null): CpoHistoryRow[] {
  * 수 있어야 하므로 파생값이 아니라 별도의 뮤터블 상태로 들고 있는다.
  */
 export function useCpoList() {
+  const dialog = useDialog()
+
   /** 시안은 상세조회가 펼쳐진 상태로 열린다 */
   const advancedSearchOpen = ref(false)
 
@@ -414,7 +417,7 @@ export function useCpoList() {
     detailDialogOpen.value = true
   }
 
-  function saveNewHistory() {
+  async function saveNewHistory() {
     const row = getActiveDiagnosis()
     if (!row) return
     historyRows.value = [
@@ -429,13 +432,13 @@ export function useCpoList() {
       },
       ...historyRows.value,
     ]
+    await dialog.alert({ title: '등록 되었습니다.' })
     newHistoryDialogOpen.value = false
-    toast.success('범죄예방진단 이력이 등록되었습니다.')
   }
 
-  function saveDetail() {
+  async function saveDetail() {
+    await dialog.alert({ title: '등록 되었습니다.' })
     detailDialogOpen.value = false
-    toast.success('범죄예방진단 상세내용이 저장되었습니다.')
   }
 
   function openPhotoData() {
@@ -468,7 +471,7 @@ export function useCpoList() {
     newDiagnosisDialogOpen.value = false
   }
 
-  function saveNewDiagnosis() {
+  async function saveNewDiagnosis() {
     // TODO: API 연동. 지금은 목록 맨 앞에 새 행을 끼워 넣는 것으로 등록을 흉내낸다.
     const nextNo = rows.value.reduce((max, row) => Math.max(max, row.no), 0) + 1
     rows.value = [
@@ -485,8 +488,8 @@ export function useCpoList() {
       },
       ...rows.value,
     ]
+    await dialog.alert({ title: '등록 되었습니다.' })
     newDiagnosisDialogOpen.value = false
-    toast.success('등록되었습니다.')
   }
 
   function printKeep() {
