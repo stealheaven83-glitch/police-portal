@@ -17,14 +17,6 @@ const { detailOpen, detailForm, closeUserDetail } = store
 const dialog = useDialog()
 
 async function onSave() {
-  const result = await dialog.confirm({
-    title: '저장하시겠습니까?',
-    description: '사용자 정보를 저장합니다.',
-    btnOk: '확인',
-    btnCancel: '취소',
-  })
-  if (!result.confirmed) return
-
   // TODO: API 연동
   await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
   closeUserDetail()

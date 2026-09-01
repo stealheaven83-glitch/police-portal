@@ -209,7 +209,13 @@ export function useUserAuthManage() {
   const allUsers = ref<UserRow[]>(createUserRows())
   const selectedUser = ref<UserRow | null>(null)
 
+  /**
+   * 부서를 고르기 전에는 비워 둔다(메뉴관리 PC-COM-2203 과 같은 방식).
+   * 목업이라 어느 부서를 골라도 같은 목록이 나온다 — 실제로는 부서코드로 조회한다.
+   */
   const users = computed(() => {
+    if (!selectedDept.value) return []
+
     const keyword = appliedKeyword.value.trim()
     if (!keyword) return allUsers.value
 

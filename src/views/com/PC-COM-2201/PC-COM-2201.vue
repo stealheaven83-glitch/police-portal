@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { toast } from 'vue-sonner'
+import { nextTick, provide, ref, watch } from 'vue'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -16,11 +15,14 @@ import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import {
   useUserAuthManage,
+  useUserDetail,
+  UserManageKey,
   searchFieldOptions,
   type AuthRow,
   type DeptNode,
   type UserRow,
 } from './composable/PC-COM-2201'
+import UserInfoDialog from './components/UserInfoDialog.vue'
 
 
 defineOptions({ name: 'PcCom2201' })
@@ -33,6 +35,14 @@ const navItems = [
 ]
 
 const dialog = useDialog()
+
+/**
+ * 패턴 A(CLAUDE.md §3) — 컴포저블을 이 화면에서 한 번만 만들어 provide 한다.
+ * 사용자 정보 팝업(PC-COM-2202)은 UserManageKey 로 inject 해 같은 상태를 본다.
+ */
+const store = { ...useUserAuthManage(), ...useUserDetail() }
+provide(UserManageKey, store)
+
 const {
   deptTree,
   selectedDept,
@@ -44,27 +54,29 @@ const {
   searchField,
   searchKeyword,
   users,
+  selectedUser,
   searchUsers,
   selectUser,
   authKeyword,
   auths,
   checkedAuthCodes,
-} = useUserAuthManage()
+  openUserDetail,
+} = store
 
 const treeRef = ref<InstanceType<typeof TreeView> | null>(null)
 
 /* ── 부서 트리 ────────────────────────────── */
 /** TreeView 는 범용 TreeNode 를 넘기므로 이 화면의 DeptNode 로 좁혀 받는다 */
-function onDeptClick(node: TreeNode) {
-  selectedDept.value = node as DeptNode
+function onDeptSelected(node: TreeNode | null) {
+  selectedDept.value = node as DeptNode | null
 }
 
 /**
  * 추가한 노드의 입력창에서 이름을 확정했을 때.
- * 이름을 안 적고 빠져나가면 빈 노드가 지워지므로 그때는 저장 안내를 하지 않는다.
+ * 이름을 안 적고 빠져나가면 방금 만든 빈 노드는 composable 이 지운다.
  */
 function onDeptRename(node: TreeNode, name: string) {
-  if (commitDeptName(node as DeptNode, name)) toast.success('저장되었습니다.')
+  commitDeptName(node as DeptNode, name)
 }
 
 function onDeptRenameCancel(node: TreeNode) {
@@ -96,12 +108,13 @@ const userColumns: TabulatorGridColumn[] = [
     title: '사용자ID',
     field: 'userId',
     hozAlign: 'center',
-    // 버튼 텍스트가 곧 셀 값이다 — 눌러서 그 사용자의 권한을 불러온다
+    // 버튼 텍스트가 곧 셀 값이다 — 눌러서 그 사용자의 정보 팝업(PC-COM-2202)을 연다.
+    // 권한 목록은 행을 골랐을 때 채워진다(select-mode="single").
     cellType: 'button',
     buttonVariant: 'link',
     buttonSize: 'xxs',
     buttonLabel: (row) => String((row as UserRow).userId),
-    onButtonClick: (row) => selectUser(row as UserRow),
+    onButtonClick: (row) => openUserDetail(row as UserRow),
   },
   { title: '계급', field: 'rank', hozAlign: 'center' },
   { title: '성명', field: 'name', hozAlign: 'center' },
@@ -130,10 +143,21 @@ function onAuthSelectionChanged(selected: any[]) {
   checkedAuthCodes.value = selected.map((row) => (typeof row.getData === 'function' ? row.getData() : row) as AuthRow).map((auth) => auth.code)
 }
 
+/**
+ * 고른 사용자가 이미 가진 권한을 그리드 체크로 보여준다.
+ * 그리드가 다시 그려진 뒤에 맞춰야 해서 nextTick 을 기다리고,
+ * 권한 조회어로 목록이 좁혀질 때도 체크가 남도록 auths 변화에도 다시 맞춘다.
+ */
+async function syncAuthChecks() {
+  await nextTick()
+  authGridRef.value?.selectWhere((row) => checkedAuthCodes.value.includes((row as AuthRow).code))
+}
+
+watch([selectedUser, auths], syncAuthChecks)
+
 /* ── 저장 ─────────────────────────────────── */
 function onSave() {
   // TODO: API 연동 (선택 사용자 + checkedAuthCodes 전송)
-  toast.success('저장되었습니다.')
 }
 
 // 사이드메뉴(시스템 관리 LNB) 설정 — 활성 항목은 라우트 경로로 자동 매칭된다
@@ -186,10 +210,11 @@ useBottomTabSetup({
           <TreeView
             ref="treeRef"
             v-model="deptTree"
+            :selected="selectedDept"
             show-icon
             :editing-node="editingDept"
             :draggable="false"
-            @node-click="onDeptClick"
+            @update:selected="onDeptSelected"
             @node-rename="onDeptRename"
             @node-rename-cancel="onDeptRenameCancel"
           />
@@ -237,7 +262,7 @@ useBottomTabSetup({
           :data="users"
           select-mode="single"
           height="100%"
-          placeholder="등록된 사용자가 없습니다"
+          placeholder="좌측에서 부서를 선택해 주세요"
           show-pagination
           :items-per-page="10"
           @row-selection-changed="onUserSelectionChanged"
@@ -279,4 +304,7 @@ useBottomTabSetup({
       </LayoutPanel>
     </template>
   </LayoutSplite>
+
+  <!-- 사용자목록의 아이디를 누르면 열린다(PC-COM-2202) -->
+  <UserInfoDialog />
 </template>

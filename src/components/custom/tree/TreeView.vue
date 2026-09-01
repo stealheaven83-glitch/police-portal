@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, toRaw, watch, type HTMLAttributes } from 'vue'
+import {
+  computed,
+  nextTick,
+  ref,
+  toRaw,
+  watch,
+  type DirectiveBinding,
+  type HTMLAttributes,
+} from 'vue'
 import { Draggable } from '@he-tree/vue'
 import '@he-tree/vue/style/default.css'
 import { cn } from '@/lib/utils'
@@ -104,6 +112,18 @@ function onSelect(node: TreeNode, stat: TreeStat) {
   emit('node-click', node, stat)
 }
 
+/*
+ * he-tree 가 만드는 바깥 노드(.tree-node)에는 클래스를 넣을 prop 이 없다.
+ * 선택된 행에서 그 노드를 직접 잡아 active 를 붙여, 들여쓰기까지 포함한 한 줄 전체가
+ * 강조되게 한다. 슬롯과 .tree-node 사이에 .tree-node-inner 가 한 겹 더 있어서
+ * parentElement 가 아니라 closest 로 올라간다.
+ * updated 에서도 다시 맞춰야 접기/펼치기로 다시 그려져도 유지된다.
+ */
+function toggleActiveNode(el: HTMLElement, binding: DirectiveBinding<boolean>) {
+  el.closest('.tree-node')?.classList.toggle('active', Boolean(binding.value))
+}
+const vActiveNode = { mounted: toggleActiveNode, updated: toggleActiveNode }
+
 /* ── 이름 입력 ─────────────────────────── */
 const editingName = ref('')
 const editInputRef = ref<any>(null)
@@ -177,7 +197,11 @@ defineExpose({
       :each-draggable="() => draggable"
     >
       <template #default="{ node, stat }">
-        <div class="treeRow" :class="{ 'is-selected': selected === node }">
+        <div
+          class="treeRow"
+          :class="{ 'is-selected': selected === node }"
+          v-active-node="selected === node"
+        >
           <!--
             접기/펼치기는 실제 button 이어야 키보드로 조작할 수 있다.
             하위가 없는 노드는 접을 게 없어 동그라미 대신 폴더가 이 자리를 쓰고,
@@ -345,6 +369,11 @@ defineExpose({
 
 /* 선택된 노드는 색으로 구분한다 */
 .treeRow.is-selected {
+  background: var(--Surface-primary);
+}
+
+/* 강조는 들여쓰기 영역까지 덮어야 해서 he-tree 의 바깥 노드에도 같은 배경을 준다 */
+:deep(.tree-node.active) {
   background: var(--Surface-primary);
 }
 
