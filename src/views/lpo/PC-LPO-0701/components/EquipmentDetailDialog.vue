@@ -10,7 +10,7 @@ import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
 import { EquipmentListKey, vehicleTypeLabel, carTypeOptions, locationOptions, info112Options } from '../composable/PC-LPO-0701'
 import styles from '@/components/custom/info-table/InfoTable.module.css'
-import screenStyles from '../style/PC-LPO-0701.module.css'
+
 
 const store = inject(EquipmentListKey)!
 const { detail, detailDialogOpen, saveDetail, deleteDetail, openVehicle112Dialog } = store
@@ -120,7 +120,7 @@ function onSave() {
       </InfoField>
 
       <InfoField label="임시차량" full>
-        <div :class="screenStyles.tempVehicleRow">
+        <div class="group-gap3">
           <InputField2 size="sm" class="!space-y-0 flex-1" readonly />
           <Button type="button" variant="secondary" size="sm" @click="openVehicle112Dialog">차량조회</Button>
         </div>

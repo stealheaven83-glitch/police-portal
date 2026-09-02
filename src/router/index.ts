@@ -594,7 +594,33 @@ const router = createRouter({
             component: () => import('../views/com/PC-COM-2201/PC-COM-2201.vue'),
             meta: {
                 layout: 'WorkLayout',
-                title: '사용자 권한관리'
+                title: '사용자 권한관리',
+                // PC-COM-2202(사용자정보 팝업)는 이 컴포넌트 안의 팝업이라 같은 파일을 가리킨다 —
+                // screenGroup 을 공통으로 줘서 두 화면ID 사이를 오갈 때 리마운트되지 않게 한다
+                // (PC-COM-2204/2205/2207 과 동일 패턴, Layout.vue 참고).
+                screenGroup: 'PC-COM-2201',
+            }
+        },
+        {
+            // PC-COM-2201 과 같은 파일을 가리킨다 — 사용자정보 팝업(PC-COM-2202)은 사용자목록에서
+            // 아이디를 눌러야 그 행 값으로 채워지는 비대칭 팝업이라(CLAUDE.md §3) URL 만으로는 열지
+            // 않는다. 이 경로로 들어오면 사용자 권한관리 목록이 뜨고, 아이디를 누르면 팝업이 열린다.
+            path: '/views/com/PC-COM-2202',
+            name: 'PC-COM-2202',
+            component: () => import('../views/com/PC-COM-2201/PC-COM-2201.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '사용자 정보',
+                screenGroup: 'PC-COM-2201',
+            }
+        },
+        {
+            path: '/views/com/PC-COM-2206',
+            name: 'PC-COM-2206',
+            component: () => import('../views/com/PC-COM-2206/PC-COM-2206.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '코드 관리'
             }
         },
         {

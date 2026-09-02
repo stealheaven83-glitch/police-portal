@@ -6,12 +6,12 @@
 }
 
 /* 시작일 ~ 종료일처럼 한 덩어리로 붙어 다녀야 하는 입력 묶음 */
-.inlineGroup {
+/* .inlineGroup {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.8rem;
-}
+} */
 
 /* '가로 [  ] px  세로 [  ] px' 처럼 라벨·입력·단위가 한 줄로 이어지는 묶음 */
 .unitField {

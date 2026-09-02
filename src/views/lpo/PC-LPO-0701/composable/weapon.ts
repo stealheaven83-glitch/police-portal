@@ -117,7 +117,8 @@ export function useWeaponDetail(allRows: Ref<EquipmentListRow[]>) {
 
   function addWeaponHandler() {
     const nextId = weaponDetail.handlers.length ? Math.max(...weaponDetail.handlers.map((h) => h.id)) + 1 : 1
-    weaponDetail.handlers.push({ id: nextId, name: '' })
+    // push 로 제자리 수정하면 TabulatorGrid 의 :data watch(참조 비교)가 변경을 못 잡는다 — 재할당한다
+    weaponDetail.handlers = [...weaponDetail.handlers, { id: nextId, name: '' }]
   }
 
   function saveWeaponDetail() {

@@ -104,7 +104,7 @@ export const systemAdminMenu: SideMenuConfig = {
         { name: '사용자 권한관리', path: '/views/com/PC-COM-2201' },
         { name: '메뉴관리', path: '/views/com/PC-COM-2203' },
         { name: '권한관리', path: '/views/com/PC-COM-2204' },
-        { name: '코드관리' },
+        { name: '코드관리', path: '/views/com/PC-COM-2206' },
       ],
     },
     // 하위가 없는 1뎁스는 그 자체가 링크다(시안에서도 +/- 표시가 없다)

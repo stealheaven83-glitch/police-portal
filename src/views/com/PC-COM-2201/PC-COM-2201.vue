@@ -278,7 +278,7 @@ useBottomTabSetup({
           :data="users"
           select-mode="single"
           height="100%"
-          placeholder="좌측에서 부서를 선택해 주세요"
+          placeholder="등록된 사용자가 없습니다."
           show-pagination
           :items-per-page="10"
           @row-selection-changed="onUserSelectionChanged"
@@ -306,7 +306,7 @@ useBottomTabSetup({
           />
         </template>
 
-        <!-- 맨 앞 체크박스 열과 전체선택 헤더는 select-mode="checkbox" 가 만들어준다 -->
+       
         <TabulatorGrid
           ref="authGridRef"
           class="flex-1"
@@ -314,7 +314,7 @@ useBottomTabSetup({
           :data="auths"
           select-mode="checkbox"
           height="100%"
-          placeholder="조회된 권한이 없습니다"
+          placeholder="등록된 그룹이 없습니다."
           @row-selection-changed="onAuthSelectionChanged"
         />
       </LayoutPanel>

@@ -4,17 +4,15 @@ import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { EquipmentListKey } from '../composable/PC-LPO-0701'
+import { useDialogGridRedraw } from '../composable/dialogGridRedraw'
 
 const store = inject(EquipmentListKey)!
 const { maintenanceDialogOpen, maintenanceTitle, maintenanceRows, addMaintenanceRow, saveMaintenanceHistory } = store
 
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 
-/** 처음 그려질 때는 세로 스크롤바가 생기기 전 폭 기준으로 fitColumns 가 계산되어
- *  스크롤바만큼 오른쪽에 빈 공간이 남는다. 스크롤바가 실제로 반영된 뒤 한 번 더 그리게 한다. */
-function onTableBuilt() {
-  requestAnimationFrame(() => gridRef.value?.redraw(true))
-}
+// 팝업 등장 애니메이션(scale) 중에 컬럼 폭이 계산돼 오른쪽에 빈 칸이 남는 것을 막는다
+const { onTableBuilt } = useDialogGridRedraw(gridRef)
 
 function onPrint() {
   window.print()
@@ -48,7 +46,6 @@ const maintenanceGridColumns: TabulatorGridColumn[] = [
   >
     <TabulatorGrid
       ref="gridRef"
-      class="w-full"
       :columns="maintenanceGridColumns"
       v-model:data="maintenanceRows"
       height="320px"

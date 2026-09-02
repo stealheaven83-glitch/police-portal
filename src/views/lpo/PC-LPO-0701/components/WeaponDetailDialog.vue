@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { inject } from 'vue'
+import { inject, ref } from 'vue'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
@@ -7,11 +7,38 @@ import InputField2 from '@/components/custom/input/InputField2.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { EquipmentListKey, gunTypeOptions, gunSerialOptions, locationOptions } from '../composable/PC-LPO-0701'
+import { useDialogGridRedraw } from '../composable/dialogGridRedraw'
 import styles from '@/components/custom/info-table/InfoTable.module.css'
 
 const store = inject(EquipmentListKey)!
 const { weaponDetail, weaponDetailDialogOpen, addWeaponHandler, saveWeaponDetail, deleteWeaponDetail } = store
+
+const handlerGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
+
+// 팝업 등장 애니메이션(scale) 중에 컬럼 폭이 계산돼 오른쪽에 빈 칸이 남는 것을 막는다
+const { onTableBuilt } = useDialogGridRedraw(handlerGridRef)
+
+/**
+ * 담당자 목록 그리드.
+ * "번호"는 저장되는 값이 아니라 화면상의 순번이라 formatter 로 행 위치에서 계산한다
+ * (담당자추가/삭제로 행이 바뀌어도 1부터 다시 매겨진다).
+ */
+const handlerColumns: TabulatorGridColumn[] = [
+  {
+    title: '번호',
+    width: 70,
+    hozAlign: 'center',
+    formatter: (cell: any) => String(cell.getRow().getPosition(true)),
+  },
+  {
+    title: '담당자',
+    field: 'name',
+    cellType: 'input',
+    hozAlign: 'left',
+  },
+]
 </script>
 
 <template>
@@ -71,28 +98,22 @@ const { weaponDetail, weaponDetailDialogOpen, addWeaponHandler, saveWeaponDetail
       </InfoField>
 
     </InfoTable>
-    <div class="mt-5" :class="styles.handlerTableWrap">
-      <table :class="styles.handlerTable">
-        <caption class="sr-only">담당자 목록 — 번호, 담당자</caption>
-        <thead>
-          <tr>
-            <th scope="col">번호</th>
-            <th scope="col">담당자</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(handler, index) in weaponDetail.handlers" :key="handler.id">
-            <td>{{ index + 1 }}</td>
-            <td>
-              <InputField2 v-model="handler.name" size="sm" class="!space-y-0" placeholder="담당자명 입력" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div :class="styles.handlerActions">
-    </div>
-    
+
+    <!--
+      담당자(휴대자) 목록. 하단 '담당자추가' 버튼으로 행이 늘어난다.
+      .grid-wrap 은 police-style.css 의 공통 클래스(그리드 위 여백).
+      height 를 비워 행 수만큼 표가 늘어나게 한다(시안처럼 남는 빈 행이 없다).
+    -->
+    <TabulatorGrid
+      ref="handlerGridRef"
+      class="grid-wrap"
+      :columns="handlerColumns"
+      v-model:data="weaponDetail.handlers"
+      height=""
+      placeholder="등록된 담당자가 없습니다"
+      @table-built="onTableBuilt"
+    />
+
     <template #footer>
       <Button type="button" variant="tertiary2" size="md" @click="weaponDetailDialogOpen = false">닫기</Button>
       <Button type="button" variant="tertiary2" size="md" :disabled="weaponDetail.id == null" @click="deleteWeaponDetail">삭제</Button>

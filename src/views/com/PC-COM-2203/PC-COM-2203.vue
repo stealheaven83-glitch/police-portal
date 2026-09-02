@@ -1,3 +1,73 @@
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="메뉴 관리" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+
+  <LayoutSplite :count="2" :widths="[24, 76]" >
+    <!-- ── 메뉴 트리 ────────────────────────── -->
+    <template #layout-1>
+      <LayoutPanel title="메뉴" no-padding>
+        <div class="btn-tree">
+          <Button type="button" variant="text" size="sm" @click="treeRef?.openAll()">
+            <img src="/portal/asset/images/icon/ico_plus.svg" alt="" aria-hidden="true" />
+            모두 확장
+          </Button>
+          <Button type="button" variant="text" size="sm" @click="treeRef?.closeAll()">
+            <img src="/portal/asset/images/icon/ico_minus.svg" alt="" aria-hidden="true" />
+            모두 축소
+          </Button>
+        </div>
+
+        <!-- 메뉴가 깊고 이름이 길어 이 패널 안에서만 스크롤한다 -->
+        <div class="tree-scroll">
+          <TreeView
+            ref="treeRef"
+            v-model="menuTree"
+            :selected="selectedMenu"
+            :draggable="false"
+            show-icon
+            @update:selected="onMenuSelected"
+          />
+        </div>
+      </LayoutPanel>
+    </template>
+
+    <!-- ── 메뉴 편집 ────────────────────────── -->
+    <template #layout-2>
+      <LayoutPanel title="메뉴 편집">
+        <template #actions>
+          <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelected">
+            선택삭제
+          </Button>
+          <Button type="button" variant="secondary" size="sm" @click="onAdd">추가</Button>
+          <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
+        </template>
+
+        <!--
+          좌측 트리에서 메뉴를 골라야 목록이 채워진다(진입 직후에는 비어 있다).
+          맨 앞 체크박스 열과 전체선택 헤더는 select-mode="checkbox" 가 만들어준다.
+        -->
+        <TabulatorGrid
+          ref="gridRef"
+          class="flex-1"
+          :columns="columns"
+          :data="rows"
+          select-mode="checkbox"
+          height="100%"
+          placeholder="좌측에서 메뉴를 선택해 주세요"
+          @row-selection-changed="selectedCount = $event.length"
+        />
+      </LayoutPanel>
+    </template>
+  </LayoutSplite>
+</template>
+
+
 <script setup lang="ts">
 import { ref } from 'vue'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
@@ -79,7 +149,7 @@ async function onDeleteSelected() {
   // 되돌릴 수 없는 동작이라 지우기 전에 한 번 묻는다
   const result = await dialog.confirm({
     title: '선택한 메뉴를 삭제하시겠습니까?',
-    description: '삭제한 메뉴는 되돌릴 수 없습니다.',
+
     btnOk: '확인',
     btnCancel: '취소',
   })
@@ -114,71 +184,3 @@ useBottomTabSetup({
 })
 </script>
 
-<template>
-  <PageHeader>
-    <template #left>
-      <PageTitle title="메뉴 관리" />
-    </template>
-    <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
-  </PageHeader>
-
-  <LayoutSplite :count="2" :widths="[24, 76]" >
-    <!-- ── 메뉴 트리 ────────────────────────── -->
-    <template #layout-1>
-      <LayoutPanel title="메뉴" no-padding>
-        <div class="btn-tree">
-          <Button type="button" variant="text" size="sm" @click="treeRef?.openAll()">
-            <img src="/portal/asset/images/icon/ico_plus.svg" alt="" aria-hidden="true" />
-            모두 확장
-          </Button>
-          <Button type="button" variant="text" size="sm" @click="treeRef?.closeAll()">
-            <img src="/portal/asset/images/icon/ico_minus.svg" alt="" aria-hidden="true" />
-            모두 축소
-          </Button>
-        </div>
-
-        <!-- 메뉴가 깊고 이름이 길어 이 패널 안에서만 스크롤한다 -->
-        <div class="tree-scroll">
-          <TreeView
-            ref="treeRef"
-            v-model="menuTree"
-            :selected="selectedMenu"
-            :draggable="false"
-            show-icon
-            @update:selected="onMenuSelected"
-          />
-        </div>
-      </LayoutPanel>
-    </template>
-
-    <!-- ── 메뉴 편집 ────────────────────────── -->
-    <template #layout-2>
-      <LayoutPanel title="메뉴 편집">
-        <template #actions>
-          <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelected">
-            선택삭제
-          </Button>
-          <Button type="button" variant="secondary" size="sm" @click="onAdd">추가</Button>
-          <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
-        </template>
-
-        <!--
-          좌측 트리에서 메뉴를 골라야 목록이 채워진다(진입 직후에는 비어 있다).
-          맨 앞 체크박스 열과 전체선택 헤더는 select-mode="checkbox" 가 만들어준다.
-        -->
-        <TabulatorGrid
-          ref="gridRef"
-          class="flex-1"
-          :columns="columns"
-          :data="rows"
-          select-mode="checkbox"
-          height="100%"
-          placeholder="좌측에서 메뉴를 선택해 주세요"
-          @row-selection-changed="selectedCount = $event.length"
-        />
-      </LayoutPanel>
-    </template>
-  </LayoutSplite>
-</template>

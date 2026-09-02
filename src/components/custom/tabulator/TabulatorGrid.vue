@@ -389,6 +389,35 @@ function watchVScrollBorder() {
 }
 
 /* ------------------------------------------------------------------ *
+ * 컨테이너 폭이 바뀌면 컬럼 폭을 다시 계산
+ * ------------------------------------------------------------------ */
+/*
+ * Tabulator 의 autoResize 는 renderVertical 이 'virtual' 일 때만 ResizeObserver 를 달고,
+ * 그 밖에는 window resize 만 듣는다. 이 그리드는 행 겹침 때문에 'basic' 을 쓰므로(마운트
+ * 옵션 참고) LayoutSplit 스플리터 드래그처럼 "창 크기는 그대로인데 컨테이너만 넓어지는"
+ * 경우 fitColumns 가 옛 폭 그대로 남아 오른쪽에 빈칸이 생긴다. 직접 관찰해서 다시 그린다.
+ */
+let widthObserver: ResizeObserver | null = null
+let widthRedrawFrame = 0
+
+function watchContainerWidth() {
+  const root = hostEl.value
+  if (!root) return
+  let lastWidth = Math.round(root.clientWidth)
+
+  widthObserver = new ResizeObserver((entries) => {
+    const width = Math.round(entries[0].contentRect.width)
+    // 폭이 그대로면(세로 스크롤바 토글 등) 다시 그릴 이유가 없다. 0 은 숨겨진 상태다.
+    if (!width || width === lastWidth) return
+    lastWidth = width
+    // 드래그 중에는 매 프레임 들어오므로 한 프레임에 한 번만 그린다
+    cancelAnimationFrame(widthRedrawFrame)
+    widthRedrawFrame = requestAnimationFrame(() => table?.redraw(true))
+  })
+  widthObserver.observe(root)
+}
+
+/* ------------------------------------------------------------------ *
  * 일괄 선택 체크박스: custom/checkbox 를 셀/헤더에 실제 마운트해
  * Tabulator 의 행 선택 상태와 양방향으로 동기화
  * ------------------------------------------------------------------ */
@@ -826,6 +855,7 @@ onMounted(() => {
 
   table.on('tableBuilt', () => {
     watchVScrollBorder()
+    watchContainerWidth()
     emit('table-built', table)
   })
 
@@ -902,6 +932,9 @@ onBeforeUnmount(() => {
   table = null
   scrollBorderObserver?.disconnect()
   scrollBorderObserver = null
+  widthObserver?.disconnect()
+  widthObserver = null
+  cancelAnimationFrame(widthRedrawFrame)
 })
 
 /* ------------------------------------------------------------------ *
