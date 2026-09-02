@@ -211,48 +211,6 @@
   min-width: 0;
 }
 
-.vehicleTableWrap {
-  max-height: 32rem;
-  overflow-y: auto;
-  border-top: 2px solid var(--Text-body_0, #1e2124);
-}
-
-.vehicleTable {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.vehicleTable th,
-.vehicleTable td {
-  padding: 1rem 1.2rem;
-  border-bottom: 1px solid var(--Border_gray03, #e6e8ea);
-  font-size: 1.4rem;
-  text-align: center;
-  color: var(--Text-body_1, #33363d);
-}
-
-.vehicleTable th {
-  position: sticky;
-  top: 0;
-  background: var(--Background-gray01, #f5f6f8);
-  color: var(--Text-body_0, #1e2124);
-  font-weight: 600;
-}
-
-.vehicleRow {
-  cursor: pointer;
-}
-
-.vehicleRow:hover {
-  background: var(--Surface-primary, #eef4fb);
-}
-
-.vehicleRowSelected {
-  background: var(--Surface-primary, #eef4fb);
-  color: var(--Base-primary, #0054a6);
-  font-weight: 600;
-}
-
 /* -------------------------------------------------------------- 반응형 */
 @media (max-width: 48rem) {
   .toolbar {
@@ -271,47 +229,6 @@
   min-width: 0;
 }
 
-.vehicleTableWrap {
-  max-height: 32rem;
-  overflow-y: auto;
-  border-top: 2px solid var(--Text-body_0);
-}
-
-.vehicleTable {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.vehicleTable th,
-.vehicleTable td {
-  padding: 1rem 1.2rem;
-  border-bottom: 1px solid var(--Border_gray03);
-  font-size: 1.4rem;
-  text-align: center;
-  color: var(--Text-body_1, #33363d);
-}
-
-.vehicleTable th {
-  position: sticky;
-  top: 0;
-  background: var(--Background-gray01);
-  color: var(--Text-body_0);
-  font-weight: 600;
-}
-
-.vehicleRow {
-  cursor: pointer;
-}
-
-.vehicleRow:hover {
-  background: var(--Surface-primary);
-}
-
-.vehicleRowSelected {
-  background: var(--Surface-primary);
-  color: var(--Base-primary);
-  font-weight: 600;
-}
 .info-table-txt{
   margin-left:0.4rem;
   line-height:1.5;

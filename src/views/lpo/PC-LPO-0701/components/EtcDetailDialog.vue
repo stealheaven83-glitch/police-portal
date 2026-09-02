@@ -15,7 +15,7 @@ const { etcDetail, etcDetailDialogOpen, saveEtcDetail, deleteEtcDetail } = store
 
 <template>
   <GenericDialog2 v-model:open="etcDetailDialogOpen" title="기타 상세" :size="800" :show-close-button="true">
-    <p :class="styles.legend">• 필수 입력 항목</p>
+    <p :class="styles.legend">필수 입력 항목</p>
 
     <InfoTable :columns="2" popup>
       <InfoField for="etc-type">
@@ -34,7 +34,7 @@ const { etcDetail, etcDetailDialogOpen, saveEtcDetail, deleteEtcDetail } = store
       
       <InfoField />
 
-      <InfoField label="비고" full layout="column">
+      <InfoField label="비고" full>
         <TextareaField v-model="etcDetail.note" class="w-full !space-y-0" textarea-class="w-full" :height="90" />
       </InfoField>
     </InfoTable>

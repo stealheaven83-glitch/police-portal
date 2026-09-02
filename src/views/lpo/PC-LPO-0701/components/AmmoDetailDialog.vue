@@ -18,7 +18,7 @@ const unitLabel = computed(() => ammoUnitOptions.find((o) => o.value === ammoDet
 
 <template>
   <GenericDialog2 v-model:open="ammoDetailDialogOpen" title="탄약" :size="800" :show-close-button="true">
-    <p :class="styles.legend">• 필수 입력 항목</p>
+    <p :class="styles.legend">필수 입력 항목</p>
 
     <InfoTable :columns="2" popup>
       <InfoField for="ammo-management-name">
@@ -53,7 +53,7 @@ const unitLabel = computed(() => ammoUnitOptions.find((o) => o.value === ammoDet
         </div>
       </InfoField>
 
-      <InfoField label="비고" full layout="column">
+      <InfoField label="비고" full>
         <TextareaField v-model="ammoDetail.note" class="w-full !space-y-0" textarea-class="w-full" :height="90" />
       </InfoField>
     </InfoTable>
