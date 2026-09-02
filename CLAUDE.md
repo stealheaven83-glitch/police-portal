@@ -492,26 +492,6 @@ const ok = await dialog.confirm({ title: '저장 하시겠습니까?', btnOk: '�
 화면의 근거는 Figma 하나다. PPT 기획서·스크린샷을 Figma 와 나란히 놓으면 어느 쪽이 최신인지
 판단이 갈려서 오히려 혼동을 준다. **사용자가 주는 Figma node URL 로 작업한다.**
 
-### 참고: xlsx·pptx·docx 읽기 (IA 목록 등)
-`ia-list.xlsx` 같은 자료를 읽을 일이 있을 때를 위한 메모다.
-
-**이 파일들은 전부 zip이라 압축을 풀어 XML을 직접 읽으면 된다.** 의존성 필요 없다.
-- ❌ `python` — 이 환경에선 Windows 스토어 스텁이라 실행 안 됨
-- ❌ `npx xlsx-cli` — 빈 출력만 나옴
-- ✅ `cp f.xlsx t.zip && unzip -q t.zip -d x` 후 XML 파싱. 구현 예: `docs/parse-ia.js`
-
-| 파일 | 어디를 읽나 |
-|---|---|
-| **xlsx** | `x/xl/worksheets/sheet1.xml` + `x/xl/sharedStrings.xml`. 문자열 셀은 `t="s"`이고 `<v>`가 sharedStrings 인덱스 |
-| **pptx** | `x/ppt/slides/slideN.xml`의 `<a:t>`가 텍스트. `x/ppt/media/`에 **원본 해상도 이미지**가 그대로 들어있어 Read 로 볼 수 있다 |
-
-⚠ xlsx 함정: 빈 셀은 `<c r="B4" s="5"/>` 자기완결형이다. 정규식을 `<c ...>([\s\S]*?)</c>` 로만
-쓰면 다음 셀의 `</c>`까지 삼켜서 **값이 엉뚱한 행/열에 박힌다**(실제로 겪음).
-`(?:\/>|>([\s\S]*?)<\/c>)` 로 분기해야 한다. 병합 셀은 `<mergeCell ref="A1:A5">`를 읽어
-좌상단 값을 범위 전체에 복사한다(Depth 트리 컬럼 복원에 필요).
-
-(PDF만 못 읽는다 — poppler 미설치. PDF는 이미지로 요청한다.)
-
 ### 화면ID가 특정되지 않으면 **반드시 물어본다**
 사용자가 화면ID를 직접 주면 그게 정답이다. Figma node URL만 받았으면 프레임 이름
 (`PC_지역경찰_06_장비관리_03_무기` 형식)으로 `screen-id-map.md`에서 화면ID를 찾는다(`grep`).
