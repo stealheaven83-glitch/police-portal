@@ -7,6 +7,7 @@ import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
 import { Button } from '@/components/custom/button'
+import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
 import { Checkbox } from '@/components/custom/checkbox'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
@@ -218,435 +219,437 @@ useBottomTabSetup({
     </div>
   </div>
 
-  <!-- ── 부서정보 ─────────────────────────────────────────── -->
-  <section class="pc-lpo-0601-section" aria-labelledby="dept-info-heading">
-    <h2 id="dept-info-heading" class="pc-lpo-0601-section-title">부서정보</h2>
+  <ScrollWrapper>
+    <!-- ── 부서정보 ─────────────────────────────────────────── -->
+    <section class="pc-lpo-0601-section" aria-labelledby="dept-info-heading">
+      <h2 id="dept-info-heading" class="pc-lpo-0601-section-title">부서정보</h2>
 
-    <InfoTable :columns="3">
-      <InfoField label="부서명">{{ department.name }}</InfoField>
+      <InfoTable :columns="3">
+        <InfoField label="부서명">{{ department.name }}</InfoField>
 
-      <InfoField label="개소년도" for="dept-opened-year">
-        <DatePicker
-          id="dept-opened-year"
-          v-model="department.openedYear"
-          size="sm"
-          class="!space-y-0 flex-1"
-          input-class="w-full"
-        />
-      </InfoField>
-
-      <InfoField label="급지">
-        <div class="group-gap1">
-          <InputField2
-            v-model="department.grade"
-            label="급지"
-            label-class="blind"
+        <InfoField label="개소년도" for="dept-opened-year">
+          <DatePicker
+            id="dept-opened-year"
+            v-model="department.openedYear"
             size="sm"
-            class="!space-y-0"
-            input-class="w-[8rem]"
+            class="!space-y-0 flex-1"
+            input-class="w-full"
           />
-          <InputField2
-            v-model="department.quota"
-            label="정원"
-            label-position="left"
-            size="sm"
-            class="!space-y-0"
-            input-class="w-[8rem]"
-          />
-          <span class="pc-lpo-0601-inline-text">경찰관 현원 {{ officerHeadcount }}명</span>
-        </div>
-      </InfoField>
+        </InfoField>
 
-      <InfoField label="소재지 주소" :row-span="2">
-        <AddressInput
-          v-model="department.address"
-          v-model:detail="department.addressDetail"
-          size="sm"
-          @search="addressStubOpen = true"
-        />
-      </InfoField>
-
-      <InfoField label="소재지" for="dept-location">
-        <SelectField
-          id="dept-location"
-          v-model="department.location"
-          :options="locationOptions"
-          placeholder="선택"
-          size="sm"
-          class="!space-y-0 flex-1"
-          trigger-class="w-full"
-        />
-      </InfoField>
-
-      <InfoField label="일반전화" for="dept-general-phone">
-        <InputField2
-          id="dept-general-phone"
-          v-model="department.generalPhone"
-          size="sm"
-          class="!space-y-0 flex-1"
-          input-class="w-full"
-        />
-      </InfoField>
-
-      <InfoField label="경비전화" for="dept-security-phone">
-        <InputField2
-          id="dept-security-phone"
-          v-model="department.securityPhone"
-          size="sm"
-          class="!space-y-0 flex-1"
-          input-class="w-full"
-        />
-      </InfoField>
-
-      <InfoField label="경비팩스" for="dept-security-fax">
-        <InputField2
-          id="dept-security-fax"
-          v-model="department.securityFax"
-          size="sm"
-          class="!space-y-0 flex-1"
-          input-class="w-full"
-        />
-      </InfoField>
-    </InfoTable>
-
-    <InfoTable :columns="4" class="pc-lpo-0601-table-gap">
-      <InfoField label="근무형태" for="dept-work-type">
-        <SelectField
-          id="dept-work-type"
-          v-model="department.workType"
-          :options="workTypeOptions"
-          placeholder="선택"
-          size="sm"
-          class="!space-y-0 flex-1"
-          trigger-class="w-full"
-        />
-      </InfoField>
-
-      <InfoField label="근무주기" for="dept-work-cycle">
-        <InputField2
-          id="dept-work-cycle"
-          v-model="department.workCycle"
-          size="sm"
-          class="!space-y-0 flex-1"
-          input-class="w-full"
-        />
-      </InfoField>
-
-      <InfoField label="주간전종인원" for="dept-day-dedicated">
-        <InputField2
-          id="dept-day-dedicated"
-          v-model="department.dayDedicated"
-          size="sm"
-          class="!space-y-0 flex-1"
-          input-class="w-full"
-        />
-      </InfoField>
-
-      <InfoField label="야간전종인원" for="dept-night-dedicated">
-        <InputField2
-          id="dept-night-dedicated"
-          v-model="department.nightDedicated"
-          size="sm"
-          class="!space-y-0 flex-1"
-          input-class="w-full"
-        />
-      </InfoField>
-    </InfoTable>
-
-    <InfoTable :columns="2" class="pc-lpo-0601-table-gap">
-      <InfoField label="유연 파출소 여부">
-        <div class="group-gap1">
-          <Checkbox v-model="department.flexibleUse" aria-label="유연 파출소 여부 사용" />
-          <MultiCheckSelect
-            v-model="department.flexibleOffices"
-            :options="integratedOfficeOptions"
-            :disabled="!department.flexibleUse"
-            placeholder="통합운영 관서"
-            group-label="통합운영 관서"
-            size="sm"
-            trigger-class="w-[16.4rem]"
-            aria-label="통합운영 관서"
-          />
-          <span class="pc-lpo-0601-inline-text">지역파출소1, 지역파출소2</span>
-        </div>
-      </InfoField>
-
-      <InfoField label="중심관서">
-        <div class="group-gap1">
-          <Checkbox v-model="department.centralUse" aria-label="중심관서 사용" />
-          <MultiCheckSelect
-            v-model="department.centralOffices"
-            :options="integratedOfficeOptions"
-            :disabled="!department.centralUse"
-            placeholder="통합운영 관서"
-            group-label="통합운영 관서"
-            size="sm"
-            trigger-class="w-[16.4rem]"
-            aria-label="중심관서 통합운영 관서"
-          />
-          <span class="pc-lpo-0601-inline-text">지역파출소1, 지역파출소2</span>
-        </div>
-      </InfoField>
-
-      <InfoField label="통합관리반">
-        <div class="group-gap1">
-          <Checkbox v-model="department.integratedTeamUse" aria-label="통합관리반 사용" />
-          <MultiCheckSelect
-            v-model="department.integratedTeamOffices"
-            :options="integratedOfficeOptions"
-            :disabled="!department.integratedTeamUse"
-            placeholder="중심관서 선택"
-            group-label="중심관서 선택"
-            size="sm"
-            trigger-class="w-[16.4rem]"
-            aria-label="통합관리반 중심관서"
-          />
-        </div>
-      </InfoField>
-
-      <InfoField label="" />
-    </InfoTable>
-  </section>
-
-  <!-- ── 관내정보 ─────────────────────────────────────────── -->
-  <section class="pc-lpo-0601-section" aria-labelledby="district-info-heading">
-    <h2 id="district-info-heading" class="pc-lpo-0601-section-title">관내정보</h2>
-
-    <InfoTable :columns="2">
-      <InfoField label="관내정보">
-        <div class="pc-lpo-0601-summary-row">
-          <span class="pc-lpo-0601-inline-text">{{ district.dongSummary }}</span>
-          <Button type="button" variant="tertiary" size="xs" @click="dongDialogOpen = true">
-            행정동 수정
-          </Button>
-        </div>
-      </InfoField>
-
-      <InfoField label="인구">
-        <div class="group-gap1">
-          <span class="pc-lpo-0601-inline-text">총인구 {{ district.totalPopulation }}명</span>
-          <InputField2
-            v-model="district.male"
-            label="남자"
-            label-position="left"
-            size="sm"
-            class="!space-y-0"
-            input-class="w-[8rem]"
-          />
-          <InputField2
-            v-model="district.female"
-            label="여자"
-            label-position="left"
-            size="sm"
-            class="!space-y-0"
-            input-class="w-[8rem]"
-          />
-        </div>
-      </InfoField>
-
-      <InfoField label="가구" full>
-        <div class="pc-lpo-0601-count-row">
-          <span class="pc-lpo-0601-inline-text">가구수 {{ district.households }}</span>
-          <InputField2
-            v-model="district.detachedHouse"
-            label="단독주택수"
-            label-position="left"
-            size="sm"
-            class="!space-y-0"
-            input-class="w-[8rem]"
-          />
-          <InputField2
-            v-model="district.rowHouse"
-            label="연립주택수"
-            label-position="left"
-            size="sm"
-            class="!space-y-0"
-            input-class="w-[8rem]"
-          />
-          <InputField2
-            v-model="district.apartment"
-            label="아파트동수"
-            label-position="left"
-            size="sm"
-            class="!space-y-0"
-            input-class="w-[8rem]"
-          />
-          <InputField2
-            v-model="district.villa"
-            label="빌라동수"
-            label-position="left"
-            size="sm"
-            class="!space-y-0"
-            input-class="w-[8rem]"
-          />
-          <InputField2
-            v-model="district.oneRoom"
-            label="원룸수"
-            label-position="left"
-            size="sm"
-            class="!space-y-0"
-            input-class="w-[8rem]"
-          />
-          <InputField2
-            v-model="district.separateHouse"
-            label="벌집가수"
-            label-position="left"
-            size="sm"
-            class="!space-y-0"
-            input-class="w-[8rem]"
-          />
-          <InputField2
-            v-model="district.entertainment"
-            label="풍속업소수"
-            label-position="left"
-            size="sm"
-            class="!space-y-0"
-            input-class="w-[8rem]"
-          />
-        </div>
-      </InfoField>
-
-      <InfoField label="전체 관할구역" full>{{ district.wholeArea }}</InfoField>
-
-      <InfoField label="순찰차별 관할구역" full>
-        <TableWrapper
-          :columns="patrolColumns"
-          :items="patrolVehicles"
-          class="pc-lpo-0601-patrol-table"
-        >
-          <template #cell-vehicle="{ item }">
-            <span class="pc-lpo-0601-cell-text">{{ item.vehicle }}</span>
-          </template>
-
-          <template #cell-area="{ item }">
-            <div class="pc-lpo-0601-cell-action">
-              <span class="pc-lpo-0601-cell-text">{{ item.area }}</span>
-              <Button type="button" variant="tertiary" size="xs" @click="openMapDialog(item)">
-                관할구역 관리
-              </Button>
-            </div>
-          </template>
-
-          <template #cell-areaName="{ item }">
+        <InfoField label="급지">
+          <div class="group-gap1">
             <InputField2
-              v-model="item.areaName"
-              :label="`${item.vehicle} 순찰구역명`"
+              v-model="department.grade"
+              label="급지"
               label-class="blind"
               size="sm"
               class="!space-y-0"
-              input-class="w-full"
+              input-class="w-[8rem]"
             />
-          </template>
+            <InputField2
+              v-model="department.quota"
+              label="정원"
+              label-position="left"
+              size="sm"
+              class="!space-y-0"
+              input-class="w-[8rem]"
+            />
+            <span class="pc-lpo-0601-inline-text">경찰관 현원 {{ officerHeadcount }}명</span>
+          </div>
+        </InfoField>
 
-          <template #cell-areaDetail="{ item }">
-            <div class="pc-lpo-0601-cell-action">
-              <template v-if="item.areaDetail">
-                <span class="pc-lpo-0601-cell-text">{{ item.areaDetail }}</span>
-                <button
+        <InfoField label="소재지 주소" :row-span="2">
+          <AddressInput
+            v-model="department.address"
+            v-model:detail="department.addressDetail"
+            size="sm"
+            @search="addressStubOpen = true"
+          />
+        </InfoField>
+
+        <InfoField label="소재지" for="dept-location">
+          <SelectField
+            id="dept-location"
+            v-model="department.location"
+            :options="locationOptions"
+            placeholder="선택"
+            size="sm"
+            class="!space-y-0 flex-1"
+            trigger-class="w-full"
+          />
+        </InfoField>
+
+        <InfoField label="일반전화" for="dept-general-phone">
+          <InputField2
+            id="dept-general-phone"
+            v-model="department.generalPhone"
+            size="sm"
+            class="!space-y-0 flex-1"
+            input-class="w-full"
+          />
+        </InfoField>
+
+        <InfoField label="경비전화" for="dept-security-phone">
+          <InputField2
+            id="dept-security-phone"
+            v-model="department.securityPhone"
+            size="sm"
+            class="!space-y-0 flex-1"
+            input-class="w-full"
+          />
+        </InfoField>
+
+        <InfoField label="경비팩스" for="dept-security-fax">
+          <InputField2
+            id="dept-security-fax"
+            v-model="department.securityFax"
+            size="sm"
+            class="!space-y-0 flex-1"
+            input-class="w-full"
+          />
+        </InfoField>
+      </InfoTable>
+
+      <InfoTable :columns="4" class="pc-lpo-0601-table-gap">
+        <InfoField label="근무형태" for="dept-work-type">
+          <SelectField
+            id="dept-work-type"
+            v-model="department.workType"
+            :options="workTypeOptions"
+            placeholder="선택"
+            size="sm"
+            class="!space-y-0 flex-1"
+            trigger-class="w-full"
+          />
+        </InfoField>
+
+        <InfoField label="근무주기" for="dept-work-cycle">
+          <InputField2
+            id="dept-work-cycle"
+            v-model="department.workCycle"
+            size="sm"
+            class="!space-y-0 flex-1"
+            input-class="w-full"
+          />
+        </InfoField>
+
+        <InfoField label="주간전종인원" for="dept-day-dedicated">
+          <InputField2
+            id="dept-day-dedicated"
+            v-model="department.dayDedicated"
+            size="sm"
+            class="!space-y-0 flex-1"
+            input-class="w-full"
+          />
+        </InfoField>
+
+        <InfoField label="야간전종인원" for="dept-night-dedicated">
+          <InputField2
+            id="dept-night-dedicated"
+            v-model="department.nightDedicated"
+            size="sm"
+            class="!space-y-0 flex-1"
+            input-class="w-full"
+          />
+        </InfoField>
+      </InfoTable>
+
+      <InfoTable :columns="2" class="pc-lpo-0601-table-gap">
+        <InfoField label="유연 파출소 여부">
+          <div class="group-gap1">
+            <Checkbox v-model="department.flexibleUse" aria-label="유연 파출소 여부 사용" />
+            <MultiCheckSelect
+              v-model="department.flexibleOffices"
+              :options="integratedOfficeOptions"
+              :disabled="!department.flexibleUse"
+              placeholder="통합운영 관서"
+              group-label="통합운영 관서"
+              size="sm"
+              trigger-class="w-[16.4rem]"
+              aria-label="통합운영 관서"
+            />
+            <span class="pc-lpo-0601-inline-text">지역파출소1, 지역파출소2</span>
+          </div>
+        </InfoField>
+
+        <InfoField label="중심관서">
+          <div class="group-gap1">
+            <Checkbox v-model="department.centralUse" aria-label="중심관서 사용" />
+            <MultiCheckSelect
+              v-model="department.centralOffices"
+              :options="integratedOfficeOptions"
+              :disabled="!department.centralUse"
+              placeholder="통합운영 관서"
+              group-label="통합운영 관서"
+              size="sm"
+              trigger-class="w-[16.4rem]"
+              aria-label="중심관서 통합운영 관서"
+            />
+            <span class="pc-lpo-0601-inline-text">지역파출소1, 지역파출소2</span>
+          </div>
+        </InfoField>
+
+        <InfoField label="통합관리반">
+          <div class="group-gap1">
+            <Checkbox v-model="department.integratedTeamUse" aria-label="통합관리반 사용" />
+            <MultiCheckSelect
+              v-model="department.integratedTeamOffices"
+              :options="integratedOfficeOptions"
+              :disabled="!department.integratedTeamUse"
+              placeholder="중심관서 선택"
+              group-label="중심관서 선택"
+              size="sm"
+              trigger-class="w-[16.4rem]"
+              aria-label="통합관리반 중심관서"
+            />
+          </div>
+        </InfoField>
+
+        <InfoField label="" />
+      </InfoTable>
+    </section>
+
+    <!-- ── 관내정보 ─────────────────────────────────────────── -->
+    <section class="pc-lpo-0601-section" aria-labelledby="district-info-heading">
+      <h2 id="district-info-heading" class="pc-lpo-0601-section-title">관내정보</h2>
+
+      <InfoTable :columns="2">
+        <InfoField label="관내정보">
+          <div class="pc-lpo-0601-summary-row">
+            <span class="pc-lpo-0601-inline-text">{{ district.dongSummary }}</span>
+            <Button type="button" variant="tertiary" size="xs" @click="dongDialogOpen = true">
+              행정동 수정
+            </Button>
+          </div>
+        </InfoField>
+
+        <InfoField label="인구">
+          <div class="group-gap1">
+            <span class="pc-lpo-0601-inline-text">총인구 {{ district.totalPopulation }}명</span>
+            <InputField2
+              v-model="district.male"
+              label="남자"
+              label-position="left"
+              size="sm"
+              class="!space-y-0"
+              input-class="w-[8rem]"
+            />
+            <InputField2
+              v-model="district.female"
+              label="여자"
+              label-position="left"
+              size="sm"
+              class="!space-y-0"
+              input-class="w-[8rem]"
+            />
+          </div>
+        </InfoField>
+
+        <InfoField label="가구" full>
+          <div class="pc-lpo-0601-count-row">
+            <span class="pc-lpo-0601-inline-text">가구수 {{ district.households }}</span>
+            <InputField2
+              v-model="district.detachedHouse"
+              label="단독주택수"
+              label-position="left"
+              size="sm"
+              class="!space-y-0"
+              input-class="w-[8rem]"
+            />
+            <InputField2
+              v-model="district.rowHouse"
+              label="연립주택수"
+              label-position="left"
+              size="sm"
+              class="!space-y-0"
+              input-class="w-[8rem]"
+            />
+            <InputField2
+              v-model="district.apartment"
+              label="아파트동수"
+              label-position="left"
+              size="sm"
+              class="!space-y-0"
+              input-class="w-[8rem]"
+            />
+            <InputField2
+              v-model="district.villa"
+              label="빌라동수"
+              label-position="left"
+              size="sm"
+              class="!space-y-0"
+              input-class="w-[8rem]"
+            />
+            <InputField2
+              v-model="district.oneRoom"
+              label="원룸수"
+              label-position="left"
+              size="sm"
+              class="!space-y-0"
+              input-class="w-[8rem]"
+            />
+            <InputField2
+              v-model="district.separateHouse"
+              label="벌집가수"
+              label-position="left"
+              size="sm"
+              class="!space-y-0"
+              input-class="w-[8rem]"
+            />
+            <InputField2
+              v-model="district.entertainment"
+              label="풍속업소수"
+              label-position="left"
+              size="sm"
+              class="!space-y-0"
+              input-class="w-[8rem]"
+            />
+          </div>
+        </InfoField>
+
+        <InfoField label="전체 관할구역" full>{{ district.wholeArea }}</InfoField>
+
+        <InfoField label="순찰차별 관할구역" full>
+          <TableWrapper
+            :columns="patrolColumns"
+            :items="patrolVehicles"
+            class="pc-lpo-0601-patrol-table"
+          >
+            <template #cell-vehicle="{ item }">
+              <span class="pc-lpo-0601-cell-text">{{ item.vehicle }}</span>
+            </template>
+
+            <template #cell-area="{ item }">
+              <div class="pc-lpo-0601-cell-action">
+                <span class="pc-lpo-0601-cell-text">{{ item.area }}</span>
+                <Button type="button" variant="tertiary" size="xs" @click="openMapDialog(item)">
+                  관할구역 관리
+                </Button>
+              </div>
+            </template>
+
+            <template #cell-areaName="{ item }">
+              <InputField2
+                v-model="item.areaName"
+                :label="`${item.vehicle} 순찰구역명`"
+                label-class="blind"
+                size="sm"
+                class="!space-y-0"
+                input-class="w-full"
+              />
+            </template>
+
+            <template #cell-areaDetail="{ item }">
+              <div class="pc-lpo-0601-cell-action">
+                <template v-if="item.areaDetail">
+                  <span class="pc-lpo-0601-cell-text">{{ item.areaDetail }}</span>
+                  <button
+                    type="button"
+                    class="pc-lpo-0601-icon-button"
+                    @click="patrolDetailStubOpen = true"
+                  >
+                    <Icon name="search" :size="20" />
+                    <span class="blind">{{ item.vehicle }} 순찰구역 상세 보기</span>
+                  </button>
+                </template>
+                <Button
+                  v-else
                   type="button"
-                  class="pc-lpo-0601-icon-button"
+                  variant="tertiary"
+                  size="xs"
                   @click="patrolDetailStubOpen = true"
                 >
-                  <Icon name="search" :size="20" />
-                  <span class="blind">{{ item.vehicle }} 순찰구역 상세 보기</span>
-                </button>
-              </template>
-              <Button
-                v-else
-                type="button"
-                variant="tertiary"
-                size="xs"
-                @click="patrolDetailStubOpen = true"
-              >
-                순찰구역 등록
-              </Button>
-            </div>
-          </template>
-        </TableWrapper>
-      </InfoField>
+                  순찰구역 등록
+                </Button>
+              </div>
+            </template>
+          </TableWrapper>
+        </InfoField>
 
-      <InfoField label="지역특성 및 중점 추진사항" full for="district-features">
-        <TextareaField
-          id="district-features"
-          v-model="district.features"
-          :height="70"
-          class="!space-y-0 flex-1"
-          textarea-class="w-full"
+        <InfoField label="지역특성 및 중점 추진사항" full for="district-features">
+          <TextareaField
+            id="district-features"
+            v-model="district.features"
+            :height="70"
+            class="!space-y-0 flex-1"
+            textarea-class="w-full"
+          />
+        </InfoField>
+      </InfoTable>
+    </section>
+
+    <!-- ── 치안센터 ─────────────────────────────────────────── -->
+    <section class="pc-lpo-0601-section" aria-labelledby="safety-center-heading">
+      <div class="section-bar">
+        <h2 id="safety-center-heading">치안센터</h2>
+        <div class="section-bar-actions">
+          <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSafetyCenters">
+            선택삭제
+          </Button>
+          <Button type="button" variant="tertiary2" size="sm" @click="onAddSafetyCenter">추가</Button>
+          <button
+            type="button"
+            class="pc-lpo-0601-section-toggle"
+            :aria-expanded="safetyCenterOpen"
+            aria-controls="safety-center-panel"
+            @click="safetyCenterOpen = !safetyCenterOpen"
+          >
+            <component :is="safetyCenterOpen ? Minus : Plus" :size="20" />
+            <span class="blind">치안센터 {{ safetyCenterOpen ? '접기' : '펼치기' }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div v-show="safetyCenterOpen" id="safety-center-panel" class="grid-wrap">
+        <TabulatorGrid
+          ref="safetyCenterGridRef"
+          v-model:data="safetyCenters"
+          :columns="safetyCenterColumns"
+          select-mode="checkbox"
+          layout="fitDataFill"
+          height="228px"
+          placeholder="등록된 치안센터가 없습니다"
+          @row-selection-changed="safetyCenterSelected = $event.length"
         />
-      </InfoField>
-    </InfoTable>
-  </section>
-
-  <!-- ── 치안센터 ─────────────────────────────────────────── -->
-  <section class="pc-lpo-0601-section" aria-labelledby="safety-center-heading">
-    <div class="section-bar">
-      <h2 id="safety-center-heading">치안센터</h2>
-      <div class="section-bar-actions">
-        <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSafetyCenters">
-          선택삭제
-        </Button>
-        <Button type="button" variant="tertiary2" size="sm" @click="onAddSafetyCenter">추가</Button>
-        <button
-          type="button"
-          class="pc-lpo-0601-section-toggle"
-          :aria-expanded="safetyCenterOpen"
-          aria-controls="safety-center-panel"
-          @click="safetyCenterOpen = !safetyCenterOpen"
-        >
-          <component :is="safetyCenterOpen ? Minus : Plus" :size="20" />
-          <span class="blind">치안센터 {{ safetyCenterOpen ? '접기' : '펼치기' }}</span>
-        </button>
       </div>
-    </div>
+    </section>
 
-    <div v-show="safetyCenterOpen" id="safety-center-panel" class="grid-wrap">
-      <TabulatorGrid
-        ref="safetyCenterGridRef"
-        v-model:data="safetyCenters"
-        :columns="safetyCenterColumns"
-        select-mode="checkbox"
-        layout="fitDataFill"
-        height="228px"
-        placeholder="등록된 치안센터가 없습니다"
-        @row-selection-changed="safetyCenterSelected = $event.length"
-      />
-    </div>
-  </section>
-
-  <!-- ── 연혁 ─────────────────────────────────────────────── -->
-  <section class="pc-lpo-0601-section" aria-labelledby="history-heading">
-    <div class="section-bar">
-      <h2 id="history-heading">연혁</h2>
-      <div class="section-bar-actions">
-        <Button type="button" variant="tertiary2" size="sm" @click="onDeleteHistories">
-          선택삭제
-        </Button>
-        <Button type="button" variant="tertiary2" size="sm" @click="onAddHistory">추가</Button>
-        <button
-          type="button"
-          class="pc-lpo-0601-section-toggle"
-          :aria-expanded="historyOpen"
-          aria-controls="history-panel"
-          @click="historyOpen = !historyOpen"
-        >
-          <component :is="historyOpen ? Minus : Plus" :size="20" />
-          <span class="blind">연혁 {{ historyOpen ? '접기' : '펼치기' }}</span>
-        </button>
+    <!-- ── 연혁 ─────────────────────────────────────────────── -->
+    <section class="pc-lpo-0601-section" aria-labelledby="history-heading">
+      <div class="section-bar">
+        <h2 id="history-heading">연혁</h2>
+        <div class="section-bar-actions">
+          <Button type="button" variant="tertiary2" size="sm" @click="onDeleteHistories">
+            선택삭제
+          </Button>
+          <Button type="button" variant="tertiary2" size="sm" @click="onAddHistory">추가</Button>
+          <button
+            type="button"
+            class="pc-lpo-0601-section-toggle"
+            :aria-expanded="historyOpen"
+            aria-controls="history-panel"
+            @click="historyOpen = !historyOpen"
+          >
+            <component :is="historyOpen ? Minus : Plus" :size="20" />
+            <span class="blind">연혁 {{ historyOpen ? '접기' : '펼치기' }}</span>
+          </button>
+        </div>
       </div>
-    </div>
 
-    <div v-show="historyOpen" id="history-panel" class="grid-wrap">
-      <TabulatorGrid
-        ref="historyGridRef"
-        v-model:data="histories"
-        :columns="historyColumns"
-        select-mode="checkbox"
-        height="276px"
-        placeholder="등록된 연혁이 없습니다"
-        @row-selection-changed="historySelected = $event.length"
-      />
-    </div>
-  </section>
+      <div v-show="historyOpen" id="history-panel" class="grid-wrap">
+        <TabulatorGrid
+          ref="historyGridRef"
+          v-model:data="histories"
+          :columns="historyColumns"
+          select-mode="checkbox"
+          height="276px"
+          placeholder="등록된 연혁이 없습니다"
+          @row-selection-changed="historySelected = $event.length"
+        />
+      </div>
+    </section>
+  </ScrollWrapper>
 
   <!-- ── 팝업 ─────────────────────────────────────────────── -->
   <PatrolAreaMapDialog
