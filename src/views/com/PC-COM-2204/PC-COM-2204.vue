@@ -78,13 +78,14 @@
     </template>
   </LayoutSplit>
 
-  <!-- 부서조회(PC-COM-2205)·전체 사용자(PC-COM-2207) 팝업은 시안을 아직 못 받아 자리만 잡아둔다 -->
-  <EmptyStubDialog v-model:open="deptSearchOpen" title="부서 조회" />
+  <DepartmentSearchDialog />
+  <!-- 전체 사용자 팝업(PC-COM-2207)은 시안을 아직 못 받아 자리만 잡아둔다 -->
+  <EmptyStubDialog v-model:open="allUsersOpen" title="전체 사용자" />
 </template>
 
 <script setup lang="ts">
 import { provide, ref } from 'vue'
-import { toast } from 'vue-sonner'
+import { useDialog } from '@/composable/dialog/dialog'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -95,6 +96,7 @@ import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tab
 import LayoutSplit from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
 import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
+import DepartmentSearchDialog from './components/DepartmentSearchDialog.vue'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { systemAdminMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
@@ -127,11 +129,18 @@ const {
   activePermissionKey,
   menuPermissions,
   keyword,
-  deptSearchOpen,
+  allUsersOpen,
   selectPermission,
   createPermissionRow,
   openDeptSearch,
 } = store
+
+/*
+ * 성공·경고 피드백은 toast 가 아니라 알림창(AlertDialog2)으로 낸다.
+ * CLAUDE.md §7 의 기본값은 toast 지만 사용자 지정이고, 같은 시스템관리 메뉴의
+ * PC-COM-2201·PC-COM-2203·PC-COM-2206 도 같은 문구를 dialog.alert 로 낸다.
+ */
+const dialog = useDialog()
 
 const searchIcon = '/portal/asset/images/icon/ico_seach_black_20.svg'
 
@@ -161,7 +170,10 @@ const permissionColumns: TabulatorGridColumn[] = [
     cellType: 'button',
     buttonVariant: 'tertiary',
     buttonSize: 'xs',
-    // 비어있으면 "부서 조회" 버튼, 이미 지정돼있으면 그 요약 텍스트만(버튼 테두리 없이) 보여준다
+    // 비어있으면 "부서 조회" 버튼, 이미 지정돼있으면 그 요약 텍스트 + 돋보기 아이콘.
+    // 아이콘은 styles.css 의 .pc-com-2204-note-cell 이 붙인다 — 공용 button 셀이 라벨을
+    // textContent 로 넣어서 <span class="grid-icon-search"> 를 라벨에 못 실어 보내기 때문.
+    cssClass: 'pc-com-2204-note-cell',
     buttonVisible: (row) => !(row as PermissionRow).deptNote,
     buttonLabel: (row) => (row as PermissionRow).deptNote || '부서 조회',
     onButtonClick: (row) => openDeptSearch((row as PermissionRow).rowKey),
@@ -181,17 +193,23 @@ function onAddPermission() {
   permissionGridRef.value?.addRow(createPermissionRow(), false)
 }
 
-function onDeleteSelectedPermissions() {
+async function onDeleteSelectedPermissions() {
   if (!selectedPermissionCount.value) {
-    toast.warning('삭제할 권한을 선택해 주세요.')
+    await dialog.alert({ title: '삭제할 권한을 선택해 주세요.', btnCancel: '확인' })
     return
   }
+  // 사용자 지정: 삭제 전 컨펌창을 먼저 띄운다 (§7 기본은 컨펌 없이 바로 삭제)
+  const result = await dialog.confirm({ title: '삭제하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
+  if (!result.confirmed) return
   permissionGridRef.value?.deleteSelected()
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
-function onSavePermissions() {
-  toast.success('저장되었습니다.')
+async function onSavePermissions() {
+  // 사용자 지정: 저장 전 컨펌창을 먼저 띄운다 (§7 기본은 컨펌 없이 바로 저장)
+  const result = await dialog.confirm({ title: '저장하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
+  if (!result.confirmed) return
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
 }
 
 /* ------------------------------------------------------------------ *
@@ -230,8 +248,11 @@ const menuColumns: TabulatorGridColumn[] = [
   { title: '엑셀', field: 'excel', width: 80, hozAlign: 'center', cellType: 'checkbox' },
 ]
 
-function onSaveMenuPermissions() {
-  toast.success('저장되었습니다.')
+async function onSaveMenuPermissions() {
+  // 사용자 지정: 저장 전 컨펌창을 먼저 띄운다 (§7 기본은 컨펌 없이 바로 저장)
+  const result = await dialog.confirm({ title: '저장하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
+  if (!result.confirmed) return
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
 }
 
 useBottomTabSetup({

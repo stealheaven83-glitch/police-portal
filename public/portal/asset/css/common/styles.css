@@ -48,6 +48,85 @@
   background-color: var(--Background-gray01);
 }
 
+/* 비고 칸 — 값이 있는 행은 '홍길동 외 10' 뒤에 돋보기 아이콘이 붙는다(시안 11710:112376).
+   TabulatorGrid 의 button 셀은 값이 있으면 라벨을 담은 <span> 하나만 그리는데,
+   그 라벨을 textContent 로 넣어서 <span class="grid-icon-search"> 를 실어 보낼 수 없다.
+   그래서 그 <span> 에 가상요소로 같은 아이콘을 얹는다.
+   ('부서 조회' 버튼 쪽은 Vue 컴포넌트가 <div> 로 마운트돼서 > span 에 안 걸린다) */
+.pc-com-2204-note-cell > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.pc-com-2204-note-cell > span::after {
+  content: "";
+  flex-shrink: 0;
+  width: 2.6rem;
+  height: 2.6rem;
+  background: url("../../images/icon/btn search-circle.svg") no-repeat center / 2.6rem auto;
+}
+
+/* PC-COM-2205 부서조회 팝업 — 권한명 줄 */
+.pc-com-2204-dept-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  margin-bottom: 1.2rem;
+}
+.pc-com-2204-dept-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+}
+
+/* '선택 사용자' 칩 줄 — 회색 바 */
+.pc-com-2204-selected-bar {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-bottom: 1.6rem;
+  padding: 1.2rem 1.6rem;
+  border-radius: var(--Radius-medium2);
+  background-color: var(--Background-gray01);
+}
+.pc-com-2204-selected-tags {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 부서 정보 / 사용자 정보 2분할 상자 */
+.pc-com-2204-dept-panes {
+  display: flex;
+  overflow: hidden;
+  border: 1px solid var(--Border_gray02);
+  border-radius: var(--Radius-medium2);
+}
+.pc-com-2204-pane {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  flex-direction: column;
+}
+/* 좌측은 시안 300 : 우측 414 비율로 고정폭에 가깝게 둔다 */
+.pc-com-2204-pane-dept {
+  flex: 0 0 30rem;
+  border-right: 1px solid var(--Border_gray02);
+}
+.pc-com-2204-pane-title {
+  padding: 1.2rem 1.6rem;
+  border-bottom: 1px solid var(--Border_gray02);
+  background-color: var(--Background-gray01);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+}
+
+/* 사용자ID 는 시안에서 밑줄(링크처럼) */
+.pc-com-2204-userid-cell.tabulator-cell {
+  text-decoration: underline;
+}
+
 /* ── PC-COM-2402 팝업관리 (등록 팝업 PC-COM-2403 포함) ────────── */
 
 /* 첨부파일 줄 끝의 용량 안내 문구 — 버튼 옆에 한 줄로 붙어야 해서 줄바꿈을 막는다 */

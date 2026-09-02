@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { toast } from 'vue-sonner'
+import { useDialog } from '@/composable/dialog/dialog'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -62,6 +62,12 @@ const {
 } = usePersonnelManage()
 
 const department = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
+/*
+ * 성공·경고 피드백은 toast 가 아니라 알림창(AlertDialog2)으로 낸다.
+ * CLAUDE.md §7 의 기본값은 toast 지만 사용자 지정이다.
+ */
+const dialog = useDialog()
+
 const searchIcon = '/portal/asset/images/icon/ico_seach_black_20.svg'
 
 /* ------------------------------------------------------------------ *
@@ -84,8 +90,8 @@ function onListRowClick(_e: Event, row: any) {
   selectRow(data.rowKey)
 }
 
-function onSave() {
-  toast.success('저장되었습니다.')
+async function onSave() {
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
 }
 
 /* ------------------------------------------------------------------ *
@@ -149,17 +155,17 @@ function onAddTransfer() {
   transferGridRef.value?.addRow(createTransferRow(), true)
 }
 
-function onDeleteSelectedTransfers() {
+async function onDeleteSelectedTransfers() {
   if (!selectedTransferCount.value) {
-    toast.warning('삭제할 전입 전출 내역을 선택해 주세요.')
+    await dialog.alert({ title: '삭제할 전입 전출 내역을 선택해 주세요.', btnCancel: '확인' })
     return
   }
   transferGridRef.value?.deleteSelected()
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
-function onSaveTransfers() {
-  toast.success('저장되었습니다.')
+async function onSaveTransfers() {
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
 }
 
 useBottomTabSetup({

@@ -1536,6 +1536,15 @@ html.theme-dark .rowgroup.notice .notice-list .noticeSwiper .swiper-nav .slide-a
 .file-input{
   width:200px;
 }
+
+
+/*grid안에 있는 아이콘 */
+
+.grid-icon-search{
+  width: 2.6rem;
+  height:2.6rem;
+  background:url('../../images/icon/btn search-circle.svg') no-repeat center/2.6rem auto;
+}
 /*그루핑 및 gap 처리*/
 .group-gap1{
   display: flex;

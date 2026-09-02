@@ -75,6 +75,43 @@ function createMockMenuPermissions(): MenuPermissionRow[] {
   }))
 }
 
+/** 부서조회 팝업(PC-COM-2205) 좌측 "부서 정보" 한 행 */
+export interface DeptNode {
+  station: string
+  dept: string
+}
+
+/** 부서조회 팝업 우측 "사용자 정보" 한 행 */
+export interface UserRow {
+  userId: string
+  rank: string
+  name: string
+  station: string
+  dept: string
+}
+
+/** 시안의 부서 목록 5행 */
+export const deptList: DeptNode[] = [
+  { station: '경찰대학', dept: '교무처' },
+  { station: '경찰대학', dept: '교수부' },
+  { station: '경찰대학', dept: '운영지원과' },
+  { station: '경찰대학', dept: '학생지도부' },
+  { station: '경찰대학', dept: '도서관' },
+]
+
+function createMockUsers(): UserRow[] {
+  return [
+    { userId: 'sdfdgdfg', rank: '경감', name: '홍길동', station: '경찰대학', dept: '교수부' },
+    { userId: 'jytdrtg', rank: '경감', name: '홍길동', station: '경찰대학', dept: '교수부' },
+    { userId: 'qweqwr', rank: '경정', name: '김길동', station: '경찰대학', dept: '교수부' },
+    { userId: 'hjkhgkg', rank: '경위', name: '박길동', station: '경찰대학', dept: '교수부' },
+    { userId: 'xdvsd', rank: '경감', name: '홍길동', station: '경찰대학', dept: '교수부' },
+    { userId: 'uykghcm11', rank: '경감', name: '홍길동', station: '경찰대학', dept: '교수부' },
+    { userId: 'sdfdgdfg2', rank: '경감', name: '홍길동', station: '부산청', dept: '청문감사인권관' },
+    { userId: 'jytdrtg2', rank: '경감', name: '홍길동', station: '부산청', dept: '청문감사인권관' },
+  ]
+}
+
 export function usePermissionManagement() {
   const permissions = ref<PermissionRow[]>(createMockPermissions())
   /** 시안은 PA00002(범죄예방대응국) 행이 선택된 상태다 */
@@ -95,6 +132,40 @@ export function usePermissionManagement() {
   const deptSearchTargetKey = ref<number | null>(null)
 
   let nextRowKey = permissions.value.length + 1
+
+  /* ---------------------------------------------------------------- 부서조회 팝업 */
+  const allUsers = ref<UserRow[]>(createMockUsers())
+  /** 시안은 '경찰대학 | 교수부' 행이 선택된 상태다 */
+  const activeDept = ref<DeptNode>(deptList[1])
+  /** 좌측에서 고른 부서에 속한 사용자만 우측에 보인다 */
+  const usersInActiveDept = computed(() =>
+    allUsers.value.filter(
+      (u) => u.station === activeDept.value.station && u.dept === activeDept.value.dept,
+    ),
+  )
+  /** 상단 '선택 사용자' 칩 목록. 시안은 홍길동·김길동·박길동 3명이 선택된 상태다 */
+  const selectedUsers = ref<UserRow[]>([allUsers.value[0], allUsers.value[2], allUsers.value[3]])
+
+  function selectDept(node: DeptNode) {
+    activeDept.value = node
+  }
+
+  function removeSelectedUser(userId: string) {
+    selectedUsers.value = selectedUsers.value.filter((u) => u.userId !== userId)
+  }
+
+  /** '권한적용' — 대상 권한 행의 비고에 선택 인원 요약(홍길동 외 2)을 반영한다 */
+  function applyDeptSearch() {
+    const key = deptSearchTargetKey.value
+    if (key !== null) {
+      const [first, ...rest] = selectedUsers.value
+      const note = first ? (rest.length ? `${first.name} 외 ${rest.length}` : first.name) : ''
+      permissions.value = permissions.value.map((row) =>
+        row.rowKey === key ? { ...row, deptNote: note } : row,
+      )
+    }
+    deptSearchOpen.value = false
+  }
 
   function selectPermission(rowKey: number) {
     activePermissionKey.value = rowKey
@@ -121,6 +192,14 @@ export function usePermissionManagement() {
     selectPermission,
     createPermissionRow,
     openDeptSearch,
+    deptList,
+    allUsers,
+    activeDept,
+    usersInActiveDept,
+    selectedUsers,
+    selectDept,
+    removeSelectedUser,
+    applyDeptSearch,
   }
 }
 
