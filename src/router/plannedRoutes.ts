@@ -317,7 +317,7 @@ function domainOf(screenId: string): string {
  * 예정 화면 라우트를 만든다.
  *
  * @param taken 이미 등록된 라우트 name 집합. 여기 있는 화면ID 는 건너뛴다 —
- *              직접 등록한 라우트나 route.ts 로 수집된 라우트와 name 이 겹치면
+ *              router/index.ts 에 직접 적힌 라우트와 name 이 겹치면
  *              vue-router 가 중복 경고를 내고 뒤쪽이 앞쪽을 덮는다.
  */
 export function buildPlannedRoutes(taken: Set<string>): RouteRecordRaw[] {

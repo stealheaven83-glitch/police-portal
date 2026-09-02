@@ -58,8 +58,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.8rem;
-  padding: 0.8rem 1.6rem;
+  gap: 1.2rem;
+  padding: 0.4rem 1.2rem;
   background: #fff;
   min-width: 0;
 }
@@ -107,11 +107,6 @@
   margin-left: 0.6rem;
   color: var(--Base--point);
 }
-.hint {
-  font-size: 1.3rem;
-  color: var(--Base--point, #d32f2f);
-  white-space: nowrap;
-}
 
 .tempVehicleRow {
   display: flex;
@@ -131,7 +126,15 @@
   background:var(--Base--point);
   border-radius: 50%;
 }
-.requiredDot::before {
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.9rem;
+  color: var(--Text-body_0);
+  font-size: 1.3rem;
+}
+.legend:before {
   content: '';
   display: block;
   width: 0.6rem;
@@ -139,19 +142,19 @@
   background: var(--Base--point);
   border-radius: 50%;
 }
-.legend {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-bottom: 1.2rem;
-  font-size: 1.3rem;
-  color: var(--Base--point, #d32f2f);
-}
 
 .hint {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   color: var(--Base--point, #d32f2f);
   white-space: nowrap;
+  font-weight: 400;
+}
+
+.hint:before {
+  content: '＊';
+  color: var(--Base--point);
+  border-radius: 50%;
+  margin-right: 0.4rem;
 }
 
 .tempVehicleRow {
@@ -199,7 +202,7 @@
 .searchRow {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 1.2rem;
   margin-bottom: 1.6rem;
 }
 
@@ -263,13 +266,6 @@
 }
 
 /* -------------------------------------------------------------- 112차량 조회 팝업 */
-.searchRow {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  margin-bottom: 1.6rem;
-}
-
 .searchInput {
   flex: 1;
   min-width: 0;

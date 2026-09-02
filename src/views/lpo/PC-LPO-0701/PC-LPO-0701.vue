@@ -1,3 +1,73 @@
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="장비관리" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+
+
+    <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
+    <template #department>
+      <span class="dept-name">부서</span>
+      <DepartmentCascadeSelect v-model="department" size="sm" />
+    </template>
+    <template #form>
+      <div class="search-area">
+        <SelectField
+            label="상태구분"
+            :options="selectItem"
+            label-position="left"
+            size="sm"
+            triggerClass="w-30"
+          />
+        <InputField2 label="통신장비 관리명" size="sm" inputClass="w-40" />
+      </div>
+    </template>
+    <template #btns>
+      <Button variant="secondary" size="sm">조회</Button>
+    </template>
+  </SearchWrapper>
+
+  <Tabs v-model="activeCategory" class="my-5">
+    <TabsList variant="fill" :grow="true">
+      <TabsTrigger v-for="tab in categoryTabs" :key="tab.value" :value="tab.value">{{ tab.label }}</TabsTrigger>
+    </TabsList>
+  </Tabs>
+
+  <div class="list-actions">
+    <Button type="button" variant="tertiary2" size="sm" @click="onPrint">인쇄</Button>
+    <Button type="button" variant="primary" size="sm" @click="onNew">신규</Button>
+  </div>
+
+  <!--
+    그리드가 직접 flex 아이템이라 남은 높이를 채운다(flex-1 + height="100%").
+    min-height 는 좁은 화면에서 위쪽 툴바·탭이 접혀 남는 높이가 사라졌을 때의 바닥이다.
+    (min-h-0 을 주면 min-height 가 무시되므로 주지 않는다)
+  -->
+
+  <TabulatorGrid
+    class="flex-1"
+    :columns="gridColumns"
+    :data="rowsByCategory"
+    height="100%"
+    min-height="40rem"
+    placeholder="등록된 장비가 없습니다"
+    show-pagination
+    :items-per-page="10"
+  />
+
+  <EquipmentDetailDialog />
+  <Vehicle112Dialog />
+  <CommDetailDialog />
+  <WeaponDetailDialog />
+  <AmmoDetailDialog />
+  <CuffsDetailDialog />
+  <EtcDetailDialog />
+  <MaintenanceHistoryDialog />
+</template>
 <script setup lang="ts">
 import { computed, provide, ref } from 'vue'
 import { useAutoTrigger, type ScreenTriggerMap } from '@/composables/useAutoTrigger'
@@ -25,7 +95,6 @@ import type { EquipmentListRow } from './composable/PC-LPO-0701'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
-// import styles from './style/PC-LPO-0701.module.css'
 
 // KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!) — useBottomTabSetup 의 componentName 과 일치해야 한다.
 // 0701~0714 가 이 컴포넌트 하나를 screenGroup 으로 공유하므로(router/index.ts 참고), 탭도
@@ -290,74 +359,3 @@ useBottomTabSetup({
   closable: true,
 })
 </script>
-
-<template>
-  <PageHeader>
-    <template #left>
-      <PageTitle title="장비관리" />
-    </template>
-    <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
-  </PageHeader>
-
-
-    <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
-    <template #department>
-      <span class="dept-name">부서</span>
-      <DepartmentCascadeSelect v-model="department" size="sm" />
-    </template>
-    <template #form>
-      <div class="search-area">
-        <SelectField
-            label="상태구분"
-            :options="selectItem"
-            label-position="left"
-            size="sm"
-            triggerClass="w-30"
-          />
-        <InputField2 label="통신장비 관리명" size="sm" inputClass="w-40" />
-      </div>
-    </template>
-    <template #btns>
-      <Button variant="secondary" size="sm">조회</Button>
-    </template>
-  </SearchWrapper>
-
-  <Tabs v-model="activeCategory" class="my-5">
-    <TabsList variant="fill" :grow="true">
-      <TabsTrigger v-for="tab in categoryTabs" :key="tab.value" :value="tab.value">{{ tab.label }}</TabsTrigger>
-    </TabsList>
-  </Tabs>
-
-  <div class="list-actions">
-    <Button type="button" variant="tertiary2" size="sm" @click="onPrint">인쇄</Button>
-    <Button type="button" variant="primary" size="sm" @click="onNew">신규</Button>
-  </div>
-
-  <!--
-    그리드가 직접 flex 아이템이라 남은 높이를 채운다(flex-1 + height="100%").
-    min-height 는 좁은 화면에서 위쪽 툴바·탭이 접혀 남는 높이가 사라졌을 때의 바닥이다.
-    (min-h-0 을 주면 min-height 가 무시되므로 주지 않는다)
-  -->
-
-  <TabulatorGrid
-    class="flex-1"
-    :columns="gridColumns"
-    :data="rowsByCategory"
-    height="100%"
-    min-height="40rem"
-    placeholder="등록된 장비가 없습니다"
-    show-pagination
-    :items-per-page="10"
-  />
-
-  <EquipmentDetailDialog />
-  <Vehicle112Dialog />
-  <CommDetailDialog />
-  <WeaponDetailDialog />
-  <AmmoDetailDialog />
-  <CuffsDetailDialog />
-  <EtcDetailDialog />
-  <MaintenanceHistoryDialog />
-</template>

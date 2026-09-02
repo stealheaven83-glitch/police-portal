@@ -27,7 +27,7 @@ function onSave() {
 
 <template>
   <GenericDialog2 v-model:open="detailDialogOpen" title="기동장비 상세" :size="800" :show-close-button="true">
-    <p :class="styles.legend">• 필수 입력 항목</p>
+    <p :class="styles.legend">필수 입력 항목</p>
 
     <InfoTable :columns="2">
       <!-- 라디오/버튼처럼 값 영역에 컨트롤이 여러 개면 for 를 주지 않는다(InfoField 가 role="group" 으로 묶는다) -->
@@ -47,7 +47,7 @@ function onSave() {
           class="!space-y-0 flex-1"
           :disabled="isPlateNumberDisabled"
         />
-        <span v-if="!isVehicleRestricted && !detail.isSaved" :class="screenStyles.hint">저장 이후에는 차량번호는 수정할 수 없습니다.</span>
+        <span v-if="!isVehicleRestricted && !detail.isSaved" :class="styles.hint">저장 이후에는 차량번호는 수정할 수 없습니다.</span>
       </InfoField>
 
       <InfoField for="equip-management-name">
@@ -112,7 +112,7 @@ function onSave() {
           v-model="detail.info112"
           :options="info112Options"
           size="sm"
-          trigger-class="w-full"
+          trigger-class="w-60"
           class="!space-y-0 flex-1"
           placeholder="선택하세요"
           :disabled="isVehicleRestricted"
@@ -121,12 +121,12 @@ function onSave() {
 
       <InfoField label="임시차량" full>
         <div class="group-gap3">
-          <InputField2 size="sm" class="!space-y-0 flex-1" readonly />
-          <Button type="button" variant="secondary" size="sm" @click="openVehicle112Dialog">차량조회</Button>
+          <InputField2 size="sm" class="!space-y-0 w-50" readonly />
+          <Button type="button" variant="secondary" size="sm" class="min-w-21" @click="openVehicle112Dialog">차량조회</Button>
         </div>
       </InfoField>
 
-      <InfoField label="비고" full layout="column">
+      <InfoField label="비고" full>
         <TextareaField v-model="detail.note" class="w-full !space-y-0" textarea-class="w-full" :height="90" />
       </InfoField>
     </InfoTable>
