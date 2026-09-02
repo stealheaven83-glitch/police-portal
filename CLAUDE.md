@@ -57,13 +57,13 @@ Figma 에는 동작이 안 그려져 있다 — 사용자가 따로 지정하지
 4. **기준 파일을 고른다** — §1-1 표에서 유형 → **그 파일만** 읽는다(`views/` 전체를 뒤지지 않는다).
 5. **컴포넌트를 고른다** — `component-guide.md`. 프레임의 `instance` 이름이 답이다(§10 역인덱스).
    `custom/**`·`ui/**` 는 그 자리에서 다시 나열한다 — 기억으로 판단하지 않는다(§1).
-6. **만든다** — `views/{domain}/{화면ID}/` 안에서만. **라우터·프리셋은 안 건드린다(§4).**
-   화면 전용 CSS 는 `styles.css` 에 화면ID 프리픽스로(§1-2).
+6. **만든다** — `views/{domain}/{화면ID}/` 안에서만. 라우트는 그 폴더의 `route.ts` 로(§4).
+   **`presets.ts`(LNB)는 안 건드린다(§4).** 화면 전용 CSS 는 `styles.css` 에 화면ID 프리픽스로(§1-2).
 7. **Figma 이미지와 나란히 놓고** 빠진 영역이 없나 본다(§9).
-8. **인계 메모를 남긴다**(§11) — 특히 **추론한 동작**과 **"라우터 미등록"**.
+8. **인계 메모를 남긴다**(§11) — 특히 **추론한 동작**과 **"LNB 프리셋 미등록"**.
 
-⚠ 만든 화면은 **라우팅이 안 되어 브라우저로 못 본다**(§4 — 등록은 배치로). 확인은 Figma 이미지
-대조로 한다. "안 열리는데요"는 버그가 아니라 정상이다.
+⚠ 만든 화면은 `route.ts` 덕에 **브라우저로 바로 열린다**(§4). 단 **LNB 에는 안 뜬다** — 프리셋은
+배치 등록이라, 주소창에 `/views/{domain}/{화면ID}` 를 직접 쳐서 본다.
 
 ## 1. 컴포넌트 재사용
 - 찾는 순서: `src/components/custom/**` → `src/components/ui/**`. 둘 다 없으면
@@ -193,7 +193,7 @@ Figma 에는 동작이 안 그려져 있다 — 사용자가 따로 지정하지
 ### 기준 파일에서 "그대로 따라할 것" — `PC-LPO-0215` 기준
 구조를 눈으로 훑고 비슷하게 쓰는 게 아니라, 아래 항목은 **형태까지 그대로** 가져온다.
 
-1. **파일 구성** — `PC-XXX-NNNN.vue` + `composable/PC-XXX-NNNN.ts`. `style/` 폴더는
+1. **파일 구성** — `PC-XXX-NNNN.vue` + `composable/PC-XXX-NNNN.ts` + `route.ts`(§4). `style/` 폴더는
    **만들지 않는다**(0215가 그렇다 — 공통 클래스로 해결). 화면 전용 CSS 가 필요하면 `styles.css`(§1-2).
 2. **템플릿 순서** — `PageHeader`(#left `PageTitle` / #right `Breadcrumb`) → `SearchWrapper`
    (#department / #form / #btns) → `.list-actions` → `TabulatorGrid`. 사이에 의미 없는 `<div>`를
@@ -267,6 +267,7 @@ hex 를 박지 말고 `var(--Text-body_1)` 토큰을 쓴다. 화면 분할은 `L
 ```
 views/{domain}/PC-XXX-NNNN/
   PC-XXX-NNNN.vue
+  route.ts                       (이 화면의 라우트. 자동 수집된다 — §4)
   composable/PC-XXX-NNNN.ts   (또는 composable/ 폴더로 분할)
   components/                    (그 화면 전용 팝업 등)
 ```
@@ -312,50 +313,82 @@ rows.value.splice(idx, 1, updated)
 rows.value = rows.value.map((r, i) => (i === idx ? updated : r))
 ```
 
-## 4. 라우터 등록
+## 4. 라우터 등록 — **화면 폴더 안의 `route.ts` 로 한다**
 - 화면ID는 `screen-id-map.md` 기준(IA 284개 전수). Figma 메뉴 번호로 유추하면 어긋난다.
-- `src/router/index.ts`에 `path:'/views/{domain}/{화면ID}'`, `name:'{화면ID}'`,
-  `meta:{ layout:'WorkLayout', title:'...' }`.
-- 화면ID 많은 화면군은 배열+`.map()`으로 반복 등록(0701~0714 참고). 필요하면 `screenGroup` meta도
-  같이(§3).
-- (검토됨·미적용: 각 폴더가 자기 라우트를 `route.ts`로 export하고 `router/index.ts`가
-  `import.meta.glob`으로 자동 수집 — 이 파일에 손이 자주 가 동시 작업 시 git 충돌이 잦아서.)
+- **`src/router/index.ts` 는 건드리지 않는다.** 화면 폴더에 `route.ts` 를 만들면 끝이다 —
+  `router/index.ts` 가 `import.meta.glob('../views/**/route.ts', { eager: true })` 로 자동 수집한다.
 
-### ⛔ 화면 작업 중에는 `router/index.ts` 와 `presets.ts` 를 건드리지 않는다
-882줄짜리 `router/index.ts` 와 `presets.ts` 는 **화면을 추가할 때마다 셋이 동시에 손대서
-git 충돌이 상시로 났다**(최근 12커밋이 전부 이 두 파일을 건드렸다). 그래서 규칙을 나눈다.
+```ts
+// views/lpo/PC-LPO-0601/route.ts
+import type { RouteRecordRaw } from 'vue-router'
 
-| 화면을 | 라우터·프리셋 | 비고 |
-|---|---|---|
-| **추가** | ⛔ 안 건드린다 | 라우팅 안 되는 게 정상. 배치 때 등록 |
-| **수정** | ⛔ 안 건드린다 | 화면ID가 늘었으면 인계 메모에만 적는다 |
-| **삭제** | ✅ **같이 지운다** | 안 지우면 빌드가 깨진다 — 아래 참고 |
+const route: RouteRecordRaw = {
+  path: '/views/lpo/PC-LPO-0601',
+  name: 'PC-LPO-0601',
+  component: () => import('./PC-LPO-0601.vue'),   // ← 옆 파일이라 상대경로
+  meta: { layout: 'WorkLayout', title: '관내현황' },
+}
 
-- **화면 만드는 세션**: `views/{domain}/{화면ID}/` 안에서만 작업한다.
-  만든 화면이 아직 라우팅되지 않는 건 정상이다 — **인계 메모(§11)에 "라우터 미등록"이라고 적는다.**
-- **등록은 별도 배치로**, 사용자가 명시적으로 요청할 때만 한다:
-  > "라우터에 없는 페이지들 등록해줘"
+export default route
+```
 
-  이때 라우터와 프리셋(LNB)을 **함께** 갱신한다. 한 사람만 그 파일을 건드리므로 충돌이 없다.
+- **화면군**(한 컴포넌트가 여러 화면ID, §3 패턴A)은 **배열을 default export** 한다 —
+  수집부가 `flatMap` 이라 그대로 펼쳐진다. 지금 `index.ts` 의 `.map()` 형태를 그대로 옮기면 된다.
+  `screenGroup` meta 도 여기서 준다(§3).
+- `eager: true` 지만 `component` 는 `() => import()` 라 **.vue 는 계속 lazy** 다(코드 스플리팅 유지).
 
-⚠ **삭제만은 미루면 안 된다.** 화면 폴더를 지웠는데 라우터에 `import` 가 남아 있으면
-`Could not resolve ...` 로 **빌드 전체가 실패한다.** 화면을 지울 때는 라우터 항목(과 프리셋의
-해당 `path`)을 **같은 커밋에서 함께** 지운다. 그 화면이 화면군의 일부였다면 나머지 화면ID 들이
-같은 컴포넌트를 가리키고 있는지 먼저 확인한다(§3 패턴A).
+### 왜 이렇게 바뀌었나
+882줄짜리 `router/index.ts` 는 **화면을 추가할 때마다 셋이 동시에 손대서 git 충돌이 상시로 났다**
+(최근 12커밋이 전부 이 파일을 건드렸다). 그렇다고 "등록은 배치로" 로 미뤘더니 이번엔 만든 화면을
+**브라우저로 못 봐서** 나중에 등록을 또 해야 했다 — 일을 두 번 했다.
 
-**미등록 화면 찾는 법** — 폴더는 있는데 라우터에 `name` 이 없는 것:
+`route.ts` 자동 수집이 둘 다 없앤다. 각자 자기 폴더만 건드리니 충돌이 없고, 만들자마자 열린다.
+
+⚠ **미리 등록해두는 사고가 원리적으로 안 생긴다.** 예전에 `index.ts` 에 라우트를 미리 채워두면,
+`component: () => import('...')` 경로가 문자열 리터럴이라 Rollup 이 빌드 시점에 정적 분석해서
+파일이 없으면 `Could not resolve ...` 로 **빌드 전체가 실패했다**(실측 확인. `vue-tsc` 는 통과해서
+넣은 사람은 모르고 배포하려는 사람이 막힌다). glob 은 **실재하는 파일만** 잡고, `route.ts` 가
+있으면 그 옆의 `.vue` 도 반드시 있으므로 이 함정이 사라진다.
+
+### 그래도 손대지 않는 것 / 손대야 하는 것
+
+| 화면을 | `route.ts` | `presets.ts`(LNB) | `router/index.ts` |
+|---|---|---|---|
+| **추가** | ✅ 만든다 | ⛔ 안 건드린다 | ⛔ 안 건드린다 |
+| **수정** | ✅ 필요하면 고친다 | ⛔ 안 건드린다 | ⛔ 안 건드린다 |
+| **삭제** | 폴더째 지우면 같이 사라짐 | ✅ 해당 `path` 지운다 | 아래 ⚠ 참고 |
+
+- **`presets.ts`(LNB)는 여전히 배치 등록이다.** 화면 폴더는 자기가 메뉴 트리 어디에 붙는지 알 수
+  없어서 자동화가 안 된다(아래 ⚠). 인계 메모(§11)에 **"LNB 프리셋 미등록"** 이라고 적는다.
+  등록은 사용자가 명시적으로 요청할 때 한 사람이 몰아서 한다:
+  > "프리셋에 없는 페이지들 LNB 등록해줘"
+
+⚠ **삭제 시 주의.** `route.ts` 는 폴더 안에 있으니 폴더를 지우면 같이 사라져 빌드가 안 깨진다.
+다만 **`index.ts` 에 남아 있는 구식 등록**(아래 참고)이면 그 항목을 **같은 커밋에서 함께** 지워야
+한다 — 안 지우면 `Could not resolve ...` 로 빌드 전체가 실패한다. 그 화면이 화면군의 일부였다면
+나머지 화면ID 들이 같은 컴포넌트를 가리키고 있는지 먼저 확인한다(§3 패턴A).
+
+### 기존 등록분은 그대로 둔다 — 두 방식은 공존한다
+`router/index.ts` 배열에 직접 적힌 기존 라우트 95개는 **손대지 않는다.** 새 화면부터 `route.ts` 를
+쓰고, 기존은 차차 이관한다(`styles.css` 와 같은 전략, §1-2).
+
+**"라우터 걷어와" — 배치 이관**은 사용자가 요청할 때만 한다. `route.ts` 들을 `index.ts` 배열로
+옮기고 `route.ts` 를 지우는 작업인데, 이때 **`component` 경로를 다시 쓴다**:
+`import('./PC-LPO-0601.vue')` → `import('../views/lpo/PC-LPO-0601/PC-LPO-0601.vue')`.
+걷어온 뒤에도 **수집 코드(`collectedRoutes`)는 그대로 둔다** — 파일이 없으면 빈 배열이라
+아무 일도 안 하고, 다음 화면 작업에 또 필요하다.
+
+**미등록 화면 찾는 법** — 폴더는 있는데 `route.ts` 도 없고 `index.ts` 에도 `name` 이 없는 것:
 ```bash
 comm -23 \
-  <(find src/views -maxdepth 2 -type d -name 'P[CM]-*' -o -maxdepth 2 -type d -name 'MO-*' | sed 's|.*/||' | sort -u) \
-  <(grep -oE "name: '(PC|PM|MO)-[A-Z]{3}-[0-9]{4}'" src/router/index.ts | sed "s/name: '//;s/'//" | sort -u)
+  <(find src/views -maxdepth 2 -type d \( -name 'P[CM]-*' -o -name 'MO-*' \) | sed 's|.*/||' | sort -u) \
+  <(cat \
+      <(grep -oE "name: '(PC|PM|MO)-[A-Z]{3}-[0-9]{4}'" src/router/index.ts | sed "s/name: '//;s/'//") \
+      <(find src/views -name route.ts | grep -oE '(PC|PM|MO)-[A-Z]{3}-[0-9]{4}') \
+    | sort -u)
 ```
 반대로 라우터에만 있고 폴더가 없는 것은 **화면군**(한 컴포넌트가 여러 화면ID를 갖는 경우,
 §3 패턴A)이라 정상이다 — 지우지 않는다.
-
-⚠ **라우트를 미리 다 등록해두는 방식은 안 된다.** `component: () => import('...')` 의 경로가
-문자열 리터럴이라 Rollup 이 빌드 시점에 정적 분석한다. 파일이 없으면
-`Could not resolve ...` 로 **빌드 전체가 실패한다**(실측 확인). `vue-tsc` 는 통과해서 넣은
-사람은 모르고 넘어가고 배포하려는 사람이 막힌다.
 
 ⚠ **LNB 프리셋도 IA 로 미리 다 채울 수 없다.** IA 의 depth 는 "화면 계층"이고 LNB 는
 "메뉴 구조"라 서로 다르다. IA 로 자동 생성하면 이렇게 틀린다:
@@ -366,7 +399,8 @@ IA:  관내현황 > 상세내역
 LNB: 관내현황                       ← '상세내역'은 메뉴가 아니다
 ```
 **LNB 구조는 Figma 를 봐야 아는 디자인 결정**이지 IA 에서 유도되지 않는다.
-그래서 프리셋도 라우터와 같이 **배치 때 사람이 판단해서** 넣는다.
+라우터와 달리 프리셋을 자동 수집할 수 없는 이유가 이것이다 — 화면 폴더는 자기가 메뉴 트리의
+어느 자리에 붙는지 모른다. 그래서 프리셋만은 **배치 때 사람이 판단해서** 넣는다.
 
 ### 브레드크럼 `path` — 라우터에 실재하는 것만 준다 (화면 유형 무관, 전부 해당)
 `Breadcrumb`의 `navItems`에서 **`path`는 실제 라우트가 있을 때만** 쓴다. 없으면 라벨만 둔다.
@@ -603,6 +637,7 @@ Figma 에서 형태 확인 → component-guide.md 에서 공통에 있나 확인
 4. **새로 만든 공통 CSS·컴포넌트** — 있으면 목록(§1). `component-guide.md` 등재 여부도
 5. **Figma 에 없어서 임의로 채운 것** — 동작(팝업 연결·필수항목·유효성), 목업 데이터 형태,
    컬럼 폭, placeholder 문구 등
-6. **라우터·LNB 등록 필요 여부** — 화면을 새로 만들었으면 `router/index.ts`·`presets.ts` 는
-   건드리지 않았을 테니(§4) **"라우터 미등록 — 배치 등록 필요"** 라고 적는다.
+6. **라우터·LNB 등록 상태** — 라우트는 `route.ts` 로 만들었을 테니 **"`route.ts` 등록 — 바로 열림,
+   `/views/{domain}/{화면ID}`"** 이라고 주소까지 적는다(검증 세션이 그걸로 연다).
+   `presets.ts` 는 안 건드렸을 테니(§4) **"LNB 프리셋 미등록 — 배치 등록 필요"** 라고 적는다.
    화면군에 화면ID가 늘었으면 그것도 적는다(예: "PC-LPO-0802 팝업 추가됨").

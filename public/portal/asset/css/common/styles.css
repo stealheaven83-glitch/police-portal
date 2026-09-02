@@ -14,3 +14,144 @@
  */
 
 /* ── 화면 블록은 여기부터 (화면ID 오름차순) ───────────────────── */
+
+/* ── PC-LPO-0601 관내현황 (팝업 PC-LPO-0602 · PC-LPO-0603 포함) ── */
+
+/* 상단 부서선택 + 수정일/버튼 줄 */
+.pc-lpo-0601-toolbar {
+  margin-bottom: 2rem;
+}
+.pc-lpo-0601-modified {
+  font-size: 1.4rem;
+  line-height: 1.5;
+  color: var(--Text-body_2);
+  white-space: nowrap;
+}
+
+/* 부서정보 / 관내정보 구역 */
+.pc-lpo-0601-section + .pc-lpo-0601-section {
+  margin-top: 3.2rem;
+}
+.pc-lpo-0601-section-title {
+  margin-bottom: 1.2rem;
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+}
+.pc-lpo-0601-table-gap {
+  margin-top: 1.2rem;
+}
+
+/* 값 영역에 들어가는 안내 텍스트(입력이 아닌 조회값) */
+.pc-lpo-0601-inline-text {
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+  white-space: nowrap;
+}
+
+/* 관내정보 — 텍스트 + 우측 버튼 */
+.pc-lpo-0601-summary-row {
+  display: flex;
+  flex: 1 0 0;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+}
+.pc-lpo-0601-summary-row .pc-lpo-0601-inline-text {
+  white-space: normal;
+}
+
+/* 가구 — 라벨+입력 7쌍이 한 줄에 늘어선다 */
+.pc-lpo-0601-count-row {
+  display: flex;
+  flex: 1 0 0;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.2rem 2rem;
+}
+
+/* 순찰차별 관할구역 표 — 셀을 좌측 정렬로 되돌린다(TableWrapper 기본은 가운데) */
+.pc-lpo-0601-patrol-table td {
+  text-align: left;
+}
+.pc-lpo-0601-cell-text {
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+}
+.pc-lpo-0601-cell-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+}
+.pc-lpo-0601-icon-button {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  color: var(--Text-body_0);
+  cursor: pointer;
+}
+
+/* 치안센터 · 연혁 구역 바의 접기/펴기 버튼 */
+.pc-lpo-0601-section-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  color: var(--Text-body_0);
+  cursor: pointer;
+}
+
+/* 팝업(PC-LPO-0602 · PC-LPO-0603) 공통 */
+.pc-lpo-0601-dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+.pc-lpo-0601-dialog-body .form-note {
+  margin-bottom: 0;
+}
+.pc-lpo-0601-dialog-subtitle {
+  margin-top: 0.4rem;
+}
+.pc-lpo-0601-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+/* PC-LPO-0603 관할행정동 검색 */
+.pc-lpo-0601-dong-search {
+  gap: 1.6rem 2.4rem;
+}
+.pc-lpo-0601-search-label {
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+  white-space: nowrap;
+}
+
+/* PC-LPO-0602 순찰차별 관할구역 관리 */
+.pc-lpo-0601-map-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.pc-lpo-0601-map {
+  overflow: hidden;
+  border: 0.1rem solid var(--Border_gray02);
+  border-radius: var(--Radius-medium2);
+}
+.pc-lpo-0601-map img {
+  display: block;
+  width: 100%;
+  height: auto;
+}

@@ -1,5 +1,26 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
 import Error404 from '../views/error/error404.vue'
+
+/**
+ * 화면 폴더가 자기 라우트를 직접 갖는다 — `views/{domain}/{화면ID}/route.ts` 를 자동 수집.
+ *
+ * 왜: 이 파일을 셋이 동시에 고쳐서 git 충돌이 상시로 났다. 화면 폴더 안에서만 작업하면
+ *     공유 파일을 건드릴 일이 없다.
+ *
+ * ⚠ glob 은 **실제로 존재하는 파일만** 잡는다. 그래서 라우트를 미리 등록해뒀다가
+ *   `Could not resolve ...` 로 남의 빌드를 깨뜨리는 사고가 원리적으로 생기지 않는다
+ *   (route.ts 가 있으면 그 옆의 .vue 도 반드시 있다).
+ *
+ * route.ts 는 라우트 하나(객체) 또는 화면군(배열)을 default export 한다.
+ * 기존 라우트는 아래 배열에 그대로 두고, 새 화면부터 route.ts 를 쓴다 — 두 방식은 공존한다.
+ */
+const collectedRoutes = Object.values(
+    import.meta.glob<{ default: RouteRecordRaw | RouteRecordRaw[] }>(
+        '../views/**/route.ts',
+        { eager: true },
+    ),
+).flatMap((mod) => mod.default)
 
 const router = createRouter({
     history: createWebHistory(),
@@ -83,15 +104,7 @@ const router = createRouter({
                 title: '인사관리',
             }
         },
-        {
-            path: '/views/lpo/PC-LPO-0601',
-            name: 'PC-LPO-0601',
-            component: () => import('../views/lpo/PC-LPO-0601/PC-LPO-0601.vue'),
-            meta: {
-                layout: 'WorkLayout',
-                title: '관내현황',
-            }
-        },
+        // PC-LPO-0601 관내현황 → views/lpo/PC-LPO-0601/route.ts 로 이관 (자동 수집)
         {
             path: '/views/flp/PM-FLP-0101',
             name: 'PM-FLP-0101',
@@ -890,6 +903,9 @@ const router = createRouter({
                 title: 'Figma 신규 컴포넌트'
             }
         },
+        // 각 화면 폴더의 route.ts 를 여기에 펼친다. notFound 보다 반드시 앞이어야 한다.
+        ...collectedRoutes,
+
         {
             path: '/:pathMatch(.*)*',
             name: 'notFound',
