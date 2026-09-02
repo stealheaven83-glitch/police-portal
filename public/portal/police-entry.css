@@ -18,3 +18,13 @@
 
 @import url("./asset/css/common/police-style.css") layer(police);
 @import url("./asset/css/common/swiper-bundle.min.css") layer(police);
+
+/*
+ * 화면 전용 CSS 모음 (CLAUDE.md §1-2).
+ *
+ * layer() 로 감싸지 않는다 — 레이어 없는 CSS 는 @layer 안의 모든 것을 이기므로,
+ * 화면 전용 스타일이 police-style.css(layer police) / shadcn(components) /
+ * 테일윈드(utilities) 를 항상 덮는다. 화면에서 !important 를 쓸 필요가 없다.
+ * 클래스명은 화면ID 프리픽스로 유니크하게(.pc-lpo-0215-wrapper) — 전역이라 겹치면 깨진다.
+ */
+@import url("./asset/css/common/styles.css");

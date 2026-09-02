@@ -4,7 +4,7 @@ CLAUDE.md §1(재사용 원칙)의 실행 편. §1은 "찾아봐라"까지 말�
 나오는지"**를 말한다. 새 화면을 시작할 때 §1-1 기준 파일과 함께 본다.
 
 경로는 전부 `src/components/` 기준. `custom/`이 1순위, `ui/`(shadcn-vue 프리미티브)가 2순위.
-**공통 CSS는 §12**를 본다 — 화면 전용 module.css를 만들기 전에 거기부터 뒤진다.
+**공통 CSS는 §12**를 본다 — 화면 전용 CSS(`styles.css`)를 쓰기 전에 거기부터 뒤진다.
 
 ---
 
@@ -293,7 +293,7 @@ Figma `search__pc`는 **헤더 통합검색**이고 `layout/portal/PortalHeader.
 
 ---
 
-## 12. 공통 CSS — 화면 module.css를 만들기 전에 여기부터
+## 12. 공통 CSS — 화면 전용 CSS를 쓰기 전에 여기부터
 
 `public/portal/asset/css/common/police-style.css`가 **전역 로드**된다(페이지에서 import 안 함).
 CLAUDE.md §1의 CSS 우선순위 ①②를 실행으로 옮긴 것 — 같은 역할 클래스를 새로 만들기 전에 찾는다.
@@ -334,7 +334,7 @@ hex를 직접 쓰지 않는다. `var(--Text-body_1)`, `var(--Base-primary)`, `va
 ### 그래도 없을 때 — **화면 전용으로 만들지 말고 공통에 추가한다**
 
 "최대한 공통을 활용한다"는 **① 있으면 쓴다 + ② 없으면 공통에 만든다** 두 가지다(CLAUDE.md §1).
-②를 빠뜨리고 화면 module.css에 만들면, 다음 화면이 같은 걸 또 만들어 값이 갈라진다.
+②를 빠뜨리고 화면 전용으로 만들면, 다음 화면이 같은 걸 또 만들어 값이 갈라진다.
 
 | 만들려는 것 | 어디에 |
 |---|---|
@@ -343,7 +343,7 @@ hex를 직접 쓰지 않는다. `var(--Text-body_1)`, `var(--Base-primary)`, `va
 | 특정 컴포넌트에 딸린 스타일 | 그 컴포넌트 폴더의 `*.module.css` |
 | 라벨-값 표 관련 | `custom/info-table/InfoTable.module.css` (이미 공통) |
 | 그리드 관련 | `src/assets/css/tabulator-theme.css` (전역 적용, 다시 스타일링 불필요) |
-| **화면 전용** `style/PC-XXX-NNNN.module.css` | **예외적으로만** — 그 화면에서만 의미가 있고 다른 화면에 옮겨 붙일 수 없는 것. **애매하면 공통으로 만든다** |
+| **그 화면에서만 쓰는 것** | `public/portal/asset/css/common/styles.css` 에 화면ID 프리픽스 클래스로(`.pc-lpo-0215-wrapper`) — **CLAUDE.md §1-2**. 화면 폴더에 `style/*.module.css` 를 새로 만들지 않는다. **애매하면 공통으로 만든다** |
 
 공통에 추가했으면 **위 §12 표에 한 줄 추가**한다 — 그래야 다음 사람이 찾아 쓴다.
 

@@ -1,0 +1,16 @@
+@charset "UTF-8";
+
+/*
+ * 화면 전용 CSS 모음. 규칙 전문은 CLAUDE.md §1-2.
+ *
+ * - 공통(police-style.css)에 둘 수 없는, 그 화면에서만 쓰는 것만 넣는다.
+ * - 클래스명은 반드시 `.{화면ID 소문자}-{역할}` — 전역이라 겹치면 남의 화면이 깨진다.
+ *     예) .pc-lpo-0215-wrapper, .pc-lpo-0215-narrow-col
+ * - 블록은 화면ID 오름차순. 자기 블록만 만지고 남의 블록은 건드리지 않는다(pull 충돌).
+ * - 색·모서리는 hex 금지, police-style.css 토큰(var(--Text-body_1)) 사용.
+ * - 여러 화면에 같은 스타일이 쌓이면 police-style.css 로 승격 — 각자 하지 말고 배치로.
+ *
+ * 이 파일은 police-entry.css 가 layer() 없이 import 한다 → 공통보다 우선순위가 높다.
+ */
+
+/* ── 화면 블록은 여기부터 (화면ID 오름차순) ───────────────────── */
