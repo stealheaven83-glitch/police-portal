@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import {
   Dialog,
   DialogContent,
@@ -77,6 +77,74 @@ const sizeStyle = computed(() => {
   return { width: 'calc(100% - 20px)', maxWidth: `${props.size}px` }
 })
 
+
+
+/* ── 본문 스크롤 발생 감지 ──────────────────────────────────────────────
+ * 본문(default 슬롯)이 max-h-[85dvh] 를 넘겨 내부 스크롤이 생기는 시점을 잡는다.
+ * 결과는 본문 div 의 `data-scrollable` 속성에만 반영한다 — 안에서만 쓰고 밖으로 보내지 않는다.
+ *
+ * DOM 구조는 바꾸지 않는다(31개 화면이 이 팝업을 쓴다 — 슬롯을 래퍼로 감싸면
+ * 안에서 height:100% 같은 걸 쓰던 화면이 깨진다). 그래서 감시자를 두 개 쓴다:
+ *   · ResizeObserver   — 팝업/뷰포트가 줄어 컨테이너가 작아지는 경우
+ *   · MutationObserver — 슬롯 내용이 늘거나 줄어드는 경우(조회 결과, 탭 전환 등)
+ */
+const bodyRef = ref<HTMLElement | null>(null)
+const isScrollable = ref(false)
+
+/** 스크롤이 생겼을 때만 스크롤바 폭만큼 본문을 넓혀 팝업 좌우 여백 안으로 밀어넣는다 */
+const scrollStyle = computed(() =>
+  isScrollable.value
+    ? { width: 'calc(100% + 30px)', paddingRight: '15px' }
+    : undefined,
+)
+
+
+let resizeObserver: ResizeObserver | null = null
+let mutationObserver: MutationObserver | null = null
+let rafId = 0
+
+function measure() {
+  const el = bodyRef.value
+  if (!el) return
+  // 소수점 반올림 오차로 1px 차이가 나는 경우가 있어 여유를 둔다
+  const next = el.scrollHeight - el.clientHeight > 1
+  isScrollable.value = next
+}
+
+/** 레이아웃이 확정된 뒤에 한 번만 재도록 프레임 단위로 묶는다 */
+function scheduleMeasure() {
+  if (rafId) return
+  rafId = requestAnimationFrame(() => {
+    rafId = 0
+    measure()
+  })
+}
+
+function observe(el: HTMLElement | null) {
+  disconnect()
+  if (!el) return
+  resizeObserver = new ResizeObserver(scheduleMeasure)
+  resizeObserver.observe(el)
+  mutationObserver = new MutationObserver(scheduleMeasure)
+  mutationObserver.observe(el, { childList: true, subtree: true, characterData: true })
+  scheduleMeasure()
+}
+
+function disconnect() {
+  resizeObserver?.disconnect()
+  resizeObserver = null
+  mutationObserver?.disconnect()
+  mutationObserver = null
+  if (rafId) {
+    cancelAnimationFrame(rafId)
+    rafId = 0
+  }
+}
+
+// 팝업이 닫히면 DialogContent 가 언마운트돼 ref 가 null 이 된다 — 열릴 때 다시 붙인다.
+watch(bodyRef, (el) => observe(el))
+onBeforeUnmount(disconnect)
+
 function handleOpenChange(value: boolean) {
   if (!value && props.persistent) return
   emit('update:open', value)
@@ -126,8 +194,8 @@ function handleCancel() {
           </DialogClose>
       </DialogHeader>
 
-      <!-- 본문: 내용이 많으면 내부 스크롤 -->
-      <div class="flex-1 min-h-0 overflow-y-auto">
+      <!-- 본문: 내용이 많으면 내부 스크롤. 스크롤이 생기면 data-scrollable="true" -->
+      <div ref="bodyRef" class="flex-1 min-h-0 overflow-y-auto" :style="scrollStyle" :data-scrollable="isScrollable">
         <slot />
       </div>
 
