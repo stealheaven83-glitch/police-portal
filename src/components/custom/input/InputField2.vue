@@ -74,7 +74,7 @@ const props = withDefaults(defineProps<Props>(), {
   labelPosition: 'left',
   required: false,
   showCount: false,
-  clearable: false,
+  clearable: true,
   disabled: false,
   readonly: false,
   size: 'lg',
