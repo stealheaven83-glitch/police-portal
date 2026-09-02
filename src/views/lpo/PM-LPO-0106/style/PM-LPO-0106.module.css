@@ -1,22 +1,11 @@
-<<<<<<< Updated upstream
-/* 알림 화면(PM-LPO-0106) 전용 레이아웃. 1rem = 10px 기준 (전역 리셋). */
 
-.listToolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.2rem;
-}
-=======
-/* 알림 화면(PM-LPO-0106) 전용 스타일. 1rem = 10px 기준 (전역 리셋). */
->>>>>>> Stashed changes
 
 /*
  * 내용 셀(link 버튼): 첫줄만 표시하고 길면 말줄임. Button 기본 클래스가
  * inline-flex 라 텍스트 말줄임이 안되서 block + nowrap + ellipsis 로 되돌린다.
  * (PC-LPO-0701 의 장비관리명 컬럼과 같은 cellType:'button' + buttonVariant:'link' 패턴 —
  * hover:underline 은 Button 의 link variant 가 이미 갖고 있다)
- */
+ */                                
 .contentBtn {
   display: block;
   width: 100%;
@@ -30,3 +19,4 @@
 .contentText {
   white-space: pre-line;
 }
+ 

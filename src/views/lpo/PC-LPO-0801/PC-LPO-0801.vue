@@ -132,51 +132,6 @@ useBottomTabSetup({
     </template>
   </PageHeader>
 
-  <div :class="styles.toolbar">
-    <div :class="styles.toolbarTop">
-      <div :class="styles.searchRow">
-        <span class="dept-name">부서</span>
-        <DepartmentCascadeSelect v-model="department" :tree="departmentTree" size="sm" :select-class="styles.select" />
-      </div>
-      <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
-    </div>
-
-    <div v-if="showAdvancedSearch" :class="styles.advancedSearchRow">
-      <div :class="styles.searchField">
-        <label :class="styles.searchLabel" for="personnel-search-rank">직급</label>
-        <SelectField
-          id="personnel-search-rank"
-          v-model="searchRank"
-          :options="rankOptions"
-          size="sm"
-          :trigger-class="styles.select"
-          class="!space-y-0"
-        />
-      </div>
-      <div :class="styles.searchField">
-        <label :class="styles.searchLabel" for="personnel-search-name">이름</label>
-        <InputField2 id="personnel-search-name" v-model="searchName" size="sm" input-class="w-40" class="!space-y-0" />
-      </div>
-      <Button type="button" variant="secondary" size="sm" @click="search">조회</Button>
-    </div>
-
-    <div :class="styles.toggleRow">
-      <button
-        type="button"
-        :class="styles.toggleButton"
-        :aria-expanded="showAdvancedSearch"
-        @click="showAdvancedSearch = !showAdvancedSearch"
-      >
-        상세조회 {{ showAdvancedSearch ? '닫기' : '열기' }}
-        <ChevronDown :size="14" />
-      </button>
-      <p :class="styles.disclaimer">
-        ※ 개인정보를 공무수행 목적이 사적으로 조회 또는 유출하여 타인의 비밀을 침해하거나 누설할 경우
-        <strong :class="styles.disclaimerStrong">5년이하의 징역 또는 5천만원 이하의 벌금</strong>에 처해집니다.
-      </p>
-    </div>
-  </div>
-
   <div :class="styles.columns">
     <section :class="styles.panel" aria-labelledby="personnel-list-heading">
       <div :class="styles.panelHead">

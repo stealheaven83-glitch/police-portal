@@ -839,7 +839,7 @@ onMounted(() => {
       if (!props.rowClass) return
       const el = row.getElement()
       // 행 엘리먼트가 재사용될 수 있으므로 이전에 붙인 클래스를 먼저 제거한다
-      const prev = el.dataset.gridRowClass
+      const prev = el.dataset.gridRowClass 
       if (prev) {
         el.classList.remove(prev)
         delete el.dataset.gridRowClass

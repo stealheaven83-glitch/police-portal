@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import Error404 from '../views/error/error404.vue'
+import { buildPlannedRoutes } from './plannedRoutes'
 
 /**
  * 화면 폴더가 자기 라우트를 직접 갖는다 — `views/{domain}/{화면ID}/route.ts` 를 자동 수집.
@@ -939,5 +940,19 @@ const router = createRouter({
         },
     ]
 })
+
+/**
+ * 아직 안 만든 화면까지 미리 등록한다(views/worklist 의 화면ID 목록 기준).
+ *
+ * 위 배열을 건드리지 않고 addRoute 로 붙이는 이유: 이 파일은 셋이 동시에 고쳐 충돌이 잦아서
+ * diff 를 최소로 두려는 것이다. vue-router 4 는 등록 순서가 아니라 경로 점수로 매칭하므로
+ * 나중에 붙여도 위의 notFound(catch-all)보다 구체적인 경로가 항상 먼저 잡힌다.
+ *
+ * 이미 등록된 화면ID(위 배열 · route.ts 수집분)는 buildPlannedRoutes 가 건너뛴다.
+ */
+const registeredNames = new Set(
+    router.getRoutes().map((r) => r.name).filter(Boolean) as string[],
+)
+buildPlannedRoutes(registeredNames).forEach((route) => router.addRoute(route))
 
 export default router
