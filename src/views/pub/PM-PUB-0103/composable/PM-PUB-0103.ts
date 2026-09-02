@@ -12,6 +12,8 @@ export interface SelectOption {
 export interface CpoDiagnosisRow {
   /** 화면에 보이는 번호이자 이력 조회 키 */
   no: number
+  /** 진단일자 — PC-PUB-0105(CPO 확인용) 좌측 목록에 뜬다 */
+  diagnosedAt: string
   /** 진단 부서(지구대/파출소) */
   dept: string
   /** 진단 유형 */
@@ -26,6 +28,11 @@ export interface CpoDiagnosisRow {
   detailAddress: string
   /** 현금다액취급업소 여부 */
   cashIntensive: string
+  /**
+   * 간이진단통보자료(PM-PUB-0109) 보유 여부.
+   * TODO: API 연동 시 실제 자료 유무로 대체. 없으면 버튼을 눌러도 알림창만 뜬다.
+   */
+  hasSimpleNotice: boolean
 }
 
 /** 우측 'CPO 범죄예방진단 이력' 한 행 */
@@ -177,9 +184,42 @@ export const extraAssessmentRows: AssessmentStepperRow[] = [
   { type: 'stepper', key: 'emergencyBell', label: '비상벨(감지형 포함)', unit: '개' },
 ]
 
+/** 시설개선(예정) 상태 — 진단 추가(PM-PUB-0106)는 기획서상 완료/미완료 두 가지다 */
+export const improvementDoneOptions: SelectOption[] = [
+  { label: '완료', value: 'done' },
+  { label: '미완료', value: 'notDone' },
+]
+
+/** 참고사항 한 줄 — 항목명 + 등급 + 수치 */
+export interface ReferenceStat {
+  label: string
+  grade: string
+  value: string
+}
+
+/** 참고사항 1) 범죄 특성 (시안 기준 표시값) */
+export const crimeStats: ReferenceStat[] = [
+  { label: '강력/절도/폭력/지능범죄', grade: '보통', value: '618' },
+  { label: '112신고(Code()/1/2)', grade: '보통', value: '8823' },
+]
+
+/** 참고사항 2) 인구 사회학적 특성 (시안 기준 표시값) */
+export const demographicStats: ReferenceStat[] = [
+  { label: '인구 밀도', grade: '보통', value: '6729' },
+  { label: '지역 결속력', grade: '보통', value: '111' },
+  { label: '기초생활수급자수', grade: '보통', value: '111' },
+  { label: '1인가구 비율', grade: '위험', value: '0' },
+  { label: '외국인 비율', grade: '양호', value: '0' },
+  { label: '관리대상자수', grade: '위험', value: '0' },
+  { label: '풍속업소 수', grade: '보통', value: '173' },
+  { label: '설문조사 결과', grade: '보통', value: '0' },
+]
+
 /** 좌측 현황에 새 건을 등록하는 팝업(PM-PUB-0114)의 입력값 */
 export interface NewDiagnosisForm {
   department: DepartmentValue
+  /** 진단 추가(PM-PUB-0106)에서만 쓰는 읽기 전용 관리번호 */
+  managementNo: string
   type: string
   diagnosisDate: string
   address: string
@@ -191,8 +231,12 @@ export interface NewDiagnosisForm {
   bizName: string
   houseOwner: string
   applicant: string
+  /** 진단 추가(PM-PUB-0106)의 관리자 */
+  manager: string
   contact: string
   householdCount: number
+  /** 진단 추가(PM-PUB-0106)의 직원수 */
+  employeeCount: number
   floorCount: number
   moveInYear: number
   crimePreventionStatus: string
@@ -209,6 +253,7 @@ export interface NewDiagnosisForm {
 function createEmptyNewDiagnosisForm(): NewDiagnosisForm {
   return {
     department: { level1: 'hq', level2: 'all', level3: 'all' },
+    managementNo: '',
     type: '',
     diagnosisDate: '',
     address: '',
@@ -220,8 +265,10 @@ function createEmptyNewDiagnosisForm(): NewDiagnosisForm {
     bizName: '',
     houseOwner: '',
     applicant: '',
+    manager: '',
     contact: '',
     householdCount: 0,
+    employeeCount: 0,
     floorCount: 0,
     moveInYear: 0,
     crimePreventionStatus: 'new',
@@ -256,6 +303,7 @@ function createRows(total: number): CpoDiagnosisRow[] {
     const no = total - index
     return {
       no,
+      diagnosedAt: '2026-06-24',
       dept: DEPTS[no % DEPTS.length],
       type: TYPES[no % TYPES.length],
       bizName: BIZ_NAMES[no % BIZ_NAMES.length],
@@ -264,6 +312,8 @@ function createRows(total: number): CpoDiagnosisRow[] {
       baseAddress: BASE_ADDRESS,
       detailAddress: `${DETAIL_ADDRESS}${(no % 9) + 1}호`,
       cashIntensive: no % 7 === 0 ? '해당' : '해당없음',
+      /* 목업: 3의 배수 건은 자료가 없는 것으로 둬서 알림창 경로도 확인할 수 있게 한다 */
+      hasSimpleNotice: no % 3 !== 0,
     }
   })
 }
@@ -360,6 +410,7 @@ export function useCpoList() {
   /** 목록/이력에서 선택한 진단 건을 긴 공용 진단 폼에 채운다. */
   function loadDiagnosis(row: CpoDiagnosisRow) {
     Object.assign(newDiagnosisForm, createEmptyNewDiagnosisForm(), {
+      managementNo: `2026${String(row.no).padStart(6, '0')}`,
       type: typeOptions.find((option) => option.label === row.type)?.value ?? 'etc',
       diagnosisDate: '2026-06-16',
       address: row.baseAddress,
@@ -371,15 +422,17 @@ export function useCpoList() {
       bizName: row.bizName,
       houseOwner: '성명불상',
       applicant: '홍길동',
+      manager: '성명불상',
       contact: '01012342341',
       householdCount: 4,
-      floorCount: 6,
+      employeeCount: 6,
+      floorCount: 4,
       moveInYear: 1999,
       crimePreventionStatus: 'continue',
       previousCrimeDamage: 'no',
       damageCount: 3,
       note: '시골 농촌지역으로 파출소 근처에 있어 대체로 위험성이 없는 편임.',
-      emailNotify: true,
+      emailNotify: historyRows.value[0]?.mailRequested === '예',
     })
     Object.assign(assessmentValues, createEmptyAssessmentValues())
     for (const item of buildingAssessmentRows) {
@@ -437,6 +490,8 @@ export function useCpoList() {
   }
 
   async function saveDetail() {
+    const mailRequested = newDiagnosisForm.emailNotify ? '예' : '아니오'
+    historyRows.value = historyRows.value.map((row) => ({ ...row, mailRequested }))
     await dialog.alert({ title: '등록 되었습니다.' })
     detailDialogOpen.value = false
   }
@@ -457,8 +512,17 @@ export function useCpoList() {
     openPhotoData()
   }
 
-  function openSimpleNoticeData() {
-    getActiveDiagnosis()
+  /**
+   * 기획서: 자료가 있으면 간이진단통보자료(PM-PUB-0109)를 열고, 없으면 알림창만 띄운다.
+   * 세 곳(0105 CPO확인용 · 0114 신규 · 0106 진단추가)의 버튼이 모두 이 함수로 모이므로
+   * 존재 여부 판단도 여기 한 곳에서 한다.
+   */
+  async function openSimpleNoticeData() {
+    const row = getActiveDiagnosis()
+    if (!row?.hasSimpleNotice) {
+      await dialog.alert({ title: '간이진단통보자료가 없습니다.' })
+      return
+    }
     simpleNoticeDialogOpen.value = true
   }
 
@@ -477,6 +541,7 @@ export function useCpoList() {
     rows.value = [
       {
         no: nextNo,
+        diagnosedAt: newDiagnosisForm.diagnosisDate || '2026-06-24',
         dept: DEPTS[nextNo % DEPTS.length],
         type: typeOptions.find((o) => o.value === newDiagnosisForm.type)?.label ?? '',
         bizName: newDiagnosisForm.bizName,
@@ -485,6 +550,8 @@ export function useCpoList() {
         baseAddress: newDiagnosisForm.address,
         detailAddress: newDiagnosisForm.detailAddress,
         cashIntensive: '해당없음',
+        /* 새로 등록한 건은 아직 간이진단통보자료가 없다 */
+        hasSimpleNotice: false,
       },
       ...rows.value,
     ]
@@ -508,11 +575,37 @@ export function useCpoList() {
     mailNoticeDialogOpen.value = true
   }
 
+  /**
+   * 이력 그리드가 다 만들어졌는지 여부와, 그전에 들어온 작업을 담아두는 자리.
+   *
+   * URL 로 팝업 화면ID(PC-PUB-0105 · PM-PUB-0106/0107)에 직접 들어오면 useAutoTrigger 가 마운트
+   * 도중 팝업을 열고, 아래 워처가 대표 진단 건을 채우면서 historyRows 를 갈아끼운다.
+   * 그런데 그 시점엔 Tabulator 가 아직 build 중이라 setData 가 내부에서 터진다
+   * (TypeError: reading 'verticalFillMode'). 그래서 그리드가 준비됐다고 알려줄 때까지
+   * 미뤄뒀다가 실행한다.
+   */
+  const historyGridReady = ref(false)
+  let pendingAutoLoad: (() => void) | null = null
+
+  function markHistoryGridReady() {
+    historyGridReady.value = true
+    const job = pendingAutoLoad
+    pendingAutoLoad = null
+    job?.()
+  }
+
+  function runWhenHistoryGridReady(job: () => void) {
+    if (historyGridReady.value) job()
+    else pendingAutoLoad = job
+  }
+
   /** 화면ID로 팝업에 직접 진입한 경우에도 상세 폼에 대표 진단 건을 채운다. */
   watch([newHistoryDialogOpen, detailDialogOpen, cpoResultDialogOpen], (states, previous) => {
     if (!states.some((state, index) => state && !previous?.[index])) return
-    const row = getActiveDiagnosis()
-    if (row) loadDiagnosis(row)
+    runWhenHistoryGridReady(() => {
+      const row = getActiveDiagnosis()
+      if (row) loadDiagnosis(row)
+    })
   })
 
   return {
@@ -521,7 +614,10 @@ export function useCpoList() {
     rows,
     selectedRow,
     historyRows,
+    markHistoryGridReady,
     selectRow,
+    /** PC-PUB-0105 팝업 안 목록에서 다른 건을 고르면 상세 폼을 다시 채우는 데 쓴다 */
+    loadDiagnosis,
     search,
     newDiagnosisDialogOpen,
     newHistoryDialogOpen,

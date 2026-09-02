@@ -4,7 +4,10 @@
       <PageTitle title="CPO 입력 · 관리" />
     </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
+      <div class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </div>
     </template>
   </PageHeader>
 
@@ -15,7 +18,7 @@
     </template>
     <template #form>
       <div class="search-area" :class="styles.searchArea">
-        <InputField2 v-model="searchForm.detailAddress" label="상세주소" size="sm" inputClass="w-40" clearable />
+        <InputField2 v-model="searchForm.detailAddress" label="상세주소" size="sm" inputClass="w-40" />
         <SelectField
           v-model="searchForm.sortBy"
           label="정렬기준"
@@ -24,8 +27,8 @@
           size="sm"
           triggerClass="w-30"
         />
-        <InputField2 v-model="searchForm.managementNo" label="관리번호" size="sm" inputClass="w-32" clearable />
-        <InputField2 v-model="searchForm.bizName" label="상호명" size="sm" inputClass="w-32" clearable />
+        <InputField2 v-model="searchForm.managementNo" label="관리번호" size="sm" inputClass="w-32" />
+        <InputField2 v-model="searchForm.bizName" label="상호명" size="sm" inputClass="w-32" />
         <SelectField
           v-model="searchForm.type"
           label="유형"
@@ -59,9 +62,9 @@
           triggerClass="w-30"
         />
         <div class="flex items-center">
-          <DatePicker label="진단일자" labelPosition="left" size="sm" inputClass="w-[160px]" clearable></DatePicker>
+          <DatePicker label="진단일자" labelPosition="left" size="sm" inputClass="w-[160px]"></DatePicker>
           <span class="px-3">~</span>
-          <DatePicker size="sm" inputClass="w-[160px]" clearable></DatePicker>
+          <DatePicker size="sm" inputClass="w-[160px]"></DatePicker>
         </div>
         <SelectField
           v-model="searchForm.reason"
@@ -71,7 +74,7 @@
           size="sm"
           triggerClass="w-50"
         />
-        <InputField2 v-model="searchForm.diagnoser" label="진단자" size="sm" inputClass="w-30" clearable />
+        <InputField2 v-model="searchForm.diagnoser" label="진단자" size="sm" inputClass="w-30" />
       </div>
     </template>
     <template #btns>
@@ -127,6 +130,11 @@
           <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelectedHistory">선택삭제</Button>
           <Button type="button" variant="primary" size="sm" @click="openNewHistory">신규</Button>
         </template>
+        <!--
+          @table-built: URL 로 팝업 화면ID에 직접 들어오면 마운트 도중 이 그리드의 데이터가
+          바뀌는데, Tabulator 가 아직 build 중이면 setData 가 터진다. build 완료를 알려주면
+          composable 이 그때까지 초기 로드를 미뤄준다.
+        -->
         <TabulatorGrid
           ref="historyGridRef"
           class="flex-1"
@@ -136,6 +144,7 @@
           height="100%"
           min-height="40rem"
           placeholder="좌측 목록에서 진단 건을 선택해 주세요"
+          @table-built="markHistoryGridReady"
         />
       </LayoutPanel>
     </template>
@@ -154,9 +163,12 @@
     @open-history="openDiagnosisHistory"
   />
 
+  <!-- PM-PUB-0106 진단 추가 — 같은 진단 폼을 'add' 모드로 재사용한다(대상 정보는 읽기 전용) -->
   <NewDiagnosisDialog
     v-model:open="newHistoryDialogOpen"
-    title="범죄예방진단 이력 신규"
+    title="범죄예방진단 추가"
+    mode="add"
+    diagnoser="[경사] 홍길동"
     :form="newDiagnosisForm"
     :assessment="assessmentValues"
     :total-score="totalScore"
@@ -179,9 +191,6 @@
     @open-photo="openPhotoDataFromDetail"
   />
 
-  <PhotoDataDialog v-model:open="photoDialogOpen" v-model:note="newDiagnosisForm.note" />
-  <SimpleNoticeDataDialog v-model:open="simpleNoticeDialogOpen" :diagnosis="selectedRow" />
-  <DiagnosisHistoryDialog v-model:open="diagnosisHistoryDialogOpen" :diagnosis="selectedRow" :rows="historyRows" />
   <KeepResultDialog v-model:open="keepResultDialogOpen" :diagnosis="selectedRow" />
   <CpoResultDialog
     v-model:open="cpoResultDialogOpen"
@@ -192,12 +201,26 @@
     :total-score="totalScore"
     @open-simple-notice="openSimpleNoticeData"
     @open-history="openDiagnosisHistory"
+    @select-row="onCpoResultRowSelect"
   />
   <MailNoticeDialog
     v-model:open="mailNoticeDialogOpen"
     :diagnosis="selectedRow"
     :note="newDiagnosisForm.note"
+    :mail-requested="newDiagnosisForm.emailNotify"
   />
+
+  <!--
+    ⚠ 아래 세 팝업(사진자료 0108 · 간이진단통보자료 0109 · 이력보기 0110)은 위 팝업들 위에
+    겹쳐 여는 하위 팝업이라 반드시 '맨 마지막' 에 선언한다.
+    GenericDialog2 는 모두 body 로 포털되고 z-index 가 z-50 으로 같아서, 겹칠 때는 DOM 에
+    나중에 온 쪽이 위에 그려진다 — 앞에 두면 부모 팝업 뒤에 깔려 "배경만 어두워지고 아무
+    반응이 없는" 것처럼 보인다(0105 에서 간이진단통보자료를 열었을 때 실제로 겪음).
+    새 하위 팝업을 추가할 때도 이 아래에 붙인다.
+  -->
+  <PhotoDataDialog v-model:open="photoDialogOpen" v-model:note="newDiagnosisForm.note" />
+  <SimpleNoticeDataDialog v-model:open="simpleNoticeDialogOpen" :diagnosis="selectedRow" />
+  <DiagnosisHistoryDialog v-model:open="diagnosisHistoryDialogOpen" :diagnosis="selectedRow" :rows="historyRows" />
 </template>
 
 <script setup lang="ts">
@@ -212,7 +235,7 @@ import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascad
 import SelectField from '@/components/custom/select/SelectField.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
-import { Button } from '@/components/custom/button'
+import { Button, HelpButton } from '@/components/custom/button'
 import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
@@ -259,7 +282,9 @@ const {
   rows,
   selectedRow,
   historyRows,
+  markHistoryGridReady,
   selectRow,
+  loadDiagnosis,
   search,
   newDiagnosisDialogOpen,
   newHistoryDialogOpen,
@@ -354,6 +379,15 @@ function onDiagnosisRowClick(_event: Event, row: any) {
   if (data) selectRow(data)
 }
 
+/**
+ * PC-PUB-0105 팝업 안 목록에서 다른 건을 고르면 좌측 선택 상태와 상세 폼을 함께 바꾼다.
+ * (selectRow 는 선택행/이력만 갱신하므로 폼 재적재는 loadDiagnosis 가 맡는다)
+ */
+function onCpoResultRowSelect(row: CpoDiagnosisRow) {
+  selectRow(row)
+  loadDiagnosis(row)
+}
+
 function onDiagnosisRowDoubleClick(_event: Event, row: any) {
   openDetail(getRowData(row))
 }
@@ -393,6 +427,13 @@ function screenState(active?: keyof typeof dialogStates) {
   return Object.entries(dialogStates).map(([name, state]) => [state, name === active] as const)
 }
 
+/*
+ * ⚠ 키는 '화면ID' 가 아니라 라우터에 등록된 route.name 이어야 한다(useAutoTrigger 가
+ *   route.name 으로 매칭하고, 역방향에서 router.replace({ name }) 를 호출한다).
+ *   0104/0105 는 라우터 name 이 PM- 이고 PC- 는 alias 라, 여기서도 PM- 을 쓴다.
+ *   PC- 로 적어두면 팝업을 열 때 "No match for PC-PUB-0105" 로 watcher 가 터져서
+ *   URL 진입은 물론 버튼으로도 팝업이 열리지 않는다.
+ */
 const screenTriggers: ScreenTriggerMap = {
   'PM-PUB-0103': screenState(),
   'PM-PUB-0104': screenState('keep'),

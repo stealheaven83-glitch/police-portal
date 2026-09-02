@@ -1,8 +1,7 @@
 <template>
   <GenericDialog2 v-model:open="open" title="범죄예방진단 상세" :size="800" show-close-button>
-    <section :class="styles.dialogSection">
-      <div class="pop-title-sub"><h2>범죄예방진단 카드</h2></div>
-      <InfoTable :columns="2" popup :class="styles.detailCardTable">
+    <div class="pop-title-sub"><h2>범죄예방진단 카드</h2></div>
+      <InfoTable :columns="2" popup :class="styles.infoTable">
         <InfoField label="부서">{{ departmentLabel }}</InfoField>
         <InfoField label="관리번호">{{ managementNo }}</InfoField>
         <InfoField label="유형">{{ diagnosis?.type || typeLabel }}</InfoField>
@@ -20,23 +19,15 @@
             :class="styles.detailDateField"
             input-class="w-full"
             placeholder="YYYY.MM.DD"
-            clearable
           />
           <Button type="button" variant="secondary" size="sm" @click="emit('open-photo')">
             사진자료
           </Button>
         </InfoField>
       </InfoTable>
-    </section>
-
-    <section :class="styles.dialogSection">
-      <div class="pop-title-sub"><h2>일반현황</h2></div>
-      <InfoTable :columns="2" popup :class="[styles.generalTable, styles.detailGeneralTop]">
-        <InfoField
-          for="diagnosis-detail-reason"
-          label="진단사유"
-          :class="styles.detailReasonField"
-        >
+    <div class="pop-title-sub"><h2>일반현황</h2></div>
+      <InfoTable :columns="2" popup :class="styles.infoTable">
+        <InfoField for="diagnosis-detail-reason" label="진단사유">
           <SelectField
             id="diagnosis-detail-reason"
             v-model="form.reason"
@@ -52,6 +43,7 @@
           for="diagnosis-detail-address"
           label="주소"
           layout="column"
+          :row-span="2"
           :class="styles.detailAddressField"
         >
           <InputField2
@@ -64,8 +56,7 @@
             icon-class="size-5"
             icon-label="주소 검색"
             search
-            @icon-click="addressSearchOpen = true"
-            clearable
+            @icon-click="onSearchAddress"
           />
           <InputField2
             id="diagnosis-detail-address-extra"
@@ -74,33 +65,27 @@
             :class="styles.detailAddressExtra"
             input-class="w-full"
             aria-label="상세주소"
-            clearable
           />
         </InfoField>
 
-        <InfoField
-          for="diagnosis-detail-biz-name"
-          label="상호명"
-          :class="styles.detailBizNameField"
-        >
+        <InfoField for="diagnosis-detail-biz-name" label="상호명">
           <InputField2
             id="diagnosis-detail-biz-name"
             v-model="form.bizName"
             size="sm"
             :class="styles.detailControlFill"
             input-class="w-full"
-            clearable
           />
         </InfoField>
 
-        <InfoField label="관할동" :class="styles.detailDistrictField">광희동</InfoField>
-        <InfoField label="관할부서" :class="styles.detailOfficeField">남포지구대</InfoField>
+        <InfoField label="관할동">광희동</InfoField>
+        <InfoField label="관할부서">남포지구대</InfoField>
       </InfoTable>
 
       <InfoTable
         :columns="2"
         popup
-        :class="[styles.generalTable, styles.detailGeneralBottom]"
+        :class="styles.infoTable"
       >
         <InfoField for="diagnosis-detail-owner" label="가옥주">
           <InputField2
@@ -109,7 +94,6 @@
             size="sm"
             :class="styles.detailControlFill"
             input-class="w-full"
-            clearable
           />
         </InfoField>
         <InfoField for="diagnosis-detail-applicant" label="신청자">
@@ -119,7 +103,6 @@
             size="sm"
             :class="styles.detailControlFill"
             input-class="w-full"
-            clearable
           />
         </InfoField>
 
@@ -130,18 +113,17 @@
             size="sm"
             :class="styles.detailControlFill"
             input-class="w-full"
-            clearable
           />
         </InfoField>
         <InfoField label="거주 가구수">
-          <Stepper v-model="form.householdCount" :min="0" :class="styles.detailStepperFull" label="거주 가구수" />
+          <Stepper v-model="form.householdCount" :min="0" :class="styles.detailControlFill" label="거주 가구수" />
         </InfoField>
 
         <InfoField label="층수">
-          <Stepper v-model="form.floorCount" :min="0" :class="styles.detailStepperFull" label="층수" />
+          <Stepper v-model="form.floorCount" :min="0" :class="styles.detailControlFill" label="층수" />
         </InfoField>
         <InfoField label="입주년도">
-          <Stepper v-model="form.moveInYear" :min="0" :class="styles.detailStepperFull" label="입주년도" />
+          <Stepper v-model="form.moveInYear" :min="0" :class="styles.detailControlFill" label="입주년도" />
         </InfoField>
 
         <InfoField label="방범진단">
@@ -166,57 +148,25 @@
         </InfoField>
 
         <InfoField label="피해 횟수">
-          <Stepper v-model="form.damageCount" :min="0" :class="styles.detailStepperFull" label="피해 횟수" />
+          <Stepper v-model="form.damageCount" :min="0" :class="styles.detailControlFill" label="피해 횟수" />
         </InfoField>
         <InfoField label=""><span aria-hidden="true"></span></InfoField>
       </InfoTable>
-    </section>
+    <div class="pop-title-sub"><h2>참고사항 (2023)</h2></div>
+      <div class="pop-title-lv2"><h3>1) 범죄 특성</h3></div>
+      <InfoTable :columns="2" popup :class="styles.refTables">
+        <InfoField v-for="stat in crimeStats" :key="stat.label" :label="stat.label">
+          <div :class="styles.referenceValueGrid"><span>{{ stat.grade }}</span><span>{{ stat.value }}</span></div>
+        </InfoField>
+      </InfoTable>
 
-    <section :class="styles.dialogSection">
-      <div class="pop-title-sub"><h2>참고사항 (2023)</h2></div>
-      <div :class="styles.refTables">
-        <div class="pop-title-lv2"><h3>1) 범죄 특성</h3></div>
-        <InfoTable :columns="2" popup>
-          <InfoField label="강력/절도/폭력/지능범죄">
-            <div :class="styles.referenceValueGrid"><span>보통</span><span>618</span></div>
-          </InfoField>
-          <InfoField label="112신고(Code()/1/2)">
-            <div :class="styles.referenceValueGrid"><span>보통</span><span>8823</span></div>
-          </InfoField>
-        </InfoTable>
-
-        <div class="pop-title-lv2"><h3>2) 인구 사회학적 특성</h3></div>
-        <InfoTable :columns="2" popup>
-          <InfoField label="인구 밀도">
-            <div :class="styles.referenceValueGrid"><span>보통</span><span>6729</span></div>
-          </InfoField>
-          <InfoField label="지역 결속력">
-            <div :class="styles.referenceValueGrid"><span>보통</span><span>111</span></div>
-          </InfoField>
-          <InfoField label="기초생활수급자수">
-            <div :class="styles.referenceValueGrid"><span>보통</span><span>111</span></div>
-          </InfoField>
-          <InfoField label="1인가구 비율">
-            <div :class="styles.referenceValueGrid"><span>위험</span><span>0</span></div>
-          </InfoField>
-          <InfoField label="외국인 비율">
-            <div :class="styles.referenceValueGrid"><span>양호</span><span>0</span></div>
-          </InfoField>
-          <InfoField label="관리대상자수">
-            <div :class="styles.referenceValueGrid"><span>위험</span><span>0</span></div>
-          </InfoField>
-          <InfoField label="풍속업소 수">
-            <div :class="styles.referenceValueGrid"><span>보통</span><span>173</span></div>
-          </InfoField>
-          <InfoField label="설문조사 결과">
-            <div :class="styles.referenceValueGrid"><span>보통</span><span>0</span></div>
-          </InfoField>
-        </InfoTable>
-      </div>
-    </section>
-
-    <section :class="styles.dialogSection">
-      <div class="pop-title-sub"><h2>범죄예방진단 항목 및 진단결과</h2></div>
+      <div class="pop-title-lv2"><h3>2) 인구 사회학적 특성</h3></div>
+      <InfoTable :columns="2" popup :class="styles.refTables">
+        <InfoField v-for="stat in demographicStats" :key="stat.label" :label="stat.label">
+          <div :class="styles.referenceValueGrid"><span>{{ stat.grade }}</span><span>{{ stat.value }}</span></div>
+        </InfoField>
+      </InfoTable>
+    <div class="pop-title-sub"><h2>범죄예방진단 항목 및 진단결과</h2></div>
       <div class="pop-title-lv2"><h3>1) 건물특성</h3></div>
       <InfoTable :columns="1" popup :class="styles.buildingTable">
         <InfoField v-for="row in buildingAssessmentRows" :key="row.key" :label="row.label" full>
@@ -238,40 +188,35 @@
       </InfoTable>
 
       <div class="pop-title-lv2"><h3>2) 추가 항목</h3></div>
-      <div :class="styles.wideTables">
-        <InfoTable :columns="1" popup>
-          <InfoField v-for="row in extraAssessmentRows" :key="row.key" :label="row.label" full>
-            <Stepper v-model="assessment[row.key]" :min="0" :class="styles.detailStepper" :label="row.label" />
-            <span :class="styles.assessmentUnit">{{ row.unit }}</span>
-          </InfoField>
-        </InfoTable>
+      <InfoTable :columns="1" popup :class="styles.wideTables">
+        <InfoField v-for="row in extraAssessmentRows" :key="row.key" :label="row.label" full>
+          <Stepper v-model="assessment[row.key]" :min="0" :class="styles.detailStepper" :label="row.label" />
+          <span :class="styles.assessmentUnit">{{ row.unit }}</span>
+        </InfoField>
+      </InfoTable>
 
-        <div class="pop-title-lv2"><h3>3) 기타</h3></div>
-        <InfoTable :columns="1" popup>
-          <InfoField for="diagnosis-detail-etc-label" full :class="styles.etcLabelField">
-            <template #label>
-              <Input
-                id="diagnosis-detail-etc-label"
-                v-model="form.etcLabel"
-                size="sm"
-                :class="styles.detailEtcInput"
-                aria-label="기타 항목"
-              />
-            </template>
-            <Stepper v-model="form.etcCount" :min="0" :class="styles.detailStepper" label="기타 수량" />
-          </InfoField>
-        </InfoTable>
-      </div>
+      <div class="pop-title-lv2"><h3>3) 기타</h3></div>
+      <InfoTable :columns="1" popup :class="styles.wideTables">
+        <InfoField for="diagnosis-detail-etc-label" full :class="styles.etcLabelField">
+          <template #label>
+            <Input
+              id="diagnosis-detail-etc-label"
+              v-model="form.etcLabel"
+              size="sm"
+              :class="styles.detailEtcInput"
+              aria-label="기타 항목"
+            />
+          </template>
+          <Stepper v-model="form.etcCount" :min="0" :class="styles.detailStepper" label="기타 수량" />
+        </InfoField>
+      </InfoTable>
 
-      <div :class="styles.detailTotalScoreRow">
+      <div :class="styles.totalScoreRow">
         <span :class="styles.totalScoreLabel">총점</span>
-        <strong>43</strong>
+        <strong :class="styles.totalScoreValue">{{ totalScore }}</strong>
         <span :class="styles.totalScoreUnit">점</span>
       </div>
-    </section>
-
-    <section :class="styles.dialogSection">
-      <div class="pop-title-sub"><h2>시설개선(예정) 일정</h2></div>
+    <div class="pop-title-sub"><h2>시설개선(예정) 일정</h2></div>
       <InfoTable :columns="1" popup :class="styles.scheduleTable">
         <InfoField for="diagnosis-detail-improvement-date" label="시설개선(예정) 일자" full>
           <DatePicker
@@ -281,23 +226,19 @@
             :class="styles.detailImprovementDate"
             input-class="w-full"
             placeholder="YYYY.MM.DD"
-            clearable
           />
           <SelectField
             v-model="form.improvementStatus"
             :options="improvementStatusOptions"
             size="sm"
             trigger-class="w-full"
-            :class="styles.detailImprovementStatus"
+            :class="styles.detailStepper"
             placeholder="선택"
             aria-label="시설개선 상태"
           />
         </InfoField>
       </InfoTable>
-    </section>
-
-    <section :class="[styles.dialogSection, styles.noteSection]">
-      <div class="pop-title-sub"><h2>착안사항</h2></div>
+    <div class="pop-title-sub mb-2"><h2>착안사항</h2></div>
       <TextareaField
         v-model="form.note"
         :class="styles.detailTextarea"
@@ -306,10 +247,9 @@
         aria-label="착안사항"
       />
       <div :class="styles.detailNoteMeta">
-        <Checkbox v-model="form.emailNotify" label="범죄예방진단 결과 이메일 통보" />
+        <Checkbox v-model="form.emailNotify" label="범죄예방진단 결과 우편 통보" />
         <p><span>범죄예방진단자 :</span> {{ diagnosis?.diagnoser || '홍길동' }} 경사</p>
       </div>
-    </section>
 
     <template #footer>
       <Button type="button" :class="styles.detailPrintButton" variant="tertiary2" size="md" @click="emit('print')">
@@ -320,11 +260,10 @@
     </template>
   </GenericDialog2>
 
-  <AddressSearchDialog v-model:open="addressSearchOpen" @select="form.address = $event" />
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import { InfoField, InfoTable } from '@/components/custom/info-table'
@@ -336,7 +275,7 @@ import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
 import { Checkbox } from '@/components/custom/checkbox'
-import AddressSearchDialog from '@/views/pub/components/AddressSearchDialog.vue'
+import { useDialog } from '@/composable/dialog/dialog'
 import {
   buildingAssessmentRows,
   crimePreventionStatusOptions,
@@ -344,6 +283,8 @@ import {
   extraAssessmentRows,
   improvementStatusOptions,
   previousCrimeDamageOptions,
+  crimeStats,
+  demographicStats,
   type CpoDiagnosisRow,
   type NewDiagnosisForm,
   typeOptions,
@@ -360,7 +301,7 @@ interface Props {
 
 const { form, assessment, diagnosis } = defineProps<Props>()
 const open = defineModel<boolean>('open', { default: false })
-const addressSearchOpen = ref(false)
+const dialog = useDialog()
 
 const emit = defineEmits<{
   (event: 'save'): void
@@ -368,6 +309,15 @@ const emit = defineEmits<{
   (event: 'print'): void
   (event: 'open-photo'): void
 }>()
+
+/**
+ * 주소검색은 별도 화면(PC-COM-0401 주소검색 › 도로명 찾기) 팝업으로 여는 자리다.
+ * 아직 그 화면이 없어서, 눌러도 아무 일이 없으면 고장난 것처럼 보이므로 안내만 띄운다.
+ * TODO: PC-COM-0401 이 만들어지면 이 알림 대신 그 팝업을 열고 선택값을 form.address 에 넣는다.
+ */
+async function onSearchAddress() {
+  await dialog.alert({ title: '주소검색 기능은 준비 중입니다.' })
+}
 
 const searchIcon = '/portal/asset/images/icon/ico_seach_black_20.svg'
 const departmentLabel = '부산청 부산중부서 남포지구대'

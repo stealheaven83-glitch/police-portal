@@ -60,6 +60,22 @@ function onFileSelected(photo: PhotoSlot, event: Event) {
   input.value = ''
 }
 
+/** 등록된 사진을 지운다 — 되돌릴 수 없으므로 확인창(ConfirmDialog2)으로 한 번 막는다 */
+async function removePhoto(photo: PhotoSlot) {
+  const { confirmed } = await dialog.confirm({
+    title: '사진을 삭제하시겠습니까?',
+    btnOk: '예',
+    btnCancel: '아니오',
+  })
+  if (!confirmed) return
+
+  if (photo.preview) URL.revokeObjectURL(photo.preview)
+  photo.preview = ''
+  photo.fileName = ''
+
+  await dialog.alert({ title: '삭제되었습니다.' })
+}
+
 async function save() {
   await dialog.alert({ title: '등록 되었습니다.' })
   open.value = false
@@ -86,26 +102,29 @@ onBeforeUnmount(() => photos.value.forEach((photo) => photo.preview && URL.revok
             class="sr-only"
             @change="onFileSelected(photo, $event)"
           />
-          <Button type="button" variant="tertiary2" size="xs" class="w-full" @click="pickPhoto(photo.key)">
-            사진변경
-          </Button>
+          <div :class="styles.photoCardActions">
+            <Button type="button" variant="tertiary2" size="xs" @click="pickPhoto(photo.key)">
+              사진변경
+            </Button>
+            <Button type="button" variant="tertiary2" size="xs" @click="removePhoto(photo)">
+              삭제
+            </Button>
+          </div>
         </article>
       </div>
     </div>
 
-    <div :class="styles.photoNote">
-      <InfoTable :columns="1" popup>
-        <InfoField label="범죄예방진단자 조치사항" full>
-          <TextareaField
-            v-model="note"
-            class="w-full !space-y-0"
-            textarea-class="w-full"
-            :height="80"
-            aria-label="범죄예방진단자 조치사항"
-          />
-        </InfoField>
-      </InfoTable>
-    </div>
+    <InfoTable :columns="1" popup :class="styles.photoNote">
+      <InfoField label="범죄예방진단자 조치사항" full>
+        <TextareaField
+          v-model="note"
+          :class="styles.detailTextarea"
+          textarea-class="w-full"
+          :height="80"
+          aria-label="범죄예방진단자 조치사항"
+        />
+      </InfoField>
+    </InfoTable>
 
     <template #footer>
       <Button type="button" variant="tertiary2" size="md" @click="open = false">취소</Button>

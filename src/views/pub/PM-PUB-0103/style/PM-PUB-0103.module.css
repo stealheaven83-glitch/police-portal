@@ -1,30 +1,6 @@
 /* -------------------------------------------------------------- 검색영역(CPO 입력 · 관리 목록) */
-/*
- * 넓은 화면에서만 검색 항목을 의미 단위로 끊어 보여준다.
- *   1 상세주소 · 2 정렬기준 · 3 관리번호
- *   4 상호명 · 5 유형
- *   6 시설개선 확인유무 · 7 착안사항 유무 · 8 현금다액업소
- *   9 진단일자
- *  10 진단사유 · 11 진단자
- *
- * 전역 .searchArea 는 flex-wrap 이라 "이 항목부터 새 줄" 을 지정하는 속성이 없다.
- * 다만 컨테이너의 ::before/::after 도 flex 아이템이 되므로, order 로 원하는 자리에 끼워
- * 넣고 폭을 100% 로 주면 그 지점에서 줄이 바뀐다 — 마크업은 그대로 두고 CSS 로만 처리한다.
- *
- * 좁은 화면에서는 이 강제 줄바꿈을 아예 걸지 않는다. 폭이 줄면 억지로 끊어둔 자리에 빈
- * 공간만 생기므로, 그때는 전역 .searchArea 의 기본 흐름대로 항목들이 앞줄에 이어 붙게
- * 두는 편이 낫다(시설개선 확인유무가 유형 옆으로 올라붙는 동작).
- *
- * 주의: 아래 nth-child 번호는 검색 항목의 "현재 순서" 기준이다. 항목을 추가·삭제·이동하면
- * 이 번호도 같이 맞춰야 한다.
- */
+/* 넓은 화면에서만 6번(시설개선 확인유무)·10번(진단사유) 앞에서 줄 꿈 */
 @media (min-width: 62.5rem) {
-  /*
-   * 높이 0 인 줄바꿈 아이템은 그 위아래로 row-gap 이 한 번씩 붙어 그 줄만 간격이 두 배가
-   * 된다(음수 margin 으로는 flex 줄 높이가 줄지 않는다). 그래서 세로 간격은 row-gap 대신
-   * 각 항목의 margin-bottom 으로 준다 — 줄바꿈용 ::before/::after 는 margin 이 없으므로
-   * 간격을 만들지 않는다. 가로 간격(column-gap 3.6rem)은 전역 값을 그대로 쓴다.
-   */
   .searchArea {
     row-gap: 0;
     margin-bottom: -1.6rem;
@@ -41,7 +17,6 @@
     flex: 0 0 100%;
   }
 
-  /* 6번(시설개선 확인유무) 앞에서 줄바꿈 */
   .searchArea::before {
     order: 2;
   }
@@ -50,7 +25,6 @@
     order: 3;
   }
 
-  /* 10번(진단사유) 앞에서 줄바꿈 */
   .searchArea::after {
     order: 4;
   }
@@ -60,14 +34,11 @@
   }
 }
 
-/* -------------------------------------------------------------- 범죄예방진단 현황 신규 팝업(PM-PUB-0114) */
-.dialogSection + .dialogSection {
-  margin-top: 1.6rem;
-}
-
-/* InfoTable 공통 확장 변수로 섹션별 라벨 열 너비만 조정한다. */
-.cardTable,
-.generalTable {
+/*
+ * 라벨 열 폭 — InfoTable 기본값(14rem)이 시안(120px)보다 넓어 화면에서 덮는다.
+ * 이 폴더의 라벨-값 표는 전부 이 클래스 하나를 쓴다(다른 폭이 필요한 넷만 아래에 따로).
+ */
+.infoTable {
   --info-label-w: 120px;
 }
 
@@ -87,20 +58,9 @@
   --info-label-w: 16rem;
 }
 
-/* PM-PUB-0104 범죄예방진단결과 (보관용) 팝업 */
-.keepPersonTable {
-  --info-label-w: 120px;
-}
-
-/* pop-title-sub(제목) ↔ 텍스트영역 사이 간격 8px */
-.keepSectionHeading {
-  margin-bottom: 0.8rem;
-}
-
-/* PM-PUB-0107 범죄예방진단 상세 팝업 */
-.detailCardTable,
-.detailGeneralTop {
-  --info-label-w: 120px;
+/* 착안사항은 여러 줄이 들어가므로 시안대로 한 칸 높이를 8rem 으로 잡는다 */
+.mailNoteTable > * {
+  min-height: 8rem;
 }
 
 .detailControlFill {
@@ -120,42 +80,17 @@
   width: 12rem;
 }
 
-.detailStepperFull {
-  flex: 1 1 auto;
-  min-width: 0;
-  width: 100%;
-}
-
-.detailGeneralTop {
-  grid-template-rows: repeat(3, minmax(48px, auto));
-}
-
-.generalTable.detailGeneralBottom {
-  margin-top: 8px;
-}
-
-.detailReasonField {
-  grid-column: 1;
-  grid-row: 1;
-}
-
-.detailAddressField {
-  grid-column: 2;
-  grid-row: 1 / 3;
-}
-
-.detailAddressField > div:last-child {
+/* 주소 칸(0107 .detailAddressField / 0114 .addressField) — 두 줄 간격 0.4rem.
+   space-between 은 남는 높이를 사이에 밀어넣어 gap 이 무시되므로 center 로 둔다 */
+.detailAddressField > div:last-child,
+.addressField > div:last-child {
   justify-content: center;
   gap: 0.4rem;
   min-height: 0;
   padding: 0.4rem 1.6rem;
 }
 
-/*
- * PM-PUB-0114 주소 칸과 두 입력 사이 간격을 맞춘다. 첫 입력에 붙은 .detailControlFill 의
- * flex:1 1 auto 가 세로(column) 컨테이너에서는 위아래로 늘어나(주소 칸이 2행 span) 두
- * 입력 사이가 gap(0.4rem)보다 벌어진다 — 여기서는 늘어나지 않게 막고 gap 만 남긴다.
- */
+/* .detailControlFill 의 flex:1 은 세로 칸에서 위아래로 늘어나 gap 보다 벌어진다 — 늘어남만 막는다 */
 .detailAddressField > div:last-child > * {
   flex-grow: 0;
 }
@@ -164,22 +99,8 @@
   width: 13.6rem;
 }
 
-.detailBizNameField {
-  grid-column: 1;
-  grid-row: 2;
-}
-
-.detailDistrictField {
-  grid-column: 1;
-  grid-row: 3;
-}
-
-.detailOfficeField {
-  grid-column: 2;
-  grid-row: 3;
-}
-
-.detailTotalScoreRow {
+/* 총점 바 — 0107·0114·0105 공용. 시안(11174-134849) 높이 41px, 앞 표와 8px */
+.totalScoreRow {
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -193,14 +114,8 @@
   line-height: 1.4;
 }
 
-.detailTotalScoreRow strong {
-  color: #bd2c0f;
-  font-weight: 600;
-}
-
-.detailTotalScoreRow > span,
-.detailTotalScoreRow > strong,
-.totalScoreRow > span {
+.totalScoreRow > span,
+.totalScoreRow > strong {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -221,11 +136,6 @@
   width: 20rem;
 }
 
-.detailImprovementStatus {
-  flex: 0 0 12rem;
-  width: 12rem;
-}
-
 .detailEtcInput {
   width: 100%;
   background: #fff;
@@ -233,10 +143,6 @@
 
 .detailTextarea {
   width: 100%;
-}
-
-.noteSection > :global(.pop-title-sub) {
-  margin-bottom: 0.8rem;
 }
 
 .detailNoteMeta {
@@ -261,80 +167,26 @@
   margin-right: auto;
 }
 
-/*
- * flex:1 1 auto 로 남는 폭을 다 가져가면, 자식 셀렉트는 고정폭이라 그 초과분이 셀렉트 뒤에
- * 안 보이는 여백으로 남아 간이진단통보자료 버튼과의 간격이 control 의 gap(12px)보다 더
- * 벌어져 보인다. 그래서 늘어나지는 않게(grow:0) 하되, 셀 폭이 모자랄 때는 버튼이 셀
- * 밖으로 밀려나지 않도록 줄어들 수는 있게(shrink:1) 한다.
- */
+/* 늘어나면 셀렉트 뒤 빈 폭이 버튼 간격처럼 보인다 — grow:0 / shrink:1 */
 .departmentSelectGroup {
   flex: 0 1 auto;
   min-width: 0;
-  /* 컴포넌트 기본값은 flex-wrap:wrap 이라, 폭이 조금만 모자라도 셀렉트가 다음 줄로 넘어간다.
-     줄을 바꾸는 대신 아래 규칙대로 셀렉트가 조금씩 줄어들게 한다(좁은 화면은 미디어쿼리에서 해제). */
   flex-wrap: nowrap;
 }
 
-/*
- * DepartmentCascadeSelect 는 각 셀렉트에 Tailwind w-40(16rem)을 직접 붙이는데, 3개를 나란히
- * 두면 이 팝업 셀 폭을 넘는다. 폭을 13.2rem 으로 줄이고, 그래도 모자라면 더 줄어들 수 있게
- * flex-shrink 를 열어둔다(min-width:0 이 없으면 flex 아이템이 내용 크기 밑으로 못 줄어든다).
- */
+/* 컴포넌트 기본 w-40 x3 은 팝업 셀 폭을 넘는다 — 13.2rem 으로 줄이고 더 줄어들 여지도 남긴다 */
 .departmentSelectGroup > div {
   width: 13.2rem;
   flex: 0 1 13.2rem;
   min-width: 0;
 }
 
-.addressGrid {
-  display: grid;
-  grid-column: 1 / -1;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  /*
-   * 고정 4.9rem 이면 관할동 셀렉트 실제 높이가 트랙을 넘쳐, 아래 관할부서 필드가 위로
-   * 겹치며 관할동의 border-bottom(구분선)을 덮어 라인이 사라진다 — 콘텐츠 높이만큼
-   * 늘어나게 해 구분선이 트랙 경계에 그려지도록 한다.
-   */
-  grid-template-rows: repeat(2, minmax(4.9rem, auto));
-}
-
 .addressField {
-  grid-column: 1;
-  grid-row: 1 / 3;
   min-height: 0;
   height: 100%;
 }
 
-/*
- * 도로명주소 / 상세주소 두 줄 사이 간격은 0.4rem.
- * justify-content:space-between 을 쓰면 남는 높이를 두 줄 사이로 다 밀어넣어 gap 값이
- * 무시되므로(실측 9px), center 로 두고 gap 으로만 간격을 정한다.
- */
-.addressField > div:last-child {
-  justify-content: center;
-  gap: 0.4rem;
-  min-height: 0;
-  padding: 0.4rem 1.6rem;
-}
-
-.jurisdictionRow {
-  grid-column: 2;
-}
-
-.jurisdictionRow:nth-child(2) {
-  grid-row: 1;
-}
-
-.jurisdictionRow:nth-child(3) {
-  grid-row: 2;
-}
-
-/*
- * 상세주소 입력 + 이력보기 버튼을 한 줄에 나란히 놓는다. 입력은 남는 폭을 다 채우고
- * 버튼은 셀 오른쪽 끝에 고정 폭으로 붙는다(사이 간격 12px) — 입력에 고정 폭을 주면
- * 이 행의 실제 가용폭(addressGrid 가 반으로 쪼갠 좁은 칸)보다 버튼까지 합친 길이가
- * 길어져 셀 오른쪽 패딩을 넘어 삐져나갔다.
- */
+/* 상세주소 입력 + 이력보기 버튼 한 줄(간격 12px). 입력에 고정폭을 주면 셀 밖으로 삐져나간다 */
 .detailAddressRow {
   display: flex;
   align-items: center;
@@ -342,38 +194,20 @@
   width: 100%;
 }
 
-/*
- * InfoField 는 class prop 을 선언하고 있지만(다른 페이지 어디서도 실제로 안 쓴다), 진단일자
- * 처럼 입력 + 버튼이 한 셀에 같이 들어가는 필드는 control 의 기본 gap(0.8rem)이 아니라
- * 12px(1.2rem)이어야 해서, control div 를 밖에서 셀렉터로 건드려 gap 만 덮어쓴다.
- * 기본 flex-wrap:wrap 이면 늘어난 입력이 한 줄을 다 차지해 버튼이 다음 줄로 밀리므로
- * nowrap 도 같이 준다.
- */
+/* 입력 + 버튼이 한 셀에 들어가는 필드 — 간격 12px(기본 8px), 버튼이 다음 줄로 밀리지 않게 nowrap */
 .inlineActionField > div:last-child {
   flex-wrap: nowrap;
   gap: 1.2rem;
 }
 
-/*
- * DatePicker.vue 는 class prop 을 #dp-input 슬롯 안의 InputField2 에만 넘기고, 실제로
- * .control 의 flex 아이템인 바깥 루트(VueDatePicker 가 렌더링하는 .dp--main)에는 전달하지
- * 않는다 — 그래서 DatePicker 에 flex-1 을 줘도 실제 flex 아이템은 그대로라 늘어나지
- * 않는다(중첩된 자손의 flex-grow 는 조상에게 전파되지 않는다). 라이브러리 컴포넌트라
- * class prop 을 고칠 수 없어, 페이지에서 그 바깥 루트의 폭과 flex 동작을 직접 지정한다.
- */
+/* DatePicker 는 class 를 안쪽 입력에만 넘겨서 실제 flex 아이템(.dp--main)이 안 늘어난다 — 여기서 직접 지정 */
 .inlineActionField :global(.dp--main) {
   flex: 0 1 24rem;
   min-width: 0;
   width: 24rem;
 }
 
-/*
- * InfoField 는 class prop 을 선언하고 있지만(다른 페이지 어디서도 실제로 안 쓴다), 이 값
- * 그리드는 InfoField 내부 control div 를 밖에서 셀렉터로 건드리는 대신 슬롯 안에 래퍼
- * div 를 두고 그 안에서만 스타일을 준다. control 의 기본 padding(0.8rem 1.6rem)을
- * 음수 margin 으로 상쇄해 셀 가장자리까지 꽉 채우고, align-self:stretch 로 셀 높이
- * 전체를 채운다.
- */
+/* 등급/수치 2칸 — control 기본 padding 을 음수 margin 으로 상쇄해 셀 가장자리까지 채운다 */
 .referenceValueGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -402,95 +236,25 @@
 }
 
 /*
- * "기타" 항목은 라벨 자리에 입력창(#label 슬롯)을 넣는 특수 케이스라, InfoField 가 항상
- * 렌더링하는 <label> 요소 자체(슬롯 밖, InfoField 내부 마크업)의 패딩을 줄여야 한다 —
- * 슬롯 콘텐츠가 아니라 InfoField 루트가 대상이라 class prop 없이는 닿지 않는 진짜 예외.
+ * '기타'는 라벨 자리에 입력창을 넣는 특수 케이스 — InfoField 가 그리는 <label> 의
+ * 패딩을 줄여야 하는데, 슬롯 밖 요소라 class prop 으로는 닿지 않는다.
  */
 .etcLabelField > label:first-child {
   padding: 0.8rem 1.6rem;
 }
 
-.totalScoreRow {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  min-height: 4rem;
-  padding: 1rem 1.6rem;
-  margin-top: 1.2rem;
-  border: 0;
-  background: var(--Background-gray01, #f5f6f8);
-  font-size: 1.5rem;
-  color: #1e2124;
-}
-
 .totalScoreValue {
-  font-size: 1.9rem;
   font-weight: 700;
   color: #bd2c0f;
 }
 
-.dialogSection.emailNotifySection {
-  margin-top: 0.8rem;
+.addressReadonlyField > div:last-child {
+  justify-content: center;
+  gap: 0.4rem;
 }
 
 /* -------------------------------------------------------------- 연계 팝업 공통 */
-.tableScroll {
-  width: 100%;
-  overflow: auto;
-}
-
-.dataTable,
-.summaryTable {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-  color: var(--Text-body_0, #1e2124);
-  font-size: 1.4rem;
-}
-
-.dataTable th,
-.dataTable td,
-.summaryTable th,
-.summaryTable td {
-  min-height: 4.8rem;
-  padding: 1.2rem;
-  border-bottom: 1px solid var(--Border-gray03, #e6e8ea);
-  text-align: center;
-  vertical-align: middle;
-  word-break: keep-all;
-}
-
-.dataTable thead th {
-  border-top: 1px solid var(--Text-body_0, #1e2124);
-  border-bottom-color: var(--Border-gray01, #8a949e);
-  font-weight: 700;
-}
-
-.summaryTable th {
-  width: 12rem;
-  background: var(--Background-gray01, #f5f6f8);
-  font-weight: 500;
-}
-
-.summaryTable td {
-  text-align: left;
-}
-
-.emptyCell {
-  height: 24rem;
-  color: var(--Text-body_disable, #8a949e);
-}
-
-.activeDataRow td {
-  background: var(--Surface-primary, #eef4fb);
-  color: var(--Text-primary, #005bba);
-  font-weight: 700;
-}
-
-/*
- * Figma: 타이틀에 하단 라인이 있지만 .pop-title h1 에는 라인이 없다(코드베이스에 heading-라인
- * 패턴 없음) — 대신 이미지 영역 상단에 라인을 둔다. 두 사진 행 사이에는 구분선 없이 16px 간격만.
- */
+/* 시안의 제목 하단 라인을 .pop-title h1 이 못 그려서, 대신 이미지 영역 상단에 둔다 */
 .photoArea {
   display: flex;
   flex-direction: column;
@@ -499,7 +263,6 @@
   border-top: 1px solid var(--Border-gray02, #b1b8be);
 }
 
-/* 취약상황사진 / 개선상황사진 — 각 5칸씩 한 행 */
 .photoRow {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -511,6 +274,18 @@
   flex-direction: column;
   gap: 0.4rem;
   min-width: 0;
+}
+
+.photoCardActions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+/* 카드 폭 절반씩. Button 의 min-w-25 를 안 풀면 카드(13.6rem)를 넘쳐 버튼이 서로 겹친다 */
+.photoCardActions > * {
+  flex: 1 1 0;
+  min-width: 0;
+  padding-inline: 0;
 }
 
 .photoCard h3 {
@@ -564,11 +339,7 @@
   object-fit: cover;
 }
 
-/*
- * Figma 'Photo Default' 빈 상태. 아이콘(원+산)과 'No Image' 워드마크가 Figma 에서
- * 아웃라인 이미지라, 동일하게 보이도록 두 하위 이미지를 원좌표대로 합친 SVG 하나
- * (img_no_image.svg, 66x76)를 그대로 렌더한다.
- */
+/* 시안의 빈 상태 — 아이콘+워드마크를 합친 SVG(img_no_image.svg, 66x76)를 그대로 쓴다 */
 .noImage {
   width: 6.6rem;
   height: 7.6rem;
@@ -581,7 +352,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   border: 1px solid var(--Border-gray03, #d7d9dc);
   background: #fff;
@@ -602,101 +373,58 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1.6rem;
   margin-top: 2.4rem;
-}
-
-.sectionCaption {
-  margin: 1.6rem 0 0.8rem;
-  font-size: 1.5rem;
-  font-weight: 500;
+  padding-bottom: 1.6rem;
+  border-bottom: 1px solid var(--Border-gray03, #e6e8ea);
 }
 
 .mailSummary {
   display: grid;
-  grid-template-columns: 8rem minmax(0, 1fr);
-  align-items: center;
-  margin-top: 1.6rem;
-  padding: 1.6rem;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: stretch;
+  padding: 1.6rem 2rem;
   border-radius: 0.8rem;
   background: var(--Surface-primary, #eef4fb);
   font-size: 1.4rem;
   line-height: 1.8;
 }
 
-.mailSummary strong {
+/* 직계 자식만 — 본문(p) 안의 강조 <strong> 까지 잡히지 않도록 */
+.mailSummary > strong {
+  display: flex;
+  align-items: center;
+  padding-right: 1.6rem;
   border-right: 1px solid var(--Border-gray03, #d7d9dc);
-  text-align: center;
+  font-size: 1.7rem;
 }
 
 .mailSummary p {
   padding-left: 1.6rem;
 }
 
-.mailSummary b,
-.resultGuide + .dataTable + * b {
+/* 시안: 이 건물 점수만 파란색, 비교용 평균 점수는 검정 굵게 — 그래서 이 클래스에만 색을 준다 */
+.mailScore {
   color: var(--Text-primary, #005bba);
 }
 
 .resultGuide {
-  margin: 1.6rem 0 0.8rem;
   font-size: 1.3rem;
 }
 
-.mailNote {
-  display: grid;
-  grid-template-columns: 12rem minmax(0, 1fr);
-  min-height: 8rem;
-  margin-top: 1.6rem;
-  border-top: 1px solid var(--Border-gray02, #cdd1d5);
-  border-bottom: 1px solid var(--Border-gray03, #e6e8ea);
-  font-size: 1.4rem;
-}
-
-.mailNote strong,
-.mailNote p {
-  display: flex;
-  align-items: center;
-  padding: 1.6rem;
-}
-
-.mailNote strong {
-  justify-content: center;
-  background: var(--Background-gray01, #f5f6f8);
-  font-weight: 500;
-}
-
+/* 분할·패널은 공용 LayoutSplite/LayoutPanel 이 그린다 — 화면은 열어둔 변수만 덮는다 */
 .cpoResultLayout {
-  display: grid;
-  grid-template-columns: minmax(32rem, 0.75fr) minmax(56rem, 1.25fr);
-  gap: 1.6rem;
-  min-height: 64rem;
+  /* 팝업 본문 높이. `100%` 는 부모가 flex 아이템이라 auto 로 풀려 3000px 이 된다 — 팝업 높이 바꾸면 같이 수정 */
+  --split-height: calc(85dvh - 12rem);
 }
 
-.cpoResultList,
-.cpoResultDetail {
-  min-width: 0;
-  padding: 1.6rem;
-  border: 1px solid var(--Border-gray03, #e6e8ea);
-  border-radius: 0.8rem;
+/* LayoutSplite 는 전체 화면용이라 아래 테두리가 비어 있다 — 팝업에선 분할이 여기서 끝나 닫아준다 */
+.cpoResultLayout.cpoResultLayout {
+  border-bottom: 1px solid var(--Border_gray0);
+  border-radius: 1rem;
 }
 
-.cpoResultList {
-  display: flex;
-  flex-direction: column;
-}
-
-.cpoResultList .tableScroll {
-  flex: 1;
-}
-
-.cpoResultDetail {
-  max-height: 68vh;
+/* 상세는 내용이 길어 패널 본문이 스스로 스크롤한다(본문 기본값은 overflow:hidden) */
+.cpoResultDetail :global(.layoutPanelBody) {
   overflow-y: auto;
-}
-
-.resultCount {
-  margin-top: 1.6rem;
-  color: var(--Text-body_1, #464c53);
-  font-size: 1.3rem;
 }
 
 @media (max-width: 62.5rem) {
@@ -710,42 +438,10 @@
     width: 100%;
   }
 
-  .detailGeneralTop {
-    grid-template-rows: none;
-  }
-
-  .detailReasonField,
-  .detailAddressField,
-  .detailBizNameField,
-  .detailDistrictField,
-  .detailOfficeField {
-    grid-column: auto;
-    grid-row: auto;
-  }
-
-  .addressGrid {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: none;
-  }
-
   .addressField {
-    grid-column: auto;
-    grid-row: auto;
     height: auto;
   }
 
-  .jurisdictionRow {
-    grid-column: auto;
-    grid-row: auto;
-  }
-
-  .cpoResultLayout {
-    grid-template-columns: 1fr;
-  }
-
-  .cpoResultList {
-    max-height: 36rem;
-  }
 }
 
 @media (max-width: 40rem) {
@@ -757,10 +453,7 @@
   }
 
   .departmentSelectGroup > div,
-  .improvementDate,
-  .improvementStatusSelect,
-  .detailImprovementDate,
-  .detailImprovementStatus {
+  .detailImprovementDate {
     width: 100%;
     flex-basis: 100%;
   }
@@ -775,8 +468,95 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .mailSummary,
-  .mailNote {
+  .mailSummary {
     grid-template-columns: 1fr;
   }
+}
+
+/* 신고내용은 여러 줄 — TableWrapper 기본 가운데정렬 대신 왼쪽정렬 + 줄바꿈 보존 */
+.noticeContentCell.noticeContentCell {
+  padding-block: 1.2rem;
+  text-align: left;
+  white-space: pre-line;
+  line-height: 1.6;
+}
+
+/* 시안: 부서명 뒤 24px 띄고 버튼. 값이 남는 폭을 다 먹으면 버튼이 오른쪽 끝으로 밀린다 */
+.cpoDeptField > div:last-child {
+  flex-wrap: nowrap;
+  gap: 2.4rem;
+}
+
+/* DatePicker 의 실제 flex 아이템(.dp--main)이 안 늘어난다 — 시안은 셀을 꽉 채운다 */
+.cpoDateField :global(.dp--main) {
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+/* 기본·상세주소는 왼쪽 두 줄, 이력보기 버튼은 오른쪽에서 두 행의 가운데에 둔다 */
+.cpoAddressField > div:last-child {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: repeat(2, max-content);
+  align-content: center;
+  gap: 0.4rem 0.8rem;
+}
+
+.cpoAddressField > div:last-child > span {
+  min-width: 0;
+  font-size: 1.5rem;
+  color: var(--Text-body_0, #1e2124);
+}
+
+/* 공용 Pagination 의 `1fr auto 1fr` 이 이 패널 폭에선 건수 문구와 17px 겹친다 — 내용 폭대로 둔다.
+   TabulatorGrid 가 페이저에 클래스를 안 열어둬 .tabulator-host 다음 형제로 집는다 */
+.cpoResultList :global(.tabulator-host) + div {
+  grid-template-columns: max-content minmax(0, auto) max-content;
+  column-gap: 0.8rem;
+}
+
+/* 폭이 더 줄면 한 줄을 포기하고 2행으로 접는다(겹치는 것보다 낫다) */
+@media (max-width: 90rem) {
+  .cpoResultList :global(.tabulator-host) + div {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 1.2rem;
+  }
+
+  .cpoResultList :global(.tabulator-host) + div > :nth-child(2) {
+    grid-column: 1 / -1;
+    order: 3;
+    justify-self: center;
+  }
+}
+
+/* 시안 76×32. Button 의 min-w-25(100px)에 걸려 커지므로 이 버튼만 최소폭을 푼다 */
+.cpoAddressField button {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  min-width: 0;
+}
+
+/* TableCell 기본이 whitespace-nowrap 이라 긴 값이 옆 칸을 침범한다 — 줄바꿈만 허용 */
+.noticeWrapCell.noticeWrapCell {
+  padding-block: 1.2rem;
+  white-space: normal;
+  word-break: keep-all;
+  line-height: 1.6;
+}
+
+/* 시안 표 — 헤더 35px · 행 48px(TableWrapper 기본은 40/38). height 는 최소높이로 동작해 여러 줄은 늘어난다.
+   폴더 안 TableWrapper 는 전부 이 클래스를 같이 쓴다 */
+.figmaTable :global(th) {
+  height: 3.5rem;
+  padding-block: 0;
+}
+
+.figmaTable :global(tbody td) {
+  height: 4.8rem;
+}
+
+/* 시안이 표 영역 436px 고정 — 건수가 적어도 팝업 높이가 오르내리지 않는다 */
+.historyTableArea {
+  min-height: 43.6rem;
 }
