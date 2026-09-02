@@ -1,3 +1,40 @@
+
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="게시판 관리" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+
+  <div class="list-actions">
+    <!-- <div class="list-action-txt">
+      <p>출동업무수당 지급대상 자동체크는 매일 오전 08시~12시에 반영됩니다. 12시 이후에 확인 후 작성하세요</p>
+      <p>출동업무수당 자동체크 된 지급대상 사건과 임의등록 사건 만 표시됩니다.</p>
+    </div> -->
+      <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelected">
+        선택삭제
+      </Button>
+      <Button type="button" variant="secondary" size="sm" @click="onAdd">추가</Button>
+      <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
+  </div>  
+  <TabulatorGrid
+    ref="gridRef"
+    v-model:data="rows"
+    class="flex-1"
+    :columns="columns"
+    select-mode="checkbox"
+    height="100%"
+    placeholder="등록된 게시판이 없습니다"
+    show-pagination
+    :items-per-page="10"
+    @row-selection-changed="selectedCount = $event.length"
+  />
+</template>
+
+
 <script setup lang="ts">
 import { ref } from 'vue'
 import { toast } from 'vue-sonner'
@@ -103,38 +140,3 @@ useBottomTabSetup({
   closable: true,
 })
 </script>
-
-<template>
-  <PageHeader>
-    <template #left>
-      <PageTitle title="게시판 관리" />
-    </template>
-    <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
-  </PageHeader>
-
-  <div class="list-actions">
-    <!-- <div class="list-action-txt">
-      <p>출동업무수당 지급대상 자동체크는 매일 오전 08시~12시에 반영됩니다. 12시 이후에 확인 후 작성하세요</p>
-      <p>출동업무수당 자동체크 된 지급대상 사건과 임의등록 사건 만 표시됩니다.</p>
-    </div> -->
-      <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelected">
-        선택삭제
-      </Button>
-      <Button type="button" variant="secondary" size="sm" @click="onAdd">추가</Button>
-      <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
-  </div>  
-  <TabulatorGrid
-    ref="gridRef"
-    v-model:data="rows"
-    class="flex-1"
-    :columns="columns"
-    select-mode="checkbox"
-    height="100%"
-    placeholder="등록된 게시판이 없습니다"
-    show-pagination
-    :items-per-page="10"
-    @row-selection-changed="selectedCount = $event.length"
-  />
-</template>

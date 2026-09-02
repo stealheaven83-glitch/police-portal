@@ -1533,7 +1533,9 @@ html.theme-dark .rowgroup.notice .notice-list .noticeSwiper .swiper-nav .slide-a
   }
 }
 
-
+.file-input{
+  width:200px;
+}
 /*그루핑 및 gap 처리*/
 .group-gap1{
   display: flex;
@@ -1591,4 +1593,8 @@ html.theme-dark .rowgroup.notice .notice-list .noticeSwiper .swiper-nav .slide-a
   display: flex;
   align-items: center;
   height: 4.2rem;
+}
+.pop-editor{
+  border:0;
+  margin:5px 0;
 }

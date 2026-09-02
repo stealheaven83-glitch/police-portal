@@ -477,7 +477,7 @@ const worklist = ref([
   { id: 368, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '목록', depth5: '', screenName: '팝업관리 화면', screenId: 'PC-COM-2402', path: '/views/com/PC-COM-2402', status: '대기' },
   { id: 369, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '등록', depth5: '', screenName: '팝업관리 등록화면', screenId: 'PC-COM-2403', path: '', status: '대기' },
   { id: 370, category: '스마트워크', depth1: '', depth2: '앱관리', depth3: '', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
-  { id: 371, category: '스마트워크', depth1: '', depth2: '', depth3: '목록', depth4: '', depth5: '', screenName: '앱관리 목록 화면', screenId: 'PC-COM-2501', path: '', status: '대기' },
+  { id: 371, category: '스마트워크', depth1: '', depth2: '', depth3: '목록', depth4: '', depth5: '', screenName: '앱관리 목록 화면', screenId: 'PC-COM-2501', path: '/views/com/PC-COM-2501', status: '대기' },
   { id: 372, category: '스마트워크', depth1: '', depth2: '', depth3: '등록', depth4: '', depth5: '', screenName: '앱관리 등록 팝업창', screenId: 'PC-COM-2502', path: '', status: '대기' },
   { id: 373, category: '스마트워크', depth1: '', depth2: '도움말 관리기능', depth3: '', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
   { id: 374, category: '스마트워크', depth1: '', depth2: '', depth3: '목록', depth4: '', depth5: '', screenName: '도움말 목록 화면', screenId: 'PC-COM-2601', path: '', status: '대기' },

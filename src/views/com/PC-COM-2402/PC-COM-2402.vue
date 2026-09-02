@@ -1,3 +1,51 @@
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="팝업공지 관리" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+
+  <!--
+    시안의 검색줄은 부서 선택도 상세조회 토글도 없다.
+    SearchWrapper 는 department 슬롯과 collapsible 이 모두 없으면 회색 입력 박스만 그린다.
+  -->
+  <div>
+    <SearchWrapper>
+      <template #form>
+        <div class="search-area">
+          <div class="group-gap2">
+            <DatePicker v-model="searchFrom" label="시작일" size="sm" class="!space-y-0" input-class="w-[16rem]" />
+            <span>~</span>
+            <DatePicker v-model="searchTo" label="종료일" size="sm" class="!space-y-0" input-class="w-[16rem]" />
+          </div>
+        </div>
+      </template>
+      <template #btns> 
+        <Button variant="secondary" size="sm" @click="search">조회</Button>
+      </template>
+    </SearchWrapper>
+  </div>
+
+  <div class="list-actions">
+    <Button type="button" variant="primary" size="sm" @click="openNew">신규</Button>
+  </div>
+
+  <TabulatorGrid
+    class="flex-1"
+    :columns="columns"
+    :data="rows"
+    height="100%"
+    min-height="30rem"
+    placeholder="등록된 팝업공지가 없습니다"
+    show-pagination
+    :items-per-page="10"
+  />
+
+  <PopupNoticeDialog />
+</template>
 <script setup lang="ts">
 import { provide } from 'vue'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
@@ -74,52 +122,3 @@ useBottomTabSetup({
   closable: true,
 })
 </script>
-
-<template>
-  <PageHeader>
-    <template #left>
-      <PageTitle title="팝업공지 관리" />
-    </template>
-    <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
-  </PageHeader>
-
-  <!--
-    시안의 검색줄은 부서 선택도 상세조회 토글도 없다.
-    SearchWrapper 는 department 슬롯과 collapsible 이 모두 없으면 회색 입력 박스만 그린다.
-  -->
-  <div>
-    <SearchWrapper>
-      <template #form>
-        <div class="search-area">
-          <div class="group-gap2">
-            <DatePicker v-model="searchFrom" label="시작일" size="sm" class="!space-y-0" input-class="w-[16rem]" />
-            <span>~</span>
-            <DatePicker v-model="searchTo" label="종료일" size="sm" class="!space-y-0" input-class="w-[16rem]" />
-          </div>
-        </div>
-      </template>
-      <template #btns>
-        <Button variant="secondary" size="sm" @click="search">조회</Button>
-      </template>
-    </SearchWrapper>
-  </div>
-
-  <div class="list-actions">
-    <Button type="button" variant="primary" size="sm" @click="openNew">신규</Button>
-  </div>
-
-  <TabulatorGrid
-    class="flex-1"
-    :columns="columns"
-    :data="rows"
-    height="100%"
-    min-height="30rem"
-    placeholder="등록된 팝업공지가 없습니다"
-    show-pagination
-    :items-per-page="10"
-  />
-
-  <PopupNoticeDialog />
-</template>

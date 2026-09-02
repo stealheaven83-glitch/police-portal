@@ -1,153 +1,70 @@
-/*인사관리 페이지 전용 레이아웃. 1rem = 10px 기준 (전역 리셋).
+/*
+ * 인사관리(PC-LPO-0801) 화면 전용. 1rem = 10px 기준 (전역 리셋).
+ * 여기 있는 건 전부 "이 화면 고유의 배치" — 공통으로 옮겨 붙일 데가 없는 것들이다(CLAUDE.md §1).
+ */
 
-.toolbar {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-  padding: 1.6rem 2rem;
-  border: 1px solid var(--Border_gray03, #e6e8ea);
-  border-radius: 0.8rem;
-  background: var(--Background-gray01, #f5f6f8);
+/* ---------------------------------------------------------------- 목록 */
+/*
+ * "지금 오른쪽 상세에 보이는 행" 강조. 체크박스 선택과는 별개 개념이라 공용
+ * .tabulator-selected 를 못 쓴다. PC-COM-2204 의 .activeRow 와 같은 규칙인데,
+ * 동료 파일을 건드리지 않으려고 합치지 않고 각자 뒀다(CLAUDE.md §1).
+ */
+.activeRow {
+  background-color: var(--Surface-primary);
 }
 
-.toolbarTop {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.2rem;
-}
-
-.searchRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1.2rem;
-}
-
-.searchField {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-}
-
-.searchLabel {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--Text-body_0, #1e2124);
-  white-space: nowrap;
-}
-
-.select {
-  width: 13rem;
-  max-width: 100%;
-}
-
-.toggleRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.2rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--Border_gray03, #e6e8ea);
-}
-
-.toggleButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: var(--Text-body_1, #33363d);
-}
-
-.toggleButton svg {
-  transition: transform 0.2s ease-in-out;
-}
-
-.toggleButton[aria-expanded='true'] svg {
-  transform: rotate(180deg);
-}
-
-.disclaimer {
-  font-size: 1.3rem;
-  color: var(--Text-body_2, #58616a);
-}
-
-.advancedSearchRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1.2rem;
-  padding-top: 1rem;
-  border-top: 1px dashed var(--Border_gray03, #e6e8ea);
-}
-
-/* -------------------------------------------------------------- 2단 레이아웃 */
-.columns {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-  align-items: start;
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-.panel {
-  border: 1px solid var(--Border_gray03, #e6e8ea);
-  border-radius: 0.8rem;
-  overflow: hidden;
-  background: #fff;
-}
-
-.panelHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.2rem;
-  padding: 1.2rem 1.6rem;
-  border-bottom: 1px solid var(--Border_gray03, #e6e8ea);
-  background: var(--Background-gray01, #f5f6f8);
-}
-
-.panelTitle {
-  font-size: 1.7rem;
+/* tabulator-cell 은 Tabulator 가 런타임에 붙이는 전역 클래스라 :global() 로 빠져나가야
+   실제 DOM 클래스와 매칭된다 — CSS Modules 가 이 파일의 클래스 셀렉터를 해시로 스코프하기 때문. */
+.activeRow :global(.tabulator-cell) {
+  color: var(--Base-primary);
   font-weight: 700;
-  color: var(--Text-body_0, #1e2124);
 }
 
-.panelBody {
-  padding: 1.6rem;
+/* ---------------------------------------------------------------- 안내 문구 */
+/* 개인정보 조회 경고문에서 처벌 조항만 붉게 강조하는 부분(시안 기준) */
+.noticeStrong {
+  color: var(--Base--point);
+  font-weight: 700;
 }
 
-/* -------------------------------------------------------------- 상세 폼 (사진 + InfoTable) */
+/* ---------------------------------------------------------------- 상세 패널 */
+/*
+ * 상세는 사진 칸 + 폼이 가로로 붙고, 패널보다 길어지면 이 영역만 세로로 스크롤한다
+ * (LayoutPanel 본문은 overflow:hidden 이라 안쪽에서 스크롤을 받아야 한다).
+ */
+.detailScroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
 .detailLayout {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1.6rem;
   align-items: flex-start;
+  gap: 2.4rem;
 }
 
+/* 사진 칸 — 시안 120x164 + 아래 '사진 등록' 버튼 */
 .photoBox {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.8rem;
+  gap: 1.2rem;
   flex-shrink: 0;
-  width: 14rem;
+  width: 12rem;
 }
 
 .photoFrame {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 14rem;
-  height: 17rem;
-  border: 1px solid var(--Border_gray03, #e6e8ea);
-  border-radius: 0.4rem;
-  background: var(--Background-gray01, #f5f6f8);
-  color: var(--Text-body_disable, #b1b8be);
-  font-size: 1.4rem;
+  width: 12rem;
+  height: 16.4rem;
   overflow: hidden;
+  border: 1px solid var(--Border_gray02);
+  border-radius: var(--Radius-medium1);
+  background-color: var(--Background-gray01);
+  color: var(--Text-body_2);
+  font-size: 1.3rem;
 }
 
 .photoFrame img {
@@ -156,69 +73,32 @@
   object-fit: cover;
 }
 
+/* 폼은 사진 옆 남는 폭을 다 쓴다 */
 .detailFields {
-  flex: 1 1 32rem;
+  flex: 1;
   min-width: 0;
-  max-width: 100%;
 }
 
-/* -------------------------------------------------------------- 전입 전출 현황 */
+/* ---------------------------------------------------------------- 전입 전출 현황 */
+/* 상세 폼과 하위 표를 가르는 굵은 구분선(시안의 divider) */
 .transferSection {
-  margin-top: 2.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 6px solid var(--Background-gray01);
 }
 
-.transferTableWrap {
-  min-width: 0;
-  overflow-x: auto;
-  border-top: 2px solid var(--Text-body_0, #1e2124);
+.transferHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
 }
 
-.transferTable {
-  width: 100%;
-  min-width: 60rem;
-  border-collapse: collapse;
-}
-
-.transferTable th,
-.transferTable td {
-  padding: 1rem 1.2rem;
-  border-bottom: 1px solid var(--Border_gray03, #e6e8ea);
-  font-size: 1.4rem;
-  text-align: center;
-  color: var(--Text-body_1, #33363d);
-}
-
-.transferTable th {
-  background: var(--Background-gray01, #f5f6f8);
-  color: var(--Text-body_0, #1e2124);
-  font-weight: 600;
-}
-
-.transferEmpty {
-  padding: 3.2rem 0;
-  color: var(--Text-body_disable, #b1b8be);
-}
-
-/* -------------------------------------------------------------- 반응형 */
-@media (max-width: 75rem) {
-  .columns {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 40rem) {
-  .toolbarTop,
-  .searchRow {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .select {
-    width: 100%;
-  }
-
-  .detailLayout {
-    flex-direction: column;
-    align-items: center;
-  }
+.transferTitle {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
 }

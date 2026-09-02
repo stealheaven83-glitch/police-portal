@@ -15,6 +15,53 @@
 
 /* ── 화면 블록은 여기부터 (화면ID 오름차순) ───────────────────── */
 
+/* ── PC-COM-2204 권한관리 (팝업 PC-COM-2205 · PC-COM-2207 포함) ── */
+
+/* 지금 오른쪽 '메뉴별 권한설정'에 떠 있는 권한 행 강조.
+   체크박스 선택(다중, 선택삭제용)과는 별개 개념이라 공용 .tabulator-selected 를 못 쓴다. */
+.pc-com-2204-active-row {
+  background-color: var(--Surface-primary);
+}
+.pc-com-2204-active-row .tabulator-cell {
+  color: var(--Base-primary);
+  font-weight: 700;
+}
+
+/* 오른쪽 패널 제목줄의 권한ID / 권한명 값 */
+.pc-com-2204-active-value {
+  color: var(--Base--point);
+  font-weight: 600;
+}
+
+/* '메뉴명' 그룹 헤더 밑에 생기는 빈 서브헤더 줄(level1/2/3)을 접어 한 줄처럼 보이게 한다.
+   컬럼 구조는 기획 스펙이라 그대로 두고 높이만 0 으로 만든다.
+   Tabulator 가 그룹 헤더 높이를 JS 로 인라인 계산해 넣으므로 !important 로 덮는다. */
+.pc-com-2204-menu-grid .tabulator-col-group-cols {
+  height: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden;
+  border-top: none !important;
+}
+
+/* 메뉴명 2depth 칸은 시안에서 회색으로 칠해져 있다 */
+.pc-com-2204-menu-grid .tabulator-cell.pc-com-2204-depth-cell {
+  background-color: var(--Background-gray01);
+}
+
+/* ── PC-COM-2402 팝업관리 (등록 팝업 PC-COM-2403 포함) ────────── */
+
+/* 첨부파일 줄 끝의 용량 안내 문구 — 버튼 옆에 한 줄로 붙어야 해서 줄바꿈을 막는다 */
+.pc-com-2402-file-hint {
+  font-size: 1.3rem; 
+  color: var(--Text-body_1);
+  white-space: nowrap;
+}
+@media (max-width: 36rem) {
+  .pc-com-2402-file-hint {
+    white-space: normal;
+  }
+}
+
 /* ── PC-LPO-0601 관내현황 (팝업 PC-LPO-0602 · PC-LPO-0603 포함) ── */
 
 /* 상단 부서선택 + 수정일/버튼 줄 */

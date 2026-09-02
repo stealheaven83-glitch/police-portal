@@ -1,4 +1,45 @@
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="앱관리" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+  <SearchWrapper>
+    <template #form>
+      <div class="search-area">
+        <div class="group-gap3">
+        <SelectField v-model="searchCondition" label="검색조건" :options="searchConditionOptions" size="sm" triggerClass="w-35" />
+        <InputField2 v-model="keyword" size="sm" inputClass="w-100" placeholder="검색어를 입력해주세요." />
+      </div>
+      </div>
+    </template>
+    <template #btns>
+      <Button variant="secondary" size="sm">조회</Button>
+    </template>
+  </SearchWrapper>
+
+  <div class="list-actions">
+    <Button type="button" variant="primary" size="sm" @click="openNewDetail">신규</Button>
+  </div>
+
+  <TabulatorGrid
+    class="flex-1"
+    :columns="columns"
+    :data="rows"
+    height="100%"
+    min-height="40rem"
+    placeholder="등록된 앱 버전이 없습니다"
+    :items-per-page="10"
+  />
+
+  <AppVersionDialog />
+</template>
+
 <script setup lang="ts">
+import { provide } from 'vue'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -10,7 +51,8 @@ import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tab
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { systemAdminMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
-import { useAppVersionList, searchConditionOptions } from './composable/PC-COM-2501'
+import { useAppVersionList, AppVersionKey, searchConditionOptions } from './composable/PC-COM-2501'
+import AppVersionDialog from './components/AppVersionDialog.vue'
 
 defineOptions({ name: 'PcCom2501' })
 
@@ -22,7 +64,11 @@ const navItems = [
   { label: '앱관리' },
 ]
 
-const { searchCondition, keyword, rows } = useAppVersionList()
+// 팝업(AppVersionDialog)이 같은 상태를 쓰도록 여기서 한 번만 만들어 provide 한다(CLAUDE.md §3 패턴A)
+const store = useAppVersionList()
+provide(AppVersionKey, store)
+
+const { searchCondition, keyword, rows, openNewDetail } = store
 
 const columns: TabulatorGridColumn[] = [
   { title: '번호', field: 'no', width: 70, hozAlign: 'center' },
@@ -47,40 +93,3 @@ useBottomTabSetup({
   closable: true,
 })
 </script>
-
-<template>
-  <PageHeader>
-    <template #left>
-      <PageTitle title="앱관리" />
-    </template>
-    <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
-  </PageHeader>
-  <SearchWrapper>
-    <template #form>
-      <div class="search-area">
-        <SelectField v-model="searchCondition" label="검색조건" :options="searchConditionOptions" size="sm" triggerClass="w-35" />
-        <InputField2 v-model="keyword" size="sm" inputClass="w-100" placeholder="검색어를 입력해주세요." />
-      </div>
-    </template>
-    <template #btns>
-      <Button variant="secondary" size="sm">조회</Button>
-    </template>
-  </SearchWrapper>
-
-  <div class="list-actions">
-    <Button type="button" variant="primary" size="sm">신규</Button>
-  </div>
-
-  <TabulatorGrid
-    class="flex-1"
-    :columns="columns"
-    :data="rows"
-    height="100%"
-    min-height="40rem"
-    placeholder="등록된 앱 버전이 없습니다"
-    show-pagination="false"
-    :items-per-page="10"
-  />
-</template>
