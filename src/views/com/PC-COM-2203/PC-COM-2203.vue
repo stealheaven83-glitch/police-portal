@@ -4,7 +4,10 @@
       <PageTitle title="메뉴 관리" />
     </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
+      <span class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </span>
     </template>
   </PageHeader>
 
@@ -73,6 +76,7 @@ import { ref } from 'vue'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 import { Button } from '@/components/custom/button'
 import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'

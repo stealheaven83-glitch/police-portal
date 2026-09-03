@@ -16,7 +16,10 @@
       <PageTitle title="알림" />
     </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
+      <span class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </span>
     </template>
   </PageHeader>
 
@@ -108,7 +111,7 @@ import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import NotificationDetailDialog from './components/NotificationDetailDialog.vue'
 import { useNotificationList, type NotificationRow } from './composable/PM-LPO-0106'
 import styles from './style/PM-LPO-0106.module.css'
-
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 defineOptions({
   name: 'PmLpo0106',
 })

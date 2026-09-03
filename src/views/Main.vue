@@ -43,14 +43,14 @@
                   <i class="icon info" aria-hidden="true"></i>
                   <span>검색원활</span>
                 </span>
-                <span class="status-bedge normal">
+                <!-- <span class="status-bedge normal">
                   <i class="icon info" aria-hidden="true"></i>
                   <span>검색보통</span>
                 </span>
                 <span class="status-bedge busy">
                   <i class="icon info" aria-hidden="true"></i>
                   <span>검색혼잡</span>
-                </span>
+                </span> -->
               </div>
               <div class="serach-box">
                 <input

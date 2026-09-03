@@ -4,7 +4,10 @@
       <PageTitle title="간이 범죄예방진단" />
     </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
+      <span class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </span>
     </template>
   </PageHeader>
 
@@ -159,6 +162,7 @@ import {
   type DiagnosisHistoryRow,
 } from './composable/PM-PUB-0101'
 import styles from './style/PM-PUB-0101.module.css'
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 
 // KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!)
 defineOptions({

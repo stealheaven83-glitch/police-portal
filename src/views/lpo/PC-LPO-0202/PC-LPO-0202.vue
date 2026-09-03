@@ -4,7 +4,10 @@
       <PageTitle title="근무지정표작성" />
     </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
+      <span class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </span>
     </template>
   </PageHeader>
 
@@ -278,7 +281,7 @@ import LayoutHeader from '@/components/custom/content-layout/layoutHeader.vue'
 import WorkerAddDialog from './components/WorkerAddDialog.vue'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
-
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 useSideMenuSetup({ ...localPoliceMenu, openIndex: 1, activeChild: '근무일지(甲)' })
 
 const navItems = [

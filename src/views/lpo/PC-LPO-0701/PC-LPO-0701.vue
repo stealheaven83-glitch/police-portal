@@ -4,7 +4,10 @@
       <PageTitle title="장비관리" />
     </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
+      <span class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </span>
     </template>
   </PageHeader>
 
@@ -95,7 +98,7 @@ import type { EquipmentListRow } from './composable/PC-LPO-0701'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
-
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 // KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!) — useBottomTabSetup 의 componentName 과 일치해야 한다.
 // 0701~0714 가 이 컴포넌트 하나를 screenGroup 으로 공유하므로(router/index.ts 참고), 탭도
 // 어느 화면ID로 들어오든 항상 이 하나의 "장비관리" 탭으로 고정한다.

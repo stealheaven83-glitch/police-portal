@@ -4,7 +4,10 @@
       <PageTitle title="단체현황" />
     </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
+      <span class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </span>
     </template>
   </PageHeader>
 
@@ -62,6 +65,7 @@ import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { publicSafetyMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { usePublicSafetyStore, groupTypeOptions } from '../composable/publicSafety'
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 
 defineOptions({ name: 'PcPub0306' })
 

@@ -5,7 +5,10 @@
       <PageTitle title="시스템모니터링 관리" />
     </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
+      <span class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </span>
     </template>
   </PageHeader>
 
@@ -40,7 +43,7 @@ import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tab
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { systemAdminMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
-
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 // KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!)
 defineOptions({
   name: 'PcCom2301',

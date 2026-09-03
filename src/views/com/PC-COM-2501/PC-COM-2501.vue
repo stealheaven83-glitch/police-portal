@@ -4,7 +4,10 @@
       <PageTitle title="앱관리" />
     </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
+      <span class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </span>
     </template>
   </PageHeader>
   <SearchWrapper>
@@ -32,6 +35,7 @@
     height="100%"
     min-height="40rem"
     placeholder="등록된 앱 버전이 없습니다"
+    show-pagination
     :items-per-page="10"
   />
 
@@ -53,7 +57,7 @@ import { systemAdminMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useAppVersionList, AppVersionKey, searchConditionOptions } from './composable/PC-COM-2501'
 import AppVersionDialog from './components/AppVersionDialog.vue'
-
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 defineOptions({ name: 'PcCom2501' })
 
 useSideMenuSetup({ ...systemAdminMenu, openIndex: 3, activeChild: '앱관리' })

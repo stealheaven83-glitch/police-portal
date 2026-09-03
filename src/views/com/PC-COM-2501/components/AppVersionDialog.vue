@@ -118,7 +118,6 @@ async function onSave() {
 async function onDelete() {
   const result = await dialog.confirm({
     title: '삭제하시겠습니까?',
-    description: '삭제한 앱 버전은 되돌릴 수 없습니다.',
     btnOk: '확인',
     btnCancel: '취소',
   })

@@ -287,3 +287,85 @@
     font-weight: 400;
     color: var(--Text-body_1);
 }
+
+/* ── PC-STT-0103 인사관리현황 ─────────────────────────────────── */
+
+/* 지금 오른쪽 상세에 보이는 행 강조 */
+.pc-stt-0103-active-row {
+  background-color: var(--Surface-primary);
+}
+.pc-stt-0103-active-row .tabulator-cell {
+  color: var(--Base-primary);
+  font-weight: 700;
+}
+
+/* 개인정보 조회 경고문에서 처벌 조항만 붉게 강조 */
+.pc-stt-0103-notice-strong {
+  color: var(--Base--point);
+  font-weight: 700;
+}
+
+/* 상세는 사진 칸 + 폼이 가로로 붙고, 패널보다 길어지면 이 영역만 세로로 스크롤한다
+   (LayoutPanel 본문은 overflow:hidden 이라 안쪽에서 스크롤을 받아야 한다) */
+.pc-stt-0103-detail-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+.pc-stt-0103-detail-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 2.4rem;
+}
+
+/* 사진 칸 — 시안 120x164 + 아래 '사진 등록' 버튼 */
+.pc-stt-0103-photo-box {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  flex-shrink: 0;
+  width: 12rem;
+}
+.pc-stt-0103-photo-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12rem;
+  height: 16.4rem;
+  overflow: hidden;
+  border: 1px solid var(--Border_gray02);
+  border-radius: var(--Radius-medium1);
+  background-color: var(--Background-gray01);
+  color: var(--Text-body_2);
+  font-size: 1.3rem;
+}
+.pc-stt-0103-photo-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.pc-stt-0103-detail-fields {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 상세 폼과 하위 표를 가르는 굵은 구분선(시안의 divider) */
+.pc-stt-0103-transfer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 6px solid var(--Background-gray01);
+}
+.pc-stt-0103-transfer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+}
+.pc-stt-0103-transfer-title {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+}

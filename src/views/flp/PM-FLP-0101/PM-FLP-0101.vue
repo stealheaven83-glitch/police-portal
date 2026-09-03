@@ -6,7 +6,7 @@
     <template #right>
       <div class="group-gap2">
         <Breadcrumb :items="navItems" />
-        
+        <HelpButton />             
       </div>
     </template>
   </PageHeader>
@@ -95,7 +95,7 @@ import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useRequestManage, periodTypeOptions, receiptTypeOptions } from './composable/PM-FLP-0101'
 import styles from './style/PM-FLP-0101.module.css'
-
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 // KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수, useBottomTabSetup 의 componentName 과 일치)
 defineOptions({ name: 'PmFlp0101' })
 

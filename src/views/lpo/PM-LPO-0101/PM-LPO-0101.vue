@@ -4,7 +4,10 @@
       <PageTitle title="메모" />
     </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
+      <span class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </span>
     </template>
   </PageHeader>
 
@@ -145,7 +148,7 @@ import type { MemoSort } from './composable/useMemoList'
 import styles from './style/PM-LPO-0101.module.css'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
-
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 useSideMenuSetup({ ...localPoliceMenu, openIndex: 0, activeChild: '메모' })
 
 const navItems = [

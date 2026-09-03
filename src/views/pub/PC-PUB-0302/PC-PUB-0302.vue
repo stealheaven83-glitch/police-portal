@@ -4,7 +4,10 @@
       <PageTitle title="단체정보상세" />
     </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
+      <span class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </span>
     </template>
   </PageHeader>
 
@@ -34,7 +37,7 @@ import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import GroupDetailForm from '../components/GroupDetailForm.vue'
 import { usePublicSafetyStore, createEmptyGroupForm } from '../composable/publicSafety'
 import styles from '../style/pageActions.module.css'
-
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 defineOptions({ name: 'PcPub0302' })
 
 const navItems = [

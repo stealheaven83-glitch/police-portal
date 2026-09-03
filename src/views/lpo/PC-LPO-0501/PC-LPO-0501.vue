@@ -4,7 +4,10 @@
       <PageTitle title="출동수당조회" />
     </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
+      <span class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </span>
     </template>
   </PageHeader>
 
@@ -76,7 +79,7 @@ import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useDispatchAllowanceList } from './composable/PC-LPO-0501'
-
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 defineOptions({ name: 'PcLpo0501' })
 
 useSideMenuSetup({ ...localPoliceMenu, openIndex: 3, activeChild: '출동수당 조회' })

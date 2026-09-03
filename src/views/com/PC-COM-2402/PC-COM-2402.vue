@@ -4,7 +4,10 @@
       <PageTitle title="팝업공지 관리" />
     </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
+      <span class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </span>
     </template>
   </PageHeader>
 
@@ -65,7 +68,7 @@ import {
   PopupNoticeKey,
   type PopupNoticeRow,
 } from './composable/PC-COM-2402'
-
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 defineOptions({ name: 'PcCom2402' })
 
 const navItems = [

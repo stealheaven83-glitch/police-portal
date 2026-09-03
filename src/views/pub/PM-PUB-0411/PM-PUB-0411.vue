@@ -4,7 +4,10 @@
       <PageTitle title="주취자센터관리" />
     </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
+      <span class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </span>
     </template>
   </PageHeader>
 
@@ -87,6 +90,7 @@ import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { publicSafetyMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import DrunkCenterDetailForm from '../components/DrunkCenterDetailForm.vue'
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 import {
   useDrunkCenterStore,
   createEmptyCenterForm,

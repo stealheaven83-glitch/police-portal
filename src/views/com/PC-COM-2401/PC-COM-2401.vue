@@ -5,7 +5,10 @@
       <PageTitle title="게시판 관리" />
     </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
+      <span class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </span>
     </template>
   </PageHeader>
 
@@ -48,7 +51,7 @@ import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { systemAdminMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useBoardManage, countOptions } from './composable/PC-COM-2401'
-
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 defineOptions({ name: 'PcCom2401' })
 
 const navItems = [
@@ -120,12 +123,16 @@ function onDeleteSelected() {
 }
 
 async function onSave() {
-  // TODO: API 연동. 변경된 행만 보내려면 gridRef.getDirtyRows() 를 쓴다.
-  await dialog.alert({
-    title: '저장하시.',
-    description: '게시판 설정이 저장되었습니다.',
-    btnCancel: '확인',
+  // 사용자 지정: 저장 전 컨펌창을 먼저 띄운다 (§7 기본은 컨펌 없이 바로 저장)
+  const result = await dialog.confirm({
+    title: '저장 하시겠습니까?',
+    btnOk: '확인',
+    btnCancel: '취소',
   })
+  if (!result.confirmed) return
+
+  // TODO: API 연동. 변경된 행만 보내려면 gridRef.getDirtyRows() 를 쓴다.
+  await dialog.alert({ title: '등록 되었습니다.', btnCancel: '확인' })
 }
 
 // 사이드메뉴(시스템 관리 LNB) 설정

@@ -4,7 +4,10 @@
       <PageTitle title="주취자 센터 병상 현황" />
     </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
+      <span class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </span>
     </template>
   </PageHeader>
 
@@ -281,6 +284,7 @@ import {
 } from './composable/PM-PUB-0409'
 import styles from './style/PM-PUB-0409.module.css'
 import infoStyles from '@/components/custom/info-table/InfoTable.module.css'
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 
 // KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!) — useBottomTabSetup 의 componentName 과 일치해야 한다.
 defineOptions({ name: 'PmPub0409' })

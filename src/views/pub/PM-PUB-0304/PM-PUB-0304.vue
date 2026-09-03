@@ -4,7 +4,10 @@
       <PageTitle title="단체활동기록" />
     </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
+      <span class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </span>
     </template>
   </PageHeader>
 
@@ -170,6 +173,7 @@ import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { publicSafetyMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import AddressSearchDialog from '../components/AddressSearchDialog.vue'
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 import {
   usePublicSafetyStore,
   createEmptyActivityForm,

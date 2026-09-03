@@ -4,7 +4,10 @@
       <PageTitle title="공지사항" />
     </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
+      <span class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </span>
     </template>
   </PageHeader>
 
@@ -72,7 +75,7 @@ import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useNoticeList, authorFilterOptions, searchFieldOptions } from './composable/PM-COM-1001'
-
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 defineOptions({ name: 'PmCom1001' })
 
 const navItems = [

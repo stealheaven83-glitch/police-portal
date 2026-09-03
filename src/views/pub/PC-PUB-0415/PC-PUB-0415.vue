@@ -4,7 +4,10 @@
       <PageTitle title="정신응급대응팀" />
     </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
+      <span class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </span>
     </template>
   </PageHeader>
 
@@ -79,6 +82,7 @@ import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { publicSafetyMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import MentalCenterDetailForm from '../components/MentalCenterDetailForm.vue'
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 import {
   useMentalCenterStore,
   createEmptyCenterForm,
