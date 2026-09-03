@@ -221,23 +221,31 @@ CLAUDE.md 는 매 세션 자동으로 전문이 실리고, 아래 문서들은 *
 1. **파일 구성** — `PC-XXX-NNNN.vue` + `composable/PC-XXX-NNNN.ts` 둘뿐이다. **`route.ts` 는 만들지
    않는다**(§4). `style/` 폴더도 **만들지 않는다**(0215가 그렇다 — 공통 클래스로 해결).
    화면 전용 CSS 가 필요하면 `styles.css`(§1-2).
-2. **템플릿 순서** — `PageHeader`(#left `PageTitle` / #right `Breadcrumb`) → `SearchWrapper`
+2. **`.vue` 블록 순서** — `<template>` → `<script setup>` 순서로 고정한다. **화면 폴더의
+   `components/` 팝업까지 같은 순서.** `<style>` 블록은 두지 않는다(화면 CSS 는 `styles.css`, §1-2).
+   ```
+   1  <template>
+   2  <script setup lang="ts">
+   3  <style>          ← 쓰지 않는다
+   ```
+   2026-09-03 에 화면·팝업 62개를 이 순서로 일괄 정리했다 — 새로 만드는 파일도 이 순서를 따른다.
+3. **템플릿 순서** — `PageHeader`(#left `PageTitle` / #right `Breadcrumb`) → `SearchWrapper`
    (#department / #form / #btns) → `.list-actions` → `TabulatorGrid`. 사이에 의미 없는 `<div>`를
    끼우지 않는다.
-3. **LNB** — 프리셋을 인라인 전개(§5). 문자열 키는 프리셋 기본값이 그 화면과 정확히 일치할 때만.
-4. **브레드크럼** — 실제 라우트가 있는 항목에만 `path`를 준다. 없는 경로를 넣으면 죽은 링크가 된다.
-5. **`defineOptions` + `useBottomTabSetup`** — 이름이 정확히 일치해야 KeepAlive가 걸린다(§5).
-6. **CSS** — 레이아웃은 공통 클래스(`.search-area` `.group-gap2` `.list-actions` `.dept-name`).
+4. **LNB** — 프리셋을 인라인 전개(§5). 문자열 키는 프리셋 기본값이 그 화면과 정확히 일치할 때만.
+5. **브레드크럼** — 실제 라우트가 있는 항목에만 `path`를 준다. 없는 경로를 넣으면 죽은 링크가 된다.
+6. **`defineOptions` + `useBottomTabSetup`** — 이름이 정확히 일치해야 KeepAlive가 걸린다(§5).
+7. **CSS** — 레이아웃은 공통 클래스(`.search-area` `.group-gap2` `.list-actions` `.dept-name`).
    테일윈드는 컴포넌트 `class` prop 으로 폭/여백 미세조정만(`inputClass="w-40"` 등, §1의 예외).
-7. **그리드** — `ref="gridRef"` + `class="flex-1"` + `height="100%"` + `min-height`.
+8. **그리드** — `ref="gridRef"` + `class="flex-1"` + `height="100%"` + `min-height`.
    페이지네이션이 필요하면 `show-pagination` + `:items-per-page`(그리드 화면 30개 중 21개가 쓴다).
-8. **검색 옵션** — `export const xxxOptions` 로 composable 에 두고 화면에서 import.
+9. **검색 옵션** — `export const xxxOptions` 로 composable 에 두고 화면에서 import.
    sentinel 은 `''` 가 아니라 `'all'`(§8).
 
 ### 기준 파일의 신뢰도
 2026-08-31~09-01 에 정비했다 — `PC-LPO-0215`(LNB 추가, 죽은 브레드크럼 링크 제거, 불필요한
 래퍼 제거, 페이지네이션 예시 추가), `PC-LPO-0801`(테일윈드 7줄 → 0). 같은 기간에 LNB 활성
-표시 오류를 16개 화면에서, 죽은 브레드크럼 링크를 11개 화면 19곳에서 일괄 수정했다. **그래도 기준 파일이 완전무결하다고 가정하지 않는다** — 복사하기 전에 위 8개 항목을
+표시 오류를 16개 화면에서, 죽은 브레드크럼 링크를 11개 화면 19곳에서 일괄 수정했다. **그래도 기준 파일이 완전무결하다고 가정하지 않는다** — 복사하기 전에 위 9개 항목을
 그 파일에서 실제로 확인하고, 어긋난 게 보이면 사용자에게 알린다. 기준 파일이 바뀌면 이 표도 갱신.
 
 ## 1-2. 화면 전용 CSS — `styles.css` 한 파일에 모은다

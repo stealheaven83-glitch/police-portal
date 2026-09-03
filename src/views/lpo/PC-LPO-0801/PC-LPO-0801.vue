@@ -1,182 +1,3 @@
-<script setup lang="ts">
-import { ref } from 'vue'
-import { useDialog } from '@/composable/dialog/dialog'
-import PageHeader from '@/components/custom/title/PageHeader.vue'
-import PageTitle from '@/components/custom/title/PageTitle.vue'
-import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
-import HelpButton from '@/components/custom/button/HelpButton.vue'
-import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
-import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
-import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
-import SelectField from '@/components/custom/select/SelectField.vue'
-import InputField2 from '@/components/custom/input/InputField2.vue'
-import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
-import TextareaField from '@/components/custom/textarea/TextareaField.vue'
-import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
-import { Checkbox } from '@/components/custom/checkbox'
-import { Button } from '@/components/custom/button'
-import { InfoTable, InfoField } from '@/components/custom/info-table'
-import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
-import LayoutSplit from '@/components/custom/content-layout/layoutSplit.vue'
-import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
-import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
-import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
-import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
-import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
-import {
-  usePersonnelManage,
-  statusOptions,
-  duplicateTypeOptions,
-  positionOptions,
-  teamOptions,
-  periodicAccidentReasonOptions,
-  type PersonnelListRow,
-  type TransferRow,
-} from './composable/PC-LPO-0801'
-import styles from './style/PC-LPO-0801.module.css'
-import infoStyles from '@/components/custom/info-table/InfoTable.module.css'
-
-// KeepAlive 캐싱 대상 이름 — useBottomTabSetup 의 componentName 과 정확히 같아야 한다(§5)
-defineOptions({ name: 'PcLpo0801' })
-
-// presets.ts localPoliceMenu items[6] = '인사관리'
-useSideMenuSetup({ ...localPoliceMenu, openIndex: 6, activeChild: '인사관리' })
-
-// '/lpo' 는 라우터에 없는 URL 구획이라 path 를 주지 않는다(CLAUDE.md §4)
-const navItems = [
-  { label: '홈', path: '/' },
-  { label: '지역경찰' },
-  { label: '인사관리' },
-]
-
-const {
-  advancedSearchOpen,
-  searchStatus,
-  searchEquipmentName,
-  listRows,
-  activeRowKey,
-  detail,
-  transfers,
-  selectRow,
-  createTransferRow,
-} = usePersonnelManage()
-
-const department = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
-/*
- * 성공·경고 피드백은 toast 가 아니라 알림창(AlertDialog2)으로 낸다.
- * CLAUDE.md §7 의 기본값은 toast 지만 사용자 지정이다.
- */
-const dialog = useDialog()
-
-const searchIcon = '/portal/asset/images/icon/ico_seach_black_20.svg'
-
-/* ------------------------------------------------------------------ *
- * 인사 현황 목록
- * ------------------------------------------------------------------ */
-const listColumns: TabulatorGridColumn[] = [
-  { title: '번호', field: 'no', width: 70, hozAlign: 'center' },
-  { title: '성명', field: 'name', width: 90, hozAlign: 'center' },
-  { title: '계급', field: 'rank', width: 90, hozAlign: 'center' },
-  { title: '직책', field: 'position', width: 90, hozAlign: 'center' },
-  { title: '소속팀', field: 'team', width: 90, hozAlign: 'center' },
-  { title: '전화번호', field: 'phone', hozAlign: 'center' },
-  { title: '수정자', field: 'updater', width: 90, hozAlign: 'center' },
-  { title: '수정일자', field: 'updatedAt', width: 120, hozAlign: 'center' },
-]
-
-/** @row-click 은 Tabulator RowComponent 를 넘긴다 — getData() 로 꺼낸다(CLAUDE.md §6) */
-function onListRowClick(_e: Event, row: any) {
-  const data = (typeof row?.getData === 'function' ? row.getData() : row) as PersonnelListRow
-  selectRow(data.rowKey)
-}
-
-async function onSave() {
-  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
-}
-
-/* ------------------------------------------------------------------ *
- * 사진 등록 — 파일 선택만 화면단에서 처리하고 실제 업로드는 개발팀 몫이다
- * ------------------------------------------------------------------ */
-const fileInputRef = ref<HTMLInputElement | null>(null)
-function openPhotoPicker() {
-  fileInputRef.value?.click()
-}
-function onPhotoChange(event: Event) {
-  const file = (event.target as HTMLInputElement).files?.[0]
-  if (!file) return
-  detail.photoUrl = URL.createObjectURL(file)
-}
-
-/* ------------------------------------------------------------------ *
- * 전입 전출 현황
- * ------------------------------------------------------------------ */
-/**
- * "선택은 체크박스로만" — Tabulator 는 selectableRows 가 true 면 행 아무 데나 클릭해도
- * 선택이 토글돼서, 체크를 안 했는데도 선택삭제가 그 행을 지운다.
- * 'highlight' 로 두면 그 클릭 리스너만 안 걸리고 체크박스·getSelectedRows 는 그대로 동작한다.
- */
-const selectByCheckboxOnly = { selectableRows: 'highlight' }
-
-const transferGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
-const selectedTransferCount = ref(0)
-
-/** 부서 찾기 팝업(PC-LPO-0802)은 아직 시안을 받지 못해 빈 모달로 자리만 잡아둔다 */
-const deptSearchOpen = ref(false)
-function openDeptSearch() {
-  deptSearchOpen.value = true
-}
-
-const transferColumns: TabulatorGridColumn[] = [
-  {
-    title: '전부서',
-    field: 'fromDept',
-    hozAlign: 'center',
-    cellType: 'button',
-    buttonVariant: 'tertiary2',
-    buttonSize: 'xs',
-    buttonLabel: (row) => (row as TransferRow).fromDept || '부서조회',
-    onButtonClick: () => openDeptSearch(),
-  },
-  { title: '전입일자', field: 'transferInDate', cellType: 'date', hozAlign: 'center' },
-  {
-    title: '전출부서',
-    field: 'toDept',
-    hozAlign: 'center',
-    cellType: 'button',
-    buttonVariant: 'tertiary2',
-    buttonSize: 'xs',
-    buttonLabel: (row) => (row as TransferRow).toDept || '부서조회',
-    onButtonClick: () => openDeptSearch(),
-  },
-  { title: '전출일자', field: 'transferOutDate', cellType: 'date', hozAlign: 'center' },
-]
-
-function onAddTransfer() {
-  transferGridRef.value?.addRow(createTransferRow(), true)
-}
-
-async function onDeleteSelectedTransfers() {
-  if (!selectedTransferCount.value) {
-    await dialog.alert({ title: '삭제할 전입 전출 내역을 선택해 주세요.', btnCancel: '확인' })
-    return
-  }
-  transferGridRef.value?.deleteSelected()
-  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
-}
-
-async function onSaveTransfers() {
-  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
-}
-
-useBottomTabSetup({
-  value: 'PC-LPO-0801',
-  label: '인사관리',
-  path: '/views/lpo/PC-LPO-0801',
-  componentName: 'PcLpo0801',
-  closable: true,
-})
-</script>
-
 <template>
   <PageHeader>
     <template #left>
@@ -458,3 +279,184 @@ useBottomTabSetup({
 
   <EmptyStubDialog v-model:open="deptSearchOpen" title="부서 찾기" />
 </template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useDialog } from '@/composable/dialog/dialog'
+import PageHeader from '@/components/custom/title/PageHeader.vue'
+import PageTitle from '@/components/custom/title/PageTitle.vue'
+import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
+import HelpButton from '@/components/custom/button/HelpButton.vue'
+import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
+import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
+import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
+import SelectField from '@/components/custom/select/SelectField.vue'
+import InputField2 from '@/components/custom/input/InputField2.vue'
+import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import TextareaField from '@/components/custom/textarea/TextareaField.vue'
+import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
+import { Checkbox } from '@/components/custom/checkbox'
+import { Button } from '@/components/custom/button'
+import { InfoTable, InfoField } from '@/components/custom/info-table'
+import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import LayoutSplit from '@/components/custom/content-layout/layoutSplit.vue'
+import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
+import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
+import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
+import {
+  usePersonnelManage,
+  statusOptions,
+  duplicateTypeOptions,
+  positionOptions,
+  teamOptions,
+  periodicAccidentReasonOptions,
+  type PersonnelListRow,
+  type TransferRow,
+} from './composable/PC-LPO-0801'
+import styles from './style/PC-LPO-0801.module.css'
+import infoStyles from '@/components/custom/info-table/InfoTable.module.css'
+
+// KeepAlive 캐싱 대상 이름 — useBottomTabSetup 의 componentName 과 정확히 같아야 한다(§5)
+defineOptions({ name: 'PcLpo0801' })
+
+// presets.ts localPoliceMenu items[6] = '인사관리'
+useSideMenuSetup({ ...localPoliceMenu, openIndex: 6, activeChild: '인사관리' })
+
+// '/lpo' 는 라우터에 없는 URL 구획이라 path 를 주지 않는다(CLAUDE.md §4)
+const navItems = [
+  { label: '홈', path: '/' },
+  { label: '지역경찰' },
+  { label: '인사관리' },
+]
+
+const {
+  advancedSearchOpen,
+  searchStatus,
+  searchEquipmentName,
+  listRows,
+  activeRowKey,
+  detail,
+  transfers,
+  selectRow,
+  createTransferRow,
+} = usePersonnelManage()
+
+const department = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
+/*
+ * 성공·경고 피드백은 toast 가 아니라 알림창(AlertDialog2)으로 낸다.
+ * CLAUDE.md §7 의 기본값은 toast 지만 사용자 지정이다.
+ */
+const dialog = useDialog()
+
+const searchIcon = '/portal/asset/images/icon/ico_seach_black_20.svg'
+
+/* ------------------------------------------------------------------ *
+ * 인사 현황 목록
+ * ------------------------------------------------------------------ */
+const listColumns: TabulatorGridColumn[] = [
+  { title: '번호', field: 'no', width: 70, hozAlign: 'center' },
+  { title: '성명', field: 'name', width: 90, hozAlign: 'center' },
+  { title: '계급', field: 'rank', width: 90, hozAlign: 'center' },
+  { title: '직책', field: 'position', width: 90, hozAlign: 'center' },
+  { title: '소속팀', field: 'team', width: 90, hozAlign: 'center' },
+  { title: '전화번호', field: 'phone', hozAlign: 'center' },
+  { title: '수정자', field: 'updater', width: 90, hozAlign: 'center' },
+  { title: '수정일자', field: 'updatedAt', width: 120, hozAlign: 'center' },
+]
+
+/** @row-click 은 Tabulator RowComponent 를 넘긴다 — getData() 로 꺼낸다(CLAUDE.md §6) */
+function onListRowClick(_e: Event, row: any) {
+  const data = (typeof row?.getData === 'function' ? row.getData() : row) as PersonnelListRow
+  selectRow(data.rowKey)
+}
+
+async function onSave() {
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
+}
+
+/* ------------------------------------------------------------------ *
+ * 사진 등록 — 파일 선택만 화면단에서 처리하고 실제 업로드는 개발팀 몫이다
+ * ------------------------------------------------------------------ */
+const fileInputRef = ref<HTMLInputElement | null>(null)
+function openPhotoPicker() {
+  fileInputRef.value?.click()
+}
+function onPhotoChange(event: Event) {
+  const file = (event.target as HTMLInputElement).files?.[0]
+  if (!file) return
+  detail.photoUrl = URL.createObjectURL(file)
+}
+
+/* ------------------------------------------------------------------ *
+ * 전입 전출 현황
+ * ------------------------------------------------------------------ */
+/**
+ * "선택은 체크박스로만" — Tabulator 는 selectableRows 가 true 면 행 아무 데나 클릭해도
+ * 선택이 토글돼서, 체크를 안 했는데도 선택삭제가 그 행을 지운다.
+ * 'highlight' 로 두면 그 클릭 리스너만 안 걸리고 체크박스·getSelectedRows 는 그대로 동작한다.
+ */
+const selectByCheckboxOnly = { selectableRows: 'highlight' }
+
+const transferGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
+const selectedTransferCount = ref(0)
+
+/** 부서 찾기 팝업(PC-LPO-0802)은 아직 시안을 받지 못해 빈 모달로 자리만 잡아둔다 */
+const deptSearchOpen = ref(false)
+function openDeptSearch() {
+  deptSearchOpen.value = true
+}
+
+const transferColumns: TabulatorGridColumn[] = [
+  {
+    title: '전부서',
+    field: 'fromDept',
+    hozAlign: 'center',
+    cellType: 'button',
+    buttonVariant: 'tertiary2',
+    buttonSize: 'xs',
+    buttonLabel: (row) => (row as TransferRow).fromDept || '부서조회',
+    onButtonClick: () => openDeptSearch(),
+  },
+  { title: '전입일자', field: 'transferInDate', cellType: 'date', hozAlign: 'center' },
+  {
+    title: '전출부서',
+    field: 'toDept',
+    hozAlign: 'center',
+    cellType: 'button',
+    buttonVariant: 'tertiary2',
+    buttonSize: 'xs',
+    buttonLabel: (row) => (row as TransferRow).toDept || '부서조회',
+    onButtonClick: () => openDeptSearch(),
+  },
+  { title: '전출일자', field: 'transferOutDate', cellType: 'date', hozAlign: 'center' },
+]
+
+function onAddTransfer() {
+  transferGridRef.value?.addRow(createTransferRow(), true)
+}
+
+async function onDeleteSelectedTransfers() {
+  if (!selectedTransferCount.value) {
+    await dialog.alert({ title: '삭제할 전입 전출 내역을 선택해 주세요.', btnCancel: '확인' })
+    return
+  }
+  transferGridRef.value?.deleteSelected()
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
+}
+
+async function onSaveTransfers() {
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
+}
+
+useBottomTabSetup({
+  value: 'PC-LPO-0801',
+  label: '인사관리',
+  path: '/views/lpo/PC-LPO-0801',
+  componentName: 'PcLpo0801',
+  closable: true,
+})
+</script>
+
+

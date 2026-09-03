@@ -1,3 +1,96 @@
+<template>
+  <!-- 모바일 앱 헤더 (<768) -->
+  <header :class="[styles.mHeader, styles.mobileOnly]">
+    <button type="button" :class="styles.mHeaderBtn" aria-label="뒤로" @click="goBack">
+      <Icon name="arrowLeft" :size="24" />
+    </button>
+    <h1 :class="styles.mHeaderTitle">알림</h1>
+    <button type="button" :class="styles.mHeaderBtn" aria-label="메뉴" @click="onMenu">
+      <Icon name="menu" :size="20" />
+    </button>
+  </header>
+
+  <!-- PC 헤더 (≥768) -->
+  <PageHeader :class="styles.pcOnly">
+    <template #left>
+      <PageTitle title="알림" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+
+  <div :class="styles.listToolbar">
+    <FilterChipGroup v-model="status" :items="statusItems" />
+    <Button
+      type="button"
+      variant="tertiary2"
+      size="sm"
+      :class="styles.pcOnly"
+      @click="onDeleteSelected"
+    >
+      선택 삭제
+    </Button>
+  </div>
+
+  <!-- PC: 그리드 -->
+  <TabulatorGrid
+    ref="gridRef"
+    class="flex-1"
+    :class="styles.pcOnly"
+    :columns="columns"
+    :data="displayRows"
+    select-mode="checkbox"
+    height="100%"
+    min-height="40rem"
+    placeholder="알림이 없습니다"
+    show-pagination
+    :items-per-page="10"
+  />
+
+  <!-- 모바일: 카드 리스트 -->
+  <ul :class="[styles.cards, styles.mobileOnly]">
+    <li
+      v-for="row in displayRows"
+      :key="row.id"
+      :class="[styles.card, row.read && styles.cardRead, selectedIds.has(row.id) && styles.cardSelected]"
+      @click="onContentClick(row)"
+    >
+      <div :class="styles.cardHead">
+        <Checkbox
+          :model-value="selectedIds.has(row.id)"
+          @update:model-value="() => toggleCard(row.id)"
+          @click.stop
+        />
+        <span :class="styles.cardTitle">{{ row.category }}</span>
+      </div>
+      <dl :class="styles.cardBody">
+        <div :class="styles.cardRow"><dt>상태</dt><dd>{{ row.statusLabel }}</dd></div>
+        <div :class="styles.cardRow"><dt>일시</dt><dd>{{ row.date }}</dd></div>
+        <div :class="[styles.cardRow, styles.cardRowContent]"><dt>내용</dt><dd>{{ row.content }}</dd></div>
+      </dl>
+    </li>
+    <li v-if="!displayRows.length" :class="styles.cardEmpty">알림이 없습니다</li>
+  </ul>
+
+  <!-- 모바일: 하단 고정 삭제 CTA -->
+  <div :class="[styles.cta, styles.mobileOnly]">
+    <Button type="button" variant="tertiary2" :class="styles.ctaBtn" @click="onDeleteSelected">삭제</Button>
+  </div>
+
+  <!-- 모바일: 맨 위로 -->
+  <button
+    type="button"
+    :class="[styles.topBtn, styles.mobileOnly]"
+    aria-label="맨 위로"
+    @click="scrollTop"
+  >
+    <Icon name="arrowTop" :size="24" />
+  </button>
+
+  <NotificationDetailDialog v-model:open="detailDialogOpen" :row="detailRow" @delete="onDeleteOne" />
+</template>
+
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -136,96 +229,3 @@ useBottomTabSetup({
   componentName: 'PmLpo0106',
 })
 </script>
-
-<template>
-  <!-- 모바일 앱 헤더 (<768) -->
-  <header :class="[styles.mHeader, styles.mobileOnly]">
-    <button type="button" :class="styles.mHeaderBtn" aria-label="뒤로" @click="goBack">
-      <Icon name="arrowLeft" :size="24" />
-    </button>
-    <h1 :class="styles.mHeaderTitle">알림</h1>
-    <button type="button" :class="styles.mHeaderBtn" aria-label="메뉴" @click="onMenu">
-      <Icon name="menu" :size="20" />
-    </button>
-  </header>
-
-  <!-- PC 헤더 (≥768) -->
-  <PageHeader :class="styles.pcOnly">
-    <template #left>
-      <PageTitle title="알림" />
-    </template>
-    <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
-  </PageHeader>
-
-  <div :class="styles.listToolbar">
-    <FilterChipGroup v-model="status" :items="statusItems" />
-    <Button
-      type="button"
-      variant="tertiary2"
-      size="sm"
-      :class="styles.pcOnly"
-      @click="onDeleteSelected"
-    >
-      선택 삭제
-    </Button>
-  </div>
-
-  <!-- PC: 그리드 -->
-  <TabulatorGrid
-    ref="gridRef"
-    class="flex-1"
-    :class="styles.pcOnly"
-    :columns="columns"
-    :data="displayRows"
-    select-mode="checkbox"
-    height="100%"
-    min-height="40rem"
-    placeholder="알림이 없습니다"
-    show-pagination
-    :items-per-page="10"
-  />
-
-  <!-- 모바일: 카드 리스트 -->
-  <ul :class="[styles.cards, styles.mobileOnly]">
-    <li
-      v-for="row in displayRows"
-      :key="row.id"
-      :class="[styles.card, row.read && styles.cardRead, selectedIds.has(row.id) && styles.cardSelected]"
-      @click="onContentClick(row)"
-    >
-      <div :class="styles.cardHead">
-        <Checkbox
-          :model-value="selectedIds.has(row.id)"
-          @update:model-value="() => toggleCard(row.id)"
-          @click.stop
-        />
-        <span :class="styles.cardTitle">{{ row.category }}</span>
-      </div>
-      <dl :class="styles.cardBody">
-        <div :class="styles.cardRow"><dt>상태</dt><dd>{{ row.statusLabel }}</dd></div>
-        <div :class="styles.cardRow"><dt>일시</dt><dd>{{ row.date }}</dd></div>
-        <div :class="[styles.cardRow, styles.cardRowContent]"><dt>내용</dt><dd>{{ row.content }}</dd></div>
-      </dl>
-    </li>
-    <li v-if="!displayRows.length" :class="styles.cardEmpty">알림이 없습니다</li>
-  </ul>
-
-  <!-- 모바일: 하단 고정 삭제 CTA -->
-  <div :class="[styles.cta, styles.mobileOnly]">
-    <Button type="button" variant="tertiary2" :class="styles.ctaBtn" @click="onDeleteSelected">삭제</Button>
-  </div>
-
-  <!-- 모바일: 맨 위로 -->
-  <button
-    type="button"
-    :class="[styles.topBtn, styles.mobileOnly]"
-    aria-label="맨 위로"
-    @click="scrollTop"
-  >
-    <Icon name="arrowTop" :size="24" />
-  </button>
-
-  <NotificationDetailDialog v-model:open="detailDialogOpen" :row="detailRow" @delete="onDeleteOne" />
-</template>
