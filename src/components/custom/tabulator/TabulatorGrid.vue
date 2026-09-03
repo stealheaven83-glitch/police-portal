@@ -31,6 +31,8 @@ import { Switch } from '@/components/custom/switch'
 import { Badge } from '@/components/custom/badge'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import Input from '@/components/custom/input/Input.vue'
+// cellClearable 셀만 이걸 쓴다 — 지우기(X) 버튼은 InputField2 에만 있다
+import InputField2 from '@/components/custom/input/InputField2.vue'
 import type {
   PageSizeOption,
   TabulatorGridColumn,
@@ -643,22 +645,60 @@ function dateCellFormatter(columnKey: string) {
 /* ------------------------------------------------------------------ *
  * 상시 노출 입력 셀: 편집 모드 진입 없이 셀 안에 항상 텍스트 input 표시
  * ------------------------------------------------------------------ */
-function inputCellFormatter(columnKey: string) {
+function inputCellFormatter(col: TabulatorGridColumn, columnKey: string) {
   return (cell: any) => {
     const value = ref<string>(cell.getValue() ?? '')
 
+    /*
+     * 타이핑 도중이 아니라 편집이 끝났을 때(blur/Enter) 한 번만 커밋한다.
+     * 매 키 입력마다 setValue 를 부르면 cellEdited 가 글자 수만큼 발생해
+     * dirty 표시가 요동치기 때문. (기존 raw input 의 change 동작과 동일)
+     */
+    const commit = () => cell.setValue(value.value)
+
+    // 지우기(X)나 조회 아이콘이 필요한 셀만 InputField2 로 — 그 기능이 이쪽에만 있다
+    const rich = Boolean(col.cellClearable || col.cellIcon)
+
     return mountCell(cell, columnKey, 'grid-input-cell', () =>
-      h(Input, {
-        modelValue: value.value,
-        size: 'sm',
-        'onUpdate:modelValue': (val: string | number) => {
-          value.value = String(val)
-        },
-        // 타이핑 도중이 아니라 편집이 끝났을 때(blur/Enter) 한 번만 커밋한다.
-        // 매 키 입력마다 setValue 를 부르면 cellEdited 가 글자 수만큼 발생해
-        // dirty 표시가 요동치기 때문. (기존 raw input 의 change 동작과 동일)
-        onChange: () => cell.setValue(value.value),
-      }),
+      rich
+        ? h(InputField2, {
+            modelValue: value.value,
+            size: 'sm',
+            clearable: Boolean(col.cellClearable),
+            placeholder: col.cellPlaceholder,
+            ...(col.cellIcon
+              ? {
+                  icon: col.cellIcon,
+                  iconClass: 'size-5',
+                  iconLabel: col.cellIconLabel ?? '조회',
+                  search: true,
+                  onIconClick: () => col.onCellIconClick?.(cell.getRow().getData(), cell),
+                }
+              : {}),
+            // 셀 안이라 라벨은 안 보이지만, 스크린리더에는 어느 칸인지 알려준다
+            label: col.title,
+            labelClass: 'sr-only',
+            class: '!space-y-0',
+            inputClass: 'w-full',
+            'onUpdate:modelValue': (val: string | number) => {
+              const next = String(val ?? '')
+              // 지우기(X)는 native change 를 안 쏘므로 그 자리에서 바로 커밋한다
+              const cleared = next === '' && value.value !== ''
+              value.value = next
+              if (cleared) commit()
+            },
+            onChange: commit,
+          })
+        : h(Input, {
+            modelValue: value.value,
+            size: 'sm',
+            // 값이 비어 있을 때 안내 문구(시안에서 '부서조회'처럼 회색으로 깔리는 글자)
+            placeholder: col.cellPlaceholder,
+            'onUpdate:modelValue': (val: string | number) => {
+              value.value = String(val)
+            },
+            onChange: commit,
+          }),
     )
   }
 }
@@ -851,7 +891,7 @@ function buildColumnInner(col: TabulatorGridColumn, columnKey: string): Record<s
   if (rest.formatter || !cellType) return rest
 
   if (cellType === 'date') return { ...rest, formatter: dateCellFormatter(columnKey) }
-  if (cellType === 'input') return { ...rest, formatter: inputCellFormatter(columnKey) }
+  if (cellType === 'input') return { ...rest, formatter: inputCellFormatter(col, columnKey) }
   if (cellType === 'select') return { ...rest, formatter: selectCellFormatter(col, columnKey) }
   if (cellType === 'switch')
     return { ...rest, hozAlign: rest.hozAlign ?? 'center', formatter: switchCellFormatter(columnKey) }

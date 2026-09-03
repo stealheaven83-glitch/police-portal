@@ -20,16 +20,12 @@
       <div class="search-area">
         <SelectField
           v-model="searchStatus"
-          label="상태구분"
+          label="직급"
           :options="statusOptions"
           size="sm"
           trigger-class="w-30"
         />
-        <!--
-          시안(11471:70218)의 라벨이 '기동장비관리명'인데 인사관리 화면과 맞지 않는다 —
-          장비관리 화면에서 복사해 온 흔적으로 보인다. 임의로 고치지 않고 시안 그대로 두었다.
-        -->
-        <InputField2 v-model="searchEquipmentName" label="기동장비관리명" size="sm" input-class="w-50" />
+        <InputField2 v-model="searchEquipmentName" label="이름" size="sm" input-class="w-50" />
       </div>
     </template>
     <template #btns>
@@ -38,14 +34,14 @@
   </SearchWrapper>
 
   <div class="list-actions space-between">
-    <p class="form-note">
+    <p class="form-note end">
       * 개인정보를 공무수행 목적외 사적으로 조회 또는 유출하여 타인의 비밀을 침해하거나 누설할 경우
-      <span :class="styles.noticeStrong">5년이하의 징역 또는 5천만원 이하의 벌금</span>에 처해집니다.
+      <span class="notice-strong">5년이하의 징역 또는 5천만원 이하의 벌금</span>에 처해집니다.
     </p>
     <Button type="button" variant="primary" size="sm" class="w-25" @click="onSave">저장</Button>
   </div>
 
-  <LayoutSplit :count="2" :widths="[54, 46]" :min-widths="[35, 30]">
+  <LayoutSplit :count="2" :widths="[50, 50]" :min-widths="[35, 30]">
     <template #layout-1>
       <LayoutPanel title="인사 현황">
         <TabulatorGrid
@@ -62,21 +58,25 @@
 
     <template #layout-2>
       <LayoutPanel title="인사 상세">
-        <div :class="styles.detailScroll">
-          <div :class="styles.detailLayout">
-            <div :class="styles.photoBox">
-              <div :class="styles.photoFrame">
-                <img v-if="detail.photoUrl" :src="detail.photoUrl" alt="등록된 증명사진">
-                <span v-else>No Image</span>
+        <ScrollWrapper>
+          <div class="detail-layout">
+            <div class="photo-box">
+              <div class="photo-frame">
+                <!-- 사진이 없으면 시안의 기본 프로필 이미지를 원본 크기로 가운데 둔다 -->
+                <img
+                  :src="detail.photoUrl ?? defaultPhoto"
+                  :class="detail.photoUrl ? undefined : 'photo-empty'"
+                  :alt="detail.photoUrl ? '등록된 증명사진' : '등록된 증명사진 없음'"
+                >
               </div>
-              <Button type="button" variant="tertiary2" size="xs" @click="openPhotoPicker">사진 등록</Button>
+              <Button type="button" variant="tertiary" size="xs" @click="openPhotoPicker">사진 등록</Button>
               <input ref="fileInputRef" type="file" accept="image/*" hidden @change="onPhotoChange">
             </div>
 
-            <div :class="styles.detailFields">
-              <InfoTable :columns="2">
-                <InfoField label="성명" for="personnel-name">
-                  <InputField2 id="personnel-name" v-model="detail.name" size="sm" class="!space-y-0 flex-1" />
+            <div class="detail-fields">
+              <InfoTable :columns="2" size="100">
+                <InfoField label="성명">
+                  <span>홍길동</span>
                 </InfoField>
                 <InfoField label="성별">
                   <RadioGroup v-model="detail.gender" :class="infoStyles['info-table-radio']">
@@ -103,18 +103,22 @@
                     :disabled="detail.duplicateName === 'none'"
                   />
                 </InfoField>
+              </InfoTable>
 
-                <InfoField label="경찰관 배명 일자" for="personnel-officer-assigned" full>
-                  <DatePicker id="personnel-officer-assigned" v-model="detail.officerAssignedDate" size="sm" class="flex-1" />
+              <!-- 나머지는 전체폭 1단. 시안 라벨 148px / 값 384px -->
+              <InfoTable :columns="1" size="148" class="form-rest">
+                <InfoField label="경찰관 배명 일자" for="personnel-officer-assigned">
+                  <DatePicker id="personnel-officer-assigned" v-model="detail.officerAssignedDate" size="sm" class="flex-1" input-class="w-full" />
                 </InfoField>
-                <InfoField label="현계급 배명 일자" for="personnel-rank-assigned" full>
-                  <DatePicker id="personnel-rank-assigned" v-model="detail.currentRankAssignedDate" size="sm" class="flex-1" />
+                <InfoField label="현계급 배명 일자" for="personnel-rank-assigned">
+                  <DatePicker id="personnel-rank-assigned" v-model="detail.currentRankAssignedDate" size="sm" class="flex-1" input-class="w-full" />
                 </InfoField>
-                <InfoField label="현부서 전입 일자" for="personnel-dept-transfer" full>
-                  <DatePicker id="personnel-dept-transfer" v-model="detail.currentDeptTransferDate" size="sm" class="flex-1" />
+                <InfoField label="현부서 전입 일자" for="personnel-dept-transfer">
+                  <DatePicker id="personnel-dept-transfer" v-model="detail.currentDeptTransferDate" size="sm" class="flex-1" input-class="w-full" />
                 </InfoField>
 
-                <InfoField label="근무구분" full>
+                <!-- 시안은 라디오 6개 + 체크박스 2개가 폭에 맞춰 3줄로 흐른다 -->
+                <InfoField label="근무구분">
                   <RadioGroup v-model="detail.position" :class="infoStyles['info-table-radio']">
                     <RadioGroupItem
                       v-for="opt in positionOptions"
@@ -127,99 +131,112 @@
                   <Checkbox v-model="detail.actingTeamLead" label="팀장대리" />
                 </InfoField>
 
-                <InfoField label="소속팀" for="personnel-team" full>
+                <!-- 시안: 셀렉트 120px + 직접입력 228px -->
+                <InfoField label="소속팀" for="personnel-team">
                   <SelectField
                     id="personnel-team"
                     v-model="detail.team"
                     :options="teamOptions"
                     size="sm"
                     trigger-class="w-full"
-                    class="!space-y-0 w-40"
+                    class="!space-y-0 w-30"
                     placeholder="선택"
                   />
                   <InputField2
                     v-model="detail.teamNote"
                     size="sm"
-                    class="!space-y-0 flex-1"
+                    input-class="w-57"
+                    class="!space-y-0"
                     label="소속팀 직접입력"
                     label-class="sr-only"
                     :disabled="detail.team !== 'etc'"
                   />
                 </InfoField>
 
-                <InfoField label="기타근무" full layout="column">
+                <!-- 시안: 라디오 4개가 세로로, 고른 항목의 입력만 살아난다 -->
+                <InfoField label="기타근무" layout="column">
                   <RadioGroup v-model="detail.etcWork" :class="infoStyles['info-table-radio']">
                     <RadioGroupItem value="center" label="치안센터 전담근무자" />
                   </RadioGroup>
-                  <div class="group-gap2">
+                  <span class="group-gap2">
                     <RadioGroup v-model="detail.etcWork" :class="infoStyles['info-table-radio']">
                       <RadioGroupItem value="partTime" label="시간선택근무" />
                     </RadioGroup>
                     <DatePicker
                       v-model="detail.partTimeDate"
                       size="sm"
-                      input-class="w-40"
+                      input-class="w-37"
+                      label="시간선택근무 일자"
+                      label-class="sr-only"
                       :disabled="detail.etcWork !== 'partTime'"
                     />
-                  </div>
-                  <div class="group-gap2">
+                  </span>
+                  <span class="group-gap2">
                     <RadioGroup v-model="detail.etcWork" :class="infoStyles['info-table-radio']">
                       <RadioGroupItem value="pregnancy" label="임신특례" />
                     </RadioGroup>
                     <DatePicker
                       v-model="detail.pregnancyDate"
                       size="sm"
-                      input-class="w-40"
+                      input-class="w-37"
+                      label="임신특례 일자"
+                      label-class="sr-only"
                       :disabled="detail.etcWork !== 'pregnancy'"
                     />
-                  </div>
-                  <div class="group-gap2">
+                  </span>
+                  <span class="group-gap2">
                     <RadioGroup v-model="detail.etcWork" :class="infoStyles['info-table-radio']">
                       <RadioGroupItem value="etc" label="기타" />
                     </RadioGroup>
                     <InputField2
                       v-model="detail.etcWorkNote"
                       size="sm"
-                      input-class="w-50"
+                      input-class="w-60"
                       class="!space-y-0"
                       label="기타근무 직접입력"
                       label-class="sr-only"
                       :disabled="detail.etcWork !== 'etc'"
                     />
-                  </div>
+                  </span>
                 </InfoField>
 
-                <InfoField label="정기사고자" full>
+                <!-- 시안: 체크박스 + 사유 셀렉트 + 일자. 체크해야 둘 다 살아난다 -->
+                <InfoField label="정기사고자">
                   <Checkbox v-model="detail.isPeriodicAccident" />
                   <SelectField
                     v-model="detail.periodicAccidentReason"
                     :options="periodicAccidentReasonOptions"
                     size="sm"
                     trigger-class="w-full"
-                    class="!space-y-0 w-40"
+                    class="!space-y-0 w-32"
                     placeholder="선택"
+                    label="정기사고 사유"
+                    label-class="sr-only"
                     :disabled="!detail.isPeriodicAccident"
                   />
                   <DatePicker
                     v-model="detail.periodicAccidentDate"
                     size="sm"
-                    class="flex-1"
+                    input-class="w-37"
+                    label="정기사고 일자"
+                    label-class="sr-only"
                     :disabled="!detail.isPeriodicAccident"
                   />
                 </InfoField>
 
-                <InfoField label="팀장교육수료일자" for="personnel-team-lead-training" full>
-                  <DatePicker id="personnel-team-lead-training" v-model="detail.teamLeadTrainingDate" size="sm" class="flex-1" />
+                <InfoField label="팀장교육수료일자" for="personnel-team-lead-training">
+                  <DatePicker id="personnel-team-lead-training" v-model="detail.teamLeadTrainingDate" size="sm" class="flex-1" input-class="w-full" />
                 </InfoField>
-                <InfoField label="팀장자격획득일자" for="personnel-team-lead-cert" full>
-                  <DatePicker id="personnel-team-lead-cert" v-model="detail.teamLeadCertDate" size="sm" class="flex-1" />
-                </InfoField>
-
-                <InfoField label="휴대전화" for="personnel-mobile" full>
-                  <InputField2 id="personnel-mobile" v-model="detail.mobilePhone" size="sm" class="!space-y-0 flex-1" />
+                <InfoField label="팀장자격획득일자" for="personnel-team-lead-cert">
+                  <DatePicker id="personnel-team-lead-cert" v-model="detail.teamLeadCertDate" size="sm" class="flex-1" input-class="w-full" />
                 </InfoField>
 
-                <InfoField label="주소" full layout="column">
+                <InfoField label="휴대전화" for="personnel-mobile">
+                  <InputField2 id="personnel-mobile" v-model="detail.mobilePhone" size="sm" class="!space-y-0 flex-1" input-class="w-full" />
+                </InfoField>
+
+                <!-- 시안: 주소검색(돋보기) 위, 상세주소 아래 2줄 -->
+                <InfoField label="주소" layout="column">
                   <InputField2
                     v-model="detail.addressRoad"
                     size="sm"
@@ -244,20 +261,20 @@
                   />
                 </InfoField>
 
-                <InfoField label="특이사항" for="personnel-note" full layout="column">
-                  <TextareaField id="personnel-note" v-model="detail.note" class="w-full !space-y-0" textarea-class="w-full" :height="60" />
+                <InfoField label="특이사항" for="personnel-note" layout="column">
+                  <TextareaField id="personnel-note" v-model="detail.note" class="w-full !space-y-0" textarea-class="w-full" :height="44" />
                 </InfoField>
               </InfoTable>
             </div>
           </div>
 
-          <section :class="styles.transferSection" aria-labelledby="transfer-heading">
-            <div :class="styles.transferHead">
-              <h3 id="transfer-heading" :class="styles.transferTitle">전입 전출 현황</h3>
+          <section class="transfer-section" aria-labelledby="transfer-heading">
+            <div class="transfer-head">
+              <h3 id="transfer-heading" class="transfer-title">전입 전출 현황</h3>
               <div class="btn-wrap-group">
-                <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelectedTransfers">선택삭제</Button>
-                <Button type="button" variant="secondary" size="sm" @click="onAddTransfer">추가</Button>
-                <Button type="button" variant="primary" size="sm" @click="onSaveTransfers">저장</Button>
+                <Button type="button" variant="tertiary2" size="xs" @click="onDeleteSelectedTransfers">선택삭제</Button>
+                <Button type="button" variant="secondary" size="xs" @click="onAddTransfer">추가</Button>
+                <Button type="button" variant="primary" size="xs" @click="onSaveTransfers">저장</Button>
               </div>
             </div>
 
@@ -272,12 +289,13 @@
               @row-selection-changed="selectedTransferCount = $event.length"
             />
           </section>
-        </div>
+        </ScrollWrapper>
       </LayoutPanel>
     </template>
   </LayoutSplit>
 
-  <EmptyStubDialog v-model:open="deptSearchOpen" title="부서 찾기" />
+  <DeptSearchDialog v-model:open="deptSearchOpen" @select="onDeptSelected" />
+
 </template>
 
 <script setup lang="ts">
@@ -301,10 +319,11 @@ import { InfoTable, InfoField } from '@/components/custom/info-table'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import LayoutSplit from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
-import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
+import DeptSearchDialog from './components/DeptSearchDialog.vue'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
+import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
 import {
   usePersonnelManage,
   statusOptions,
@@ -313,7 +332,6 @@ import {
   teamOptions,
   periodicAccidentReasonOptions,
   type PersonnelListRow,
-  type TransferRow,
 } from './composable/PC-LPO-0801'
 import styles from './style/PC-LPO-0801.module.css'
 import infoStyles from '@/components/custom/info-table/InfoTable.module.css'
@@ -350,6 +368,8 @@ const department = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: '
 const dialog = useDialog()
 
 const searchIcon = '/portal/asset/images/icon/ico_seach_black_20.svg'
+/** 증명사진 미등록 시 보여줄 기본 이미지 */
+const defaultPhoto = '/portal/asset/images/img/img_profile.svg'
 
 /* ------------------------------------------------------------------ *
  * 인사 현황 목록
@@ -372,7 +392,10 @@ function onListRowClick(_e: Event, row: any) {
 }
 
 async function onSave() {
-  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
+  // 사용자 지정: 저장 전 컨펌창을 먼저 띄운다 (§7 기본은 컨펌 없이 바로 저장)
+  const result = await dialog.confirm({ title: '저장 하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
+  if (!result.confirmed) return
+  await dialog.alert({ title: '저장 되었습니다.', btnCancel: '확인' })
 }
 
 /* ------------------------------------------------------------------ *
@@ -401,33 +424,51 @@ const selectByCheckboxOnly = { selectableRows: 'highlight' }
 const transferGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const selectedTransferCount = ref(0)
 
-/** 부서 찾기 팝업(PC-LPO-0802)은 아직 시안을 받지 못해 빈 모달로 자리만 잡아둔다 */
+/**
+ * 부서 조회 팝업(PC-LPO-0802). 어느 행의 어느 칸을 채울지 기억해 뒀다가 고른 값을 되돌려 넣는다.
+ * 시안(전입 전출 표)에는 팝업을 여는 트리거가 안 그려져 있어 입력 오른쪽 돋보기로 열게 했다.
+ */
 const deptSearchOpen = ref(false)
-function openDeptSearch() {
+const deptSearchTarget = ref<{ rowKey: number; field: 'fromDept' | 'toDept' } | null>(null)
+
+function openDeptSearch(row: any, field: 'fromDept' | 'toDept') {
+  deptSearchTarget.value = { rowKey: row.rowKey, field }
   deptSearchOpen.value = true
 }
 
+function onDeptSelected(dept: { station: string; dept: string }) {
+  const target = deptSearchTarget.value
+  if (!target) return
+  // 배열은 제자리 수정하지 않고 재할당한다(CLAUDE.md §3)
+  transfers.value = transfers.value.map((row) =>
+    row.rowKey === target.rowKey ? { ...row, [target.field]: `${dept.station} ${dept.dept}` } : row,
+  )
+}
+
 const transferColumns: TabulatorGridColumn[] = [
+  // 시안(11542:121631)은 버튼이 아니라 입력창이다 — 비어 있으면 '부서조회' 가 회색 안내문으로 깔린다
   {
     title: '전부서',
     field: 'fromDept',
     hozAlign: 'center',
-    cellType: 'button',
-    buttonVariant: 'tertiary2',
-    buttonSize: 'xs',
-    buttonLabel: (row) => (row as TransferRow).fromDept || '부서조회',
-    onButtonClick: () => openDeptSearch(),
+    cellType: 'input',
+    cellPlaceholder: '부서조회',
+    cellClearable: true,
+    cellIcon: searchIcon,
+    cellIconLabel: '전부서 조회',
+    onCellIconClick: (row: any) => openDeptSearch(row, 'fromDept'),
   },
   { title: '전입일자', field: 'transferInDate', cellType: 'date', hozAlign: 'center' },
   {
     title: '전출부서',
     field: 'toDept',
     hozAlign: 'center',
-    cellType: 'button',
-    buttonVariant: 'tertiary2',
-    buttonSize: 'xs',
-    buttonLabel: (row) => (row as TransferRow).toDept || '부서조회',
-    onButtonClick: () => openDeptSearch(),
+    cellType: 'input',
+    cellPlaceholder: '부서조회',
+    cellClearable: true,
+    cellIcon: searchIcon,
+    cellIconLabel: '전출부서 조회',
+    onCellIconClick: (row: any) => openDeptSearch(row, 'toDept'),
   },
   { title: '전출일자', field: 'transferOutDate', cellType: 'date', hozAlign: 'center' },
 ]
@@ -446,7 +487,10 @@ async function onDeleteSelectedTransfers() {
 }
 
 async function onSaveTransfers() {
-  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
+  // 사용자 지정: 저장 전 컨펌창을 먼저 띄운다 (§7 기본은 컨펌 없이 바로 저장)
+  const result = await dialog.confirm({ title: '저장 하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
+  if (!result.confirmed) return
+  await dialog.alert({ title: '저장 되었습니다.', btnCancel: '확인' })
 }
 
 useBottomTabSetup({
@@ -456,6 +500,7 @@ useBottomTabSetup({
   componentName: 'PcLpo0801',
   closable: true,
 })
+
 </script>
 
 

@@ -22,10 +22,6 @@
 
 /* ---------------------------------------------------------------- 안내 문구 */
 /* 개인정보 조회 경고문에서 처벌 조항만 붉게 강조하는 부분(시안 기준) */
-.noticeStrong {
-  color: var(--Base--point);
-  font-weight: 700;
-}
 
 /* ---------------------------------------------------------------- 상세 패널 */
 /*
@@ -39,21 +35,15 @@
 }
 
 .detailLayout {
-  display: flex;
-  align-items: flex-start;
-  gap: 2.4rem;
+
 }
 
 /* 사진 칸 — 시안 120x164 + 아래 '사진 등록' 버튼 */
 .photoBox {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-  flex-shrink: 0;
-  width: 12rem;
+
 }
 
-.photoFrame {
+.photo-frame {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,10 +63,22 @@
   object-fit: cover;
 }
 
-/* 폼은 사진 옆 남는 폭을 다 쓴다 */
-.detailFields {
-  flex: 1;
-  min-width: 0;
+
+/*
+ * 시안은 라벨 폭이 두 종류다 — 상단 2단 블록 100px, 아래 전체폭 행 148px.
+ * 그래서 InfoTable 을 둘로 나눠 size 로 각각 주는데, 두 표가 맞닿는 자리에 위 표의
+ * border-bottom 과 아래 표의 border-top 이 겹쳐 선이 두 겹으로 보인다. 아래 표의
+ * 윗선을 지워 한 표처럼 잇는다.
+ */
+.formRest {
+  border-top: 0;
+}
+
+/* 성명처럼 입력이 아니라 조회값만 보여주는 칸(시안에서 입력창 없이 텍스트다) */
+.readonlyText {
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--Text-body_0);
 }
 
 /* ---------------------------------------------------------------- 전입 전출 현황 */

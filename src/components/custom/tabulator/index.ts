@@ -62,6 +62,27 @@ export interface TabulatorGridColumn {
   /** 버튼 클릭 핸들러 */
   onButtonClick?: (rowData: any, cell: any) => void
 
+  /* cellType: 'input' */
+  /**
+   * 값이 비어 있을 때 입력 셀에 깔리는 안내 문구.
+   * (컬럼 옵션 이름을 placeholder 로 두면 Tabulator 의 표 전체 placeholder 와 헷갈려 cellPlaceholder 로 둔다)
+   */
+  cellPlaceholder?: string
+  /**
+   * 값이 있을 때 입력 오른쪽에 지우기(X) 버튼을 보여준다.
+   * 켜면 그 셀만 custom/input 의 InputField2 로 그린다(X 버튼이 그쪽에만 있다).
+   */
+  cellClearable?: boolean
+  /**
+   * 입력 오른쪽에 붙일 아이콘 버튼의 이미지 경로(돋보기 등). 조회 팝업을 여는 자리에 쓴다.
+   * 켜면 그 셀만 custom/input 의 InputField2 로 그린다.
+   */
+  cellIcon?: string
+  /** cellIcon 버튼의 접근성 이름 (기본 '조회') */
+  cellIconLabel?: string
+  /** cellIcon 버튼을 눌렀을 때 */
+  onCellIconClick?: (rowData: any, cell: any) => void
+
   /* cellType: 'select' */
   /** 셀렉트 옵션 목록 */
   selectOptions?: SelectCellOption[]

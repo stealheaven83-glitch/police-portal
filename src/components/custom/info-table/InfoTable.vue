@@ -16,11 +16,19 @@ interface Props {
   columns?: 1 | 2 | 3 | 4
   /** 팝업(다이얼로그) 안에 놓일 때 위쪽 여백을 준다 */
   popup?: boolean
+  /**
+   * 라벨 열 폭. 시안 치수를 그대로 옮길 수 있게 **숫자는 px** 로 본다.
+   * - `size="200"` / `:size="200"` → 200px
+   * - 단위를 붙이면 그 CSS 길이 그대로 — `size="14rem"` / `size="25%"`
+   * 안 주면 CSS 기본값 14rem(140px)을 쓴다.
+   */
+  size?: number | string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   columns: 2,
   popup: false,
+  size: undefined,
 })
 
 const COLUMN_CLASS = {
@@ -31,10 +39,27 @@ const COLUMN_CLASS = {
 } as const
 
 const columnsClass = computed(() => COLUMN_CLASS[props.columns] ?? styles.cols2)
+
+/**
+ * 라벨 열 폭은 InfoField(.field)가 var(--info-label-w) 로 읽는다.
+ * CSS 변수는 상속되므로 표 루트에 한 번만 얹으면 안쪽 모든 칸에 적용된다.
+ * prop 을 안 주면 아무것도 얹지 않아 기존 동작(CSS 기본값 14rem, 호출부 클래스 오버라이드)이 그대로다.
+ */
+const rootStyle = computed(() => {
+  if (props.size === undefined || props.size === '') return undefined
+  // size="200" 처럼 속성으로 넘기면 문자열 "200" 이 오므로 숫자 문자열도 px 로 본다
+  const isBareNumber = typeof props.size === 'number' || /^\d+(\.\d+)?$/.test(props.size)
+  const width = isBareNumber ? `${props.size}px` : props.size
+  return { '--info-label-w': width }
+})
 </script>
 
 <template>
-  <div :class="cn(styles.grid, columnsClass, { [styles.popTable]: popup })" v-bind="$attrs">
+  <div
+    :class="cn(styles.grid, columnsClass, { [styles.popTable]: popup })"
+    v-bind="$attrs"
+    :style="rootStyle"
+  >
     <slot />
   </div>
 </template>

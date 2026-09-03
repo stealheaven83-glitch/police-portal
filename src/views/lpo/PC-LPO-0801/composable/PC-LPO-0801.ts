@@ -166,6 +166,57 @@ function createMockTransfers(): TransferRow[] {
   ]
 }
 
+/**
+ * 부서 조회 팝업(PC-LPO-0802) — 좌측 트리 한 노드.
+ * TreeView 는 name/children 으로 그린다.
+ */
+export interface DeptTreeNode {
+  name: string
+  /** 이 노드를 고르면 우측 '부서 정보'에 뜨는 관서명. 잎 노드가 아니면 없다 */
+  station?: string
+  children?: DeptTreeNode[]
+}
+
+/** 부서 조회 팝업 우측 '부서 정보' 한 행 */
+export interface DeptInfoRow {
+  station: string
+  dept: string
+}
+
+/** 시안의 트리 — 지역경찰포털 아래 본청 / 경찰대학 */
+export function createDeptTree(): DeptTreeNode[] {
+  return [
+    {
+      name: '지역경찰포털',
+      children: [
+        { name: '본청', station: '본청' },
+        {
+          name: '경찰대학',
+          station: '경찰대학',
+          children: [
+            { name: '경찰대학 교무처', station: '경찰대학' },
+            { name: '경찰대학 교수부', station: '경찰대학' },
+            { name: '경찰대학 운영지원과', station: '경찰대학' },
+            { name: '경찰대학 학생지도부', station: '경찰대학' },
+            { name: '경찰대학 도서관', station: '경찰대학' },
+          ],
+        },
+      ],
+    },
+  ]
+}
+
+/** 시안의 '부서 정보' 5행 */
+export function createDeptInfoRows(): DeptInfoRow[] {
+  return [
+    { station: '경찰대학', dept: '교무처' },
+    { station: '경찰대학', dept: '교수부' },
+    { station: '경찰대학', dept: '운영지원과' },
+    { station: '경찰대학', dept: '학생지도부' },
+    { station: '경찰대학', dept: '도서관' },
+  ]
+}
+
 export function usePersonnelManage() {
   /* 검색 */
   const advancedSearchOpen = ref(false)

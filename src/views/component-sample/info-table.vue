@@ -109,6 +109,68 @@ const locationOptions = [
           </div>
         </section>
 
+        <!-- 라벨 열 폭 -->
+        <section class="space-y-4">
+          <h2 class="text-xl font-semibold border-b pb-2">size (라벨 열 폭)</h2>
+          <p class="text-muted-foreground text-sm">
+            라벨 열은 기본 <code>14rem</code>(140px)입니다. <strong>숫자만 주면 px</strong> 로 보고,
+            단위를 붙이면 그 CSS 길이를 그대로 씁니다 — <code>size="200"</code>(200px) /
+            <code>size="14rem"</code> / <code>size="25%"</code>.
+            내부적으로는 <code>--info-label-w</code> 변수를 표 루트에 얹어 안쪽 모든 칸에 상속시킵니다.
+          </p>
+
+          <p class="text-sm font-medium">기본 — 지정 없음 (14rem)</p>
+          <div class="max-w-[60rem]">
+            <InfoTable :columns="2">
+              <InfoField for="it-lw-default-name" label="장비관리명">
+                <InputField2 id="it-lw-default-name" v-model="form.managementName" size="sm" class="!space-y-0 flex-1" />
+              </InfoField>
+              <InfoField for="it-lw-default-plate" label="차량번호">
+                <InputField2 id="it-lw-default-plate" v-model="form.plateNumber" size="sm" class="!space-y-0 flex-1" />
+              </InfoField>
+            </InfoTable>
+          </div>
+
+          <p class="text-sm font-medium">
+            <code>size="100"</code> — 좁게(100px). 2단이라 칸이 절반뿐일 때 값 영역을 살린다
+          </p>
+          <div class="max-w-[60rem]">
+            <InfoTable :columns="2" size="100">
+              <InfoField for="it-lw-narrow-name" label="장비관리명">
+                <InputField2 id="it-lw-narrow-name" v-model="form.managementName" size="sm" class="!space-y-0 flex-1" />
+              </InfoField>
+              <InfoField for="it-lw-narrow-plate" label="차량번호">
+                <InputField2 id="it-lw-narrow-plate" v-model="form.plateNumber" size="sm" class="!space-y-0 flex-1" />
+              </InfoField>
+            </InfoTable>
+          </div>
+
+          <p class="text-sm font-medium">
+            <code>size="240"</code> — 넓게. 라벨이 문장인 표(점검 항목 등)
+          </p>
+          <div class="max-w-[60rem]">
+            <InfoTable :columns="1" size="240">
+              <InfoField label="야간 순찰 시 2인 1조 편성 여부">
+                <RadioGroup v-model="form.useYn" :class="styles['info-table-radio']">
+                  <RadioGroupItem value="use" label="예" />
+                  <RadioGroupItem value="unuse" label="아니오" />
+                </RadioGroup>
+              </InfoField>
+              <InfoField label="차량 점검일지 작성 여부">
+                <RadioGroup v-model="form.useYn" :class="styles['info-table-radio']">
+                  <RadioGroupItem value="use" label="예" />
+                  <RadioGroupItem value="unuse" label="아니오" />
+                </RadioGroup>
+              </InfoField>
+            </InfoTable>
+          </div>
+
+          <p class="text-muted-foreground text-sm">
+            한 화면에서 폭이 다른 표가 이어질 때는 <code>InfoTable</code> 을 나눠 쓰고,
+            아래 표의 <code>border-top</code> 을 지우면 한 표처럼 이어집니다(PC-LPO-0801 인사 상세가 이 방식).
+          </p>
+        </section>
+
         <!-- full / layout -->
         <section class="space-y-4">
           <h2 class="text-xl font-semibold border-b pb-2">full · layout="column"</h2>
