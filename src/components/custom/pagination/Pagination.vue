@@ -6,7 +6,7 @@
     md(768px) 이상에서는 시안대로 한 줄 3분할(1fr auto 1fr)이라 페이저가 바 정중앙에 온다.
   -->
   <div class="grid w-full grid-cols-2 items-center gap-y-3 md:grid-cols-[1fr_auto_1fr] md:gap-y-0 -mb-[8px]">
-    <div class="order-1 min-w-0 justify-self-start truncate text-sm">
+    <div v-if="!simple" class="order-1 min-w-0 justify-self-start truncate text-sm">
       총 <span class="font-bold">{{ totalElements }}</span>건 / 현재 {{ rangeStart }}-{{ rangeEnd }}
     </div>
     <Pagination class="order-3 col-span-2 justify-self-center md:order-2 md:col-span-1"
@@ -73,7 +73,7 @@
         </PaginationLast>
       </PaginationList>
     </Pagination>
-    <div class="order-2 justify-self-end md:order-3">
+    <div v-if="!simple" class="order-2 justify-self-end md:order-3">
       <BaseSelect
         v-model="selectedValue"
         :options="itemsPerPageOptions"
@@ -115,6 +115,12 @@ export interface Props {
   totalElements?: number;
   /** 현재 페이지 기준 좌우로 보여줄 페이지 개수 (기본 1) */
   siblingCount?: number;
+  /**
+   * 페이지 버튼만 가운데 놓는 형태(Figma: pagination__pc).
+   * 총 건수 문구와 페이지당 건수 셀렉트를 감춘다 — 검색결과처럼 그리드가 아닌 목록에서 쓴다.
+   * 기본 false 라 기존 화면 렌더 결과는 그대로다.
+   */
+  simple?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -125,7 +131,8 @@ const props = withDefaults(defineProps<Props>(), {
     { label: '30건', value: '30' },
   ],
   totalElements: 0,
-  siblingCount: 1
+  siblingCount: 1,
+  simple: false
 })
 
 const emit = defineEmits<{

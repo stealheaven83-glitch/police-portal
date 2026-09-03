@@ -61,6 +61,12 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | ㄴ "상세조회" 접기/펴기 | `SearchWrapper`의 `collapsible` prop — 직접 만들지 않는다 |
 | ㄴ 조회/초기화 버튼 | `SearchWrapper`의 `#btns` 슬롯 |
 | 목록을 값으로 걸러내는 토글(개수 표시) | `custom/filter-chip/FilterChipGroup.vue` |
+| 화면 가운데 놓는 **대형 검색바**(통합검색·사건대응) | `custom/search/SearchBar.vue` (3개 화면) |
+| ㄴ 왼쪽 상태 뱃지("검색 원활") | `SearchBar`의 `status`/`statusTone` prop |
+| 검색 전 **최근검색어 + 추천검색어** 두 칸 | `custom/search/SearchKeywordPanel.vue` (2개 화면) |
+
+`SearchWrapper`(그리드 위 조회조건)와 `SearchBar`(검색어 한 줄짜리 대형 입력창)를 헷갈리지
+않는다 — §9 형제 구분 참고. 헤더 우측의 작은 통합검색은 `PortalHeader.vue` 담당이다.
 
 ---
 
@@ -74,6 +80,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | 체크박스 다중선택 + 추가/선택삭제 | `select-mode="checkbox"` + `addRow`/`deleteSelected` (CLAUDE.md §6) |
 | 페이지네이션 | `TabulatorGrid`의 `show-pagination` — 별도 `Pagination` 불필요 |
 | 그리드 밖 독립 페이지네이션 | `custom/pagination/Pagination.vue` (드묾) |
+| ㄴ 페이지 버튼만 가운데(총 건수·건수 셀렉트 없이) | `Pagination`의 `simple` prop (Figma `pagination__pc`) |
 | 정적인 표(그리드 기능 불필요) | `custom/table/TableWrapper.vue` |
 | 트리 | `custom/tree/TreeView.vue` |
 | **결과가 비었을 때** | `custom/empty/NoData.vue` |
@@ -225,8 +232,13 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | `TableWrapper` | 기능 없는 정적 표 |
 | `InfoTable` | 표가 아니라 **라벨-값 정보 표**(등록/상세 폼) |
 
-**SearchWrapper / search__pc** — `SearchWrapper`는 화면의 검색 영역 레이아웃이다.
-Figma `search__pc`는 **헤더 통합검색**이고 `layout/portal/PortalHeader.vue`에 이미 있다.
+**SearchWrapper / SearchBar / search__pc** — 셋 다 "검색"이라 제일 헷갈린다.
+
+| | 무엇 | 어디 |
+|---|---|---|
+| `SearchWrapper` | 그리드 위 **조회조건 영역**(부서·기간·구분…) | `custom/search/SearchWrapper.vue` |
+| `SearchBar` | 화면 가운데 놓는 **검색어 한 줄짜리 대형 입력창** | `custom/search/SearchBar.vue` |
+| `search__pc` | **헤더 우측의 작은 통합검색** | `layout/portal/PortalHeader.vue` (이미 있다) |
 
 ---
 
@@ -283,6 +295,8 @@ Figma `search__pc`는 **헤더 통합검색**이고 `layout/portal/PortalHeader.
 | `calendar` | `custom/calendar/calendar.vue` |
 | `LNB Menu`, `header_templet__pc`, `masthead`, `footer__pc`, `main_menu*` | 화면에서 쓰지 않는다 — `Layout.vue`/`custom/sidemenu` 담당 |
 | `search__pc` | 헤더 통합검색 → `layout/portal/PortalHeader.vue` |
+| `Form`(통합검색 대형 입력창, 13315:97548) | `custom/search/SearchBar.vue` |
+| `최근검색어`+`인기검색어`(11722:93550/93570) | `custom/search/SearchKeywordPanel.vue` |
 
 ---
 

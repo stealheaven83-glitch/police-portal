@@ -369,3 +369,234 @@
   font-weight: 700;
   color: var(--Text-body_0);
 }
+/* ── PM-COM-0801 통합검색 검색창 ──────────────────────────────── */
+
+/* 시안(13323:106373) 기준: 본문 1564 폭 안에서 검색바 840, 아래 블록 1200 을 가운데 둔다 */
+.pm-com-0801-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+.pm-com-0801-search {
+  max-width: 84rem;
+  margin: 8rem auto 0;
+}
+.pm-com-0801-panel {
+  max-width: 120rem;
+  margin: 4rem auto 0;
+}
+
+/* ── PM-COM-0802 통합검색 결과 ────────────────────────────────── */
+
+.pm-com-0802-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+.pm-com-0802-search {
+  max-width: 84rem;
+  margin: 8rem auto 0;
+}
+.pm-com-0802-body {
+  max-width: 120rem;
+  margin: 4rem auto 0;
+  padding: 0 2.4rem;
+}
+
+/* 시안의 탭은 칸끼리 붙은 세그먼트 형태다 — 기본 tab 컴포넌트의 간격을 없애고
+   바깥 모서리만 둥글린다(테두리는 겹쳐서 한 줄로 보이게 -1px 씩 당긴다) */
+.pm-com-0802-tabs {
+  gap: 0;
+}
+.pm-com-0802-tabs > button {
+  border-radius: 0;
+}
+.pm-com-0802-tabs > button + button {
+  margin-left: -1px;
+}
+.pm-com-0802-tabs > button:first-child {
+  border-top-left-radius: var(--Radius-medium1);
+  border-bottom-left-radius: var(--Radius-medium1);
+}
+.pm-com-0802-tabs > button:last-child {
+  border-top-right-radius: var(--Radius-medium1);
+  border-bottom-right-radius: var(--Radius-medium1);
+}
+
+/* 카테고리 구역 — 제목줄 아래 실선, 그 아래 결과 목록 */
+.pm-com-0802-section {
+  margin-top: 4rem;
+}
+.pm-com-0802-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--Border_gray02);
+}
+.pm-com-0802-section-title {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+}
+.pm-com-0802-section-title b {
+  color: var(--Base-primary);
+}
+
+/* 메뉴 경로 링크만 나열되는 구역 */
+.pm-com-0802-menu-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.2rem;
+  margin-top: 2.4rem;
+}
+
+/* 본문이 있는 결과 한 건 */
+.pm-com-0802-item {
+  margin-top: 2.4rem;
+}
+.pm-com-0802-item-title {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+}
+.pm-com-0802-item-summary {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-top: 1.2rem;
+  font-size: 1.7rem;
+  line-height: 1.5;
+  color: var(--Text-body_1);
+}
+
+/* 결과에서 메뉴 위치를 알려주는 링크(시안 button_link) */
+.pm-com-0802-link {
+  margin-top: 1.2rem;
+  font-size: 1.7rem;
+  color: var(--Text-body_1);
+  text-decoration: underline;
+}
+.pm-com-0802-link:hover {
+  color: var(--Base-primary);
+}
+.pm-com-0802-menu-list .pm-com-0802-link {
+  margin-top: 0;
+}
+
+.pm-com-0802-pagination {
+  margin: 4rem 0;
+}
+
+/* ── PM-IRC-0101 사건대응 시나리오 검색(검색 전 · 검색 후) ─────── */
+
+.pm-irc-0101-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+.pm-irc-0101-search {
+  max-width: 84rem;
+  margin: 0 auto;
+}
+.pm-irc-0101-panel {
+  max-width: 120rem;
+  margin: 4rem auto 0;
+}
+
+/* AI 생성 답변 상자 */
+.pm-irc-0101-answer {
+  max-width: 120rem;
+  margin: 4rem auto 0;
+  padding: 2.4rem;
+  border: 1px solid var(--Base-primary);
+  border-radius: var(--Radius-medium3);
+  background-color: var(--white);
+}
+.pm-irc-0101-answer-head {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+}
+.pm-irc-0101-answer-icon {
+  width: 2.4rem;
+  height: 2.4rem;
+  color: var(--Base-primary);
+}
+.pm-irc-0101-answer-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 4rem;
+  margin-top: 2rem;
+}
+.pm-irc-0101-answer-main {
+  flex: 1;
+  min-width: 0;
+}
+.pm-irc-0101-paragraph {
+  font-size: 1.7rem;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+}
+.pm-irc-0101-block {
+  margin-top: 2.4rem;
+}
+.pm-irc-0101-block-title {
+  margin-bottom: 0.8rem;
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+}
+.pm-irc-0101-bullets {
+  margin-top: 0.8rem;
+  padding-left: 1.6rem;
+  list-style: disc;
+  font-size: 1.7rem;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+}
+.pm-irc-0101-bullets li + li {
+  margin-top: 0.8rem;
+}
+
+/* 우측 참고자료 */
+.pm-irc-0101-refs {
+  flex: 0 0 31.7rem;
+}
+.pm-irc-0101-refs-title {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+}
+.pm-irc-0101-ref-card {
+  margin-top: 1.2rem;
+  padding: 1.6rem 2.4rem;
+  border-radius: var(--Radius-medium3);
+  background-color: var(--Background-gray01);
+}
+.pm-irc-0101-ref-card-title {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+}
+.pm-irc-0101-ref-card-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-top: 0.8rem;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--Text-body_1);
+}
+.pm-irc-0101-answer-note {
+  margin-top: 2.4rem;
+  font-size: 1.5rem;
+  color: var(--Text-body_2);
+}
