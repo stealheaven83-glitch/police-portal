@@ -17,7 +17,7 @@
     </template>
     <template #right>
       <span class="group-gap2">
-        <Breadcrumb :items="navItems" />
+      <Breadcrumb :items="navItems" />
         <HelpButton />
       </span>
     </template>
@@ -36,11 +36,11 @@
     </Button>
   </div>
 
-  <!-- PC: 그리드 -->
+  <!-- PC(≥768) 는 그리드, 모바일은 카드 — TabulatorGrid 가 폭을 보고 고른다.
+       카드 구성(순서·제목)은 columns 의 card* 옵션에 있다 -->
   <TabulatorGrid
     ref="gridRef"
     class="flex-1"
-    :class="styles.pcOnly"
     :columns="columns"
     :data="displayRows"
     select-mode="checkbox"
@@ -49,32 +49,9 @@
     placeholder="알림이 없습니다"
     show-pagination
     :items-per-page="10"
+    :card-class="cardClass"
+    @card-click="onContentClick"
   />
-
-  <!-- 모바일: 카드 리스트 -->
-  <ul :class="[styles.cards, styles.mobileOnly]">
-    <li
-      v-for="row in displayRows"
-      :key="row.id"
-      :class="[styles.card, row.read && styles.cardRead, selectedIds.has(row.id) && styles.cardSelected]"
-      @click="onContentClick(row)"
-    >
-      <div :class="styles.cardHead">
-        <Checkbox
-          :model-value="selectedIds.has(row.id)"
-          @update:model-value="() => toggleCard(row.id)"
-          @click.stop
-        />
-        <span :class="styles.cardTitle">{{ row.category }}</span>
-      </div>
-      <dl :class="styles.cardBody">
-        <div :class="styles.cardRow"><dt>상태</dt><dd>{{ row.statusLabel }}</dd></div>
-        <div :class="styles.cardRow"><dt>일시</dt><dd>{{ row.date }}</dd></div>
-        <div :class="[styles.cardRow, styles.cardRowContent]"><dt>내용</dt><dd>{{ row.content }}</dd></div>
-      </dl>
-    </li>
-    <li v-if="!displayRows.length" :class="styles.cardEmpty">알림이 없습니다</li>
-  </ul>
 
   <!-- 모바일: 하단 고정 삭제 CTA -->
   <div :class="[styles.cta, styles.mobileOnly]">
@@ -102,7 +79,6 @@ import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import { Button } from '@/components/custom/button'
-import { Checkbox } from '@/components/custom/checkbox'
 import Icon from '@/components/custom/icon/Icon.vue'
 import { FilterChipGroup, type FilterChipItem } from '@/components/custom/filter-chip'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
@@ -147,7 +123,8 @@ function onContentClick(row: NotificationRow) {
 }
 
 const columns: TabulatorGridColumn[] = [
-  { title: '구분', field: 'category', width: 240, hozAlign: 'center' },
+  // card* 옵션은 모바일 카드에서만 쓰인다(표에는 영향 없음)
+  { title: '구분', field: 'category', width: 240, hozAlign: 'center', cardHeading: true },
   {
     title: '내용',
     field: 'content',
@@ -158,9 +135,11 @@ const columns: TabulatorGridColumn[] = [
     buttonClass: styles.contentBtn,
     buttonLabel: (row) => contentPreview(row as NotificationRow),
     onButtonClick: (row) => onContentClick(row as NotificationRow),
+    // 카드에서는 상태·일시 다음에 내용 전문이 온다
+    cardOrder: 3,
   },
-  { title: '상태', field: 'statusLabel', width: 120, hozAlign: 'center' },
-  { title: '일시', field: 'date', width: 200, hozAlign: 'center' },
+  { title: '상태', field: 'statusLabel', width: 120, hozAlign: 'center', cardOrder: 1 },
+  { title: '일시', field: 'date', width: 200, hozAlign: 'center', cardOrder: 2 },
 ]
 
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
@@ -168,28 +147,19 @@ const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const detailDialogOpen = ref(false)
 const detailRow = ref<NotificationRow | null>(null)
 
-/**
- * 모바일 카드 리스트용 선택 상태.
- * PC 는 TabulatorGrid 가 선택을 들고 있고(getSelectedData), 모바일은 이 Set 을 쓴다 —
- * 두 UI 중 하나만 화면에 보이므로 onDeleteSelected 에서 채워진 쪽을 집는다.
- */
-const selectedIds = ref<Set<number>>(new Set())
-
-function toggleCard(id: number) {
-  const next = new Set(selectedIds.value)
-  next.has(id) ? next.delete(id) : next.add(id)
-  selectedIds.value = next
+/** 읽은 알림은 카드만 회색으로 — PC 표의 행에는 적용되지 않아야 해서 row-class 가 아니라 card-class */
+function cardClass(row: NotificationRow) {
+  return row.read ? styles.cardRead : ''
 }
 
+/* 선택 상태는 표/카드 어느 쪽이든 TabulatorGrid 가 들고 있다(getSelectedData) */
 function onDeleteSelected() {
-  const gridIds = ((gridRef.value?.getSelectedData() ?? []) as NotificationRow[]).map((row) => row.id)
-  const ids = selectedIds.value.size ? [...selectedIds.value] : gridIds
+  const ids = ((gridRef.value?.getSelectedData() ?? []) as NotificationRow[]).map((row) => row.id)
   if (!ids.length) {
     toast.warning('삭제할 알림을 선택해 주세요.')
     return
   }
   deleteRows(ids)
-  selectedIds.value = new Set()
   toast.success('삭제되었습니다.')
 }
 

@@ -2,6 +2,7 @@
 import {
   ref,
   computed,
+  nextTick,
   onMounted,
   onActivated,
   onBeforeUnmount,
@@ -149,6 +150,29 @@ interface Props {
 
   /** 위 props 로 덮지 못하는 Tabulator 옵션을 직접 넘기고 싶을 때 */
   tableOptions?: Record<string, any>
+
+  /**
+   * 좁은 폭(pcSize 미만)에서 표 대신 카드 목록을 그릴 때, 그 <ul> 에 붙일 클래스.
+   * 카드 목록은 #card 슬롯을 넘긴 화면에서만 동작한다.
+   */
+  cardListClass?: string
+
+  /**
+   * 카드에만 붙일 클래스를 반환하는 콜백(rowClass 의 카드판).
+   * rowClass 는 PC 표의 행에도 걸리므로, 카드에서만 다르게 보여야 하는 것은 이쪽에 준다.
+   */
+  cardClass?: (rowData: any) => string | undefined | null
+
+  /**
+   * 좁은 폭에서 표 대신 카드 목록을 쓸지 여부(기본 true).
+   * 카드 모양은 columns 의 title/field 로 자동으로 만들어지므로 화면에서 따로 할 일이 없다.
+   * 생김새를 직접 정하고 싶으면 #card 슬롯으로 덮어쓴다.
+   * 좁아져도 표 그대로여야 하는 화면만 false 를 준다.
+   */
+  cardOnMobile?: boolean
+
+  /** 이 폭(px) 이상이면 PC 로 보고 표를, 미만이면 카드 목록을 그린다 */
+  pcSize?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -179,6 +203,10 @@ const props = withDefaults(defineProps<Props>(), {
   receiveMode: 'add',
   keepSource: true,
   tableOptions: undefined,
+  cardListClass: undefined,
+  cardClass: undefined,
+  cardOnMobile: true,
+  pcSize: 768
 })
 
 const emit = defineEmits<{
@@ -196,6 +224,11 @@ const emit = defineEmits<{
   (e: 'rows-received', fromRow: any, toRow: any, fromTable: any): void
   /** 드래그로 행 순서가 바뀌었을 때 */
   (e: 'row-moved', row: any): void
+  /**
+   * 좁은 폭에서 카드를 탭했을 때. 넘어오는 건 행 데이터 객체다.
+   * (표의 row-click 은 Tabulator RowComponent 라 형태가 달라서 이벤트를 나눴다)
+   */
+  (e: 'card-click', row: any): void
 }>()
 
 const attrs = useAttrs()
@@ -400,9 +433,97 @@ function watchVScrollBorder() {
 let widthObserver: ResizeObserver | null = null
 let widthRedrawFrame = 0
 
+/*
+ * 페이지 폭 — 이 컴포넌트 안에서만 쓴다(밖으로 내보내지 않는다).
+ * 창 크기가 바뀌면 window resize 로, 창은 그대로인데 LNB 접기·스플리터 드래그로
+ * 컨테이너만 바뀌면 아래 ResizeObserver 로 갱신된다.
+ */
+/**
+ * 페이지(뷰포트) 폭 px. 리사이즈마다 갱신.
+ * setup 시점에 바로 실제 폭을 넣는다 — 0 으로 시작하면 isPcSize 가 false 라
+ * v-if 안의 그리드가 첫 렌더에 안 그려지고, 그러면 tableBuilt 도 오지 않아
+ * 폭을 다시 잴 기회가 없다(닭-달걀).
+ */
+const pageWidth = ref(Math.round(window.innerWidth))
+
+/** 지금 이 순간의 페이지 폭을 읽어 갱신하고 돌려준다 */
+function measurePageWidth() {
+  pageWidth.value = Math.round(window.innerWidth)
+  return pageWidth.value
+}
+
+/** 페이지 폭이 pcSize(기본 768) 이상인가. 템플릿에서 분기용으로 쓴다 */
+const isPcSize = computed(() => pageWidth.value >= props.pcSize)
+
+/* ------------------------------------------------------------------ *
+ * 카드 뷰 (좁은 폭)
+ * ------------------------------------------------------------------ */
+/*
+ * 표는 가로 폭을 전제로 한 UI 라 좁은 화면에서는 카드 목록으로 바꾼다.
+ * 화면이 따로 해줄 일은 없다 — 카드 내용은 columns 의 title/field 에서 만든다.
+ * 생김새를 직접 정하려면 #card 슬롯으로 덮어쓴다.
+ */
+const cardView = computed(() => !isPcSize.value && props.cardOnMobile)
+
+/*
+ * 카드에 넣을 컬럼. 컬럼 정의의 card* 옵션으로 화면마다 손볼 수 있다.
+ *  - cardHidden    : 카드에서 뺀다(표에는 그대로)
+ *  - cardOrder     : 카드에서의 순서(작을수록 위). 안 주면 columns 순서
+ *  - cardHideTitle : 라벨(컬럼명) 없이 값만
+ *  - cardHeading   : 이 컬럼을 카드 제목으로(안 주면 첫 컬럼)
+ */
+const cardColumns = computed(() =>
+  (props.columns ?? [])
+    .filter((col: any) => col.field && !col.cardHidden)
+    // cardOrder 를 준 컬럼이 먼저, 안 준 컬럼은 원래 순서를 유지한다
+    .map((col: any, index: number) => ({ col, order: col.cardOrder ?? Number.MAX_SAFE_INTEGER, index }))
+    .sort((a, b) => a.order - b.order || a.index - b.index)
+    .map((entry) => entry.col),
+)
+/** 카드 제목 컬럼 — cardHeading 을 준 컬럼, 없으면 첫 컬럼 */
+const cardTitleColumn = computed(
+  () => cardColumns.value.find((col: any) => col.cardHeading) ?? cardColumns.value[0],
+)
+/** 제목을 뺀 나머지 — 카드 본문의 라벨-값 줄 */
+const cardFields = computed(() => cardColumns.value.filter((col: any) => col !== cardTitleColumn.value))
+
+/*
+ * 카드 뷰에는 Tabulator 가 없으므로 선택 상태를 여기서 들고 있는다.
+ * getSelectedData() 가 표/카드 어느 쪽이든 같은 결과를 주도록 하기 위한 것이다.
+ */
+const cardSelected = ref<any[]>([])
+/** 카드에서 체크박스를 보일지 — 표의 select-mode 를 그대로 따른다 */
+const cardSelectable = computed(() => props.selectMode === 'checkbox' || props.selectable)
+
+function isCardSelected(row: any) {
+  return cardSelected.value.includes(row)
+}
+function toggleCardSelect(row: any) {
+  cardSelected.value = isCardSelected(row)
+    ? cardSelected.value.filter((r) => r !== row)
+    : [...cardSelected.value, row]
+  emit('row-selection-changed', cardSelected.value)
+}
+/* 데이터가 갈리면 선택도 무효다(삭제된 행이 선택에 남지 않게) */
+watch(
+  () => props.data,
+  (next) => {
+    if (!cardView.value) return
+    cardSelected.value = cardSelected.value.filter((row) => (next ?? []).includes(row))
+  },
+)
+
+/** 창 크기 변경. 드래그 중 연속 호출을 프레임당 한 번으로 묶는다 */
+let pageWidthFrame = 0
+function onWindowResize() {
+  cancelAnimationFrame(pageWidthFrame)
+  pageWidthFrame = requestAnimationFrame(() => measurePageWidth())
+}
+
 function watchContainerWidth() {
   const root = hostEl.value
   if (!root) return
+
   let lastWidth = Math.round(root.clientWidth)
 
   widthObserver = new ResizeObserver((entries) => {
@@ -410,6 +531,7 @@ function watchContainerWidth() {
     // 폭이 그대로면(세로 스크롤바 토글 등) 다시 그릴 이유가 없다. 0 은 숨겨진 상태다.
     if (!width || width === lastWidth) return
     lastWidth = width
+    measurePageWidth()
     // 드래그 중에는 매 프레임 들어오므로 한 프레임에 한 번만 그린다
     cancelAnimationFrame(widthRedrawFrame)
     widthRedrawFrame = requestAnimationFrame(() => table?.redraw(true))
@@ -806,7 +928,9 @@ function movableRowsOptions() {
 /* ------------------------------------------------------------------ *
  * 마운트
  * ------------------------------------------------------------------ */
-onMounted(() => {
+/** Tabulator 생성. 카드 뷰일 때는 host 엘리먼트 자체가 없으므로 호출되지 않는다 */
+function buildTable() {
+  if (table || !hostEl.value) return
   table = new Tabulator(hostEl.value, {
     data: clone(props.data),
     reactiveData: false,
@@ -909,19 +1033,10 @@ onMounted(() => {
     emit('rows-received', fromRow, toRow, fromTable)
   })
   table.on('rowMoved', (row: any) => emit('row-moved', row))
-})
+}
 
-/**
- * KeepAlive 로 캐시된 화면(하단 탭)이 숨겨졌다가 다시 활성화될 때, 숨겨져 있던 동안
- * :data 가 바뀌었어도(예: 다른 화면에서 저장하고 목록으로 돌아옴) Tabulator 가 컨테이너
- * 크기를 0으로 측정한 채라 행을 그리지 못하고 있을 수 있다. 다시 보이게 된 시점에
- * redraw(true) 로 강제로 다시 그린다.
- */
-onActivated(() => {
-  table?.redraw(true)
-})
-
-onBeforeUnmount(() => {
+/** Tabulator 와 거기 딸린 관측자만 정리한다(컴포넌트는 살아 있음) */
+function destroyTable() {
   // Tabulator 를 먼저 destroy 하면 td 가 사라져 정리 대상을 못 찾으므로 Vue 트리부터 정리
   unmountAllRowCells()
   unmountHeaderCheckbox()
@@ -935,6 +1050,39 @@ onBeforeUnmount(() => {
   widthObserver?.disconnect()
   widthObserver = null
   cancelAnimationFrame(widthRedrawFrame)
+}
+
+onMounted(() => {
+  // 폭 관측은 표와 무관하게 항상 돈다(카드 뷰라 표가 없을 때도 폭 변화를 알아야 한다)
+  measurePageWidth()
+  window.addEventListener('resize', onWindowResize)
+  if (!cardView.value) buildTable()
+})
+
+/* 표 <-> 카드 전환. v-if 로 host 엘리먼트가 사라지므로 Tabulator 를 남겨둘 수 없다 */
+watch(cardView, async (isCard) => {
+  if (isCard) {
+    destroyTable()
+  } else {
+    await nextTick()   // host 엘리먼트가 실제로 생긴 뒤에 만든다
+    buildTable()
+  }
+})
+
+/**
+ * KeepAlive 로 캐시된 화면(하단 탭)이 숨겨졌다가 다시 활성화될 때, 숨겨져 있던 동안
+ * :data 가 바뀌었어도(예: 다른 화면에서 저장하고 목록으로 돌아옴) Tabulator 가 컨테이너
+ * 크기를 0으로 측정한 채라 행을 그리지 못하고 있을 수 있다. 다시 보이게 된 시점에
+ * redraw(true) 로 강제로 다시 그린다.
+ */
+onActivated(() => {
+  table?.redraw(true)
+})
+
+onBeforeUnmount(() => {
+  destroyTable()
+  window.removeEventListener('resize', onWindowResize)
+  cancelAnimationFrame(pageWidthFrame)
 })
 
 /* ------------------------------------------------------------------ *
@@ -1027,7 +1175,8 @@ defineExpose({
 
   /* 데이터 조회 / 변경 */
   getData: () => table?.getData() ?? [],
-  getSelectedData: () => table?.getSelectedData() ?? [],
+  /** 표/카드 어느 쪽이든 선택된 행 데이터를 돌려준다 */
+  getSelectedData: () => (cardView.value ? [...cardSelected.value] : (table?.getSelectedData() ?? [])),
   getSelectedRows: () => table?.getSelectedRows() ?? [],
   setData: (rows: any[]) => applyData(rows),
   addRow: (rowData: any, top = true) => table?.addRow(rowData, top),
@@ -1152,16 +1301,66 @@ defineExpose({
 -->
 <template>
   <div v-bind="rootAttrs" class="tabulator-root flex flex-col">
+    <!-- PC 폭(또는 #card 슬롯이 없을 때): 기존 Tabulator 표 -->
     <div
+      v-if="!cardView"
       ref="hostEl"
       v-bind="hostAttrs"
       class="tabulator-host flex-auto min-h-0"
       :style="{ '--row-h': rowHeightPx }"
     />
 
+    <!--
+      좁은 폭: 표 대신 카드 목록. columns 의 title/field 로 자동 구성한다.
+      화면이 #card 슬롯을 주면 그 마크업이 대신 쓰인다(<li> 째로 넘긴다).
+    -->
+    <ul v-else class="tabulator-card-list" :class="cardListClass">
+      <template v-for="(row, index) in data" :key="(row as any)?.id ?? index">
+        <slot
+          name="card"
+          :row="row"
+          :index="index"
+          :selected="isCardSelected(row)"
+          :toggle="() => toggleCardSelect(row)"
+        >
+          <li
+            class="tabulator-card"
+            :class="[rowClass?.(row), cardClass?.(row), isCardSelected(row) && 'is-selected']"
+            @click="$emit('card-click', row)"
+          >
+            <div class="tabulator-card-head">
+              <Checkbox
+                v-if="cardSelectable"
+                :model-value="isCardSelected(row)"
+                @update:model-value="() => toggleCardSelect(row)"
+                @click.stop
+              />
+              <span v-if="cardTitleColumn" class="tabulator-card-title">
+                {{ row[cardTitleColumn.field as string] }}
+              </span>
+            </div>
+            <dl class="tabulator-card-body">
+              <div
+                v-for="col in cardFields"
+                :key="col.field"
+                class="tabulator-card-row"
+                :class="{ 'is-no-label': col.cardHideTitle || !col.title }"
+              >
+                <dt v-if="!col.cardHideTitle && col.title">{{ col.title }}</dt>
+                <dd>{{ row[col.field as string] ?? '-' }}</dd>
+              </div>
+            </dl>
+          </li>
+        </slot>
+      </template>
+      <slot v-if="!data.length" name="card-empty">
+        <li class="tabulator-card-empty">{{ placeholder }}</li>
+      </slot>
+    </ul>
+
     <!-- 시안(메모 검색결과없음)에서는 0건일 때 페이지네이션 바가 통째로 사라진다 -->
     <Pagination
-      v-if="showPagination && totalElements > 0"
+      v-if="showPagination && totalElements > 0 && !cardView"
       class="mt-[20px] shrink-0"
       :current-page="currentPage"
       :total-pages="totalPages"
@@ -1181,5 +1380,72 @@ defineExpose({
  */
 .tabulator-root {
   min-height: var(--grid-min-h, 0);
+}
+
+
+/* ── 좁은 폭 카드 목록 ── */
+.tabulator-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  overflow-y: auto;
+}
+.tabulator-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 1.6rem;
+  border: 1px solid var(--Border_gray02);
+  border-radius: var(--Radius-medium3);
+  background: var(--Base-white, #fff);
+}
+.tabulator-card.is-selected {
+  border: 2px solid var(--Base-primary);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.05), 0 4px 4px rgba(0, 0, 0, 0.08);
+}
+.tabulator-card-head {
+  display: flex;
+  align-items: center;
+  gap: 2.4rem;
+}
+.tabulator-card-title {
+  flex: 1;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--Text-body_0);
+}
+.tabulator-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin: 0;
+}
+.tabulator-card-row {
+  display: flex;
+  gap: 2.4rem;
+  font-size: 1.5rem;
+  line-height: 1.5;
+}
+.tabulator-card-row dt {
+  flex-shrink: 0;
+  color: var(--Text-body_1);
+}
+.tabulator-card-row dd {
+  flex: 1;
+  margin: 0;
+  text-align: right;
+  color: var(--Text-body_0);
+  word-break: break-all;
+  white-space: pre-line;   /* 여러 줄 값을 그대로 보여준다 */
+}
+/* 라벨을 숨긴 줄은 값이 한 줄을 다 쓰므로 왼쪽 정렬이 자연스럽다 */
+.tabulator-card-row.is-no-label dd {
+  text-align: left;
+  white-space: pre-line;
+}
+.tabulator-card-empty {
+  padding: 4rem 0;
+  text-align: center;
+  color: var(--Text-body_1);
 }
 </style>

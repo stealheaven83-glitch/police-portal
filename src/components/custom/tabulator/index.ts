@@ -74,6 +74,17 @@ export interface TabulatorGridColumn {
   /** badgeColorMap 에 없는 값에 쓸 색상 (기본 grayLighter) */
   badgeFallbackColor?: BadgeVariants["color"]
 
+  /* ── 좁은 폭 카드 목록(cardOnMobile)에서의 표시 방법 ─────────────────
+   * 아무것도 안 주면 columns 순서 그대로, 첫 컬럼이 카드 제목, 나머지는 "라벨 값" 줄이 된다. */
+  /** 카드에서는 이 컬럼을 빼고 싶을 때(표에는 그대로 나온다) */
+  cardHidden?: boolean
+  /** 카드에서의 표시 순서. 작을수록 위. 안 주면 columns 순서를 따른다 */
+  cardOrder?: number
+  /** 카드에서 라벨(컬럼명)은 숨기고 값만 보이고 싶을 때 */
+  cardHideTitle?: boolean
+  /** 이 컬럼을 카드 제목으로 쓴다(안 주면 카드에 나오는 첫 컬럼이 제목) */
+  cardHeading?: boolean
+
   /**
    * 헤더 그룹(컬럼 중첩).
    *
