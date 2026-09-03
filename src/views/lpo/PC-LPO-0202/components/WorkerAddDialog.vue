@@ -1,3 +1,39 @@
+<template>
+  <GenericDialog2
+    v-model:open="workerAddDialogOpen"
+    title="근무자 추가"
+    :size="560"
+    :show-close-button="true"
+  >
+    <p class="mb-2 text-[1.5rem]">* 추가 근무자를 선택 후 저장하세요.</p>
+
+    <!--
+      공용 custom/tabulator 의 TabulatorGrid 사용.
+      PC-LPO-0701 등 다른 화면과 같은 tabulator-theme.css 를 그대로 물려받아
+      테두리·hover·선택행 색상·체크박스 등 표 스타일이 동일해진다.
+    -->
+    <TabulatorGrid
+      ref="gridRef"
+      :columns="columns"
+      :data="workerCandidates"
+      height="260px"
+      selectable
+      select-column-title="추가여부"
+      placeholder="조회된 근무자가 없습니다"
+      @table-built="onTableBuilt"
+    />
+
+    <template #footer>
+      <Button type="button" variant="tertiary2" size="md" @click="workerAddDialogOpen = false">
+        닫기
+      </Button>
+      <Button type="button" variant="primary" size="md" @click="handleConfirm">
+        저장
+      </Button>
+    </template>
+  </GenericDialog2>
+</template>
+
 <script setup lang="ts">
 import { inject, ref } from 'vue'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
@@ -64,39 +100,3 @@ async function handleConfirm() {
   window.location.reload()
 }
 </script>
-
-<template>
-  <GenericDialog2
-    v-model:open="workerAddDialogOpen"
-    title="근무자 추가"
-    :size="560"
-    :show-close-button="true"
-  >
-    <p class="mb-2 text-[1.5rem]">* 추가 근무자를 선택 후 저장하세요.</p>
-
-    <!--
-      공용 custom/tabulator 의 TabulatorGrid 사용.
-      PC-LPO-0701 등 다른 화면과 같은 tabulator-theme.css 를 그대로 물려받아
-      테두리·hover·선택행 색상·체크박스 등 표 스타일이 동일해진다.
-    -->
-    <TabulatorGrid
-      ref="gridRef"
-      :columns="columns"
-      :data="workerCandidates"
-      height="260px"
-      selectable
-      select-column-title="추가여부"
-      placeholder="조회된 근무자가 없습니다"
-      @table-built="onTableBuilt"
-    />
-
-    <template #footer>
-      <Button type="button" variant="tertiary2" size="md" @click="workerAddDialogOpen = false">
-        닫기
-      </Button>
-      <Button type="button" variant="primary" size="md" @click="handleConfirm">
-        저장
-      </Button>
-    </template>
-  </GenericDialog2>
-</template>

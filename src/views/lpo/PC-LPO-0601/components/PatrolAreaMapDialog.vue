@@ -1,3 +1,54 @@
+<template>
+  <GenericDialog2
+    :open="open"
+    title="순찰차별 관할구역 관리"
+    :size="800"
+    :show-footer="false"
+    @update:open="emit('update:open', $event)"
+  >
+    <div class="pc-lpo-0601-dialog-body">
+      <div class="pc-lpo-0601-map-toolbar">
+        <SelectField
+          v-model="selectedVehicle"
+          :options="patrolVehicleOptions"
+          label="순찰차"
+          label-class="blind"
+          size="sm"
+          class="!space-y-0"
+          trigger-class="w-[10.6rem]"
+        />
+        <InputField2
+          v-model="memo"
+          label="순찰구역 메모"
+          label-class="blind"
+          placeholder="순찰구역 메모"
+          size="sm"
+          class="!space-y-0 flex-1"
+          input-class="w-full"
+        />
+        <Button type="button" variant="secondary" size="sm" @click="onDraw">순찰구역 그리기</Button>
+        <Button type="button" variant="tertiary2" size="sm" @click="onReset">초기화</Button>
+      </div>
+
+      <div class="pc-lpo-0601-map">
+        <img
+          src="/portal/asset/images/img/img_patrol_area_map.png"
+          alt="순찰차별 관할구역 지도"
+        />
+      </div>
+    </div>
+
+    <template #footer>
+      <div class="pc-lpo-0601-dialog-footer">
+        <Button type="button" variant="tertiary2" size="md" @click="emit('update:open', false)">
+          닫기
+        </Button>
+        <Button type="button" variant="primary" size="md" @click="onSave">저장</Button>
+      </div>
+    </template>
+  </GenericDialog2>
+</template>
+
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { toast } from 'vue-sonner'
@@ -55,54 +106,3 @@ function onSave() {
   emit('update:open', false)
 }
 </script>
-
-<template>
-  <GenericDialog2
-    :open="open"
-    title="순찰차별 관할구역 관리"
-    :size="800"
-    :show-footer="false"
-    @update:open="emit('update:open', $event)"
-  >
-    <div class="pc-lpo-0601-dialog-body">
-      <div class="pc-lpo-0601-map-toolbar">
-        <SelectField
-          v-model="selectedVehicle"
-          :options="patrolVehicleOptions"
-          label="순찰차"
-          label-class="blind"
-          size="sm"
-          class="!space-y-0"
-          trigger-class="w-[10.6rem]"
-        />
-        <InputField2
-          v-model="memo"
-          label="순찰구역 메모"
-          label-class="blind"
-          placeholder="순찰구역 메모"
-          size="sm"
-          class="!space-y-0 flex-1"
-          input-class="w-full"
-        />
-        <Button type="button" variant="secondary" size="sm" @click="onDraw">순찰구역 그리기</Button>
-        <Button type="button" variant="tertiary2" size="sm" @click="onReset">초기화</Button>
-      </div>
-
-      <div class="pc-lpo-0601-map">
-        <img
-          src="/portal/asset/images/img/img_patrol_area_map.png"
-          alt="순찰차별 관할구역 지도"
-        />
-      </div>
-    </div>
-
-    <template #footer>
-      <div class="pc-lpo-0601-dialog-footer">
-        <Button type="button" variant="tertiary2" size="md" @click="emit('update:open', false)">
-          닫기
-        </Button>
-        <Button type="button" variant="primary" size="md" @click="onSave">저장</Button>
-      </div>
-    </template>
-  </GenericDialog2>
-</template>

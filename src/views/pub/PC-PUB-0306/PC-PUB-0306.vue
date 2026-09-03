@@ -1,3 +1,50 @@
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="단체현황" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+
+  <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
+    <template #department>
+      <span class="dept-name">부서</span>
+      <DepartmentCascadeSelect v-model="department" size="sm" />
+    </template>
+    <template #form>
+      <div class="search-area">
+        <SelectField v-model="groupTypeFilter" label="단체종류" :options="groupTypeFilterOptions" label-position="left" size="sm" triggerClass="w-32" />
+        <SelectField v-model="groupFilter" label="단체명" :options="groupFilterOptions" label-position="left" size="sm" triggerClass="w-40" />
+        <DatePicker v-model="dateFrom" label="기간" size="sm" inputClass="w-40" />
+        <span aria-hidden="true">~</span>
+        <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
+      </div>
+    </template>
+    <template #btns>
+      <Button variant="secondary" size="sm">조회</Button>
+    </template>
+  </SearchWrapper>
+
+  <div class="mt-[1.6rem] flex justify-end">
+    <Button type="button" variant="tertiary2" size="sm" @click="onDownloadExcel">
+      <Download :size="16" aria-hidden="true" />
+      엑셀다운로드
+    </Button>
+  </div>
+
+  <TabulatorGrid
+    ref="gridRef"
+    class="mt-[1.2rem] flex-1"
+    :columns="columns"
+    :data="rows"
+    height="100%"
+    min-height="40rem"
+    placeholder="조회된 단체가 없습니다"
+  />
+</template>
+
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { Download } from 'lucide-vue-next'
@@ -120,50 +167,3 @@ useBottomTabSetup({
   closable: true,
 })
 </script>
-
-<template>
-  <PageHeader>
-    <template #left>
-      <PageTitle title="단체현황" />
-    </template>
-    <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
-  </PageHeader>
-
-  <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
-    <template #department>
-      <span class="dept-name">부서</span>
-      <DepartmentCascadeSelect v-model="department" size="sm" />
-    </template>
-    <template #form>
-      <div class="search-area">
-        <SelectField v-model="groupTypeFilter" label="단체종류" :options="groupTypeFilterOptions" label-position="left" size="sm" triggerClass="w-32" />
-        <SelectField v-model="groupFilter" label="단체명" :options="groupFilterOptions" label-position="left" size="sm" triggerClass="w-40" />
-        <DatePicker v-model="dateFrom" label="기간" size="sm" inputClass="w-40" />
-        <span aria-hidden="true">~</span>
-        <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
-      </div>
-    </template>
-    <template #btns>
-      <Button variant="secondary" size="sm">조회</Button>
-    </template>
-  </SearchWrapper>
-
-  <div class="mt-[1.6rem] flex justify-end">
-    <Button type="button" variant="tertiary2" size="sm" @click="onDownloadExcel">
-      <Download :size="16" aria-hidden="true" />
-      엑셀다운로드
-    </Button>
-  </div>
-
-  <TabulatorGrid
-    ref="gridRef"
-    class="mt-[1.2rem] flex-1"
-    :columns="columns"
-    :data="rows"
-    height="100%"
-    min-height="40rem"
-    placeholder="조회된 단체가 없습니다"
-  />
-</template>

@@ -1,46 +1,3 @@
-<script setup lang="ts">
-import { inject, ref } from 'vue'
-import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
-import { Button } from '@/components/custom/button'
-import { InfoTable, InfoField } from '@/components/custom/info-table'
-import InputField2 from '@/components/custom/input/InputField2.vue'
-import SelectField from '@/components/custom/select/SelectField.vue'
-import TextareaField from '@/components/custom/textarea/TextareaField.vue'
-import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
-import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
-import { EquipmentListKey, gunTypeOptions, gunSerialOptions, locationOptions } from '../composable/PC-LPO-0701'
-import { useDialogGridRedraw } from '../composable/dialogGridRedraw'
-import styles from '@/components/custom/info-table/InfoTable.module.css'
-
-const store = inject(EquipmentListKey)!
-const { weaponDetail, weaponDetailDialogOpen, addWeaponHandler, saveWeaponDetail, deleteWeaponDetail } = store
-
-const handlerGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
-
-// 팝업 등장 애니메이션(scale) 중에 컬럼 폭이 계산돼 오른쪽에 빈 칸이 남는 것을 막는다
-const { onTableBuilt } = useDialogGridRedraw(handlerGridRef)
-
-/**
- * 담당자 목록 그리드.
- * "번호"는 저장되는 값이 아니라 화면상의 순번이라 formatter 로 행 위치에서 계산한다
- * (담당자추가/삭제로 행이 바뀌어도 1부터 다시 매겨진다).
- */
-const handlerColumns: TabulatorGridColumn[] = [
-  {
-    title: '번호',
-    width: 70,
-    hozAlign: 'center',
-    formatter: (cell: any) => String(cell.getRow().getPosition(true)),
-  },
-  {
-    title: '담당자',
-    field: 'name',
-    cellType: 'input',
-    hozAlign: 'left',
-  },
-]
-</script>
-
 <template>
   <GenericDialog2 v-model:open="weaponDetailDialogOpen" title="무기 상세" :size="800" :show-close-button="true">
     <p :class="styles.legend">필수 입력 항목</p>
@@ -122,3 +79,46 @@ const handlerColumns: TabulatorGridColumn[] = [
     </template>
   </GenericDialog2>
 </template>
+
+<script setup lang="ts">
+import { inject, ref } from 'vue'
+import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
+import { Button } from '@/components/custom/button'
+import { InfoTable, InfoField } from '@/components/custom/info-table'
+import InputField2 from '@/components/custom/input/InputField2.vue'
+import SelectField from '@/components/custom/select/SelectField.vue'
+import TextareaField from '@/components/custom/textarea/TextareaField.vue'
+import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import { EquipmentListKey, gunTypeOptions, gunSerialOptions, locationOptions } from '../composable/PC-LPO-0701'
+import { useDialogGridRedraw } from '../composable/dialogGridRedraw'
+import styles from '@/components/custom/info-table/InfoTable.module.css'
+
+const store = inject(EquipmentListKey)!
+const { weaponDetail, weaponDetailDialogOpen, addWeaponHandler, saveWeaponDetail, deleteWeaponDetail } = store
+
+const handlerGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
+
+// 팝업 등장 애니메이션(scale) 중에 컬럼 폭이 계산돼 오른쪽에 빈 칸이 남는 것을 막는다
+const { onTableBuilt } = useDialogGridRedraw(handlerGridRef)
+
+/**
+ * 담당자 목록 그리드.
+ * "번호"는 저장되는 값이 아니라 화면상의 순번이라 formatter 로 행 위치에서 계산한다
+ * (담당자추가/삭제로 행이 바뀌어도 1부터 다시 매겨진다).
+ */
+const handlerColumns: TabulatorGridColumn[] = [
+  {
+    title: '번호',
+    width: 70,
+    hozAlign: 'center',
+    formatter: (cell: any) => String(cell.getRow().getPosition(true)),
+  },
+  {
+    title: '담당자',
+    field: 'name',
+    cellType: 'input',
+    hozAlign: 'left',
+  },
+]
+</script>

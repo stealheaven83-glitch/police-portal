@@ -1,3 +1,25 @@
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="단체정보상세" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+
+  <div :class="styles.pageActions">
+    <p :class="styles.deptLabel"><span :class="styles.deptLabelPrefix">부서:</span> {{ form.dept }}</p>
+    <div :class="styles.pageActionButtons">
+      <Button type="button" variant="tertiary2" size="sm" class="w-40" @click="goList">목록</Button>
+      <Button type="button" variant="tertiary2" size="sm" class="w-40" :disabled="form.id == null" @click="onDelete">삭제</Button>
+      <Button type="button" variant="primary" size="sm" class="w-40" @click="onSave">저장</Button>
+    </div>
+  </div>
+
+  <GroupDetailForm :form="form" mode="edit" />
+</template>
+
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -66,25 +88,3 @@ useBottomTabSetup({
   closable: true,
 })
 </script>
-
-<template>
-  <PageHeader>
-    <template #left>
-      <PageTitle title="단체정보상세" />
-    </template>
-    <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
-  </PageHeader>
-
-  <div :class="styles.pageActions">
-    <p :class="styles.deptLabel"><span :class="styles.deptLabelPrefix">부서:</span> {{ form.dept }}</p>
-    <div :class="styles.pageActionButtons">
-      <Button type="button" variant="tertiary2" size="sm" class="w-40" @click="goList">목록</Button>
-      <Button type="button" variant="tertiary2" size="sm" class="w-40" :disabled="form.id == null" @click="onDelete">삭제</Button>
-      <Button type="button" variant="primary" size="sm" class="w-40" @click="onSave">저장</Button>
-    </div>
-  </div>
-
-  <GroupDetailForm :form="form" mode="edit" />
-</template>

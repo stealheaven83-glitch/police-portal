@@ -1,3 +1,83 @@
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="요청관리" />
+    </template>
+    <template #right>
+      <div class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        
+      </div>
+    </template>
+  </PageHeader>
+
+  <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
+    <template #department>
+      <span class="dept-name">부서</span>
+      <DepartmentCascadeSelect v-model="department" size="sm" />
+    </template>
+
+    <template #form>
+      <div class="search-area">
+        <SelectField
+          v-model="periodType"
+          label="기간구분"
+          :options="periodTypeOptions"
+          size="sm"
+          trigger-class="w-37"
+        />
+
+        <div class="group-gap2">
+          <DatePicker v-model="dateFrom" label="기간" size="sm" input-class="w-40" />
+          <span aria-hidden="true">~</span>
+          <DatePicker
+            v-model="dateTo"
+            label="기간 종료일"
+            label-class="sr-only"
+            size="sm"
+            input-class="w-40"
+          />
+        </div>
+
+        <SelectField
+          v-model="receiptType"
+          label="접수구분"
+          :options="receiptTypeOptions"
+          size="sm"
+          trigger-class="w-37"
+        />
+      </div>
+    </template>
+
+    <template #btns>
+      <Button type="button" variant="secondary" size="sm" @click="onSearch">
+        조회
+      </Button>
+    </template>
+  </SearchWrapper>
+
+  <div class="list-actions">
+    <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
+      <Download :size="16" aria-hidden="true" />
+      엑셀다운로드
+    </Button>
+    <Button type="button" variant="primary" size="sm" @click="onCreate">신규</Button>
+  </div>
+
+  <TabulatorGrid
+    ref="gridRef"
+    v-model:data="rows"
+    class="flex-1"
+    :columns="columns"
+    layout="fitDataFill"
+    height="100%"
+    min-height="30rem"
+    placeholder="조회된 요청이 없습니다"
+    show-pagination
+    :items-per-page="10"
+  />
+</template>
+
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Download } from 'lucide-vue-next'
@@ -89,83 +169,3 @@ useBottomTabSetup({
   closable: true,
 })
 </script>
-
-<template>
-  <PageHeader>
-    <template #left>
-      <PageTitle title="요청관리" />
-    </template>
-    <template #right>
-      <div class="group-gap2">
-        <Breadcrumb :items="navItems" />
-        
-      </div>
-    </template>
-  </PageHeader>
-
-  <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
-    <template #department>
-      <span class="dept-name">부서</span>
-      <DepartmentCascadeSelect v-model="department" size="sm" />
-    </template>
-
-    <template #form>
-      <div class="search-area">
-        <SelectField
-          v-model="periodType"
-          label="기간구분"
-          :options="periodTypeOptions"
-          size="sm"
-          trigger-class="w-37"
-        />
-
-        <div class="group-gap2">
-          <DatePicker v-model="dateFrom" label="기간" size="sm" input-class="w-40" />
-          <span aria-hidden="true">~</span>
-          <DatePicker
-            v-model="dateTo"
-            label="기간 종료일"
-            label-class="sr-only"
-            size="sm"
-            input-class="w-40"
-          />
-        </div>
-
-        <SelectField
-          v-model="receiptType"
-          label="접수구분"
-          :options="receiptTypeOptions"
-          size="sm"
-          trigger-class="w-37"
-        />
-      </div>
-    </template>
-
-    <template #btns>
-      <Button type="button" variant="secondary" size="sm" @click="onSearch">
-        조회
-      </Button>
-    </template>
-  </SearchWrapper>
-
-  <div class="list-actions">
-    <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
-      <Download :size="16" aria-hidden="true" />
-      엑셀다운로드
-    </Button>
-    <Button type="button" variant="primary" size="sm" @click="onCreate">신규</Button>
-  </div>
-
-  <TabulatorGrid
-    ref="gridRef"
-    v-model:data="rows"
-    class="flex-1"
-    :columns="columns"
-    layout="fitDataFill"
-    height="100%"
-    min-height="30rem"
-    placeholder="조회된 요청이 없습니다"
-    show-pagination
-    :items-per-page="10"
-  />
-</template>

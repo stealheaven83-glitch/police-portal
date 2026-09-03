@@ -1,20 +1,3 @@
-<script setup lang="ts">
-import { inject } from 'vue'
-import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
-import { Button } from '@/components/custom/button'
-import { InfoTable, InfoField } from '@/components/custom/info-table'
-import InputField2 from '@/components/custom/input/InputField2.vue'
-import SelectField from '@/components/custom/select/SelectField.vue'
-import TextareaField from '@/components/custom/textarea/TextareaField.vue'
-import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
-import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
-import { EquipmentListKey, cuffsTypeOptions, cuffsStatusLabel } from '../composable/PC-LPO-0701'
-import styles from '@/components/custom/info-table/InfoTable.module.css'
-
-const store = inject(EquipmentListKey)!
-const { cuffsDetail, cuffsDetailDialogOpen, saveCuffsDetail, deleteCuffsDetail } = store
-</script>
-
 <template>
   <GenericDialog2 v-model:open="cuffsDetailDialogOpen" title="수갑 상세" :size="800" :show-close-button="true">
     <p :class="styles.legend">필수 입력 항목</p>
@@ -87,3 +70,20 @@ const { cuffsDetail, cuffsDetailDialogOpen, saveCuffsDetail, deleteCuffsDetail }
     </template>
   </GenericDialog2>
 </template>
+
+<script setup lang="ts">
+import { inject } from 'vue'
+import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
+import { Button } from '@/components/custom/button'
+import { InfoTable, InfoField } from '@/components/custom/info-table'
+import InputField2 from '@/components/custom/input/InputField2.vue'
+import SelectField from '@/components/custom/select/SelectField.vue'
+import TextareaField from '@/components/custom/textarea/TextareaField.vue'
+import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
+import { EquipmentListKey, cuffsTypeOptions, cuffsStatusLabel } from '../composable/PC-LPO-0701'
+import styles from '@/components/custom/info-table/InfoTable.module.css'
+
+const store = inject(EquipmentListKey)!
+const { cuffsDetail, cuffsDetailDialogOpen, saveCuffsDetail, deleteCuffsDetail } = store
+</script>

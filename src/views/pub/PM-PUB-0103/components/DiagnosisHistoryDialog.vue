@@ -1,3 +1,25 @@
+<template>
+  <GenericDialog2 v-model:open="open" title="범죄예방진단 이력보기" :size="800" show-close-button>
+    <div :class="styles.historyTableArea">
+      <TableWrapper
+        :class="styles.figmaTable"
+        :columns="historyColumns"
+        :items="historyItems"
+        :show-pagination="false"
+      />
+      <!--
+        TableWrapper 의 emptyTitle/emptyDescription 은 TableEmpty 가 기본 슬롯만 받는데
+        네임드 슬롯(#title/#description)으로 넘기고 있어 화면에 나오지 않는다(공용 컴포넌트 이슈).
+        공용 파일을 건드리지 않는 대신, 빈 상태 표시는 공통 NoData 컴포넌트를 그대로 쓴다.
+      -->
+      <NoData v-if="!historyItems.length" message="조회된 이력이 없습니다." />
+    </div>
+    <template #footer>
+      <Button type="button" variant="tertiary2" size="md" @click="open = false">닫기</Button>
+    </template>
+  </GenericDialog2>
+</template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
@@ -24,25 +46,3 @@ const historyItems = computed(() =>
   props.rows.map((row) => ({ ...row, dept: props.diagnosis?.dept ?? '-' })),
 )
 </script>
-
-<template>
-  <GenericDialog2 v-model:open="open" title="범죄예방진단 이력보기" :size="800" show-close-button>
-    <div :class="styles.historyTableArea">
-      <TableWrapper
-        :class="styles.figmaTable"
-        :columns="historyColumns"
-        :items="historyItems"
-        :show-pagination="false"
-      />
-      <!--
-        TableWrapper 의 emptyTitle/emptyDescription 은 TableEmpty 가 기본 슬롯만 받는데
-        네임드 슬롯(#title/#description)으로 넘기고 있어 화면에 나오지 않는다(공용 컴포넌트 이슈).
-        공용 파일을 건드리지 않는 대신, 빈 상태 표시는 공통 NoData 컴포넌트를 그대로 쓴다.
-      -->
-      <NoData v-if="!historyItems.length" message="조회된 이력이 없습니다." />
-    </div>
-    <template #footer>
-      <Button type="button" variant="tertiary2" size="md" @click="open = false">닫기</Button>
-    </template>
-  </GenericDialog2>
-</template>

@@ -1,86 +1,3 @@
-<script setup lang="ts">
-import { inject, onBeforeUnmount, ref } from 'vue'
-import { Search } from 'lucide-vue-next'
-import { toast } from 'vue-sonner'
-import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
-import { InfoTable, InfoField } from '@/components/custom/info-table'
-import { Button } from '@/components/custom/button'
-import InputField2 from '@/components/custom/input/InputField2.vue'
-import SelectField from '@/components/custom/select/SelectField.vue'
-import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
-import TextareaField from '@/components/custom/textarea/TextareaField.vue'
-import { Checkbox } from '@/components/custom/checkbox'
-import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
-import TableWrapper from '@/components/custom/table/TableWrapper.vue'
-import { DiagnosisListKey } from '../composable/PM-PUB-0101'
-import {
-  detailTypeOptions,
-  detailReasonOptions,
-  notifyDeptOptions,
-  notifyStaffOptions,
-  surveyScale,
-  crimeStats,
-  demographicStats,
-  surveySections,
-  incidentColumns,
-} from '../composable/PM-PUB-0102'
-import styles from '../style/PM-PUB-0101.module.css'
-
-/** 간소화 상세 팝업 (PM-PUB-0102). 이력 그리드에서 상호명을 누르면 열린다. */
-const store = inject(DiagnosisListKey)!
-const {
-  detailOpen,
-  detailForm,
-  detailPhotos,
-  detailIncidents,
-  detailTypeLabel,
-  closeDetail,
-  changePhoto,
-  removePhoto,
-  addIncident,
-  saveDetail,
-} = store
-
-/** 사진 슬롯마다 숨겨둔 file input. '사진변경' 버튼이 이걸 대신 연다 */
-const fileInputs = ref<Record<string, HTMLInputElement | null>>({})
-
-function setFileInput(key: string, el: unknown) {
-  fileInputs.value[key] = (el as HTMLInputElement | null) ?? null
-}
-
-function pickPhoto(key: string) {
-  fileInputs.value[key]?.click()
-}
-
-function onFileSelected(key: string, event: Event) {
-  const input = event.target as HTMLInputElement
-  const file = input.files?.[0]
-  if (!file) return
-
-  if (!file.type.startsWith('image/')) {
-    toast.warning('이미지 파일만 등록할 수 있습니다.')
-    input.value = ''
-    return
-  }
-
-  changePhoto(key, file)
-  // 같은 파일을 다시 골라도 change 이벤트가 나도록 비워둔다
-  input.value = ''
-}
-
-function onAddressSearch() {
-  // TODO: 주소검색 팝업 연결
-  toast.info('주소검색 화면은 준비 중입니다.')
-}
-
-function onSurveyChange(questionId: string, value: unknown) {
-  detailForm.survey[questionId] = Number(value)
-}
-
-/** blob 미리보기 URL 이 남지 않게 정리한다 */
-onBeforeUnmount(store.revokePhotoUrls)
-</script>
-
 <template>
   <GenericDialog2
     v-model:open="detailOpen"
@@ -359,3 +276,86 @@ onBeforeUnmount(store.revokePhotoUrls)
     </template>
   </GenericDialog2>
 </template>
+
+<script setup lang="ts">
+import { inject, onBeforeUnmount, ref } from 'vue'
+import { Search } from 'lucide-vue-next'
+import { toast } from 'vue-sonner'
+import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
+import { InfoTable, InfoField } from '@/components/custom/info-table'
+import { Button } from '@/components/custom/button'
+import InputField2 from '@/components/custom/input/InputField2.vue'
+import SelectField from '@/components/custom/select/SelectField.vue'
+import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import TextareaField from '@/components/custom/textarea/TextareaField.vue'
+import { Checkbox } from '@/components/custom/checkbox'
+import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
+import TableWrapper from '@/components/custom/table/TableWrapper.vue'
+import { DiagnosisListKey } from '../composable/PM-PUB-0101'
+import {
+  detailTypeOptions,
+  detailReasonOptions,
+  notifyDeptOptions,
+  notifyStaffOptions,
+  surveyScale,
+  crimeStats,
+  demographicStats,
+  surveySections,
+  incidentColumns,
+} from '../composable/PM-PUB-0102'
+import styles from '../style/PM-PUB-0101.module.css'
+
+/** 간소화 상세 팝업 (PM-PUB-0102). 이력 그리드에서 상호명을 누르면 열린다. */
+const store = inject(DiagnosisListKey)!
+const {
+  detailOpen,
+  detailForm,
+  detailPhotos,
+  detailIncidents,
+  detailTypeLabel,
+  closeDetail,
+  changePhoto,
+  removePhoto,
+  addIncident,
+  saveDetail,
+} = store
+
+/** 사진 슬롯마다 숨겨둔 file input. '사진변경' 버튼이 이걸 대신 연다 */
+const fileInputs = ref<Record<string, HTMLInputElement | null>>({})
+
+function setFileInput(key: string, el: unknown) {
+  fileInputs.value[key] = (el as HTMLInputElement | null) ?? null
+}
+
+function pickPhoto(key: string) {
+  fileInputs.value[key]?.click()
+}
+
+function onFileSelected(key: string, event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+
+  if (!file.type.startsWith('image/')) {
+    toast.warning('이미지 파일만 등록할 수 있습니다.')
+    input.value = ''
+    return
+  }
+
+  changePhoto(key, file)
+  // 같은 파일을 다시 골라도 change 이벤트가 나도록 비워둔다
+  input.value = ''
+}
+
+function onAddressSearch() {
+  // TODO: 주소검색 팝업 연결
+  toast.info('주소검색 화면은 준비 중입니다.')
+}
+
+function onSurveyChange(questionId: string, value: unknown) {
+  detailForm.survey[questionId] = Number(value)
+}
+
+/** blob 미리보기 URL 이 남지 않게 정리한다 */
+onBeforeUnmount(store.revokePhotoUrls)
+</script>

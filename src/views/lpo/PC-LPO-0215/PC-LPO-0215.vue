@@ -1,3 +1,52 @@
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="사고자/자원근무자 현황" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+  <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
+    <template #department>
+      <span class="dept-name">부서</span>
+      <DepartmentCascadeSelect v-model="department" size="sm" />
+    </template>
+    <template #form>
+      <div class="search-area">
+        <div class="group-gap2">
+          <DatePicker v-model="dateFrom" label="근무일자" size="sm" inputClass="w-40" />
+          <span aria-hidden="true">~</span>
+          <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
+        </div>
+        <SelectField v-model="typeFilter" label="구분" :options="typeFilterOptions" size="sm" triggerClass="w-37" />
+        <InputField2 v-model="nameFilter" label="이름" size="sm" inputClass="w-40" />
+      </div>
+    </template>
+    <template #btns>
+      <Button variant="secondary" size="sm">조회</Button>
+    </template>
+  </SearchWrapper>
+
+  <div class="list-actions">
+    <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
+      <Download :size="16" aria-hidden="true" />
+      엑셀다운로드
+    </Button>
+  </div>
+
+  <TabulatorGrid
+    ref="gridRef"
+    class="flex-1"
+    :columns="columns"
+    :data="rows"
+    height="100%"
+    placeholder="조회된 내역이 없습니다"
+    show-pagination
+    :items-per-page="10"
+  />
+</template>
+
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Download } from 'lucide-vue-next'
@@ -66,52 +115,3 @@ useBottomTabSetup({
   closable: true,
 })
 </script>
-
-<template>
-  <PageHeader>
-    <template #left>
-      <PageTitle title="사고자/자원근무자 현황" />
-    </template>
-    <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
-  </PageHeader>
-  <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
-    <template #department>
-      <span class="dept-name">부서</span>
-      <DepartmentCascadeSelect v-model="department" size="sm" />
-    </template>
-    <template #form>
-      <div class="search-area">
-        <div class="group-gap2">
-          <DatePicker v-model="dateFrom" label="근무일자" size="sm" inputClass="w-40" />
-          <span aria-hidden="true">~</span>
-          <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
-        </div>
-        <SelectField v-model="typeFilter" label="구분" :options="typeFilterOptions" size="sm" triggerClass="w-37" />
-        <InputField2 v-model="nameFilter" label="이름" size="sm" inputClass="w-40" />
-      </div>
-    </template>
-    <template #btns>
-      <Button variant="secondary" size="sm">조회</Button>
-    </template>
-  </SearchWrapper>
-
-  <div class="list-actions">
-    <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
-      <Download :size="16" aria-hidden="true" />
-      엑셀다운로드
-    </Button>
-  </div>
-
-  <TabulatorGrid
-    ref="gridRef"
-    class="flex-1"
-    :columns="columns"
-    :data="rows"
-    height="100%"
-    placeholder="조회된 내역이 없습니다"
-    show-pagination
-    :items-per-page="10"
-  />
-</template>

@@ -1,3 +1,39 @@
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="단체정보리스트" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+
+  <div class="dept-area">
+    <span class="dept-name">부서</span>
+    <DepartmentCascadeSelect v-model="department" size="sm" />
+  </div>
+
+  <div class="list-actions">
+    <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
+      <Download :size="16" aria-hidden="true" />
+      엑셀다운로드
+    </Button>
+    <Button type="button" variant="primary" size="sm" @click="openNew">신규</Button>
+  </div>
+
+  <TabulatorGrid
+    ref="gridRef"
+    class="flex-1"
+    :columns="columns"
+    :data="rows"
+    height="100%"
+    min-height="40rem"
+    placeholder="등록된 단체가 없습니다"
+    show-pagination
+    :items-per-page="10"
+  />
+</template>
+
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -97,39 +133,3 @@ useBottomTabSetup({
   closable: true,
 })
 </script>
-
-<template>
-  <PageHeader>
-    <template #left>
-      <PageTitle title="단체정보리스트" />
-    </template>
-    <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
-  </PageHeader>
-
-  <div class="dept-area">
-    <span class="dept-name">부서</span>
-    <DepartmentCascadeSelect v-model="department" size="sm" />
-  </div>
-
-  <div class="list-actions">
-    <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
-      <Download :size="16" aria-hidden="true" />
-      엑셀다운로드
-    </Button>
-    <Button type="button" variant="primary" size="sm" @click="openNew">신규</Button>
-  </div>
-
-  <TabulatorGrid
-    ref="gridRef"
-    class="flex-1"
-    :columns="columns"
-    :data="rows"
-    height="100%"
-    min-height="40rem"
-    placeholder="등록된 단체가 없습니다"
-    show-pagination
-    :items-per-page="10"
-  />
-</template>

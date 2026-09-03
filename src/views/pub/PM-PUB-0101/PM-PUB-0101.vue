@@ -1,120 +1,3 @@
-<script setup lang="ts">
-import { provide, ref } from 'vue'
-import { Download } from 'lucide-vue-next'
-import PageHeader from '@/components/custom/title/PageHeader.vue'
-import PageTitle from '@/components/custom/title/PageTitle.vue'
-import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
-import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
-import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
-import SelectField from '@/components/custom/select/SelectField.vue'
-import InputField2 from '@/components/custom/input/InputField2.vue'
-import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
-import { Button } from '@/components/custom/button'
-import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
-import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
-import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
-import DiagnosisDetailDialog from './components/DiagnosisDetailDialog.vue'
-import { useDiagnosisDetail } from './composable/PM-PUB-0102'
-import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
-import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
-import {
-  useDiagnosisList,
-  typeOptions,
-  reasonOptions,
-  notifiedOptions,
-  cashIntensiveOptions,
-  DiagnosisListKey,
-  type DiagnosisRow,
-  type DiagnosisHistoryRow,
-} from './composable/PM-PUB-0101'
-import styles from './style/PM-PUB-0101.module.css'
-
-// KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!)
-defineOptions({
-  name: 'PmPub0101',
-})
-
-const navItems = [
-  { label: '홈', path: '/' },
-  { label: '생활안전' },
-  { label: '범죄예방진단' },
-  { label: '간이 범죄예방진단' },
-]
-
-/**
- * 팝업(components/)이 props/emit 없이 같은 상태를 쓰도록 여기서 한 번만 만들어 provide 한다.
- * 팝업은 DiagnosisListKey 로 inject 해서 이 인스턴스를 공유한다.
- */
-const store = { ...useDiagnosisList(), ...useDiagnosisDetail() }
-provide(DiagnosisListKey, store)
-
-const { advancedSearchOpen, searchForm, rows, historyRows, selectRow, search, openNew, openDetail } =
-  store
-
-const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
-
-/**
- * 현황 그리드 컬럼.
- * 번호만 폭을 고정하고 나머지는 layout="fitColumns" 가 남는 폭을 나눠 갖는다.
- * 주소는 다른 값보다 훨씬 길어 widthGrow 로 더 넓게 잡고 좌측 정렬한다.
- */
-const listColumns: TabulatorGridColumn[] = [
-  { title: '번호', field: 'no', width: 80, hozAlign: 'center' },
-  { title: '부서', field: 'dept', hozAlign: 'center' },
-  { title: '유형', field: 'type', hozAlign: 'center' },
-  { title: '상호명', field: 'bizName', hozAlign: 'center' },
-  { title: '진단자', field: 'diagnoser', hozAlign: 'center' },
-  { title: '주소', field: 'address', widthGrow: 3 },
-  {
-    title: '현금다액업소',
-    field: 'cashIntensive',
-    hozAlign: 'center',
-    // 체크 표시 대신 글자로 둬야 스크린리더가 읽고, 흑백 인쇄에서도 구분된다
-    formatter: (cell: any) => (cell.getValue() ? '해당' : '해당없음'),
-  },
-]
-
-const historyColumns: TabulatorGridColumn[] = [
-  { title: '진단일자', field: 'diagnosedAt', hozAlign: 'center' },
-  {
-    title: '상호명',
-    field: 'bizName',
-    hozAlign: 'center',
-    // 버튼 텍스트가 곧 셀 값이다 — 눌러서 간소화 상세 팝업을 연다
-    cellType: 'button',
-    buttonVariant: 'link',
-    buttonSize: 'xxs',
-    buttonLabel: (row) => String((row as DiagnosisHistoryRow).bizName),
-    onButtonClick: (row) => openDetail(row as DiagnosisHistoryRow),
-  },
-  { title: '진단사유', field: 'reason', hozAlign: 'center' },
-  { title: '주소', field: 'address', widthGrow: 2 },
-  { title: '진단자', field: 'diagnoser', hozAlign: 'center' },
-]
-
-/** select-mode="single" 이라 선택 행은 0건 아니면 1건이다 */
-function onRowSelectionChanged(selected: DiagnosisRow[]) {
-  selectRow(selected[0] ?? null)
-}
-
-function onDownloadExcel() {
-  const today = new Date().toISOString().slice(0, 10)
-  gridRef.value?.download('csv', `간이범죄예방진단_${today}.csv`)
-}
-
-// 사이드메뉴(생활안전 LNB) 설정
-useSideMenuSetup('publicSafety')
-
-// 탭 추가 및 활성화
-useBottomTabSetup({
-  value: 'PM-PUB-0101',
-  label: '간이 범죄예방진단',
-  path: '/views/pub/PM-PUB-0101',
-  componentName: 'PmPub0101',
-  closable: true,
-})
-</script>
-
 <template>
   <PageHeader>
     <template #left>
@@ -245,3 +128,120 @@ useBottomTabSetup({
 
   <DiagnosisDetailDialog />
 </template>
+
+<script setup lang="ts">
+import { provide, ref } from 'vue'
+import { Download } from 'lucide-vue-next'
+import PageHeader from '@/components/custom/title/PageHeader.vue'
+import PageTitle from '@/components/custom/title/PageTitle.vue'
+import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
+import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
+import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
+import SelectField from '@/components/custom/select/SelectField.vue'
+import InputField2 from '@/components/custom/input/InputField2.vue'
+import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import { Button } from '@/components/custom/button'
+import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
+import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
+import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import DiagnosisDetailDialog from './components/DiagnosisDetailDialog.vue'
+import { useDiagnosisDetail } from './composable/PM-PUB-0102'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
+import {
+  useDiagnosisList,
+  typeOptions,
+  reasonOptions,
+  notifiedOptions,
+  cashIntensiveOptions,
+  DiagnosisListKey,
+  type DiagnosisRow,
+  type DiagnosisHistoryRow,
+} from './composable/PM-PUB-0101'
+import styles from './style/PM-PUB-0101.module.css'
+
+// KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!)
+defineOptions({
+  name: 'PmPub0101',
+})
+
+const navItems = [
+  { label: '홈', path: '/' },
+  { label: '생활안전' },
+  { label: '범죄예방진단' },
+  { label: '간이 범죄예방진단' },
+]
+
+/**
+ * 팝업(components/)이 props/emit 없이 같은 상태를 쓰도록 여기서 한 번만 만들어 provide 한다.
+ * 팝업은 DiagnosisListKey 로 inject 해서 이 인스턴스를 공유한다.
+ */
+const store = { ...useDiagnosisList(), ...useDiagnosisDetail() }
+provide(DiagnosisListKey, store)
+
+const { advancedSearchOpen, searchForm, rows, historyRows, selectRow, search, openNew, openDetail } =
+  store
+
+const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
+
+/**
+ * 현황 그리드 컬럼.
+ * 번호만 폭을 고정하고 나머지는 layout="fitColumns" 가 남는 폭을 나눠 갖는다.
+ * 주소는 다른 값보다 훨씬 길어 widthGrow 로 더 넓게 잡고 좌측 정렬한다.
+ */
+const listColumns: TabulatorGridColumn[] = [
+  { title: '번호', field: 'no', width: 80, hozAlign: 'center' },
+  { title: '부서', field: 'dept', hozAlign: 'center' },
+  { title: '유형', field: 'type', hozAlign: 'center' },
+  { title: '상호명', field: 'bizName', hozAlign: 'center' },
+  { title: '진단자', field: 'diagnoser', hozAlign: 'center' },
+  { title: '주소', field: 'address', widthGrow: 3 },
+  {
+    title: '현금다액업소',
+    field: 'cashIntensive',
+    hozAlign: 'center',
+    // 체크 표시 대신 글자로 둬야 스크린리더가 읽고, 흑백 인쇄에서도 구분된다
+    formatter: (cell: any) => (cell.getValue() ? '해당' : '해당없음'),
+  },
+]
+
+const historyColumns: TabulatorGridColumn[] = [
+  { title: '진단일자', field: 'diagnosedAt', hozAlign: 'center' },
+  {
+    title: '상호명',
+    field: 'bizName',
+    hozAlign: 'center',
+    // 버튼 텍스트가 곧 셀 값이다 — 눌러서 간소화 상세 팝업을 연다
+    cellType: 'button',
+    buttonVariant: 'link',
+    buttonSize: 'xxs',
+    buttonLabel: (row) => String((row as DiagnosisHistoryRow).bizName),
+    onButtonClick: (row) => openDetail(row as DiagnosisHistoryRow),
+  },
+  { title: '진단사유', field: 'reason', hozAlign: 'center' },
+  { title: '주소', field: 'address', widthGrow: 2 },
+  { title: '진단자', field: 'diagnoser', hozAlign: 'center' },
+]
+
+/** select-mode="single" 이라 선택 행은 0건 아니면 1건이다 */
+function onRowSelectionChanged(selected: DiagnosisRow[]) {
+  selectRow(selected[0] ?? null)
+}
+
+function onDownloadExcel() {
+  const today = new Date().toISOString().slice(0, 10)
+  gridRef.value?.download('csv', `간이범죄예방진단_${today}.csv`)
+}
+
+// 사이드메뉴(생활안전 LNB) 설정
+useSideMenuSetup('publicSafety')
+
+// 탭 추가 및 활성화
+useBottomTabSetup({
+  value: 'PM-PUB-0101',
+  label: '간이 범죄예방진단',
+  path: '/views/pub/PM-PUB-0101',
+  componentName: 'PmPub0101',
+  closable: true,
+})
+</script>

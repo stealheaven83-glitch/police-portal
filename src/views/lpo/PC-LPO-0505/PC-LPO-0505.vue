@@ -1,3 +1,56 @@
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="출동수당 취합(월별)" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+
+  <div>
+    <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
+      <template #department>
+        <span class="dept-name">부서</span>
+        <DepartmentCascadeSelect v-model="department" size="sm" />
+      </template>
+      <template #form>
+        <div class="search-area">
+          <SelectField label="근무월" v-model="workYearStr" :options="yearOptions" size="sm" triggerClass="w-25" />
+          <span aria-hidden="true">년</span>
+          <SelectField v-model="workMonthStr" :options="monthOptions" size="sm" triggerClass="w-20" />
+          <span aria-hidden="true">월</span>
+          <SelectField label="신청자" v-model="applicant" :options="applicantOptions" size="sm" triggerClass="w-32" />
+          <SelectField label="신청구분" v-model="applyType" :options="applyTypeOptions" size="sm" triggerClass="w-32" />
+        </div>
+      </template>
+      <template #btns>
+        <Button variant="secondary" size="sm">조회</Button>
+      </template>
+    </SearchWrapper>
+  </div>
+
+  <div class="list-actions">
+    <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
+      <Download :size="16" aria-hidden="true" />
+      엑셀다운로드
+    </Button>
+  </div>
+
+  <TabulatorGrid
+    ref="gridRef"
+    class="flex-1"
+    :columns="columns"
+    :data="gridRows"
+    layout="fitDataFill"
+    height="100%"
+    min-height="40rem"
+    placeholder="조회된 출동수당 취합 내역이 없습니다"
+    show-pagination
+    :items-per-page="10"
+  />
+</template>
+
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { Download } from 'lucide-vue-next'
@@ -100,56 +153,3 @@ useBottomTabSetup({
   closable: true,
 })
 </script>
-
-<template>
-  <PageHeader>
-    <template #left>
-      <PageTitle title="출동수당 취합(월별)" />
-    </template>
-    <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
-  </PageHeader>
-
-  <div>
-    <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
-      <template #department>
-        <span class="dept-name">부서</span>
-        <DepartmentCascadeSelect v-model="department" size="sm" />
-      </template>
-      <template #form>
-        <div class="search-area">
-          <SelectField label="근무월" v-model="workYearStr" :options="yearOptions" size="sm" triggerClass="w-25" />
-          <span aria-hidden="true">년</span>
-          <SelectField v-model="workMonthStr" :options="monthOptions" size="sm" triggerClass="w-20" />
-          <span aria-hidden="true">월</span>
-          <SelectField label="신청자" v-model="applicant" :options="applicantOptions" size="sm" triggerClass="w-32" />
-          <SelectField label="신청구분" v-model="applyType" :options="applyTypeOptions" size="sm" triggerClass="w-32" />
-        </div>
-      </template>
-      <template #btns>
-        <Button variant="secondary" size="sm">조회</Button>
-      </template>
-    </SearchWrapper>
-  </div>
-
-  <div class="list-actions">
-    <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
-      <Download :size="16" aria-hidden="true" />
-      엑셀다운로드
-    </Button>
-  </div>
-
-  <TabulatorGrid
-    ref="gridRef"
-    class="flex-1"
-    :columns="columns"
-    :data="gridRows"
-    layout="fitDataFill"
-    height="100%"
-    min-height="40rem"
-    placeholder="조회된 출동수당 취합 내역이 없습니다"
-    show-pagination
-    :items-per-page="10"
-  />
-</template>

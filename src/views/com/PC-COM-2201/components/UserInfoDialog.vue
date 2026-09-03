@@ -1,28 +1,3 @@
-<script setup lang="ts">
-import { inject } from 'vue'
-import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
-import { InfoTable, InfoField } from '@/components/custom/info-table'
-import { Button } from '@/components/custom/button'
-import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
-import { useDialog } from '@/composable/dialog/dialog'
-import { UserManageKey } from '../composable/PC-COM-2201'
-import styles from '@/components/custom/info-table/InfoTable.module.css'
-
-defineOptions({ name: 'UserInfoDialog' })
-
-/** 사용자 정보 팝업 (PC-COM-2202). 사용자목록의 아이디를 누르면 열린다. */
-const store = inject(UserManageKey)!
-const { detailOpen, detailForm, closeUserDetail } = store
-
-const dialog = useDialog()
-
-async function onSave() {
-  // TODO: API 연동
-  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
-  closeUserDetail()
-}
-</script>
-
 <template>
   <GenericDialog2
     v-model:open="detailOpen"
@@ -58,3 +33,28 @@ async function onSave() {
     </template>
   </GenericDialog2>
 </template>
+
+<script setup lang="ts">
+import { inject } from 'vue'
+import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
+import { InfoTable, InfoField } from '@/components/custom/info-table'
+import { Button } from '@/components/custom/button'
+import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
+import { useDialog } from '@/composable/dialog/dialog'
+import { UserManageKey } from '../composable/PC-COM-2201'
+import styles from '@/components/custom/info-table/InfoTable.module.css'
+
+defineOptions({ name: 'UserInfoDialog' })
+
+/** 사용자 정보 팝업 (PC-COM-2202). 사용자목록의 아이디를 누르면 열린다. */
+const store = inject(UserManageKey)!
+const { detailOpen, detailForm, closeUserDetail } = store
+
+const dialog = useDialog()
+
+async function onSave() {
+  // TODO: API 연동
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
+  closeUserDetail()
+}
+</script>

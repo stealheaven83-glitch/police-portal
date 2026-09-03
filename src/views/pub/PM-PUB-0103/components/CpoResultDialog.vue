@@ -1,88 +1,3 @@
-<script setup lang="ts">
-import { computed } from 'vue'
-import { useDialog } from '@/composable/dialog/dialog'
-import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
-import { InfoTable, InfoField } from '@/components/custom/info-table'
-import Input from '@/components/custom/input/Input.vue'
-import InputField2 from '@/components/custom/input/InputField2.vue'
-import Stepper from '@/components/custom/input/Stepper.vue'
-import SelectField from '@/components/custom/select/SelectField.vue'
-import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
-import TextareaField from '@/components/custom/textarea/TextareaField.vue'
-import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
-import { Checkbox } from '@/components/custom/checkbox'
-import { Button } from '@/components/custom/button'
-import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
-import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
-import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
-import {
-  buildingAssessmentRows,
-  extraAssessmentRows,
-  crimeStats,
-  demographicStats,
-  districtOptions,
-  diagnosisReasonOptions,
-  crimePreventionStatusOptions,
-  previousCrimeDamageOptions,
-  improvementDoneOptions,
-  type CpoDiagnosisRow,
-  type NewDiagnosisForm,
-} from '../composable/PM-PUB-0103'
-import styles from '../style/PM-PUB-0103.module.css'
-/** RadioGroup 정렬(.info-table-radio) 같은 InfoTable 관련 공통 클래스는 공용 파일에서 그대로 가져온다 */
-import infoTableStyles from '@/components/custom/info-table/InfoTable.module.css'
-
-const props = defineProps<{
-  diagnosis?: CpoDiagnosisRow | null
-  rows: CpoDiagnosisRow[]
-  form: NewDiagnosisForm
-  assessment: Record<string, number>
-  totalScore: number
-}>()
-const emit = defineEmits<{
-  (e: 'open-simple-notice'): void
-  (e: 'open-history'): void
-  /** 팝업 안 목록에서 다른 건을 고르면 부모가 상세를 다시 채운다 */
-  (e: 'select-row', row: CpoDiagnosisRow): void
-}>()
-const open = defineModel<boolean>('open', { default: false })
-const dialog = useDialog()
-
-/* 시안: 번호 / 진단일자 / 부서명 / 주소. 주소만 길어 남는 폭을 가져간다. */
-const listColumns: TabulatorGridColumn[] = [
-  { title: '번호', field: 'no', width: 70, hozAlign: 'center' },
-  { title: '진단일자', field: 'diagnosedAt', width: 110, hozAlign: 'center' },
-  { title: '부서명', field: 'dept', width: 110, hozAlign: 'center' },
-  { title: '주소', field: 'baseAddress', widthGrow: 2, hozAlign: 'left' },
-]
-
-/**
- * TabulatorGrid 는 이 이벤트에 행 데이터가 아니라 RowComponent 를 넘긴다(공용 컴포넌트 규약).
- * 이미 데이터인 경우까지 방어적으로 언랩한다.
- */
-function onRowClick(_event: Event, row: unknown) {
-  const data = (row && typeof (row as { getData?: unknown }).getData === 'function'
-    ? (row as { getData: () => CpoDiagnosisRow }).getData()
-    : (row as CpoDiagnosisRow)) as CpoDiagnosisRow | undefined
-  if (data) emit('select-row', data)
-}
-
-/* CPO 확인용이라 대상 정보는 읽기 전용이다 — 코드가 아니라 사람이 읽는 라벨로 바꾼다 */
-const baseAddressText = computed(() => props.diagnosis?.baseAddress || props.form.address || '-')
-const detailAddressText = computed(() => props.diagnosis?.detailAddress || props.form.detailAddress || '-')
-const districtText = computed(
-  () => districtOptions.find((o) => o.value === props.form.district)?.label ?? '-',
-)
-const reasonText = computed(
-  () => diagnosisReasonOptions.find((o) => o.value === props.form.reason)?.label ?? '-',
-)
-
-async function save() {
-  await dialog.alert({ title: '등록 되었습니다.' })
-  open.value = false
-}
-</script>
-
 <template>
   <GenericDialog2 v-model:open="open" title="범죄예방진단결과 (CPO확인용)" :size="1800" show-close-button :show-footer="false">
     <!--
@@ -288,3 +203,88 @@ async function save() {
     </LayoutSplite>
   </GenericDialog2>
 </template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useDialog } from '@/composable/dialog/dialog'
+import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
+import { InfoTable, InfoField } from '@/components/custom/info-table'
+import Input from '@/components/custom/input/Input.vue'
+import InputField2 from '@/components/custom/input/InputField2.vue'
+import Stepper from '@/components/custom/input/Stepper.vue'
+import SelectField from '@/components/custom/select/SelectField.vue'
+import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import TextareaField from '@/components/custom/textarea/TextareaField.vue'
+import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
+import { Checkbox } from '@/components/custom/checkbox'
+import { Button } from '@/components/custom/button'
+import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
+import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
+import {
+  buildingAssessmentRows,
+  extraAssessmentRows,
+  crimeStats,
+  demographicStats,
+  districtOptions,
+  diagnosisReasonOptions,
+  crimePreventionStatusOptions,
+  previousCrimeDamageOptions,
+  improvementDoneOptions,
+  type CpoDiagnosisRow,
+  type NewDiagnosisForm,
+} from '../composable/PM-PUB-0103'
+import styles from '../style/PM-PUB-0103.module.css'
+/** RadioGroup 정렬(.info-table-radio) 같은 InfoTable 관련 공통 클래스는 공용 파일에서 그대로 가져온다 */
+import infoTableStyles from '@/components/custom/info-table/InfoTable.module.css'
+
+const props = defineProps<{
+  diagnosis?: CpoDiagnosisRow | null
+  rows: CpoDiagnosisRow[]
+  form: NewDiagnosisForm
+  assessment: Record<string, number>
+  totalScore: number
+}>()
+const emit = defineEmits<{
+  (e: 'open-simple-notice'): void
+  (e: 'open-history'): void
+  /** 팝업 안 목록에서 다른 건을 고르면 부모가 상세를 다시 채운다 */
+  (e: 'select-row', row: CpoDiagnosisRow): void
+}>()
+const open = defineModel<boolean>('open', { default: false })
+const dialog = useDialog()
+
+/* 시안: 번호 / 진단일자 / 부서명 / 주소. 주소만 길어 남는 폭을 가져간다. */
+const listColumns: TabulatorGridColumn[] = [
+  { title: '번호', field: 'no', width: 70, hozAlign: 'center' },
+  { title: '진단일자', field: 'diagnosedAt', width: 110, hozAlign: 'center' },
+  { title: '부서명', field: 'dept', width: 110, hozAlign: 'center' },
+  { title: '주소', field: 'baseAddress', widthGrow: 2, hozAlign: 'left' },
+]
+
+/**
+ * TabulatorGrid 는 이 이벤트에 행 데이터가 아니라 RowComponent 를 넘긴다(공용 컴포넌트 규약).
+ * 이미 데이터인 경우까지 방어적으로 언랩한다.
+ */
+function onRowClick(_event: Event, row: unknown) {
+  const data = (row && typeof (row as { getData?: unknown }).getData === 'function'
+    ? (row as { getData: () => CpoDiagnosisRow }).getData()
+    : (row as CpoDiagnosisRow)) as CpoDiagnosisRow | undefined
+  if (data) emit('select-row', data)
+}
+
+/* CPO 확인용이라 대상 정보는 읽기 전용이다 — 코드가 아니라 사람이 읽는 라벨로 바꾼다 */
+const baseAddressText = computed(() => props.diagnosis?.baseAddress || props.form.address || '-')
+const detailAddressText = computed(() => props.diagnosis?.detailAddress || props.form.detailAddress || '-')
+const districtText = computed(
+  () => districtOptions.find((o) => o.value === props.form.district)?.label ?? '-',
+)
+const reasonText = computed(
+  () => diagnosisReasonOptions.find((o) => o.value === props.form.reason)?.label ?? '-',
+)
+
+async function save() {
+  await dialog.alert({ title: '등록 되었습니다.' })
+  open.value = false
+}
+</script>

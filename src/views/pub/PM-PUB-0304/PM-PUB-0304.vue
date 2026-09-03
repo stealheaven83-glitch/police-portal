@@ -1,149 +1,3 @@
-<script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
-import { toast } from 'vue-sonner'
-import { Download } from 'lucide-vue-next'
-import PageHeader from '@/components/custom/title/PageHeader.vue'
-import PageTitle from '@/components/custom/title/PageTitle.vue'
-import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
-import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
-import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
-import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
-import SelectField from '@/components/custom/select/SelectField.vue'
-import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
-import InputField2 from '@/components/custom/input/InputField2.vue'
-import TextareaField from '@/components/custom/textarea/TextareaField.vue'
-import Stepper from '@/components/custom/input/Stepper.vue'
-import { Button } from '@/components/custom/button'
-import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
-import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
-import { InfoTable, InfoField } from '@/components/custom/info-table'
-import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
-import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
-import { publicSafetyMenu } from '@/composable/menu/sidemenu/presets'
-import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
-import AddressSearchDialog from '../components/AddressSearchDialog.vue'
-import {
-  usePublicSafetyStore,
-  createEmptyActivityForm,
-  groupTypeOptions,
-  activityTypeOptions,
-  activityTimeOptions,
-  type ActivityListRow,
-} from '../composable/publicSafety'
-import styles from './style/PM-PUB-0304.module.css'
-
-defineOptions({ name: 'PmPub0304' })
-
-const navItems = [
-  { label: '홈', path: '/' },
-  { label: '생활안전' },
-  { label: '방범협력단체' },
-  { label: '단체활동기록' },
-]
-
-const store = usePublicSafetyStore()
-
-const department = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
-const groupTypeFilter = ref('all')
-const groupFilter = ref('all')
-const dateFrom = ref('')
-const dateTo = ref('')
-const advancedSearchOpen = ref(false)
-
-const groupTypeFilterOptions = [{ label: '전체', value: 'all' }, ...groupTypeOptions]
-const groupFilterOptions = computed(() => [{ label: '전체', value: 'all' }, ...store.groupOptions.value])
-
-const rows = computed(() => {
-  return store.activities.value.filter((a) => {
-    if (groupTypeFilter.value !== 'all' && a.groupType !== groupTypeFilter.value) return false
-    if (groupFilter.value !== 'all' && String(a.groupId) !== groupFilter.value) return false
-    if (dateFrom.value && a.date < dateFrom.value) return false
-    if (dateTo.value && a.date > dateTo.value) return false
-    return true
-  })
-})
-
-const columns: TabulatorGridColumn[] = [
-  { title: '번호', field: 'id', width: 60, hozAlign: 'center' },
-  { title: '활동일자', field: 'date', hozAlign: 'center' },
-  { title: '관서', field: 'dept', hozAlign: 'center' },
-  { title: '단체명', field: 'groupName', hozAlign: 'center' },
-  { title: '단체종류', field: 'groupType', hozAlign: 'center', formatter: (cell: any) => groupTypeLabel(cell.getRow().getData()) },
-  { title: '활동종류', field: 'activityType', hozAlign: 'center', formatter: (cell: any) => activityTypeLabel(cell.getRow().getData()) },
-  { title: '참여자수', field: 'participantCount', hozAlign: 'center' },
-]
-
-function groupTypeLabel(row: ActivityListRow) {
-  return groupTypeOptions.find((o) => o.value === row.groupType)?.label ?? row.groupType
-}
-function activityTypeLabel(row: ActivityListRow) {
-  return activityTypeOptions.find((o) => o.value === row.activityType)?.label ?? row.activityType
-}
-
-const form = reactive(createEmptyActivityForm())
-const addressSearchOpen = ref(false)
-
-/** SelectField 는 문자열 value 를 쓰는데 groupId 는 number|null 이라 폼-셀렉트 사이에서 문자열로 변환해준다 */
-const groupIdOption = computed<string>({
-  get: () => (form.groupId != null ? String(form.groupId) : ''),
-  set: (value) => {
-    form.groupId = value ? Number(value) : null
-  },
-})
-
-/**
- * TabulatorGrid 의 row-selection-changed 는 데이터가 아니라 Tabulator RowComponent 를
- * 그대로 내보낸다(래퍼 자체 특성 — PM-PUB-0101 도 동일). 그래서 실제 필드 값은
- * row.getData() 로 꺼내야 하고, 혹시 순수 데이터가 오는 경우까지 함께 방어한다.
- */
-function selectRow(rowsSelected: any[]) {
-  const row = rowsSelected[0]
-  const data = row && typeof row.getData === 'function' ? row.getData() : row
-  Object.assign(form, data ? { ...data } : createEmptyActivityForm())
-}
-
-function openNew() {
-  Object.assign(form, createEmptyActivityForm())
-}
-
-function onSave() {
-  if (form.groupId == null || !form.date) {
-    toast.warning('필수 항목을 입력해 주세요.')
-    return
-  }
-  const saved = store.saveActivity(form)
-  Object.assign(form, saved)
-  toast.success('저장되었습니다.')
-}
-
-function onDelete() {
-  if (form.id == null) return
-  store.deleteActivity(form.id)
-  toast.success('삭제되었습니다.')
-  openNew()
-}
-
-function onSelectAddress(address: string) {
-  form.address = address
-}
-
-const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
-function onDownloadExcel() {
-  const today = new Date().toISOString().slice(0, 10)
-  gridRef.value?.download('csv', `단체활동기록_${today}.csv`)
-}
-
-useSideMenuSetup({ ...publicSafetyMenu, activeChild: '단체활동기록', openIndex: 2 })
-
-useBottomTabSetup({
-  value: 'PM-PUB-0304',
-  label: '단체활동기록',
-  path: '/views/pub/PM-PUB-0304',
-  componentName: 'PmPub0304',
-  closable: true,
-})
-</script>
-
 <template>
   <PageHeader>
     <template #left>
@@ -291,3 +145,149 @@ useBottomTabSetup({
 
   <AddressSearchDialog v-model:open="addressSearchOpen" @select="onSelectAddress" />
 </template>
+
+<script setup lang="ts">
+import { computed, reactive, ref } from 'vue'
+import { toast } from 'vue-sonner'
+import { Download } from 'lucide-vue-next'
+import PageHeader from '@/components/custom/title/PageHeader.vue'
+import PageTitle from '@/components/custom/title/PageTitle.vue'
+import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
+import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
+import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
+import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
+import SelectField from '@/components/custom/select/SelectField.vue'
+import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import InputField2 from '@/components/custom/input/InputField2.vue'
+import TextareaField from '@/components/custom/textarea/TextareaField.vue'
+import Stepper from '@/components/custom/input/Stepper.vue'
+import { Button } from '@/components/custom/button'
+import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
+import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
+import { InfoTable, InfoField } from '@/components/custom/info-table'
+import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { publicSafetyMenu } from '@/composable/menu/sidemenu/presets'
+import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
+import AddressSearchDialog from '../components/AddressSearchDialog.vue'
+import {
+  usePublicSafetyStore,
+  createEmptyActivityForm,
+  groupTypeOptions,
+  activityTypeOptions,
+  activityTimeOptions,
+  type ActivityListRow,
+} from '../composable/publicSafety'
+import styles from './style/PM-PUB-0304.module.css'
+
+defineOptions({ name: 'PmPub0304' })
+
+const navItems = [
+  { label: '홈', path: '/' },
+  { label: '생활안전' },
+  { label: '방범협력단체' },
+  { label: '단체활동기록' },
+]
+
+const store = usePublicSafetyStore()
+
+const department = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
+const groupTypeFilter = ref('all')
+const groupFilter = ref('all')
+const dateFrom = ref('')
+const dateTo = ref('')
+const advancedSearchOpen = ref(false)
+
+const groupTypeFilterOptions = [{ label: '전체', value: 'all' }, ...groupTypeOptions]
+const groupFilterOptions = computed(() => [{ label: '전체', value: 'all' }, ...store.groupOptions.value])
+
+const rows = computed(() => {
+  return store.activities.value.filter((a) => {
+    if (groupTypeFilter.value !== 'all' && a.groupType !== groupTypeFilter.value) return false
+    if (groupFilter.value !== 'all' && String(a.groupId) !== groupFilter.value) return false
+    if (dateFrom.value && a.date < dateFrom.value) return false
+    if (dateTo.value && a.date > dateTo.value) return false
+    return true
+  })
+})
+
+const columns: TabulatorGridColumn[] = [
+  { title: '번호', field: 'id', width: 60, hozAlign: 'center' },
+  { title: '활동일자', field: 'date', hozAlign: 'center' },
+  { title: '관서', field: 'dept', hozAlign: 'center' },
+  { title: '단체명', field: 'groupName', hozAlign: 'center' },
+  { title: '단체종류', field: 'groupType', hozAlign: 'center', formatter: (cell: any) => groupTypeLabel(cell.getRow().getData()) },
+  { title: '활동종류', field: 'activityType', hozAlign: 'center', formatter: (cell: any) => activityTypeLabel(cell.getRow().getData()) },
+  { title: '참여자수', field: 'participantCount', hozAlign: 'center' },
+]
+
+function groupTypeLabel(row: ActivityListRow) {
+  return groupTypeOptions.find((o) => o.value === row.groupType)?.label ?? row.groupType
+}
+function activityTypeLabel(row: ActivityListRow) {
+  return activityTypeOptions.find((o) => o.value === row.activityType)?.label ?? row.activityType
+}
+
+const form = reactive(createEmptyActivityForm())
+const addressSearchOpen = ref(false)
+
+/** SelectField 는 문자열 value 를 쓰는데 groupId 는 number|null 이라 폼-셀렉트 사이에서 문자열로 변환해준다 */
+const groupIdOption = computed<string>({
+  get: () => (form.groupId != null ? String(form.groupId) : ''),
+  set: (value) => {
+    form.groupId = value ? Number(value) : null
+  },
+})
+
+/**
+ * TabulatorGrid 의 row-selection-changed 는 데이터가 아니라 Tabulator RowComponent 를
+ * 그대로 내보낸다(래퍼 자체 특성 — PM-PUB-0101 도 동일). 그래서 실제 필드 값은
+ * row.getData() 로 꺼내야 하고, 혹시 순수 데이터가 오는 경우까지 함께 방어한다.
+ */
+function selectRow(rowsSelected: any[]) {
+  const row = rowsSelected[0]
+  const data = row && typeof row.getData === 'function' ? row.getData() : row
+  Object.assign(form, data ? { ...data } : createEmptyActivityForm())
+}
+
+function openNew() {
+  Object.assign(form, createEmptyActivityForm())
+}
+
+function onSave() {
+  if (form.groupId == null || !form.date) {
+    toast.warning('필수 항목을 입력해 주세요.')
+    return
+  }
+  const saved = store.saveActivity(form)
+  Object.assign(form, saved)
+  toast.success('저장되었습니다.')
+}
+
+function onDelete() {
+  if (form.id == null) return
+  store.deleteActivity(form.id)
+  toast.success('삭제되었습니다.')
+  openNew()
+}
+
+function onSelectAddress(address: string) {
+  form.address = address
+}
+
+const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
+function onDownloadExcel() {
+  const today = new Date().toISOString().slice(0, 10)
+  gridRef.value?.download('csv', `단체활동기록_${today}.csv`)
+}
+
+useSideMenuSetup({ ...publicSafetyMenu, activeChild: '단체활동기록', openIndex: 2 })
+
+useBottomTabSetup({
+  value: 'PM-PUB-0304',
+  label: '단체활동기록',
+  path: '/views/pub/PM-PUB-0304',
+  componentName: 'PmPub0304',
+  closable: true,
+})
+</script>

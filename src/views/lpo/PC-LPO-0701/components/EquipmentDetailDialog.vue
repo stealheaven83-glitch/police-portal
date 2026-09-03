@@ -1,30 +1,3 @@
-<script setup lang="ts">
-import { computed, inject } from 'vue'
-import { toast } from 'vue-sonner'
-import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
-import { Button } from '@/components/custom/button'
-import { InfoTable, InfoField } from '@/components/custom/info-table'
-import InputField2 from '@/components/custom/input/InputField2.vue'
-import SelectField from '@/components/custom/select/SelectField.vue'
-import TextareaField from '@/components/custom/textarea/TextareaField.vue'
-import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
-import { EquipmentListKey, vehicleTypeLabel, carTypeOptions, locationOptions, info112Options } from '../composable/PC-LPO-0701'
-import styles from '@/components/custom/info-table/InfoTable.module.css'
-
-
-const store = inject(EquipmentListKey)!
-const { detail, detailDialogOpen, saveDetail, deleteDetail, openVehicle112Dialog } = store
-
-/** 순찰차 외(오토바이/자전거)에는 없는 차량 전용 항목들 */
-const isVehicleRestricted = computed(() => detail.vehicleType !== 'patrol')
-const isPlateNumberDisabled = computed(() => isVehicleRestricted.value || detail.isSaved)
-
-function onSave() {
-  saveDetail()
-  toast.success('저장되었습니다.')
-}
-</script>
-
 <template>
   <GenericDialog2 v-model:open="detailDialogOpen" title="기동장비 상세" :size="800" :show-close-button="true">
     <p :class="styles.legend">필수 입력 항목</p>
@@ -138,3 +111,30 @@ function onSave() {
     </template>
   </GenericDialog2>
 </template>
+
+<script setup lang="ts">
+import { computed, inject } from 'vue'
+import { toast } from 'vue-sonner'
+import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
+import { Button } from '@/components/custom/button'
+import { InfoTable, InfoField } from '@/components/custom/info-table'
+import InputField2 from '@/components/custom/input/InputField2.vue'
+import SelectField from '@/components/custom/select/SelectField.vue'
+import TextareaField from '@/components/custom/textarea/TextareaField.vue'
+import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
+import { EquipmentListKey, vehicleTypeLabel, carTypeOptions, locationOptions, info112Options } from '../composable/PC-LPO-0701'
+import styles from '@/components/custom/info-table/InfoTable.module.css'
+
+
+const store = inject(EquipmentListKey)!
+const { detail, detailDialogOpen, saveDetail, deleteDetail, openVehicle112Dialog } = store
+
+/** 순찰차 외(오토바이/자전거)에는 없는 차량 전용 항목들 */
+const isVehicleRestricted = computed(() => detail.vehicleType !== 'patrol')
+const isPlateNumberDisabled = computed(() => isVehicleRestricted.value || detail.isSaved)
+
+function onSave() {
+  saveDetail()
+  toast.success('저장되었습니다.')
+}
+</script>

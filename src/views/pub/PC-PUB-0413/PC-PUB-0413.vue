@@ -1,3 +1,59 @@
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="주취자입퇴소현황" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+
+  <SearchWrapper>
+    <template #form>
+      <div class="search-area">
+        <SelectField
+          v-model="receiptRouteFilter"
+          label="접수경로"
+          :options="receiptRouteOptions"
+          placeholder="선택"
+          size="sm"
+          trigger-class="w-40"
+        />
+        <SelectField
+          v-model="regionFilter"
+          label="지역"
+          :options="regionFilterOptions"
+          placeholder="선택"
+          size="sm"
+          trigger-class="w-40"
+        />
+        <SelectField
+          v-model="centerFilter"
+          label="센터명"
+          :options="centerFilterOptions"
+          placeholder="선택"
+          size="sm"
+          trigger-class="w-70"
+        />
+      </div>
+    </template>
+    <template #btns>
+      <Button type="button" variant="secondary" size="sm">조회</Button>
+    </template>
+  </SearchWrapper>
+
+  <TabulatorGrid
+    class="flex-1"
+    :columns="columns"
+    :data="rows"
+    height="100%"
+    min-height="40rem"
+    placeholder="조회된 입·퇴소 내역이 없습니다"
+    show-pagination
+    :items-per-page="10"
+  />
+</template>
+
 <script setup lang="ts">
 import { computed, watch } from 'vue'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
@@ -81,59 +137,3 @@ useBottomTabSetup({
   closable: true,
 })
 </script>
-
-<template>
-  <PageHeader>
-    <template #left>
-      <PageTitle title="주취자입퇴소현황" />
-    </template>
-    <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
-  </PageHeader>
-
-  <SearchWrapper>
-    <template #form>
-      <div class="search-area">
-        <SelectField
-          v-model="receiptRouteFilter"
-          label="접수경로"
-          :options="receiptRouteOptions"
-          placeholder="선택"
-          size="sm"
-          trigger-class="w-40"
-        />
-        <SelectField
-          v-model="regionFilter"
-          label="지역"
-          :options="regionFilterOptions"
-          placeholder="선택"
-          size="sm"
-          trigger-class="w-40"
-        />
-        <SelectField
-          v-model="centerFilter"
-          label="센터명"
-          :options="centerFilterOptions"
-          placeholder="선택"
-          size="sm"
-          trigger-class="w-70"
-        />
-      </div>
-    </template>
-    <template #btns>
-      <Button type="button" variant="secondary" size="sm">조회</Button>
-    </template>
-  </SearchWrapper>
-
-  <TabulatorGrid
-    class="flex-1"
-    :columns="columns"
-    :data="rows"
-    height="100%"
-    min-height="40rem"
-    placeholder="조회된 입·퇴소 내역이 없습니다"
-    show-pagination
-    :items-per-page="10"
-  />
-</template>

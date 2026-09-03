@@ -1,3 +1,52 @@
+<template>
+  <GenericDialog2 v-model:open="open" title="사진자료" :size="800" show-close-button>
+    <div :class="styles.photoArea">
+      <div v-for="(row, rowIndex) in photoRows" :key="rowIndex" :class="styles.photoRow">
+        <article v-for="photo in row" :key="photo.key" :class="styles.photoCard">
+          <h3>{{ photo.label }}</h3>
+          <div :class="styles.photoPreview">
+            <img v-if="photo.preview" :class="styles.photoImg" :src="photo.preview" :alt="photo.label" />
+            <img v-else :class="styles.noImage" :src="noImageIcon" alt="No Image" />
+          </div>
+          <p :title="photo.fileName">{{ photo.fileName || '일시' }}</p>
+          <input
+            :ref="(element) => setFileInput(photo.key, element)"
+            type="file"
+            accept="image/*"
+            class="sr-only"
+            @change="onFileSelected(photo, $event)"
+          />
+          <div :class="styles.photoCardActions">
+            <Button type="button" variant="tertiary2" size="xs" @click="pickPhoto(photo.key)">
+              사진변경
+            </Button>
+            <Button type="button" variant="tertiary2" size="xs" @click="removePhoto(photo)">
+              삭제
+            </Button>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <InfoTable :columns="1" popup :class="styles.photoNote">
+      <InfoField label="범죄예방진단자 조치사항" full>
+        <TextareaField
+          v-model="note"
+          :class="styles.detailTextarea"
+          textarea-class="w-full"
+          :height="80"
+          aria-label="범죄예방진단자 조치사항"
+        />
+      </InfoField>
+    </InfoTable>
+
+    <template #footer>
+      <Button type="button" variant="tertiary2" size="md" @click="open = false">취소</Button>
+      <Button type="button" variant="primary" size="md" @click="save">저장</Button>
+    </template>
+  </GenericDialog2>
+</template>
+
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue'
 import { toast } from 'vue-sonner'
@@ -83,52 +132,3 @@ async function save() {
 
 onBeforeUnmount(() => photos.value.forEach((photo) => photo.preview && URL.revokeObjectURL(photo.preview)))
 </script>
-
-<template>
-  <GenericDialog2 v-model:open="open" title="사진자료" :size="800" show-close-button>
-    <div :class="styles.photoArea">
-      <div v-for="(row, rowIndex) in photoRows" :key="rowIndex" :class="styles.photoRow">
-        <article v-for="photo in row" :key="photo.key" :class="styles.photoCard">
-          <h3>{{ photo.label }}</h3>
-          <div :class="styles.photoPreview">
-            <img v-if="photo.preview" :class="styles.photoImg" :src="photo.preview" :alt="photo.label" />
-            <img v-else :class="styles.noImage" :src="noImageIcon" alt="No Image" />
-          </div>
-          <p :title="photo.fileName">{{ photo.fileName || '일시' }}</p>
-          <input
-            :ref="(element) => setFileInput(photo.key, element)"
-            type="file"
-            accept="image/*"
-            class="sr-only"
-            @change="onFileSelected(photo, $event)"
-          />
-          <div :class="styles.photoCardActions">
-            <Button type="button" variant="tertiary2" size="xs" @click="pickPhoto(photo.key)">
-              사진변경
-            </Button>
-            <Button type="button" variant="tertiary2" size="xs" @click="removePhoto(photo)">
-              삭제
-            </Button>
-          </div>
-        </article>
-      </div>
-    </div>
-
-    <InfoTable :columns="1" popup :class="styles.photoNote">
-      <InfoField label="범죄예방진단자 조치사항" full>
-        <TextareaField
-          v-model="note"
-          :class="styles.detailTextarea"
-          textarea-class="w-full"
-          :height="80"
-          aria-label="범죄예방진단자 조치사항"
-        />
-      </InfoField>
-    </InfoTable>
-
-    <template #footer>
-      <Button type="button" variant="tertiary2" size="md" @click="open = false">취소</Button>
-      <Button type="button" variant="primary" size="md" @click="save">저장</Button>
-    </template>
-  </GenericDialog2>
-</template>

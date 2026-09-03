@@ -1,3 +1,44 @@
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="월별 인수인계서" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+
+  <div class="mb-[1.2rem]">
+    <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
+      <template #department>
+        <span class="dept-name">부서</span>
+        <DepartmentCascadeSelect v-model="department" size="sm" />
+      </template>
+      <template #form>
+        <div class="search-area">
+          <div class="group-gap3">
+            <SelectField label="근무일" v-model="workYear" :options="yearOptions" size="sm" triggerClass="w-30" />
+            <SelectField v-model="workMonth" :options="monthOptions" size="sm" triggerClass="w-20" />
+          </div>
+          <Checkbox v-model="unconfirmedOnly" label="미 인수인계" />
+        </div>
+      </template>
+      <template #btns>
+        <Button variant="secondary" size="sm">조회</Button>
+      </template>
+    </SearchWrapper>
+  </div>
+
+  <TabulatorGrid
+    class="flex-1"
+    :columns="columns"
+    :data="rows"
+    height="100%"
+    min-height="30rem"
+    placeholder="조회된 인수인계 내역이 없습니다"
+  />
+</template>
+
 <script setup lang="ts">
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
@@ -56,44 +97,3 @@ useBottomTabSetup({
   closable: true,
 })
 </script>
-
-<template>
-  <PageHeader>
-    <template #left>
-      <PageTitle title="월별 인수인계서" />
-    </template>
-    <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
-  </PageHeader>
-
-  <div class="mb-[1.2rem]">
-    <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
-      <template #department>
-        <span class="dept-name">부서</span>
-        <DepartmentCascadeSelect v-model="department" size="sm" />
-      </template>
-      <template #form>
-        <div class="search-area">
-          <div class="group-gap3">
-            <SelectField label="근무일" v-model="workYear" :options="yearOptions" size="sm" triggerClass="w-30" />
-            <SelectField v-model="workMonth" :options="monthOptions" size="sm" triggerClass="w-20" />
-          </div>
-          <Checkbox v-model="unconfirmedOnly" label="미 인수인계" />
-        </div>
-      </template>
-      <template #btns>
-        <Button variant="secondary" size="sm">조회</Button>
-      </template>
-    </SearchWrapper>
-  </div>
-
-  <TabulatorGrid
-    class="flex-1"
-    :columns="columns"
-    :data="rows"
-    height="100%"
-    min-height="30rem"
-    placeholder="조회된 인수인계 내역이 없습니다"
-  />
-</template>

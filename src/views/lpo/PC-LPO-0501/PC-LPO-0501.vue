@@ -1,3 +1,64 @@
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="출동수당조회" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+
+  <div>
+    <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
+      <template #department>
+        <span class="dept-name">부서</span>
+        <DepartmentCascadeSelect v-model="department" size="sm" />
+      </template>
+      <template #form>
+        <div class="search-area">
+          <div class="group-gap2">
+            <DatePicker v-model="dateFrom" label="접수일" size="sm" inputClass="w-40" />
+            <span aria-hidden="true">~</span>
+            <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
+          </div>
+          <InputField2 v-model="keyword" label="목록검색" size="sm" inputClass="w-60" placeholder="검색어를 입력해주세요." />
+        </div>
+      </template>
+      <template #btns>
+        <Button variant="secondary" size="sm">조회</Button>
+      </template>
+    </SearchWrapper>
+  </div>
+
+  
+  <div class="list-actions space-between items-end">
+    <div class="list-actions-txt">
+      <p>＊ 출동업무수당 지급대상 자동체크는 매일 오전 08시~12시에 반영됩니다. 12시 이후에 확인 후 작성하세요</p>
+      <p>＊ 출동업무수당 자동체크 된 지급대상 사건과 임의등록 사건 만 표시됩니다.</p>
+    </div>
+    <div class="group-gap2">
+      <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
+        <Download :size="16" aria-hidden="true" />
+        엑셀다운로드
+      </Button>
+      <Button type="button" variant="secondary" size="sm" @click="onManualRegister">임의등록</Button>
+      <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
+    </div>
+  </div>
+
+  <TabulatorGrid
+    ref="gridRef"
+    class="flex-1"
+    :columns="columns"
+    :data="rows"
+    select-mode="checkbox"
+    height="100%"
+    min-height="30rem"
+    placeholder="조회된 출동수당 내역이 없습니다"
+    @row-selection-changed="selectedCount = $event.length"
+  />
+</template>
+
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Download } from 'lucide-vue-next'
@@ -67,64 +128,3 @@ useBottomTabSetup({
   closable: true,
 })
 </script>
-
-<template>
-  <PageHeader>
-    <template #left>
-      <PageTitle title="출동수당조회" />
-    </template>
-    <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
-  </PageHeader>
-
-  <div>
-    <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
-      <template #department>
-        <span class="dept-name">부서</span>
-        <DepartmentCascadeSelect v-model="department" size="sm" />
-      </template>
-      <template #form>
-        <div class="search-area">
-          <div class="group-gap2">
-            <DatePicker v-model="dateFrom" label="접수일" size="sm" inputClass="w-40" />
-            <span aria-hidden="true">~</span>
-            <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
-          </div>
-          <InputField2 v-model="keyword" label="목록검색" size="sm" inputClass="w-60" placeholder="검색어를 입력해주세요." />
-        </div>
-      </template>
-      <template #btns>
-        <Button variant="secondary" size="sm">조회</Button>
-      </template>
-    </SearchWrapper>
-  </div>
-
-  
-  <div class="list-actions space-between items-end">
-    <div class="list-actions-txt">
-      <p>＊ 출동업무수당 지급대상 자동체크는 매일 오전 08시~12시에 반영됩니다. 12시 이후에 확인 후 작성하세요</p>
-      <p>＊ 출동업무수당 자동체크 된 지급대상 사건과 임의등록 사건 만 표시됩니다.</p>
-    </div>
-    <div class="group-gap2">
-      <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
-        <Download :size="16" aria-hidden="true" />
-        엑셀다운로드
-      </Button>
-      <Button type="button" variant="secondary" size="sm" @click="onManualRegister">임의등록</Button>
-      <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
-    </div>
-  </div>
-
-  <TabulatorGrid
-    ref="gridRef"
-    class="flex-1"
-    :columns="columns"
-    :data="rows"
-    select-mode="checkbox"
-    height="100%"
-    min-height="30rem"
-    placeholder="조회된 출동수당 내역이 없습니다"
-    @row-selection-changed="selectedCount = $event.length"
-  />
-</template>

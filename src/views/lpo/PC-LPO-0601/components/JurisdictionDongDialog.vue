@@ -1,3 +1,88 @@
+<template>
+  <GenericDialog2
+    :open="open"
+    title="관할행정동 검색"
+    :size="800"
+    :show-footer="false"
+    @update:open="emit('update:open', $event)"
+  >
+    <div class="pc-lpo-0601-dialog-body">
+      <div class="search-area pc-lpo-0601-dong-search">
+        <div class="group-gap1">
+          <label class="pc-lpo-0601-search-label" for="dong-search-sido">시도</label>
+          <SelectField
+            id="dong-search-sido"
+            v-model="searchSido"
+            :options="sidoOptions"
+            size="sm"
+            class="!space-y-0"
+            trigger-class="w-[13rem]"
+          />
+        </div>
+        <div class="group-gap1">
+          <label class="pc-lpo-0601-search-label" for="dong-search-sigungu">시군구</label>
+          <SelectField
+            id="dong-search-sigungu"
+            v-model="searchSigungu"
+            :options="sigunguOptions"
+            placeholder="선택"
+            size="sm"
+            class="!space-y-0"
+            trigger-class="w-[13rem]"
+          />
+        </div>
+        <div class="group-gap1">
+          <label class="pc-lpo-0601-search-label" for="dong-search-name">행정동명</label>
+          <InputField2
+            id="dong-search-name"
+            v-model="searchDongName"
+            size="sm"
+            class="!space-y-0"
+            input-class="w-[13rem]"
+          />
+        </div>
+        <Button type="button" variant="secondary" size="sm" @click="onSearch">조회</Button>
+      </div>
+
+      <p class="form-note">* 행정동 검색결과를 더블 클릭 시 하단 표에 추가가 됩니다.</p>
+
+      <TabulatorGrid
+        :columns="resultColumns"
+        :data="searchResult"
+        select-mode="single"
+        height="240px"
+        placeholder="검색된 행정동이 없습니다"
+        @row-dbl-click="onResultDblClick"
+      />
+
+      <h2 class="pop-title-sub pc-lpo-0601-dialog-subtitle">현재 행정동</h2>
+
+      <TabulatorGrid
+        ref="currentGridRef"
+        :columns="currentColumns"
+        :data="dongs"
+        select-mode="checkbox"
+        height="180px"
+        placeholder="등록된 행정동이 없습니다"
+        @update:data="emit('update:dongs', $event as DongRow[])"
+        @row-selection-changed="selectedCount = $event.length"
+      />
+    </div>
+
+    <template #footer>
+      <div class="pc-lpo-0601-dialog-footer">
+        <Button type="button" variant="tertiary2" size="md" @click="emit('update:open', false)">
+          닫기
+        </Button>
+        <Button type="button" variant="tertiary2" size="md" @click="onDeleteSelected">
+          선택삭제
+        </Button>
+        <Button type="button" variant="primary" size="md" @click="onSave">저장</Button>
+      </div>
+    </template>
+  </GenericDialog2>
+</template>
+
 <script setup lang="ts">
 import { ref } from 'vue'
 import { toast } from 'vue-sonner'
@@ -86,88 +171,3 @@ function onSave() {
   emit('update:open', false)
 }
 </script>
-
-<template>
-  <GenericDialog2
-    :open="open"
-    title="관할행정동 검색"
-    :size="800"
-    :show-footer="false"
-    @update:open="emit('update:open', $event)"
-  >
-    <div class="pc-lpo-0601-dialog-body">
-      <div class="search-area pc-lpo-0601-dong-search">
-        <div class="group-gap1">
-          <label class="pc-lpo-0601-search-label" for="dong-search-sido">시도</label>
-          <SelectField
-            id="dong-search-sido"
-            v-model="searchSido"
-            :options="sidoOptions"
-            size="sm"
-            class="!space-y-0"
-            trigger-class="w-[13rem]"
-          />
-        </div>
-        <div class="group-gap1">
-          <label class="pc-lpo-0601-search-label" for="dong-search-sigungu">시군구</label>
-          <SelectField
-            id="dong-search-sigungu"
-            v-model="searchSigungu"
-            :options="sigunguOptions"
-            placeholder="선택"
-            size="sm"
-            class="!space-y-0"
-            trigger-class="w-[13rem]"
-          />
-        </div>
-        <div class="group-gap1">
-          <label class="pc-lpo-0601-search-label" for="dong-search-name">행정동명</label>
-          <InputField2
-            id="dong-search-name"
-            v-model="searchDongName"
-            size="sm"
-            class="!space-y-0"
-            input-class="w-[13rem]"
-          />
-        </div>
-        <Button type="button" variant="secondary" size="sm" @click="onSearch">조회</Button>
-      </div>
-
-      <p class="form-note">* 행정동 검색결과를 더블 클릭 시 하단 표에 추가가 됩니다.</p>
-
-      <TabulatorGrid
-        :columns="resultColumns"
-        :data="searchResult"
-        select-mode="single"
-        height="240px"
-        placeholder="검색된 행정동이 없습니다"
-        @row-dbl-click="onResultDblClick"
-      />
-
-      <h2 class="pop-title-sub pc-lpo-0601-dialog-subtitle">현재 행정동</h2>
-
-      <TabulatorGrid
-        ref="currentGridRef"
-        :columns="currentColumns"
-        :data="dongs"
-        select-mode="checkbox"
-        height="180px"
-        placeholder="등록된 행정동이 없습니다"
-        @update:data="emit('update:dongs', $event as DongRow[])"
-        @row-selection-changed="selectedCount = $event.length"
-      />
-    </div>
-
-    <template #footer>
-      <div class="pc-lpo-0601-dialog-footer">
-        <Button type="button" variant="tertiary2" size="md" @click="emit('update:open', false)">
-          닫기
-        </Button>
-        <Button type="button" variant="tertiary2" size="md" @click="onDeleteSelected">
-          선택삭제
-        </Button>
-        <Button type="button" variant="primary" size="md" @click="onSave">저장</Button>
-      </div>
-    </template>
-  </GenericDialog2>
-</template>

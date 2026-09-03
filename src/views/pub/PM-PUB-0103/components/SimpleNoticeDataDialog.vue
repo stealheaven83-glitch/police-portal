@@ -1,3 +1,25 @@
+<template>
+  <GenericDialog2 v-model:open="open" title="간이진단통보자료" :size="800" show-close-button>
+    <div class="pop-title-sub mb-2"><h2>112사건</h2></div>
+    <TableWrapper :class="styles.figmaTable" :columns="incidentColumns" :items="incidentItems" :show-pagination="false" />
+
+    <div :class="styles.noticePhotoGrid">
+      <article v-for="photo in photos" :key="photo.label" :class="styles.noticePhotoCard">
+        <h3>{{ photo.label }}</h3>
+        <div :class="styles.noticePhotoPlaceholder">
+          <img v-if="photo.src" :class="styles.photoImg" :src="photo.src" :alt="photo.label" />
+          <img v-else :class="styles.noImage" :src="noImageIcon" alt="No Image" />
+        </div>
+        <p>일시 {{ photo.takenAt }}</p>
+      </article>
+    </div>
+
+    <template #footer>
+      <Button type="button" variant="tertiary2" size="md" @click="open = false">닫기</Button>
+    </template>
+  </GenericDialog2>
+</template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
@@ -46,25 +68,3 @@ const photos = [
   { label: '개선상황사진 2', src: '', takenAt: '2026-06-12' },
 ]
 </script>
-
-<template>
-  <GenericDialog2 v-model:open="open" title="간이진단통보자료" :size="800" show-close-button>
-    <div class="pop-title-sub mb-2"><h2>112사건</h2></div>
-    <TableWrapper :class="styles.figmaTable" :columns="incidentColumns" :items="incidentItems" :show-pagination="false" />
-
-    <div :class="styles.noticePhotoGrid">
-      <article v-for="photo in photos" :key="photo.label" :class="styles.noticePhotoCard">
-        <h3>{{ photo.label }}</h3>
-        <div :class="styles.noticePhotoPlaceholder">
-          <img v-if="photo.src" :class="styles.photoImg" :src="photo.src" :alt="photo.label" />
-          <img v-else :class="styles.noImage" :src="noImageIcon" alt="No Image" />
-        </div>
-        <p>일시 {{ photo.takenAt }}</p>
-      </article>
-    </div>
-
-    <template #footer>
-      <Button type="button" variant="tertiary2" size="md" @click="open = false">닫기</Button>
-    </template>
-  </GenericDialog2>
-</template>

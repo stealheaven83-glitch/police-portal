@@ -1,19 +1,3 @@
-<script setup lang="ts">
-import { inject } from 'vue'
-import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
-import { Button } from '@/components/custom/button'
-import { InfoTable, InfoField } from '@/components/custom/info-table'
-import InputField2 from '@/components/custom/input/InputField2.vue'
-import SelectField from '@/components/custom/select/SelectField.vue'
-import TextareaField from '@/components/custom/textarea/TextareaField.vue'
-import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
-import { EquipmentListKey, commTypeOptions, locationOptions, commManageStatusLabel } from '../composable/PC-LPO-0701'
-import styles from '@/components/custom/info-table/InfoTable.module.css'
-
-const store = inject(EquipmentListKey)!
-const { commDetail, commDetailDialogOpen, saveCommDetail, deleteCommDetail } = store
-</script>
-
 <template>
   <GenericDialog2 v-model:open="commDetailDialogOpen" title="통신장비 상세" :size="800" :show-close-button="true">
     <p :class="styles.legend">필수 입력 항목</p>
@@ -77,3 +61,19 @@ const { commDetail, commDetailDialogOpen, saveCommDetail, deleteCommDetail } = s
     </template>
   </GenericDialog2>
 </template>
+
+<script setup lang="ts">
+import { inject } from 'vue'
+import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
+import { Button } from '@/components/custom/button'
+import { InfoTable, InfoField } from '@/components/custom/info-table'
+import InputField2 from '@/components/custom/input/InputField2.vue'
+import SelectField from '@/components/custom/select/SelectField.vue'
+import TextareaField from '@/components/custom/textarea/TextareaField.vue'
+import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
+import { EquipmentListKey, commTypeOptions, locationOptions, commManageStatusLabel } from '../composable/PC-LPO-0701'
+import styles from '@/components/custom/info-table/InfoTable.module.css'
+
+const store = inject(EquipmentListKey)!
+const { commDetail, commDetailDialogOpen, saveCommDetail, deleteCommDetail } = store
+</script>

@@ -1,18 +1,3 @@
-<script setup lang="ts">
-import { inject } from 'vue'
-import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
-import { Button } from '@/components/custom/button'
-import { InfoTable, InfoField } from '@/components/custom/info-table'
-import InputField2 from '@/components/custom/input/InputField2.vue'
-import TextareaField from '@/components/custom/textarea/TextareaField.vue'
-import Stepper from '@/components/custom/input/Stepper.vue'
-import { EquipmentListKey } from '../composable/PC-LPO-0701'
-import styles from '@/components/custom/info-table/InfoTable.module.css'
-
-const store = inject(EquipmentListKey)!
-const { etcDetail, etcDetailDialogOpen, saveEtcDetail, deleteEtcDetail } = store
-</script>
-
 <template>
   <GenericDialog2 v-model:open="etcDetailDialogOpen" title="기타 상세" :size="800" :show-close-button="true">
     <p :class="styles.legend">필수 입력 항목</p>
@@ -46,3 +31,18 @@ const { etcDetail, etcDetailDialogOpen, saveEtcDetail, deleteEtcDetail } = store
     </template>
   </GenericDialog2>
 </template>
+
+<script setup lang="ts">
+import { inject } from 'vue'
+import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
+import { Button } from '@/components/custom/button'
+import { InfoTable, InfoField } from '@/components/custom/info-table'
+import InputField2 from '@/components/custom/input/InputField2.vue'
+import TextareaField from '@/components/custom/textarea/TextareaField.vue'
+import Stepper from '@/components/custom/input/Stepper.vue'
+import { EquipmentListKey } from '../composable/PC-LPO-0701'
+import styles from '@/components/custom/info-table/InfoTable.module.css'
+
+const store = inject(EquipmentListKey)!
+const { etcDetail, etcDetailDialogOpen, saveEtcDetail, deleteEtcDetail } = store
+</script>

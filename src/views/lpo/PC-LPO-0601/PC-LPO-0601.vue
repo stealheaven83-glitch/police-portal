@@ -1,197 +1,3 @@
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Minus, Plus } from 'lucide-vue-next'
-import { toast } from 'vue-sonner'
-import PageHeader from '@/components/custom/title/PageHeader.vue'
-import PageTitle from '@/components/custom/title/PageTitle.vue'
-import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
-import HelpButton from '@/components/custom/button/HelpButton.vue'
-import { Button } from '@/components/custom/button'
-import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
-import { Checkbox } from '@/components/custom/checkbox'
-import InputField2 from '@/components/custom/input/InputField2.vue'
-import SelectField from '@/components/custom/select/SelectField.vue'
-import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
-import TextareaField from '@/components/custom/textarea/TextareaField.vue'
-import MultiCheckSelect from '@/components/custom/select/MultiCheckSelect.vue'
-import AddressInput from '@/components/custom/address/AddressInput.vue'
-import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
-import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
-import { InfoTable, InfoField } from '@/components/custom/info-table'
-import TableWrapper from '@/components/custom/table/TableWrapper.vue'
-import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
-import { Icon } from '@/components/custom/icon'
-import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
-import PatrolAreaMapDialog from './components/PatrolAreaMapDialog.vue'
-import JurisdictionDongDialog from './components/JurisdictionDongDialog.vue'
-import {
-  useJurisdictionStatus,
-  integratedOfficeOptions,
-  locationOptions,
-  safetyCenterTypeOptions,
-  workTypeOptions,
-  type PatrolVehicleRow,
-} from './composable/PC-LPO-0601'
-import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
-import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
-import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
-
-// KeepAlive 캐싱 대상 컴포넌트 이름 — useBottomTabSetup 의 componentName 과 일치해야 한다.
-defineOptions({ name: 'PcLpo0601' })
-
-// '관내현황' 은 children 이 없는 최상위 항목이라 자기 인덱스(4)와 자기 이름을 준다(CLAUDE.md §5)
-useSideMenuSetup({ ...localPoliceMenu, openIndex: 4, activeChild: '관내현황' })
-
-const navItems = [
-  { label: '홈', path: '/' },
-  { label: '지역경찰' },
-  { label: '관내현황' },
-]
-
-const department4Search = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
-
-const {
-  department,
-  officerHeadcount,
-  district,
-  patrolVehicles,
-  safetyCenters,
-  histories,
-  currentDongs,
-  createSafetyCenter,
-  createHistory,
-} = useJurisdictionStatus()
-
-/** 시안의 "수정일 : 2024-09-01 [홍길동]" — 조회 전용 표시값 */
-const modifiedInfo = '수정일 : 2024-09-01 [홍길동]'
-
-/* ── 순찰차별 관할구역 표 ─────────────────────────────────────── */
-
-const patrolColumns = [
-  { key: 'vehicle', label: '순찰차', width: '20rem' },
-  { key: 'area', label: '관할구역' },
-  { key: 'areaName', label: '순찰구역명', width: '20rem' },
-  { key: 'areaDetail', label: '순찰구역상세' },
-]
-
-const mapDialogOpen = ref(false)
-const mapDialogVehicle = ref('')
-
-function openMapDialog(row: PatrolVehicleRow) {
-  mapDialogVehicle.value = row.vehicle
-  mapDialogOpen.value = true
-}
-
-function onMapSave(payload: { vehicle: string; memo: string }) {
-  // 지도에서 그린 구역은 개발팀이 채운다 — 화면에서는 메모만 반영해 둔다
-  patrolVehicles.value = patrolVehicles.value.map((row) =>
-    row.vehicle === payload.vehicle ? { ...row, area: payload.memo || row.area } : row,
-  )
-}
-
-/** 순찰구역 상세(PC-LPO-0604)는 Figma 미제공 — 자리만 잡아 둔다 */
-const patrolDetailStubOpen = ref(false)
-
-/* ── 관할행정동 검색 팝업 ─────────────────────────────────────── */
-
-const dongDialogOpen = ref(false)
-
-/** 주소검색 팝업은 저장소에 아직 없다 — 스텁으로 자리만 잡는다 */
-const addressStubOpen = ref(false)
-
-/* ── 치안센터 ────────────────────────────────────────────────── */
-
-const safetyCenterOpen = ref(true)
-const safetyCenterGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
-const safetyCenterSelected = ref(0)
-
-const safetyCenterColumns: TabulatorGridColumn[] = [
-  { title: '번호', field: 'no', width: 60, hozAlign: 'center' },
-  { title: '센터명', field: 'name', cellType: 'input' },
-  { title: '주소', field: 'address', cellType: 'input' },
-  { title: '전화번호', field: 'phone', cellType: 'input' },
-  {
-    title: '유형',
-    field: 'type',
-    cellType: 'select',
-    selectOptions: safetyCenterTypeOptions,
-    selectPlaceholder: '선택',
-    width: 136,
-  },
-  { title: '상주여부', field: 'resident', cellType: 'checkbox', hozAlign: 'center', width: 92 },
-  { title: '오지여부', field: 'remote', cellType: 'checkbox', hozAlign: 'center', width: 92 },
-  { title: '도서지역여부', field: 'island', cellType: 'checkbox', hozAlign: 'center', width: 92 },
-  { title: '배치인원', field: 'headcount', cellType: 'input', width: 80 },
-  { title: '근무시작시간', field: 'startTime', cellType: 'input', width: 100 },
-  { title: '근무종료시간', field: 'endTime', cellType: 'input', width: 100 },
-  { title: '개소일자', field: 'openedAt', cellType: 'input' },
-  { title: '폐소일자', field: 'closedAt', cellType: 'input' },
-]
-
-async function onAddSafetyCenter() {
-  await safetyCenterGridRef.value?.addRow(createSafetyCenter(), true)
-}
-
-function onDeleteSafetyCenters() {
-  if (!safetyCenterSelected.value) {
-    toast.warning('삭제할 치안센터를 선택해 주세요.')
-    return
-  }
-  safetyCenterGridRef.value?.deleteSelected()
-  toast.success('삭제되었습니다.')
-}
-
-/* ── 연혁 ────────────────────────────────────────────────────── */
-
-const historyOpen = ref(true)
-const historyGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
-const historySelected = ref(0)
-
-const historyColumns: TabulatorGridColumn[] = [
-  { title: '번호', field: 'no', width: 60, hozAlign: 'center' },
-  { title: '연혁일자', field: 'date', cellType: 'date', width: 180 },
-  { title: '내용', field: 'content', cellType: 'input' },
-  { title: '근거', field: 'basis', cellType: 'input' },
-  { title: '비고', field: 'note', cellType: 'input' },
-  { title: '수정자', field: 'updater', width: 120, hozAlign: 'center' },
-]
-
-async function onAddHistory() {
-  await historyGridRef.value?.addRow(createHistory(), true)
-}
-
-function onDeleteHistories() {
-  if (!historySelected.value) {
-    toast.warning('삭제할 연혁을 선택해 주세요.')
-    return
-  }
-  historyGridRef.value?.deleteSelected()
-  toast.success('삭제되었습니다.')
-}
-
-/* ── 상단 액션 ───────────────────────────────────────────────── */
-
-function onPrint() {
-  window.print()
-}
-
-function onSave() {
-  if (!department.name.trim()) {
-    toast.warning('필수 항목을 입력해 주세요.')
-    return
-  }
-  toast.success('저장되었습니다.')
-}
-
-useBottomTabSetup({
-  value: 'PC-LPO-0601',
-  label: '관내현황',
-  path: '/views/lpo/PC-LPO-0601',
-  componentName: 'PcLpo0601',
-  closable: true,
-})
-</script>
-
 <template>
   <PageHeader>
     <template #left>
@@ -666,3 +472,197 @@ useBottomTabSetup({
   <EmptyStubDialog v-model:open="addressStubOpen" title="주소 검색" />
   <EmptyStubDialog v-model:open="patrolDetailStubOpen" title="순찰구역 상세" />
 </template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Minus, Plus } from 'lucide-vue-next'
+import { toast } from 'vue-sonner'
+import PageHeader from '@/components/custom/title/PageHeader.vue'
+import PageTitle from '@/components/custom/title/PageTitle.vue'
+import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
+import HelpButton from '@/components/custom/button/HelpButton.vue'
+import { Button } from '@/components/custom/button'
+import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
+import { Checkbox } from '@/components/custom/checkbox'
+import InputField2 from '@/components/custom/input/InputField2.vue'
+import SelectField from '@/components/custom/select/SelectField.vue'
+import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import TextareaField from '@/components/custom/textarea/TextareaField.vue'
+import MultiCheckSelect from '@/components/custom/select/MultiCheckSelect.vue'
+import AddressInput from '@/components/custom/address/AddressInput.vue'
+import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
+import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
+import { InfoTable, InfoField } from '@/components/custom/info-table'
+import TableWrapper from '@/components/custom/table/TableWrapper.vue'
+import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import { Icon } from '@/components/custom/icon'
+import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
+import PatrolAreaMapDialog from './components/PatrolAreaMapDialog.vue'
+import JurisdictionDongDialog from './components/JurisdictionDongDialog.vue'
+import {
+  useJurisdictionStatus,
+  integratedOfficeOptions,
+  locationOptions,
+  safetyCenterTypeOptions,
+  workTypeOptions,
+  type PatrolVehicleRow,
+} from './composable/PC-LPO-0601'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
+import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
+
+// KeepAlive 캐싱 대상 컴포넌트 이름 — useBottomTabSetup 의 componentName 과 일치해야 한다.
+defineOptions({ name: 'PcLpo0601' })
+
+// '관내현황' 은 children 이 없는 최상위 항목이라 자기 인덱스(4)와 자기 이름을 준다(CLAUDE.md §5)
+useSideMenuSetup({ ...localPoliceMenu, openIndex: 4, activeChild: '관내현황' })
+
+const navItems = [
+  { label: '홈', path: '/' },
+  { label: '지역경찰' },
+  { label: '관내현황' },
+]
+
+const department4Search = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
+
+const {
+  department,
+  officerHeadcount,
+  district,
+  patrolVehicles,
+  safetyCenters,
+  histories,
+  currentDongs,
+  createSafetyCenter,
+  createHistory,
+} = useJurisdictionStatus()
+
+/** 시안의 "수정일 : 2024-09-01 [홍길동]" — 조회 전용 표시값 */
+const modifiedInfo = '수정일 : 2024-09-01 [홍길동]'
+
+/* ── 순찰차별 관할구역 표 ─────────────────────────────────────── */
+
+const patrolColumns = [
+  { key: 'vehicle', label: '순찰차', width: '20rem' },
+  { key: 'area', label: '관할구역' },
+  { key: 'areaName', label: '순찰구역명', width: '20rem' },
+  { key: 'areaDetail', label: '순찰구역상세' },
+]
+
+const mapDialogOpen = ref(false)
+const mapDialogVehicle = ref('')
+
+function openMapDialog(row: PatrolVehicleRow) {
+  mapDialogVehicle.value = row.vehicle
+  mapDialogOpen.value = true
+}
+
+function onMapSave(payload: { vehicle: string; memo: string }) {
+  // 지도에서 그린 구역은 개발팀이 채운다 — 화면에서는 메모만 반영해 둔다
+  patrolVehicles.value = patrolVehicles.value.map((row) =>
+    row.vehicle === payload.vehicle ? { ...row, area: payload.memo || row.area } : row,
+  )
+}
+
+/** 순찰구역 상세(PC-LPO-0604)는 Figma 미제공 — 자리만 잡아 둔다 */
+const patrolDetailStubOpen = ref(false)
+
+/* ── 관할행정동 검색 팝업 ─────────────────────────────────────── */
+
+const dongDialogOpen = ref(false)
+
+/** 주소검색 팝업은 저장소에 아직 없다 — 스텁으로 자리만 잡는다 */
+const addressStubOpen = ref(false)
+
+/* ── 치안센터 ────────────────────────────────────────────────── */
+
+const safetyCenterOpen = ref(true)
+const safetyCenterGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
+const safetyCenterSelected = ref(0)
+
+const safetyCenterColumns: TabulatorGridColumn[] = [
+  { title: '번호', field: 'no', width: 60, hozAlign: 'center' },
+  { title: '센터명', field: 'name', cellType: 'input' },
+  { title: '주소', field: 'address', cellType: 'input' },
+  { title: '전화번호', field: 'phone', cellType: 'input' },
+  {
+    title: '유형',
+    field: 'type',
+    cellType: 'select',
+    selectOptions: safetyCenterTypeOptions,
+    selectPlaceholder: '선택',
+    width: 136,
+  },
+  { title: '상주여부', field: 'resident', cellType: 'checkbox', hozAlign: 'center', width: 92 },
+  { title: '오지여부', field: 'remote', cellType: 'checkbox', hozAlign: 'center', width: 92 },
+  { title: '도서지역여부', field: 'island', cellType: 'checkbox', hozAlign: 'center', width: 92 },
+  { title: '배치인원', field: 'headcount', cellType: 'input', width: 80 },
+  { title: '근무시작시간', field: 'startTime', cellType: 'input', width: 100 },
+  { title: '근무종료시간', field: 'endTime', cellType: 'input', width: 100 },
+  { title: '개소일자', field: 'openedAt', cellType: 'input' },
+  { title: '폐소일자', field: 'closedAt', cellType: 'input' },
+]
+
+async function onAddSafetyCenter() {
+  await safetyCenterGridRef.value?.addRow(createSafetyCenter(), true)
+}
+
+function onDeleteSafetyCenters() {
+  if (!safetyCenterSelected.value) {
+    toast.warning('삭제할 치안센터를 선택해 주세요.')
+    return
+  }
+  safetyCenterGridRef.value?.deleteSelected()
+  toast.success('삭제되었습니다.')
+}
+
+/* ── 연혁 ────────────────────────────────────────────────────── */
+
+const historyOpen = ref(true)
+const historyGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
+const historySelected = ref(0)
+
+const historyColumns: TabulatorGridColumn[] = [
+  { title: '번호', field: 'no', width: 60, hozAlign: 'center' },
+  { title: '연혁일자', field: 'date', cellType: 'date', width: 180 },
+  { title: '내용', field: 'content', cellType: 'input' },
+  { title: '근거', field: 'basis', cellType: 'input' },
+  { title: '비고', field: 'note', cellType: 'input' },
+  { title: '수정자', field: 'updater', width: 120, hozAlign: 'center' },
+]
+
+async function onAddHistory() {
+  await historyGridRef.value?.addRow(createHistory(), true)
+}
+
+function onDeleteHistories() {
+  if (!historySelected.value) {
+    toast.warning('삭제할 연혁을 선택해 주세요.')
+    return
+  }
+  historyGridRef.value?.deleteSelected()
+  toast.success('삭제되었습니다.')
+}
+
+/* ── 상단 액션 ───────────────────────────────────────────────── */
+
+function onPrint() {
+  window.print()
+}
+
+function onSave() {
+  if (!department.name.trim()) {
+    toast.warning('필수 항목을 입력해 주세요.')
+    return
+  }
+  toast.success('저장되었습니다.')
+}
+
+useBottomTabSetup({
+  value: 'PC-LPO-0601',
+  label: '관내현황',
+  path: '/views/lpo/PC-LPO-0601',
+  componentName: 'PcLpo0601',
+  closable: true,
+})
+</script>

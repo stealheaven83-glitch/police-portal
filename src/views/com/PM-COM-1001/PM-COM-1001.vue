@@ -1,3 +1,62 @@
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="공지사항" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+
+  <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
+    <template #department>
+      <span class="dept-name">부서</span>
+      <DepartmentCascadeSelect v-model="department" size="sm" />
+    </template>
+    <template #form>
+      <div class="search-area mb-4">
+        <div class="group-gap2">
+          <SelectField v-model="authorFilter" label="성명" labelClass="" :options="authorFilterOptions" size="sm" triggerClass="w-[15.4rem]" />
+          <InputField2 v-model="authorKeyword" size="sm" inputClass="w-[37.2rem]" placeholder="이름을 검색해주세요." />
+        </div>
+      </div>
+      <div class="search-area">
+        <div class="group-gap2">
+          <DatePicker v-model="dateFrom" label="등록일" size="sm" inputClass="w-[250px]" />
+          <span aria-hidden="true">~</span>
+          <DatePicker v-model="dateTo" size="sm" inputClass="w-[25rem]" />
+        </div>
+        <div class="group-gap2">
+          <SelectField v-model="searchField" label="검색어" :options="searchFieldOptions" size="sm" triggerClass="w-[15.3rem]" />
+          <InputField2 v-model="keyword" size="sm" inputClass="w-[37.2rem]" placeholder="검색어를 입력해주세요." />
+        </div>
+      </div>
+    </template>
+    <template #btns>
+      <Button variant="secondary" size="sm">조회</Button>
+    </template>
+  </SearchWrapper>
+
+  <TabulatorGrid
+    ref="gridRef"
+    class="mt-[1.2rem] flex-1"
+    :columns="columns"
+    :data="rows"
+    select-mode="checkbox"
+    height="100%"
+    min-height="40rem"
+    placeholder="등록된 공지사항이 없습니다"
+    show-pagination
+    :items-per-page="10"
+    @row-selection-changed="selectedCount = $event.length"
+  />
+
+  <div class="list-actions">
+    <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelected">삭제</Button>
+    <Button type="button" variant="primary" size="sm" @click="onRegister">등록</Button>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { ref } from 'vue'
 import { toast } from 'vue-sonner'
@@ -82,62 +141,3 @@ useBottomTabSetup({
   closable: true,
 })
 </script>
-
-<template>
-  <PageHeader>
-    <template #left>
-      <PageTitle title="공지사항" />
-    </template>
-    <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
-  </PageHeader>
-
-  <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
-    <template #department>
-      <span class="dept-name">부서</span>
-      <DepartmentCascadeSelect v-model="department" size="sm" />
-    </template>
-    <template #form>
-      <div class="search-area mb-4">
-        <div class="group-gap2">
-          <SelectField v-model="authorFilter" label="성명" labelClass="" :options="authorFilterOptions" size="sm" triggerClass="w-[15.4rem]" />
-          <InputField2 v-model="authorKeyword" size="sm" inputClass="w-[37.2rem]" placeholder="이름을 검색해주세요." />
-        </div>
-      </div>
-      <div class="search-area">
-        <div class="group-gap2">
-          <DatePicker v-model="dateFrom" label="등록일" size="sm" inputClass="w-[250px]" />
-          <span aria-hidden="true">~</span>
-          <DatePicker v-model="dateTo" size="sm" inputClass="w-[25rem]" />
-        </div>
-        <div class="group-gap2">
-          <SelectField v-model="searchField" label="검색어" :options="searchFieldOptions" size="sm" triggerClass="w-[15.3rem]" />
-          <InputField2 v-model="keyword" size="sm" inputClass="w-[37.2rem]" placeholder="검색어를 입력해주세요." />
-        </div>
-      </div>
-    </template>
-    <template #btns>
-      <Button variant="secondary" size="sm">조회</Button>
-    </template>
-  </SearchWrapper>
-
-  <TabulatorGrid
-    ref="gridRef"
-    class="mt-[1.2rem] flex-1"
-    :columns="columns"
-    :data="rows"
-    select-mode="checkbox"
-    height="100%"
-    min-height="40rem"
-    placeholder="등록된 공지사항이 없습니다"
-    show-pagination
-    :items-per-page="10"
-    @row-selection-changed="selectedCount = $event.length"
-  />
-
-  <div class="list-actions">
-    <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelected">삭제</Button>
-    <Button type="button" variant="primary" size="sm" @click="onRegister">등록</Button>
-  </div>
-</template>

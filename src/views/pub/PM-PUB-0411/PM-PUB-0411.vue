@@ -1,3 +1,74 @@
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="주취자센터관리" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+
+  <SearchWrapper>
+    <template #form>
+      <div class="search-area">
+        <SelectField
+          v-model="regionFilter"
+          label="지역"
+          :options="regionFilterOptions"
+          placeholder="선택"
+          size="sm"
+          trigger-class="w-40"
+        />
+        <SelectField
+          v-model="centerFilter"
+          label="센터명"
+          :options="centerFilterOptions"
+          placeholder="선택"
+          size="sm"
+          trigger-class="w-70"
+        />
+      </div>
+    </template>
+    <template #btns>
+      <Button type="button" variant="secondary" size="sm">조회</Button>
+    </template>
+  </SearchWrapper>
+
+  <LayoutSplite :count="2" :widths="[55, 45]">
+    <template #layout-1>
+      <LayoutPanel title="주취자센터관리">
+        <template #actions>
+          <Button type="button" variant="primary" size="sm" @click="goRegister">등록</Button>
+        </template>
+        <TabulatorGrid
+          class="flex-1"
+          :columns="columns"
+          :data="rows"
+          select-mode="single"
+          height="100%"
+          min-height="40rem"
+          placeholder="등록된 주취자센터가 없습니다"
+          show-pagination
+          :items-per-page="10"
+          @row-selection-changed="onRowSelectionChanged"
+        />
+      </LayoutPanel>
+    </template>
+
+    <template #layout-2>
+      <LayoutPanel title="주취자센터관리 상세">
+        <template #actions>
+          <Button type="button" variant="tertiary2" size="sm" @click="onDelete">삭제</Button>
+        </template>
+        <DrunkCenterDetailForm :form="form" id-prefix="center-detail" />
+        <div class="form-actions">
+          <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
+        </div>
+      </LayoutPanel>
+    </template>
+  </LayoutSplite>
+</template>
+
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
@@ -144,74 +215,3 @@ useBottomTabSetup({
   closable: true,
 })
 </script>
-
-<template>
-  <PageHeader>
-    <template #left>
-      <PageTitle title="주취자센터관리" />
-    </template>
-    <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
-  </PageHeader>
-
-  <SearchWrapper>
-    <template #form>
-      <div class="search-area">
-        <SelectField
-          v-model="regionFilter"
-          label="지역"
-          :options="regionFilterOptions"
-          placeholder="선택"
-          size="sm"
-          trigger-class="w-40"
-        />
-        <SelectField
-          v-model="centerFilter"
-          label="센터명"
-          :options="centerFilterOptions"
-          placeholder="선택"
-          size="sm"
-          trigger-class="w-70"
-        />
-      </div>
-    </template>
-    <template #btns>
-      <Button type="button" variant="secondary" size="sm">조회</Button>
-    </template>
-  </SearchWrapper>
-
-  <LayoutSplite :count="2" :widths="[55, 45]">
-    <template #layout-1>
-      <LayoutPanel title="주취자센터관리">
-        <template #actions>
-          <Button type="button" variant="primary" size="sm" @click="goRegister">등록</Button>
-        </template>
-        <TabulatorGrid
-          class="flex-1"
-          :columns="columns"
-          :data="rows"
-          select-mode="single"
-          height="100%"
-          min-height="40rem"
-          placeholder="등록된 주취자센터가 없습니다"
-          show-pagination
-          :items-per-page="10"
-          @row-selection-changed="onRowSelectionChanged"
-        />
-      </LayoutPanel>
-    </template>
-
-    <template #layout-2>
-      <LayoutPanel title="주취자센터관리 상세">
-        <template #actions>
-          <Button type="button" variant="tertiary2" size="sm" @click="onDelete">삭제</Button>
-        </template>
-        <DrunkCenterDetailForm :form="form" id-prefix="center-detail" />
-        <div class="form-actions">
-          <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
-        </div>
-      </LayoutPanel>
-    </template>
-  </LayoutSplite>
-</template>

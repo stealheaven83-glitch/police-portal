@@ -1,62 +1,3 @@
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Star, Share2, Paperclip } from 'lucide-vue-next'
-import PageHeader from '@/components/custom/title/PageHeader.vue'
-import PageTitle from '@/components/custom/title/PageTitle.vue'
-import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
-import { Tabs, TabsList, TabsTrigger } from '@/components/custom/tabs'
-import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
-import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
-import InputField2 from '@/components/custom/input/InputField2.vue'
-import SelectField from '@/components/custom/select/SelectField.vue'
-import { Checkbox } from '@/components/custom/checkbox'
-import { Switch } from '@/components/custom/switch'
-import { Button } from '@/components/custom/button'
-import Pagination from '@/components/custom/pagination/Pagination.vue'
-import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
-import { useMemoList, sortOptions } from './composable/useMemoList'
-import type { MemoSort } from './composable/useMemoList'
-import styles from './style/PM-LPO-0101.module.css'
-import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
-import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
-
-useSideMenuSetup({ ...localPoliceMenu, openIndex: 0, activeChild: '메모' })
-
-const navItems = [
-  { label: '홈', path: '/' },
-  { label: '지역경찰' },
-  { label: '개인수첩' },
-  { label: '메모' },
-]
-
-const {
-  activeTab,
-  sort,
-  importantOnly,
-  searchDateFrom,
-  searchDateTo,
-  searchKeyword,
-  pagedMemos,
-  selectedIds,
-  isAllSelected,
-  itemsPerPage,
-  currentPage,
-  totalPages,
-  totalElements,
-  search,
-  toggleSelectAll,
-  toggleSelect,
-  toggleImportant,
-  deleteSelected,
-  changePageSize,
-} = useMemoList()
-
-const shareOpen = ref(false)
-function openShare() {
-  shareOpen.value = true
-}
-</script>
-
 <template>
   <PageHeader>
     <template #left>
@@ -182,3 +123,62 @@ function openShare() {
 
   <EmptyStubDialog v-model:open="shareOpen" title="메모 공유" description="메모를 공유할 대상을 선택합니다." />
 </template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Star, Share2, Paperclip } from 'lucide-vue-next'
+import PageHeader from '@/components/custom/title/PageHeader.vue'
+import PageTitle from '@/components/custom/title/PageTitle.vue'
+import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
+import { Tabs, TabsList, TabsTrigger } from '@/components/custom/tabs'
+import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
+import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import InputField2 from '@/components/custom/input/InputField2.vue'
+import SelectField from '@/components/custom/select/SelectField.vue'
+import { Checkbox } from '@/components/custom/checkbox'
+import { Switch } from '@/components/custom/switch'
+import { Button } from '@/components/custom/button'
+import Pagination from '@/components/custom/pagination/Pagination.vue'
+import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
+import { useMemoList, sortOptions } from './composable/useMemoList'
+import type { MemoSort } from './composable/useMemoList'
+import styles from './style/PM-LPO-0101.module.css'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
+
+useSideMenuSetup({ ...localPoliceMenu, openIndex: 0, activeChild: '메모' })
+
+const navItems = [
+  { label: '홈', path: '/' },
+  { label: '지역경찰' },
+  { label: '개인수첩' },
+  { label: '메모' },
+]
+
+const {
+  activeTab,
+  sort,
+  importantOnly,
+  searchDateFrom,
+  searchDateTo,
+  searchKeyword,
+  pagedMemos,
+  selectedIds,
+  isAllSelected,
+  itemsPerPage,
+  currentPage,
+  totalPages,
+  totalElements,
+  search,
+  toggleSelectAll,
+  toggleSelect,
+  toggleImportant,
+  deleteSelected,
+  changePageSize,
+} = useMemoList()
+
+const shareOpen = ref(false)
+function openShare() {
+  shareOpen.value = true
+}
+</script>

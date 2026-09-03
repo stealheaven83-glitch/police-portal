@@ -1,3 +1,23 @@
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="단체정보등록" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+
+  <div :class="styles.pageActions">
+    <div :class="styles.pageActionButtons">
+      <Button type="button" variant="tertiary2" size="sm" class="w-40" @click="goList">목록</Button>
+      <Button type="button" variant="primary" size="sm" class="w-40" @click="onSave">저장</Button>
+    </div>
+  </div>
+
+  <GroupDetailForm :form="form" mode="new" />
+</template>
+
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
@@ -50,23 +70,3 @@ useBottomTabSetup({
   closable: true,
 })
 </script>
-
-<template>
-  <PageHeader>
-    <template #left>
-      <PageTitle title="단체정보등록" />
-    </template>
-    <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
-  </PageHeader>
-
-  <div :class="styles.pageActions">
-    <div :class="styles.pageActionButtons">
-      <Button type="button" variant="tertiary2" size="sm" class="w-40" @click="goList">목록</Button>
-      <Button type="button" variant="primary" size="sm" class="w-40" @click="onSave">저장</Button>
-    </div>
-  </div>
-
-  <GroupDetailForm :form="form" mode="new" />
-</template>

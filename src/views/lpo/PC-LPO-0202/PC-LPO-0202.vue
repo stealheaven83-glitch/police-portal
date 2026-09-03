@@ -1,120 +1,3 @@
-<script setup lang="ts">
-import { provide, ref } from 'vue'
-import { ChevronLeft, ChevronRight } from 'lucide-vue-next'
-import { toast } from 'vue-sonner'
-import PageHeader from '@/components/custom/title/PageHeader.vue'
-import PageTitle from '@/components/custom/title/PageTitle.vue'
-import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
-import SelectField from '@/components/custom/select/SelectField.vue'
-import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
-import type { DepartmentNode, DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
-import InputField2 from '@/components/custom/input/InputField2.vue'
-import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
-import TextareaField from '@/components/custom/textarea/TextareaField.vue'
-import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
-import { Checkbox } from '@/components/custom/checkbox'
-import { Button } from '@/components/custom/button'
-import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
-import { useWorkSchedule, WorkScheduleKey, timeSlots, teamOptions } from './composable/useWorkSchedule'
-import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
-import LayoutHeader from '@/components/custom/content-layout/layoutHeader.vue'
-import WorkerAddDialog from './components/WorkerAddDialog.vue'
-import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
-import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
-
-useSideMenuSetup({ ...localPoliceMenu, openIndex: 1, activeChild: '근무일지(甲)' })
-
-const navItems = [
-  { label: '홈', path: '/' },
-  { label: '지역경찰' },
-  { label: '근무일지' },
-  { label: '근무일지(甲)' },
-  { label: '근무지정표작성' },
-]
-
-const workSchedule = useWorkSchedule()
-provide(WorkScheduleKey, workSchedule)
-
-const {
-  workDate,
-  shift,
-  regularWorkers,
-  regularTeam,
-  volunteerWorkers,
-  incidentWorkers,
-  scheduleRows,
-  importantNotes,
-  targetDate,
-  removeVolunteerWorkers,
-  addIncidentWorker,
-  removeIncidentWorkers,
-  shiftWorkDate,
-  openWorkerAddDialog,
-} = workSchedule
-
-const departmentTree: DepartmentNode[] = [
-  {
-    label: '본청',
-    value: 'hq',
-    children: [
-      { label: '중앙보고', value: 'central-report', children: [{ label: '전체', value: 'all' }] },
-    ],
-  },
-]
-const department = ref<DepartmentValue>({ level1: 'hq', level2: 'central-report', level3: 'all' })
-
-const volunteerSelection = ref<Set<number>>(new Set())
-function toggleVolunteerSelection(id: number, checked: boolean) {
-  if (checked) volunteerSelection.value.add(id)
-  else volunteerSelection.value.delete(id)
-}
-function removeSelectedVolunteers() {
-  removeVolunteerWorkers(volunteerSelection.value)
-  volunteerSelection.value.clear()
-}
-
-const incidentSelection = ref<Set<number>>(new Set())
-function toggleIncidentSelection(id: number, checked: boolean) {
-  if (checked) incidentSelection.value.add(id)
-  else incidentSelection.value.delete(id)
-}
-function removeSelectedIncidents() {
-  removeIncidentWorkers(incidentSelection.value)
-  incidentSelection.value.clear()
-}
-
-/** 순찰구역/교대복구/근무관리/시간관리/불러오기/일괄출력 — 아직 설계되지 않은 하위 화면들의 공통 빈 모달 */
-const manageDialogOpen = ref(false)
-const manageDialogTitle = ref('')
-function openManageDialog(title: string) {
-  manageDialogTitle.value = title
-  manageDialogOpen.value = true
-}
-
-function resetScheduleGrid() {
-  for (const row of scheduleRows.value) {
-    if (row.type === 'variable') row.cells = row.cells.map((): string[] => [])
-  }
-  toast.success('甲지가 초기화되었습니다.')
-}
-
-function onPrint() {
-  window.print()
-}
-
-function onSave() {
-  toast.success('저장되었습니다.')
-}
-
-/** 근무지정표 셀 클릭 시 배정 — 실제 배정 UI는 아직 없어 빈 모달로 대체 */
-const assignDialogOpen = ref(false)
-const assignDialogTitle = ref('')
-function openAssignCell(rowLabel: string, slot: string) {
-  assignDialogTitle.value = `${rowLabel} · ${slot} 근무 배정`
-  assignDialogOpen.value = true
-}
-</script>
-
 <template>
   <PageHeader>
     <template #left>
@@ -371,6 +254,123 @@ function openAssignCell(rowLabel: string, slot: string) {
   <EmptyStubDialog v-model:open="assignDialogOpen" :title="assignDialogTitle" description="근무자를 선택해 배정합니다." />
   <WorkerAddDialog />
 </template>
+
+<script setup lang="ts">
+import { provide, ref } from 'vue'
+import { ChevronLeft, ChevronRight } from 'lucide-vue-next'
+import { toast } from 'vue-sonner'
+import PageHeader from '@/components/custom/title/PageHeader.vue'
+import PageTitle from '@/components/custom/title/PageTitle.vue'
+import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
+import SelectField from '@/components/custom/select/SelectField.vue'
+import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
+import type { DepartmentNode, DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
+import InputField2 from '@/components/custom/input/InputField2.vue'
+import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import TextareaField from '@/components/custom/textarea/TextareaField.vue'
+import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
+import { Checkbox } from '@/components/custom/checkbox'
+import { Button } from '@/components/custom/button'
+import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
+import { useWorkSchedule, WorkScheduleKey, timeSlots, teamOptions } from './composable/useWorkSchedule'
+import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
+import LayoutHeader from '@/components/custom/content-layout/layoutHeader.vue'
+import WorkerAddDialog from './components/WorkerAddDialog.vue'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
+
+useSideMenuSetup({ ...localPoliceMenu, openIndex: 1, activeChild: '근무일지(甲)' })
+
+const navItems = [
+  { label: '홈', path: '/' },
+  { label: '지역경찰' },
+  { label: '근무일지' },
+  { label: '근무일지(甲)' },
+  { label: '근무지정표작성' },
+]
+
+const workSchedule = useWorkSchedule()
+provide(WorkScheduleKey, workSchedule)
+
+const {
+  workDate,
+  shift,
+  regularWorkers,
+  regularTeam,
+  volunteerWorkers,
+  incidentWorkers,
+  scheduleRows,
+  importantNotes,
+  targetDate,
+  removeVolunteerWorkers,
+  addIncidentWorker,
+  removeIncidentWorkers,
+  shiftWorkDate,
+  openWorkerAddDialog,
+} = workSchedule
+
+const departmentTree: DepartmentNode[] = [
+  {
+    label: '본청',
+    value: 'hq',
+    children: [
+      { label: '중앙보고', value: 'central-report', children: [{ label: '전체', value: 'all' }] },
+    ],
+  },
+]
+const department = ref<DepartmentValue>({ level1: 'hq', level2: 'central-report', level3: 'all' })
+
+const volunteerSelection = ref<Set<number>>(new Set())
+function toggleVolunteerSelection(id: number, checked: boolean) {
+  if (checked) volunteerSelection.value.add(id)
+  else volunteerSelection.value.delete(id)
+}
+function removeSelectedVolunteers() {
+  removeVolunteerWorkers(volunteerSelection.value)
+  volunteerSelection.value.clear()
+}
+
+const incidentSelection = ref<Set<number>>(new Set())
+function toggleIncidentSelection(id: number, checked: boolean) {
+  if (checked) incidentSelection.value.add(id)
+  else incidentSelection.value.delete(id)
+}
+function removeSelectedIncidents() {
+  removeIncidentWorkers(incidentSelection.value)
+  incidentSelection.value.clear()
+}
+
+/** 순찰구역/교대복구/근무관리/시간관리/불러오기/일괄출력 — 아직 설계되지 않은 하위 화면들의 공통 빈 모달 */
+const manageDialogOpen = ref(false)
+const manageDialogTitle = ref('')
+function openManageDialog(title: string) {
+  manageDialogTitle.value = title
+  manageDialogOpen.value = true
+}
+
+function resetScheduleGrid() {
+  for (const row of scheduleRows.value) {
+    if (row.type === 'variable') row.cells = row.cells.map((): string[] => [])
+  }
+  toast.success('甲지가 초기화되었습니다.')
+}
+
+function onPrint() {
+  window.print()
+}
+
+function onSave() {
+  toast.success('저장되었습니다.')
+}
+
+/** 근무지정표 셀 클릭 시 배정 — 실제 배정 UI는 아직 없어 빈 모달로 대체 */
+const assignDialogOpen = ref(false)
+const assignDialogTitle = ref('')
+function openAssignCell(rowLabel: string, slot: string) {
+  assignDialogTitle.value = `${rowLabel} · ${slot} 근무 배정`
+  assignDialogOpen.value = true
+}
+</script>
 
 <style scoped>
 .table-style1{
