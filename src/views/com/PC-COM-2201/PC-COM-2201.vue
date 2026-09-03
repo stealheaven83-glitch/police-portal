@@ -1,3 +1,139 @@
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="사용자 권한관리" />
+    </template>
+    <template #right>
+      <Breadcrumb :items="navItems" />
+    </template>
+  </PageHeader>
+
+  <div class="list-actions">
+    <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
+  </div>
+
+  <LayoutSplite :count="3" :widths="[24, 52, 24]">
+    <!-- ── 부서 ─────────────────────────────── -->
+    <template #layout-1>
+      <LayoutPanel title="부서" no-padding>
+        <template #actions>
+          <Button type="button" variant="tertiary2" size="sm" @click="onDeptRemove" class="min-w-[40px]">삭제</Button>
+          <Button type="button" variant="secondary" size="sm" @click="onDeptAdd" class="min-w-[40px]">추가</Button>
+        </template>
+
+        <div class="btn-tree">
+          <Button type="button" variant="text" size="sm" @click="treeRef?.openAll()">
+            <img src="/portal/asset/images/icon/ico_plus.svg" alt="" aria-hidden="true" />
+            모두 확장
+          </Button>
+          <Button type="button" variant="text" size="sm" @click="treeRef?.closeAll()">
+            <img src="/portal/asset/images/icon/ico_minus.svg" alt="" aria-hidden="true" />
+            모두 축소
+          </Button>
+        </div>
+        <div class="tree-scroll">
+          <TreeView
+            ref="treeRef"
+            v-model="deptTree"
+            :selected="selectedDept"
+            show-icon
+            :editing-node="editingDept"
+            :draggable="false"
+            @update:selected="onDeptSelected"
+            @node-rename="onDeptRename"
+            @node-rename-cancel="onDeptRenameCancel"
+          />
+        </div>
+      </LayoutPanel>
+    </template>
+
+    <!-- ── 사용자목록 ───────────────────────── -->
+    <template #layout-2>
+      <LayoutPanel title="사용자목록">
+        <template #actions>
+          <div class="group-gap2">
+            <SelectField
+              v-model="searchField"
+              :options="searchFieldOptions"
+              size="sm"
+              trigger-class="w-30"
+              class="!space-y-0"
+              label="사용자 조회 기준"
+              label-position="top"
+              label-class="sr-only"
+            />
+            <InputField2
+              v-model="searchKeyword"
+              size="sm"
+              input-class="w-50"
+              class="!space-y-0"
+              placeholder="사용자 조회"
+              label="사용자 조회어"
+              label-class="sr-only"
+              :icon="'/portal/asset/images/icon/ico_seach_black_20.svg'"
+              icon-class="size-6"
+              icon-label="사용자 조회"
+              search
+              @icon-click="searchUsers"
+              @keyup.enter="searchUsers"
+              clearable
+            />
+          </div>
+        </template>
+
+        <TabulatorGrid
+          class="flex-1"
+          :columns="userColumns"
+          :data="users"
+          select-mode="single"
+          height="100%"
+          placeholder="등록된 사용자가 없습니다."
+          show-pagination
+          :items-per-page="10"
+          @row-selection-changed="onUserSelectionChanged"
+        />
+      </LayoutPanel>
+    </template>
+
+    <!-- ── 권한목록 ─────────────────────────── -->
+    <template #layout-3>
+      <LayoutPanel title="권한목록">
+        <template #actions>
+          <InputField2
+            v-model="authKeyword"
+            size="sm"
+            input-class="w-40"
+            class="!space-y-0"
+            placeholder="권한 조회"
+            label="권한 조회어"
+            label-class="sr-only"
+            :icon="'/portal/asset/images/icon/ico_seach_black_20.svg'"
+            icon-class="size-6"
+            icon-label="권한 조회"
+            search
+            clearable
+          />
+        </template>
+
+       
+        <TabulatorGrid
+          ref="authGridRef"
+          class="flex-1"
+          :columns="authColumns"
+          :data="auths"
+          select-mode="checkbox"
+          height="100%"
+          placeholder="등록된 그룹이 없습니다."
+          @row-selection-changed="onAuthSelectionChanged"
+        />
+      </LayoutPanel>
+    </template>
+  </LayoutSplite>
+
+  <!-- 사용자목록의 아이디를 누르면 열린다(PC-COM-2202) -->
+  <UserInfoDialog />
+</template>
+
 <script setup lang="ts">
 import { nextTick, provide, ref, watch } from 'vue'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
@@ -188,139 +324,3 @@ useBottomTabSetup({
   closable: true,
 })
 </script>
-
-<template>
-  <PageHeader>
-    <template #left>
-      <PageTitle title="사용자 권한관리" />
-    </template>
-    <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
-  </PageHeader>
-
-  <div class="list-actions">
-    <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
-  </div>
-
-  <LayoutSplite :count="3" :widths="[24, 52, 24]">
-    <!-- ── 부서 ─────────────────────────────── -->
-    <template #layout-1>
-      <LayoutPanel title="부서" no-padding>
-        <template #actions>
-          <Button type="button" variant="tertiary2" size="sm" @click="onDeptRemove" class="min-w-[40px]">삭제</Button>
-          <Button type="button" variant="secondary" size="sm" @click="onDeptAdd" class="min-w-[40px]">추가</Button>
-        </template>
-
-        <div class="btn-tree">
-          <Button type="button" variant="text" size="sm" @click="treeRef?.openAll()">
-            <img src="/portal/asset/images/icon/ico_plus.svg" alt="" aria-hidden="true" />
-            모두 확장
-          </Button>
-          <Button type="button" variant="text" size="sm" @click="treeRef?.closeAll()">
-            <img src="/portal/asset/images/icon/ico_minus.svg" alt="" aria-hidden="true" />
-            모두 축소
-          </Button>
-        </div>
-        <div class="tree-scroll">
-          <TreeView
-            ref="treeRef"
-            v-model="deptTree"
-            :selected="selectedDept"
-            show-icon
-            :editing-node="editingDept"
-            :draggable="false"
-            @update:selected="onDeptSelected"
-            @node-rename="onDeptRename"
-            @node-rename-cancel="onDeptRenameCancel"
-          />
-        </div>
-      </LayoutPanel>
-    </template>
-
-    <!-- ── 사용자목록 ───────────────────────── -->
-    <template #layout-2>
-      <LayoutPanel title="사용자목록">
-        <template #actions>
-          <div class="group-gap2">
-            <SelectField
-              v-model="searchField"
-              :options="searchFieldOptions"
-              size="sm"
-              trigger-class="w-30"
-              class="!space-y-0"
-              label="사용자 조회 기준"
-              label-position="top"
-              label-class="sr-only"
-            />
-            <InputField2
-              v-model="searchKeyword"
-              size="sm"
-              input-class="w-50"
-              class="!space-y-0"
-              placeholder="사용자 조회"
-              label="사용자 조회어"
-              label-class="sr-only"
-              :icon="'/portal/asset/images/icon/ico_seach_black_20.svg'"
-              icon-class="size-6"
-              icon-label="사용자 조회"
-              search
-              @icon-click="searchUsers"
-              @keyup.enter="searchUsers"
-              clearable
-            />
-          </div>
-        </template>
-
-        <TabulatorGrid
-          class="flex-1"
-          :columns="userColumns"
-          :data="users"
-          select-mode="single"
-          height="100%"
-          placeholder="등록된 사용자가 없습니다."
-          show-pagination
-          :items-per-page="10"
-          @row-selection-changed="onUserSelectionChanged"
-        />
-      </LayoutPanel>
-    </template>
-
-    <!-- ── 권한목록 ─────────────────────────── -->
-    <template #layout-3>
-      <LayoutPanel title="권한목록">
-        <template #actions>
-          <InputField2
-            v-model="authKeyword"
-            size="sm"
-            input-class="w-40"
-            class="!space-y-0"
-            placeholder="권한 조회"
-            label="권한 조회어"
-            label-class="sr-only"
-            :icon="'/portal/asset/images/icon/ico_seach_black_20.svg'"
-            icon-class="size-6"
-            icon-label="권한 조회"
-            search
-            clearable
-          />
-        </template>
-
-       
-        <TabulatorGrid
-          ref="authGridRef"
-          class="flex-1"
-          :columns="authColumns"
-          :data="auths"
-          select-mode="checkbox"
-          height="100%"
-          placeholder="등록된 그룹이 없습니다."
-          @row-selection-changed="onAuthSelectionChanged"
-        />
-      </LayoutPanel>
-    </template>
-  </LayoutSplite>
-
-  <!-- 사용자목록의 아이디를 누르면 열린다(PC-COM-2202) -->
-  <UserInfoDialog />
-</template>

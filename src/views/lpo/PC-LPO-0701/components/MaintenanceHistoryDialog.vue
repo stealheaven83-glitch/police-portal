@@ -9,7 +9,7 @@
       ref="gridRef"
       :columns="maintenanceGridColumns"
       v-model:data="maintenanceRows"
-      height="320px"
+      height="436px"
       placeholder="등록된 유지보수 이력이 없습니다"
       @table-built="onTableBuilt"
     />

@@ -97,8 +97,8 @@ grep -n '^/\* ──' public/portal/asset/css/common/styles.css   # 블록 순�
 파일을 열 때마다 어디를 봐야 할지 다시 찾게 된다.
 
 ```bash
-# 첫 블록이 template 인지 확인
-grep -n '^<script setup|^<template' 화면.vue | head -1
+# 첫 줄이 <template> 이어야 한다
+head -1 src/views/{도메인}/{화면ID}/{화면ID}.vue
 ```
 
 > **현황**: 2026-09-03 에 화면·화면전용 컴포넌트 **62개를 일괄 정리**해 전부 이 순서다.
