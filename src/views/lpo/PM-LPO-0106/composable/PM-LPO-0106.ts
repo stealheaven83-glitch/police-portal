@@ -1,4 +1,4 @@
-import { computed, reactive, ref } from 'vue'
+import { computed, ref } from 'vue'
 
 export interface NotificationRow {
   id: number
@@ -13,26 +13,6 @@ export interface NotificationRow {
 }
 
 export type NotificationStatus = 'all' | 'unread' | 'read'
-export type NotificationSearchCondition = 'all' | 'category' | 'content'
-
-export interface NotificationSearchForm {
-  status: NotificationStatus
-  condition: NotificationSearchCondition
-  keyword: string
-}
-
-/** Select 의 value 에는 빈 문자열을 못 쓰므로 "전체" 는 'all' 로 둔다 */
-export const statusOptions = [
-  { label: '전체', value: 'all' },
-  { label: '안읽음', value: 'unread' },
-  { label: '읽음', value: 'read' },
-]
-
-export const searchConditionOptions = [
-  { label: '전체', value: 'all' },
-  { label: '구분', value: 'category' },
-  { label: '내용', value: 'content' },
-]
 
 const categories = ['근무일지(甲)', '인수인계']
 
@@ -52,40 +32,24 @@ function createMockRows(): NotificationRow[] {
 
 export function useNotificationList() {
   const allRows = ref<NotificationRow[]>(createMockRows())
+  const status = ref<NotificationStatus>('all')
 
-  /** 검색영역이 물고 있는 입력값. 조회 버튼을 눌러야 목록에 반영된다 */
-  const searchForm = reactive<NotificationSearchForm>({
-    status: 'all',
-    condition: 'all',
-    keyword: '',
-  })
-
-  /** 실제로 목록에 적용된 조회 조건(= 마지막으로 조회 버튼을 눌렀을 때의 searchForm) */
-  const appliedForm = ref<NotificationSearchForm>({ ...searchForm })
+  const counts = computed(() => ({
+    all: allRows.value.length,
+    unread: allRows.value.filter((row) => !row.read).length,
+    read: allRows.value.filter((row) => row.read).length,
+  }))
 
   const filteredRows = computed(() => {
-    const { status, condition, keyword } = appliedForm.value
-    const trimmed = keyword.trim()
-
-    return allRows.value.filter((row) => {
-      if (status === 'unread' && row.read) return false
-      if (status === 'read' && !row.read) return false
-      if (!trimmed) return true
-      if (condition === 'category') return row.category.includes(trimmed)
-      if (condition === 'content') return row.content.includes(trimmed)
-      return row.category.includes(trimmed) || row.content.includes(trimmed)
-    })
+    if (status.value === 'unread') return allRows.value.filter((row) => !row.read)
+    if (status.value === 'read') return allRows.value.filter((row) => row.read)
+    return allRows.value
   })
 
   /** 그리드 표시용: 상태 컬럼에 쓸 라벨을 미리 얹어 내려준다 */
   const displayRows = computed(() =>
     filteredRows.value.map((row) => ({ ...row, statusLabel: row.read ? '읽음' : '안읽음' })),
   )
-
-  /** TODO: API 연동. 지금은 목업이라 조회 조건을 그대로 목록 필터에 옮기기만 한다 */
-  function search() {
-    appliedForm.value = { ...searchForm }
-  }
 
   function findRow(id: number) {
     return allRows.value.find((row) => row.id === id) ?? null
@@ -104,9 +68,9 @@ export function useNotificationList() {
   }
 
   return {
-    searchForm,
+    status,
+    counts,
     displayRows,
-    search,
     findRow,
     markRead,
     deleteRows,

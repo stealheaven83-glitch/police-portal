@@ -18,63 +18,71 @@
     </template>
     <template #form>
       <div class="search-area" :class="styles.searchArea">
-        <InputField2 v-model="searchForm.detailAddress" label="상세주소" size="sm" inputClass="w-40" />
-        <SelectField
-          v-model="searchForm.sortBy"
-          label="정렬기준"
-          :options="sortOptions"
-          label-position="left"
-          size="sm"
-          triggerClass="w-30"
-        />
-        <InputField2 v-model="searchForm.managementNo" label="관리번호" size="sm" inputClass="w-32" />
-        <InputField2 v-model="searchForm.bizName" label="상호명" size="sm" inputClass="w-32" />
-        <SelectField
-          v-model="searchForm.type"
-          label="유형"
-          :options="typeOptions"
-          label-position="left"
-          size="sm"
-          triggerClass="w-50"
-        />
-        <SelectField
-          v-model="searchForm.facilityImproved"
-          label="시설개선 확인유무"
-          :options="yesNoAllOptions"
-          label-position="left"
-          size="sm"
-          triggerClass="w-30"
-        />
-        <SelectField
-          v-model="searchForm.hasNotice"
-          label="착안사항 유무"
-          :options="yesNoAllOptions"
-          label-position="left"
-          size="sm"
-          triggerClass="w-30"
-        />
-        <SelectField
-          v-model="searchForm.cashIntensive"
-          label="현금다액업소"
-          :options="cashOptions"
-          label-position="left"
-          size="sm"
-          triggerClass="w-30"
-        />
-        <div class="flex items-center">
-          <DatePicker label="진단일자" labelPosition="left" size="sm" inputClass="w-[160px]"></DatePicker>
-          <span class="px-3">~</span>
-          <DatePicker size="sm" inputClass="w-[160px]"></DatePicker>
+        <div :class="styles.searchRow">
+          <InputField2 v-model="searchForm.detailAddress" label="상세주소" size="sm" inputClass="w-40" />
+          <SelectField
+            v-model="searchForm.sortBy"
+            label="정렬기준"
+            :options="sortOptions"
+            label-position="left"
+            size="sm"
+            triggerClass="w-30"
+          />
+          <InputField2 v-model="searchForm.managementNo" label="관리번호" size="sm" inputClass="w-32" />
+          <InputField2 v-model="searchForm.bizName" label="상호명" size="sm" inputClass="w-32" />
+          <SelectField
+            v-model="searchForm.type"
+            label="유형"
+            :options="typeOptions"
+            label-position="left"
+            size="sm"
+            triggerClass="w-50"
+          />
         </div>
-        <SelectField
-          v-model="searchForm.reason"
-          label="진단사유"
-          :options="reasonOptions"
-          label-position="left"
-          size="sm"
-          triggerClass="w-50"
-        />
-        <InputField2 v-model="searchForm.diagnoser" label="진단자" size="sm" inputClass="w-30" />
+
+        <div :class="styles.searchRow">
+          <SelectField
+            v-model="searchForm.facilityImproved"
+            label="시설개선 확인유무"
+            :options="yesNoAllOptions"
+            label-position="left"
+            size="sm"
+            triggerClass="w-30"
+          />
+          <SelectField
+            v-model="searchForm.hasNotice"
+            label="착안사항 유무"
+            :options="yesNoAllOptions"
+            label-position="left"
+            size="sm"
+            triggerClass="w-30"
+          />
+          <SelectField
+            v-model="searchForm.cashIntensive"
+            label="현금다액업소"
+            :options="cashOptions"
+            label-position="left"
+            size="sm"
+            triggerClass="w-30"
+          />
+          <div class="flex items-center">
+            <DatePicker label="진단일자" labelPosition="left" size="sm" inputClass="w-[160px]"></DatePicker>
+            <span class="px-3">~</span>
+            <DatePicker size="sm" inputClass="w-[160px]"></DatePicker>
+          </div>
+        </div>
+
+        <div :class="styles.searchRow">
+          <SelectField
+            v-model="searchForm.reason"
+            label="진단사유"
+            :options="reasonOptions"
+            label-position="left"
+            size="sm"
+            triggerClass="w-50"
+          />
+          <InputField2 v-model="searchForm.diagnoser" label="진단자" size="sm" inputClass="w-30" />
+        </div>
       </div>
     </template>
     <template #btns>
