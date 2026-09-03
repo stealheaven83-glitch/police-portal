@@ -10,6 +10,10 @@ import ArrowTopIcon from '@/assets/images/icons/arrowTop.svg?component'
 import MenuIcon from '@/assets/images/icons/menu.svg?component'
 // Figma icon/annotation — 말풍선 + 물음표(도움말). 말풍선만 currentColor 라 글자색을 따라간다
 import AnnotationIcon from '@/assets/images/icons/annotation.svg?component'
+import StarIcon from '@/assets/images/icons/star.svg?component'
+import StarFillIcon from '@/assets/images/icons/starFill.svg?component'
+import AttachIcon from '@/assets/images/icons/attach.svg?component'
+import ShareIcon from '@/assets/images/icons/share.svg?component'
 
 export const icons = {
   search: SearchIcon,
@@ -22,6 +26,10 @@ export const icons = {
   arrowTop: ArrowTopIcon,
   menu: MenuIcon,
   annotation: AnnotationIcon,
+  star: StarIcon,
+  starFill: StarFillIcon,
+  attach: AttachIcon,
+  share: ShareIcon,
 }
 
 export type IconName = keyof typeof icons

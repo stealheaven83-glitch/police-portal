@@ -131,7 +131,7 @@
 
 /* 첨부파일 줄 끝의 용량 안내 문구 — 버튼 옆에 한 줄로 붙어야 해서 줄바꿈을 막는다 */
 .pc-com-2402-file-hint {
-  font-size: 1.3rem; 
+  font-size: 1.3rem;
   color: var(--Text-body_1);
   white-space: nowrap;
 }
@@ -599,4 +599,320 @@
   margin-top: 2.4rem;
   font-size: 1.5rem;
   color: var(--Text-body_2);
+}
+
+/* ── PM-LPO-0101 메모 목록 ─────────────── */
+/* 검색영역은 공통 .search-area 사용 (PC-LPO-0215 와 동일) — 전용 클래스 만들지 않음 */
+
+/* 목록 위 컨트롤 바: 바깥은 공통 .list-actions.space-between.
+   좌/우 그룹 내부 간격(= 선택삭제·작성 버튼 왼쪽 간격)은 Figma 실측 24 / 32px.
+   공통 group-gap 은 4·8·12px 뿐이라 여기서 지정한다. (되돌려지면 이 두 클래스 복구) */
+.pm-lpo-0101-toolbar-left,
+.pm-lpo-0101-toolbar-right {
+  display: flex;
+  align-items: center;
+}
+.pm-lpo-0101-toolbar-left {
+  gap: 2.4rem;
+}
+.pm-lpo-0101-toolbar-right {
+  gap: 3.2rem;
+}
+
+/* 카드 그리드 — 카드 최소 46rem, 남는 폭은 균등 분배(≈3열 @1564px) */
+.pm-lpo-0101-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(46rem, 1fr));
+  gap: 1.6rem 2.4rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.6rem;
+  border-bottom: 0.2rem solid var(--Border_gray03);
+  list-style: none;
+}
+
+/* 메모 카드 (Figma 'Memo Li' — figma-component-audit 상 화면 전용) */
+.pm-lpo-0101-card {
+  display: flex;
+  gap: 1.6rem;
+  align-items: flex-start;
+  padding: 2.4rem;
+  border: 0.1rem solid var(--Border_gray01);
+  border-radius: var(--Radius-xlarge2);
+  background: var(--white);
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+.pm-lpo-0101-card:hover,
+.pm-lpo-0101-card:focus-within {
+  background: var(--Surface-primary);
+}
+/* Figma Hover: 제목 밑줄. 제목 텍스트는 h3 안 button 에 있으므로 button 을 겨냥한다 */
+.pm-lpo-0101-card:hover .pm-lpo-0101-card-titlebtn,
+.pm-lpo-0101-card:focus-within .pm-lpo-0101-card-titlebtn {
+  text-decoration: underline;
+}
+.pm-lpo-0101-card-selected {
+  border-width: 0.2rem;
+  border-color: var(--Base-primary);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.05), 0 4px 4px rgba(0, 0, 0, 0.08);
+}
+.pm-lpo-0101-card-check {
+  display: flex;
+  align-items: flex-start;
+  padding: 0.4rem 0;
+}
+.pm-lpo-0101-card-body {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.pm-lpo-0101-card-titlerow {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+.pm-lpo-0101-card-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+}
+/* 제목 클릭/키보드로 상세 이동 — h3 안의 버튼(네이티브 포커스·Enter 지원) */
+.pm-lpo-0101-card-titlebtn {
+  display: block;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.pm-lpo-0101-card-actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 1rem;
+}
+.pm-lpo-0101-card-iconbtn {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.pm-lpo-0101-card-iconbtn svg {
+  display: block;
+}
+.pm-lpo-0101-card-preview {
+  overflow: hidden;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--Text-body_1);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pm-lpo-0101-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.3rem;
+  color: var(--Text-body_2);
+}
+/* 메타 항목 사이 세로 구분선 — 빈 태그 대신 CSS 로 (Figma: 12px, #CDD1D5) */
+.pm-lpo-0101-card-meta span {
+  display: flex;
+  align-items: center;
+}
+.pm-lpo-0101-card-meta span + span::before {
+  content: "";
+  flex-shrink: 0;
+  width: 0.1rem;
+  height: 1.2rem;
+  margin-right: 1rem;
+  background: var(--Border_gray02);
+}
+
+/* ── PM-LPO-0104 메모 등록 (상세/수정 PM-LPO-0102 와 폼 구조 공유) ─── */
+/* Figma con: 가운데 정렬, 본문 1000px, 섹션 세로 간격 20px */
+.pm-lpo-0104-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100rem;
+  max-width: 100%;
+  margin: 0 auto;
+  padding-bottom: 3.2rem;
+}
+.pm-lpo-0104-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.pm-lpo-0104-time {
+  font-size: 1.5rem;
+  color: var(--Text-body_2);
+}
+.pm-lpo-0104-top-icons {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+.pm-lpo-0104-iconbtn {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.pm-lpo-0104-iconbtn svg {
+  display: block;
+}
+
+.pm-lpo-0104-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.pm-lpo-0104-label {
+  font-size: 1.5rem;
+  color: var(--Text-body_1);
+}
+
+/* 요약 영역 — 빈 상태는 점선, 진행/완료는 실선 (Figma 3개 프레임) */
+.pm-lpo-0104-summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3.2rem;
+  padding: 2rem 1.6rem;
+  background: var(--white);
+  border: 0.1rem dashed var(--Border_gray01);
+  border-radius: var(--Radius-medium2);
+}
+.pm-lpo-0104-summary-filled {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.2rem;
+  border-style: solid;
+}
+.pm-lpo-0104-summary-guide {
+  font-size: 1.5rem;
+  color: var(--Text-body_1);
+}
+.pm-lpo-0104-summary-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  font-size: 1.5rem;
+  color: var(--Text-body_1);
+}
+.pm-lpo-0104-summary-text {
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+}
+.pm-lpo-0104-summary-redo {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* 첨부파일 드롭존 */
+.pm-lpo-0104-dropzone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4rem;
+  padding: 2.4rem 4rem;
+  background: var(--Background-gray01);
+  border-radius: var(--Radius-xlarge2);
+}
+.pm-lpo-0104-dropzone-txt {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  text-align: center;
+}
+.pm-lpo-0104-dropzone-txt p {
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
+}
+.pm-lpo-0104-dropzone-sub {
+  font-size: 1.3rem !important;
+  color: var(--Text-body_1) !important;
+}
+
+/* 첨부파일 목록 */
+.pm-lpo-0104-filelist {
+  display: flex;
+  flex-direction: column;
+}
+.pm-lpo-0104-filecount {
+  margin-bottom: 0.8rem;
+  font-size: 1.3rem;
+  color: var(--Text-body_1);
+}
+.pm-lpo-0104-filecount b {
+  font-weight: 700;
+  color: var(--Base-primary);
+}
+.pm-lpo-0104-fileitem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem 0.4rem;
+  border-bottom: 0.1rem solid var(--Border_gray02);
+}
+.pm-lpo-0104-filename {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pm-lpo-0104-fileremove {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0;
+  font-size: 1.4rem;
+  color: var(--Text-body_1);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.pm-lpo-0104-fileremove:hover {
+  color: var(--Base-primary);
+}
+
+.pm-lpo-0104-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1.6rem;
+  padding-top: 0.4rem;
 }

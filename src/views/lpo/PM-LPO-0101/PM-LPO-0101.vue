@@ -13,25 +13,28 @@
 
   <Tabs v-model="activeTab">
     <TabsList variant="fill" :grow="true">
-      <TabsTrigger value="mine">내 메모</TabsTrigger>
-      <TabsTrigger value="received">받은 메모</TabsTrigger>
-      <TabsTrigger value="sent">보낸 메모</TabsTrigger>
+      <TabsTrigger value="mine" tone="secondary">내 메모</TabsTrigger>
+      <TabsTrigger value="received" tone="secondary">받은 메모</TabsTrigger>
+      <TabsTrigger value="sent" tone="secondary">보낸 메모</TabsTrigger>
     </TabsList>
   </Tabs>
 
-  <SearchWrapper class="mt-4">
+  <SearchWrapper>
     <template #form>
-      <div :class="styles.searchRow">
-        <div :class="styles.dateRange" role="group" aria-label="검색기간">
-          <DatePicker v-model="searchDateFrom" size="sm" placeholder="시작일" />
-          <span :class="styles.dateSeparator" aria-hidden="true">~</span>
-          <DatePicker v-model="searchDateTo" size="sm" placeholder="종료일" />
-        </div>
-        <InputField2
-          v-model="searchKeyword"
+      <div class="search-area">
+        <DateRangePicker
+          v-model:from="form.dateFrom"
+          v-model:to="form.dateTo"
+          label="검색기간"
           size="sm"
-          :class="styles.keyword"
+        />
+        <InputField2
+          v-model="form.keyword"
+          size="sm"
+          aria-label="검색어"
           placeholder="검색어를 입력해주세요."
+          inputClass="w-60"
+          clearable
           @keyup.enter="search"
         />
       </div>
@@ -41,115 +44,133 @@
     </template>
   </SearchWrapper>
 
-  <div :class="styles.listToolbar">
-    <div :class="styles.toolbarLeft">
+  <div class="list-actions space-between">
+    <div class="pm-lpo-0101-toolbar-left">
       <Checkbox
         :model-value="isAllSelected"
         label="전체 선택"
         @update:model-value="(checked) => toggleSelectAll(!!checked)"
       />
-      <Button type="button" variant="tertiary2" size="xs" :disabled="!selectedIds.size" @click="deleteSelected">
-        선택 삭제
-      </Button>
+      <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelected">선택 삭제</Button>
     </div>
-    <div :class="styles.toolbarRight">
-      <SelectField
-        :model-value="sort"
-        :options="sortOptions"
-        size="sm"
-        :trigger-class="styles.sortSelect"
-        class="!space-y-0"
-        @update:model-value="(v) => (sort = v as MemoSort)"
+    <div class="pm-lpo-0101-toolbar-right">
+      <Switch
+        :model-value="form.importantOnly"
+        variant="none"
+        label="중요 메모만 보기"
+        @update:model-value="onToggleImportantOnly"
       />
-      <Switch v-model="importantOnly" label="중요 메모만 보기" />
+      <Button type="button" variant="primary" size="sm" @click="goCreate">작성</Button>
     </div>
   </div>
 
-  <div :class="styles.candidateWrap">
-    <span :class="styles.candidateTag">컴포넌트 제작 필요 후보: 메모 카드</span>
-
-    <div :class="styles.grid">
-      <article
-        v-for="memo in pagedMemos"
-        :key="memo.id"
-        :class="[styles.card, selectedIds.has(memo.id) && styles.cardSelected]"
-      >
-        <div :class="styles.cardHead">
-          <Checkbox
-            :model-value="selectedIds.has(memo.id)"
-            :aria-label="`${memo.title} 선택`"
-            @update:model-value="(checked) => toggleSelect(memo.id, !!checked)"
-          />
-          <button type="button" :class="styles.cardTitleLink">{{ memo.title }}</button>
-          <div :class="styles.cardActions">
-            <button
-              type="button"
-              :class="[styles.iconButton, memo.important && styles.iconButtonActive]"
-              :aria-pressed="memo.important"
-              :aria-label="memo.important ? '중요 메모 해제' : '중요 메모로 등록'"
-              @click="toggleImportant(memo.id)"
-            >
-              <Star :size="18" :fill="memo.important ? 'currentColor' : 'none'" />
-            </button>
-            <button type="button" :class="styles.iconButton" aria-label="메모 공유" @click="openShare">
-              <Share2 :size="16" />
-            </button>
+  <ScrollWrapper>
+    <ul v-if="pagedMemos.length" class="pm-lpo-0101-list">
+      <li v-for="memo in pagedMemos" :key="memo.id">
+        <article
+          class="pm-lpo-0101-card"
+          :class="{ 'pm-lpo-0101-card-selected': selectedIds.has(memo.id) }"
+          @click="openDetail(memo)"
+        >
+          <div class="pm-lpo-0101-card-check">
+            <Checkbox
+              :model-value="selectedIds.has(memo.id)"
+              aria-label="메모 선택"
+              @update:model-value="() => toggleSelect(memo.id)"
+              @click.stop
+            />
           </div>
-        </div>
+          <div class="pm-lpo-0101-card-body">
+            <div class="pm-lpo-0101-card-titlerow">
+              <h3 class="pm-lpo-0101-card-title">
+                <button type="button" class="pm-lpo-0101-card-titlebtn" @click.stop="openDetail(memo)">
+                  {{ memo.title }}
+                </button>
+              </h3>
+              <div class="pm-lpo-0101-card-actions">
+                <button
+                  type="button"
+                  class="pm-lpo-0101-card-iconbtn"
+                  :aria-label="memo.important ? '중요 해제' : '중요 표시'"
+                  @click.stop="toggleImportant(memo.id)"
+                >
+                  <Icon :name="memo.important ? 'starFill' : 'star'" :size="24" />
+                </button>
+                <button
+                  type="button"
+                  class="pm-lpo-0101-card-iconbtn"
+                  aria-label="공유"
+                  @click.stop="openShare()"
+                >
+                  <Icon name="share" :size="24" />
+                </button>
+              </div>
+            </div>
+            <p class="pm-lpo-0101-card-preview">{{ memo.preview }}</p>
+            <div class="pm-lpo-0101-card-meta">
+              <span v-if="activeTab !== 'mine'">{{ memo.person }}</span>
+              <span>{{ memo.date }}</span>
+              <span>{{ memo.time }}</span>
+              <Icon v-if="memo.hasAttachment" name="attach" :size="16" />
+            </div>
+          </div>
+        </article>
+      </li>
+    </ul>
+    <NoData v-else message="메모가 없습니다" />
+  </ScrollWrapper>
 
-        <p :class="styles.cardPreview">{{ memo.preview }}</p>
+  <Pagination
+    :current-page="currentPage"
+    :total-pages="totalPages"
+    :items-per-page="itemsPerPage"
+    :total-elements="totalElements"
+    @update:page="changePage"
+    @update:items-per-page="changePageSize"
+  />
 
-        <div :class="styles.cardFooter">
-          <span>{{ memo.date }} {{ memo.time }}</span>
-          <Paperclip v-if="memo.hasAttachment" :size="14" aria-label="첨부파일 있음" />
-        </div>
-      </article>
-
-      <p v-if="!pagedMemos.length" :class="styles.emptyState">조회된 메모가 없습니다.</p>
-    </div>
-  </div>
-
-  <div :class="styles.bottomRow">
-    <Pagination
-      :current-page="currentPage"
-      :total-pages="totalPages"
-      :items-per-page="itemsPerPage"
-      :total-elements="totalElements"
-      @update:page="(page) => (currentPage = page)"
-      @update:items-per-page="changePageSize"
-    />
-  </div>
-
-  <div :class="styles.newMemoRow">
-    <Button type="button" variant="primary" size="md">새 메모</Button>
-  </div>
-
-  <EmptyStubDialog v-model:open="shareOpen" title="메모 공유" description="메모를 공유할 대상을 선택합니다." />
+  <EmptyStubDialog
+    v-model:open="shareOpen"
+    title="메모 공유"
+    description="공유 대상자를 선택하는 팝업입니다."
+  />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Star, Share2, Paperclip } from 'lucide-vue-next'
+import { useRouter } from 'vue-router'
+import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 import { Tabs, TabsList, TabsTrigger } from '@/components/custom/tabs'
 import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
-import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import { DateRangePicker } from '@/components/custom/datepicker'
 import InputField2 from '@/components/custom/input/InputField2.vue'
-import SelectField from '@/components/custom/select/SelectField.vue'
+import { Button } from '@/components/custom/button'
+import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
 import { Checkbox } from '@/components/custom/checkbox'
 import { Switch } from '@/components/custom/switch'
-import { Button } from '@/components/custom/button'
-import Pagination from '@/components/custom/pagination/Pagination.vue'
+import Icon from '@/components/custom/icon/Icon.vue'
+import { Pagination } from '@/components/custom/pagination'
 import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
-import { useMemoList, sortOptions } from './composable/useMemoList'
-import type { MemoSort } from './composable/useMemoList'
-import styles from './style/PM-LPO-0101.module.css'
+import { NoData } from '@/components/custom/empty'
+import { useDialog } from '@/composable/dialog/dialog'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
-import HelpButton from '@/components/custom/button/HelpButton.vue'
+import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
+import { useMemoList, type MemoItem } from './composable/PM-LPO-0101'
+
+defineOptions({
+  name: 'PmLpo0101',
+})
+
+// LNB: 개인수첩 > 메모 (presets.ts 에 path 로 등록돼 있음 — openIndex 0, activeChild '메모')
 useSideMenuSetup({ ...localPoliceMenu, openIndex: 0, activeChild: '메모' })
+
+const router = useRouter()
+const dialog = useDialog()
 
 const navItems = [
   { label: '홈', path: '/' },
@@ -160,28 +181,74 @@ const navItems = [
 
 const {
   activeTab,
-  sort,
-  importantOnly,
-  searchDateFrom,
-  searchDateTo,
-  searchKeyword,
+  form,
+  allMemos,
   pagedMemos,
   selectedIds,
   isAllSelected,
+  selectedCount,
   itemsPerPage,
   currentPage,
-  totalPages,
   totalElements,
+  totalPages,
   search,
-  toggleSelectAll,
   toggleSelect,
+  toggleSelectAll,
   toggleImportant,
   deleteSelected,
+  changePage,
   changePageSize,
 } = useMemoList()
 
 const shareOpen = ref(false)
+
+function onToggleImportantOnly(value: boolean) {
+  form.importantOnly = value
+  search() // 기획서 7: 토글 즉시 목록에 반영
+}
+
+/** 기획서 8: 제목/카드 클릭 → 상세 화면(PM-LPO-0102, 아직 미구현 → NotReady) */
+function openDetail(memo: MemoItem) {
+  router.push({ path: '/views/lpo/PM-LPO-0102', query: { id: memo.id } })
+}
+
+/** 기획서 11: 작성 버튼 → 등록 화면(PM-LPO-0104, 아직 미구현 → NotReady) */
+function goCreate() {
+  router.push('/views/lpo/PM-LPO-0104')
+}
+
+/** 기획서 8-1: 공유 아이콘 → 공유 대상자 선택 팝업. Figma 미제공이라 빈 스텁 연결 */
 function openShare() {
   shareOpen.value = true
 }
+
+/**
+ * 기획서 10: 삭제는 되돌릴 수 없어 컨펌창을 띄운다(§7 기본 toast 와 다르지만 기획서 지정).
+ * 선택 항목에 중요 메모가 있으면 안내 문구가 달라진다.
+ */
+async function onDeleteSelected() {
+  if (!selectedCount.value) {
+    toast.warning('삭제할 메모를 선택해 주세요.')
+    return
+  }
+  const hasImportant = allMemos.value.some((m) => selectedIds.value.has(m.id) && m.important)
+  const { confirmed } = await dialog.confirm({
+    title: '메모 삭제',
+    description: hasImportant
+      ? '중요 메모를 선택하였습니다. 선택된 메모를 삭제 하시겠습니까?'
+      : '삭제된 메모는 복구할 수 없습니다. 선택된 메모를 삭제 하시겠습니까?',
+    btnOk: '삭제',
+  })
+  if (!confirmed) return
+  deleteSelected()
+  // 사용자 지정: 삭제 완료를 제목 없는 알림 모달로 안내 — §7 기본(toast)과 다르지만 요청대로 따름
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
+}
+
+useBottomTabSetup({
+  value: 'PM-LPO-0101',
+  label: '메모',
+  path: '/views/lpo/PM-LPO-0101',
+  componentName: 'PmLpo0101',
+})
 </script>
