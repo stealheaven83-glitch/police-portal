@@ -220,7 +220,7 @@ const worklist = ref([
   { id: 111, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '타직원 출동수당 신청', depth5: '', screenName: '타직원 출동수당 신청 팝업 화면', screenId: 'PC-LPO-0509', path: '', status: '대기' },
   { id: 112, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '출동사건정보', depth5: '', screenName: '출동사건정보 팝업화면', screenId: 'PC-LPO-0510', path: '', status: '대기' },
   { id: 113, category: '스마트워크', depth1: '', depth2: '', depth3: '출동수당 취합(일별)', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
-  { id: 114, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '목록', depth5: '', screenName: '출동수당 취합 일별 화면', screenId: 'PC-LPO-0511', path: '', status: '대기' },
+  { id: 114, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '목록', depth5: '', screenName: '출동수당 취합 일별 화면', screenId: 'PC-LPO-0511', path: '/views/lpo/PC-LPO-0511', status: '완료' },
   { id: 115, category: '스마트워크', depth1: '', depth2: '', depth3: '출동수당통보', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
   { id: 116, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '목록', depth5: '', screenName: '출동수당통보 화면', screenId: 'PC-LPO-0512', path: '', status: '대기' },
   { id: 117, category: '스마트워크', depth1: '', depth2: '관내현황', depth3: '', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
