@@ -38,7 +38,7 @@
       * 개인정보를 공무수행 목적외 사적으로 조회 또는 유출하여 타인의 비밀을 침해하거나 누설할 경우
       <span class="notice-strong">5년이하의 징역 또는 5천만원 이하의 벌금</span>에 처해집니다.
     </p>
-    <Button type="button" variant="primary" size="sm" class="w-25" @click="onSave">저장</Button>
+    <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
   </div>
 
   <LayoutSplit :count="2" :widths="[50, 50]" :min-widths="[35, 30]">

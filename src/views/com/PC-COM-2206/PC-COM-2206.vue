@@ -23,15 +23,15 @@
       icon-label="검색"
       search
     />
-    <Button type="button" variant="primary" size="sm" class="w-25" @click="onSave">저장</Button>
+    <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
   </div>
 
   <LayoutSplit :count="2" :widths="[33, 67]" :min-widths="[25, 40]" :resizable="false">
     <template #layout-1>
       <LayoutPanel title="상위코드">
         <template #actions>
-          <Button type="button" variant="tertiary2" size="sm" class="w-25" @click="onDeleteSelectedParents">선택삭제</Button>
-          <Button type="button" variant="secondary" size="sm" class="w-25" @click="onAddParent">추가</Button>
+          <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelectedParents">선택삭제</Button>
+          <Button type="button" variant="secondary" size="sm" @click="onAddParent">추가</Button>
         </template>
 
         <TabulatorGrid
@@ -52,8 +52,8 @@
     <template #layout-2>
       <LayoutPanel title="하위코드">
         <template #actions>
-          <Button type="button" variant="tertiary2" size="sm" class="w-25" @click="onDeleteSelectedChildren">선택삭제</Button>
-          <Button type="button" variant="secondary" size="sm" class="w-25" @click="onAddChild">추가</Button>
+          <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelectedChildren">선택삭제</Button>
+          <Button type="button" variant="secondary" size="sm" @click="onAddChild">추가</Button>
         </template>
 
         <TabulatorGrid

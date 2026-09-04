@@ -186,6 +186,31 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 
 ---
 
+## 8-1. 버튼 폭 — `w-25` 는 쓰지 않는다, 컨텐츠 폭이면 `padding`
+
+`custom/button/Button.vue` 는 베이스에 `min-w-25`(**최소 100px**)가 걸려 있다. 짧은 라벨("저장",
+"삭제")이 제각각 폭으로 보이지 않게 하는 기본값이다.
+
+| 원하는 것 | 이렇게 한다 |
+|---|---|
+| **기본 폭(최소 100px)** | 아무것도 안 준다. `class="w-25"` 는 **의미 없는 중복**이라 붙이지 않는다 |
+| **컨텐츠에 맞는 폭**(100px 미만) | `padding` prop 을 준다 → `min-width` 가 0이 되고 좌우 여백이 그 값이 된다 |
+| 그보다 넓게 고정 | `class="w-[…]"` 로 명시 |
+
+```html
+<Button variant="primary" size="sm">저장</Button>              <!-- 최소 100px -->
+<Button variant="primary" size="sm" padding="12">저장</Button>  <!-- 글자 + 좌우 12px -->
+<Button variant="primary" size="sm" padding="0.8rem">저장</Button>
+```
+
+- `padding` 값: 숫자/숫자문자열은 px 로 해석(`"12"`, `:padding="12"`), 그 외는 CSS 값 그대로(`"0.8rem"`).
+- **`padding` 과 `w-*` 를 같이 주면 폭이 고정돼 `padding` 이 먹지 않는다.** 아이콘 버튼처럼 좁은 버튼이
+  안 좁아지면 `class` 에 `w-25` 가 남아 있는지부터 본다.
+- 세로 여백/높이는 `size`(`lg`~`xxs`)가 잡는다 — `padding` 은 좌우만 건드린다.
+- 기존 화면 14곳에 `w-25` 가 남아 있다(정리 예정). **복붙할 때 같이 딸려오지 않게 확인한다.**
+
+---
+
 ## 9. 헷갈리는 형제들 — 이걸로 구분한다
 
 **Badge / Tag / Chip / FilterChip** — 넷 다 pill 모양이라 제일 많이 틀린다.

@@ -17,7 +17,7 @@
       </div>
     </template>
     <template #btns>
-      <Button type="button" variant="secondary" size="sm" class="w-25" @click="onSearch">조회</Button>
+      <Button type="button" variant="secondary" size="sm" @click="onSearch">조회</Button>
     </template>
   </SearchWrapper>
 

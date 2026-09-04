@@ -139,6 +139,14 @@ CLAUDE.md 는 매 세션 자동으로 전문이 실리고, 아래 문서들은 *
   내부에서 테일윈드 쓰는 건 무관(고칠 곳이 한 파일이라 흩어질 문제가 없다, 예: `layoutHeader.vue`
   의 `defaultClass`/`titleClass`).
 - 예외: 기존 컴포넌트(`Button`, `InputField2` 등)에 `class` prop으로 여백/폭만 미세조정.
+  - **`Button` 에 `class="w-25"` 는 쓰지 않는다 — 기본값과 같아서 의미가 없다.** `Button` 은 베이스 클래스에
+    `min-w-25`(100px)가 이미 걸려 있어서, `w-25` 를 붙여도 보이는 폭이 달라지지 않는다. 오히려 폭을
+    100px 로 **고정**해 버려서 글자가 길어지면 넘치고, `padding` prop(아래)으로 폭을 제어할 수도 없게 된다.
+    기존 화면 14곳에 남아 있으니 **복붙할 때 같이 딸려오지 않게 확인한다**(§4 죽은 브레드크럼과 같은 이유).
+  - `Button` 의 폭을 컨텐츠에 맞추고 싶으면(라벨이 짧아 100px 이 과할 때) `padding` prop 을 쓴다 — 값을 주면 `min-width` 가 0이 되고
+    좌우 여백이 그 값으로 잡힌다: `<Button size="sm" padding="12">저장</Button>`(숫자는 px, `"0.8rem"` 같은
+    CSS 값도 된다). 이때 `w-25` 가 같이 있으면 폭이 고정돼 padding 이 먹지 않는다.
+    표는 `component-guide.md` §8-1 에 있다.
 - **테일윈드 문자열을 화면/컴포저블 JS 변수·computed에 담아 `:class`로 바인딩하는 것도 위반**
   (예: `const cardClass='flex items-center gap-2 p-4 rounded'`). `styles.css`에 진짜 CSS
   클래스로 뽑는다(§1-2).

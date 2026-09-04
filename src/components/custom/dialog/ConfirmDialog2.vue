@@ -85,10 +85,10 @@
         </div>
       </div>
       <AlertDialogFooter class="justify-center sm:justify-center mt-4">
-        <Button variant="tertiary2" size="md" class="w-25" @click="handleCancel">
+        <Button variant="tertiary2" size="md" @click="handleCancel">
           {{ btnCancel ?? '취소' }}
         </Button>
-        <Button variant="primary" size="md" class="w-25" @click="handleConfirm">
+        <Button variant="primary" size="md" @click="handleConfirm">
           {{ btnOk ?? '확인' }}
         </Button>
       </AlertDialogFooter>

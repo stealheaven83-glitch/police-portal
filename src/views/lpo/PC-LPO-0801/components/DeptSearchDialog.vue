@@ -18,7 +18,7 @@
           label-class="sr-only"
           placeholder="부서 조회"
         />
-        <Button type="button" variant="secondary" size="sm" class="w-25" @click="onSearch">조회</Button>
+        <Button type="button" variant="secondary" size="sm" @click="onSearch">조회</Button>
       </div>
 
       <!-- 부서(트리) / 부서 정보(표) 2분할 — 시안 720x420, 좌 300 : 우 414 -->
