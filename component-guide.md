@@ -328,6 +328,28 @@ CLAUDE.md §1의 CSS 우선순위 ①②를 실행으로 옮긴 것 — 같은 �
 | 스크롤되는 본문 영역 | `.layout-wrap` | padding 2rem 2.4rem, overflow-y auto |
 | 그리드 위 여백 | `.grid-wrap` | margin-top 2rem |
 
+### 인사 상세형 레이아웃 (사진 + 폼 + 하위 표)
+
+증명사진 칸 옆에 라벨-값 폼이 붙고 아래에 관련 표가 오는 상세 화면용. PC-LPO-0801 에서 올렸다.
+
+| 이럴 때 | 클래스 | 실제 |
+|---|---|---|
+| 사진 칸 + 폼 가로 배치 | `.detail-layout` | flex, align-start, gap 2rem |
+| 그 안 폼 영역 | `.detail-fields` | flex 1, min-width 0 |
+| 패널보다 길어질 때 이 영역만 스크롤 | `.detail-scroll` | flex 1, min-height 0, overflow-y auto (`ScrollWrapper` 를 쓰면 불필요) |
+| 사진 칸 세로 묶음 | `.photo-box` | flex-column, gap 1.2rem, 폭 12rem 고정 |
+| 증명사진 액자 | `.photo-frame` | 12×16.4rem, border+radius, 안쪽 `img` 는 `object-fit: cover` |
+| 사진 미등록 기본 이미지 | `.photo-frame .photo-empty` | 자르지 않고 원본 크기로 가운데 |
+| 라벨 폭이 다른 `InfoTable` 두 개를 한 표처럼 잇기 | `.form-rest` | `border-top: 0` — 아래 표의 윗선을 지워 선 두 겹을 막는다 |
+| 조회값만 보여주는 칸(입력 아님) | `.readonly-text` | 1.5rem, `--Text-body_0` |
+| 안내 문구 중 강조 부분 | `.notice-strong` | `--Base--point`, 700 |
+| 상세 폼 아래 하위 표 구역 | `.transfer-section` | 위쪽 6px 회색 구분선 + 여백, flex-column |
+| 그 구역 제목줄(제목 + 우측 버튼) | `.transfer-head` / `.transfer-title` | space-between / 1.7rem 700 |
+
+⚠ `.detail-fields .dp--main:only-child { width:100% }` 도 같이 있다 — 값 칸에 `DatePicker` **하나만**
+있을 때 칸 끝까지 늘려주는 규칙이다. 값 칸에 체크박스·셀렉트 같은 형제가 있으면 안 걸리니,
+그럴 땐 `DatePicker` 에 `class="w-37"` 처럼 폭을 직접 준다.
+
 ### 유틸
 
 | 용도 | 클래스 |

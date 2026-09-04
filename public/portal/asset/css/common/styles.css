@@ -282,6 +282,12 @@
   height: auto;
 }
 
+.pc-lpo-0701-vehicle112-label{
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--Text-body_1);
+}
+
 /* ── PC-LPO-0801 인사관리 (부서 조회 팝업 PC-LPO-0802 포함) ───── */
 
 /* 지금 오른쪽 '인사 상세'에 떠 있는 행 강조.
@@ -346,12 +352,6 @@
 .pc-lpo-0801-dept-active-row .tabulator-cell {
   color: var(--Base-primary);
   font-weight: 700;
-}
-
-.pc-lpo-0701-vehicle112-label{
-    font-size: 1.5rem;
-    font-weight: 400;
-    color: var(--Text-body_1);
 }
 
 /* ── PC-STT-0103 인사관리현황 ─────────────────────────────────── */

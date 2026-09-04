@@ -268,6 +268,16 @@ CLAUDE.md 는 매 세션 자동으로 전문이 실리고, 아래 문서들은 *
 .pc-lpo-0215-narrow-col  { --flex-col-min-w: 0; }
 ```
 - 역할부는 kebab-case. `.wrapper` `.narrowCol` 처럼 **프리픽스 없는 이름은 금지.**
+
+> ### ⚠ 클래스명은 **어디서든 케밥케이스다 — 카멜케이스는 쓰지 않는다**
+> `styles.css` 든 `police-style.css` 든 `*.module.css` 든 예외 없다.
+> `.detailLayout` `.photoBox` `.transferHead` ❌ → `.detail-layout` `.photo-box` `.transfer-head` ✅
+>
+> **왜**: CSS Modules(`*.module.css`)를 쓸 때 `styles.detailLayout` 으로 꺼내려고 카멜로 쓰는 습관이
+> 남아 있다. 그런데 그 파일에서 스타일을 공통·`styles.css` 로 옮기면 템플릿은 `class="detail-layout"`
+> 처럼 **문자열 케밥**으로 바뀌므로, 카멜 이름은 그 자리에서 아무것도 안 걸리는 죽은 코드가 된다.
+> 실제로 PC-LPO-0801 에서 한 파일에 `.photo-frame` 과 `.photoFrame img` 가 섞여 **둘 다 미매칭**된
+> 채로 남았다(2026-09-04 정리됨).
 - 그 화면 전용 팝업·컴포넌트(`components/` 밑)도 **부모 화면ID 프리픽스**를 쓴다.
 - 화면군(한 컴포넌트가 여러 화면ID, §3 패턴A)은 **대표 화면ID 하나로** 통일
   (예: 0701~0714 → `.pc-lpo-0701-*`).
