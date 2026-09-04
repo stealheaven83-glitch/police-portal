@@ -284,6 +284,16 @@
 
 /* ── PC-LPO-0801 인사관리 (부서 조회 팝업 PC-LPO-0802 포함) ───── */
 
+/* 지금 오른쪽 '인사 상세'에 떠 있는 행 강조.
+   체크박스 선택과는 별개 개념이라 공용 .tabulator-selected 를 못 쓴다. */
+.pc-lpo-0801-active-row {
+  background-color: var(--Surface-primary);
+}
+.pc-lpo-0801-active-row .tabulator-cell {
+  color: var(--Base-primary);
+  font-weight: 700;
+}
+
 /* 팝업 검색줄 — 시안 입력 608px + 조회 버튼 100px */
 .pc-lpo-0801-dept-search {
   display: flex;

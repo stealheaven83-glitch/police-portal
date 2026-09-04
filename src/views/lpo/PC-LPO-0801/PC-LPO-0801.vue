@@ -49,7 +49,7 @@
           :columns="listColumns"
           class="flex-1"
           height="100%"
-          :row-class="(row: any) => (row.rowKey === activeRowKey ? styles.activeRow : undefined)"
+          :row-class="(row: any) => (row.rowKey === activeRowKey ? 'pc-lpo-0801-active-row' : undefined)"
           placeholder="조회된 인사 정보가 없습니다"
           @row-click="onListRowClick"
         />
@@ -118,8 +118,8 @@
                 </InfoField>
 
                 <!-- 시안은 라디오 6개 + 체크박스 2개가 폭에 맞춰 3줄로 흐른다 -->
-                <InfoField label="근무구분">
-                  <RadioGroup v-model="detail.position" :class="infoStyles['info-table-radio']">
+                <InfoField label="근무구분"> 
+                  <RadioGroup v-model="detail.position" :class="infoStyles['info-table-radio']" class="flex-wrap">
                     <RadioGroupItem
                       v-for="opt in positionOptions"
                       :key="opt.value"
@@ -165,7 +165,8 @@
                     <DatePicker
                       v-model="detail.partTimeDate"
                       size="sm"
-                      input-class="w-37"
+                      class="w-37"
+                      input-class="w-full"
                       label="시간선택근무 일자"
                       label-class="sr-only"
                       :disabled="detail.etcWork !== 'partTime'"
@@ -178,7 +179,8 @@
                     <DatePicker
                       v-model="detail.pregnancyDate"
                       size="sm"
-                      input-class="w-37"
+                      class="w-37"
+                      input-class="w-full"
                       label="임신특례 일자"
                       label-class="sr-only"
                       :disabled="detail.etcWork !== 'pregnancy'"
@@ -217,7 +219,8 @@
                   <DatePicker
                     v-model="detail.periodicAccidentDate"
                     size="sm"
-                    input-class="w-37"
+                    class="w-37"
+                    input-class="w-full"
                     label="정기사고 일자"
                     label-class="sr-only"
                     :disabled="!detail.isPeriodicAccident"
@@ -333,7 +336,6 @@ import {
   periodicAccidentReasonOptions,
   type PersonnelListRow,
 } from './composable/PC-LPO-0801'
-import styles from './style/PC-LPO-0801.module.css'
 import infoStyles from '@/components/custom/info-table/InfoTable.module.css'
 // KeepAlive 캐싱 대상 이름 — useBottomTabSetup 의 componentName 과 정확히 같아야 한다(§5)
 defineOptions({ name: 'PcLpo0801' })

@@ -1629,7 +1629,7 @@ html.theme-dark .rowgroup.notice .notice-list .noticeSwiper .swiper-nav .slide-a
  * 입력창이 값 칸을 다 못 채운다. 그리드 날짜 셀도 같은 이유로
  * tabulator-theme.css 가 .grid-date-cell .dp--main { width:100% } 로 풀고 있다.
  */
-.detail-fields .dp--main {
+.detail-fields .dp--main:only-child {
   width: 100%;
 }
 .photo-box{

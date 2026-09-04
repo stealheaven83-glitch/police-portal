@@ -25,10 +25,6 @@
           size="sm"
           trigger-class="w-30"
         />
-        <!--
-          시안(11471:70218)의 라벨이 '기동장비관리명'인데 인사관리 화면과 맞지 않는다 —
-          장비관리 화면에서 복사해 온 흔적으로 보인다. 임의로 고치지 않고 시안 그대로 두었다.
-        -->
         <InputField2 v-model="searchEquipmentName" label="기동장비관리명" size="sm" input-class="w-50" />
       </div>
     </template>
@@ -169,7 +165,8 @@
                     <DatePicker
                       v-model="detail.partTimeDate"
                       size="sm"
-                      input-class="w-37"
+                      class="w-37"
+                      input-class="w-full"
                       label="시간선택근무 일자"
                       label-class="sr-only"
                       :disabled="detail.etcWork !== 'partTime'"
@@ -182,7 +179,8 @@
                     <DatePicker
                       v-model="detail.pregnancyDate"
                       size="sm"
-                      input-class="w-37"
+                      class="w-37"
+                      input-class="w-full"
                       label="임신특례 일자"
                       label-class="sr-only"
                       :disabled="detail.etcWork !== 'pregnancy'"
@@ -221,7 +219,8 @@
                   <DatePicker
                     v-model="detail.periodicAccidentDate"
                     size="sm"
-                    input-class="w-37"
+                    class="w-32"
+                    input-class="w-full"
                     label="정기사고 일자"
                     label-class="sr-only"
                     :disabled="!detail.isPeriodicAccident"
@@ -378,15 +377,20 @@ const defaultPhoto = '/portal/asset/images/img/img_profile.svg'
 /* ------------------------------------------------------------------ *
  * 인사 현황 목록
  * ------------------------------------------------------------------ */
+/*
+ * 전화번호가 남는 폭을 가져가는 유일한 컬럼이다(width 를 안 준 컬럼만 fitColumns 가 늘린다).
+ * 짧은 값만 들어가는 앞쪽 컬럼을 시안보다 조금씩 줄여 그만큼을 전화번호로 몰아주고,
+ * minWidth 로 시안 폭(160)을 바닥에 깔아 패널이 좁아져도 번호가 잘리지 않게 한다.
+ */
 const listColumns: TabulatorGridColumn[] = [
-  { title: '번호', field: 'no', width: 70, hozAlign: 'center' },
-  { title: '성명', field: 'name', width: 90, hozAlign: 'center' },
-  { title: '계급', field: 'rank', width: 90, hozAlign: 'center' },
-  { title: '직책', field: 'position', width: 90, hozAlign: 'center' },
-  { title: '소속팀', field: 'team', width: 90, hozAlign: 'center' },
-  { title: '전화번호', field: 'phone', hozAlign: 'center' },
-  { title: '수정자', field: 'updater', width: 90, hozAlign: 'center' },
-  { title: '수정일자', field: 'updatedAt', width: 120, hozAlign: 'center' },
+  { title: '번호', field: 'no', width: 60, hozAlign: 'center' },
+  { title: '성명', field: 'name', width: 80, hozAlign: 'center' },
+  { title: '계급', field: 'rank', width: 70, hozAlign: 'center' },
+  { title: '직책', field: 'position', width: 70, hozAlign: 'center' },
+  { title: '소속팀', field: 'team', width: 70, hozAlign: 'center' },
+  { title: '전화번호', field: 'phone', minWidth: 160, hozAlign: 'center' },
+  { title: '수정자', field: 'updater', width: 80, hozAlign: 'center' },
+  { title: '수정일자', field: 'updatedAt', width: 110, hozAlign: 'center' },
 ]
 
 /** @row-click 은 Tabulator RowComponent 를 넘긴다 — getData() 로 꺼낸다(CLAUDE.md §6) */

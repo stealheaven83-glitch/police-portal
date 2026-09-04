@@ -76,9 +76,9 @@ export interface TransferRow {
 /** 상세조회 - 상태구분. 시안에는 '전체'만 보여서 나머지는 임의로 채웠다 */
 export const statusOptions: SelectOption[] = [
   { label: '전체', value: 'all' },
-  { label: '재직', value: 'active' },
-  { label: '휴직', value: 'leave' },
-  { label: '전출', value: 'transferred' },
+  { label: '직급1', value: 'active' },
+  { label: '직급2', value: 'leave' },
+  { label: '직급3', value: 'transferred' },
 ]
 
 export const duplicateTypeOptions: SelectOption[] = [
