@@ -675,3 +675,167 @@
 .lp-file-remove:hover {
   color: var(--Base-primary);
 }
+
+/* ── 메모(개인수첩) 등록·상세 폼 ─────────────────────────────
+   Figma file_upload__atomic__pc · PC_지역경찰_01_개인수첩_01_메모_*
+   위 .lp-narrow-form / .lp-summary-* / .lp-dropzone* / .lp-file-* 를 그대로 쓰고,
+   시안 반영으로 값이 달라진 것과 새로 생긴 것만 여기 둔다. */
+
+/* 폼 세로 구성: 입력영역 ↔ 버튼 40px, 섹션 사이 20px */
+.lp-form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* 상단 일시 줄 — 항목 사이 세로 구분선 (Figma: 12px, #CDD1D5) */
+.lp-meta-line {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.5rem;
+  color: var(--Text-body_2);
+}
+.lp-meta-line span {
+  display: flex;
+  align-items: center;
+}
+.lp-meta-line span + span::before {
+  content: "";
+  flex-shrink: 0;
+  width: 0.1rem;
+  height: 1.2rem;
+  margin-right: 1rem;
+  background: var(--Border_gray02);
+}
+
+/* 글자수 카운터 — Figma 13px, 현재 글자수만 primary */
+.lp-char-count {
+  align-self: flex-end;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  color: var(--Text-body_1);
+}
+.lp-char-count b {
+  font-weight: 400;
+  color: var(--Base-primary);
+}
+
+/* 요약 박스 — 빈/진행/완료 세 상태 모두 점선(Figma 3개 프레임) */
+.lp-summary-box {
+  min-height: 8.6rem;
+  padding: 2rem;
+}
+.lp-summary-guide {
+  font-size: 1.5rem;
+  color: var(--Text-body_1);
+}
+.lp-summary-loading {
+  gap: 1.2rem;
+}
+.lp-summary-loading-txt {
+  font-size: 1.5rem;
+  color: var(--Text-body_1);
+}
+.lp-summary-text {
+  flex: 1;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+}
+
+/* 첨부파일 라벨줄 — 꽉 차면 개수가 라벨 옆(20px)으로 붙는다 */
+.lp-file-head {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+/* 드롭존 아래 안내 두 줄 사이 세로 구분선 */
+.lp-dropzone-sub {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  font-size: 1.3rem !important;
+  color: var(--Text-body_1) !important;
+}
+.lp-dropzone-sub span + span::before {
+  content: "";
+  display: inline-block;
+  width: 0.1rem;
+  height: 1rem;
+  margin-right: 1.2rem;
+  vertical-align: middle;
+  background: var(--Border_gray01);
+}
+
+/* 첨부 개수 — Figma 15px bold, 현재 개수만 primary */
+.lp-file-count {
+  margin-bottom: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+}
+/* 드롭존이 있을 때는 개수가 그 아래로 (드롭존과 20px = 부모 gap 8 + 12) */
+.lp-file-count-below {
+  margin-top: 1.2rem;
+}
+/* 파일 한 줄은 공통 FileUpload 가 그리므로 목록은 간격만 (Figma 12px) */
+.lp-file-list {
+  gap: 1.2rem;
+}
+
+/* 등록은 취소·저장 가운데(.lp-form-actions-center), 상세는 취소(좌) ↔ 삭제·저장(우) */
+.lp-form-actions-split {
+  justify-content: space-between;
+}
+.lp-form-actions-right {
+  display: flex;
+  gap: 1.6rem;
+}
+
+/* 검색 결과 없음 — 목록 영역 세로 가운데 (NoData 가 flex-col + justify-center) */
+.lp-nodata-fill {
+  min-height: 100%;
+}
+
+/* ── 메모 상세(읽기 전용) — Figma 10523:43293 ─────────────── */
+.lp-view-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.lp-view-title {
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+}
+.lp-view-content {
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+  white-space: pre-wrap;
+}
+/* 요약 — 연한 파랑 박스, 테두리 없음 */
+.lp-view-summary {
+  padding: 2rem;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+  background: var(--Base-primary-lighter);
+  border-radius: var(--Radius-medium2);
+}
+/* 읽기 전용은 '/ 3개' 없이 개수만 (라벨과 12px) */
+.lp-view-file-head {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+.lp-view-file-count {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--Base-primary);
+}

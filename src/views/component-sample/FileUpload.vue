@@ -3,6 +3,7 @@ import { ref } from "vue"
 import { FileUpload } from "@/components/custom/file-upload"
 
 const uploadedFile = ref<File | null>(null)
+const circleFile = ref<File | null>(null)
 const errorFile = ref<File | null>(null)
 </script>
 
@@ -32,6 +33,18 @@ const errorFile = ref<File | null>(null)
         <section class="space-y-2">
           <h2 class="text-sm font-semibold text-muted-foreground">upload (첨부됨, 삭제 가능)</h2>
           <FileUpload v-model="uploadedFile" hint="파일명을 입력해주세요 [PDF,20KB]" file-name="근무표_2026.pdf" />
+        </section>
+
+        <section class="space-y-2">
+          <h2 class="text-sm font-semibold text-muted-foreground">
+            upload (메모작성: 첨부파일)
+          </h2>
+          <FileUpload
+            v-model="circleFile"
+            hint="파일명을 입력해주세요 [PDF,20KB]"
+            file-name="전입신고서 [주민등록법 시행령 : 별지서식 15, 15호의2호] [hwp, 17KB]"
+            variant="circle"
+          />
         </section>
 
         <section class="space-y-2">

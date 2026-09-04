@@ -20,12 +20,36 @@ const router = createRouter({
             component: () => import('../views/Login.vue'),
         },
         {
+            // 메모 화면군(0101 목록 · 0102 상세/수정 · 0104 등록)은 컴포넌트 하나가
+            // useAutoTrigger 로 URL↔화면 상태를 동기화한다. screenGroup 이 같아야
+            // Layout.vue 의 :key 가 안 바뀌어 화면 이동에도 리마운트되지 않는다.
             path: '/views/lpo/PM-LPO-0101',
             name: 'PM-LPO-0101',
             component: () => import('../views/lpo/PM-LPO-0101/PM-LPO-0101.vue'),
             meta: {
                 layout: 'WorkLayout',
                 title: '메모',
+                screenGroup: 'PM-LPO-0101',
+            }
+        },
+        {
+            path: '/views/lpo/PM-LPO-0102',
+            name: 'PM-LPO-0102',
+            component: () => import('../views/lpo/PM-LPO-0101/PM-LPO-0101.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '메모 상세/수정',
+                screenGroup: 'PM-LPO-0101',
+            }
+        },
+        {
+            path: '/views/lpo/PM-LPO-0104',
+            name: 'PM-LPO-0104',
+            component: () => import('../views/lpo/PM-LPO-0101/PM-LPO-0101.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '메모 등록',
+                screenGroup: 'PM-LPO-0101',
             }
         },
         {

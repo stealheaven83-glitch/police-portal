@@ -14,6 +14,8 @@ import StarIcon from '@/assets/images/icons/star.svg?component'
 import StarFillIcon from '@/assets/images/icons/starFill.svg?component'
 import AttachIcon from '@/assets/images/icons/attach.svg?component'
 import ShareIcon from '@/assets/images/icons/share.svg?component'
+// Figma file_upload__atomic__pc 의 '삭제' 옆 아이콘 — 회색 원 + x
+import DeleteCircleIcon from '@/assets/images/icons/deleteCircle.svg?component'
 
 export const icons = {
   search: SearchIcon,
@@ -30,6 +32,7 @@ export const icons = {
   starFill: StarFillIcon,
   attach: AttachIcon,
   share: ShareIcon,
+  deleteCircle: DeleteCircleIcon,
 }
 
 export type IconName = keyof typeof icons

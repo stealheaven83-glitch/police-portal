@@ -2,6 +2,7 @@
 import type { HTMLAttributes } from "vue"
 import { computed, ref, useId } from "vue"
 import { CheckCircle2, ChevronRight, Download, Loader2, X, XCircle } from "lucide-vue-next"
+import Icon from "@/components/custom/icon/Icon.vue"
 import { cn } from "@/lib/utils"
 import { fileUploadVariants } from "."
 
@@ -26,6 +27,11 @@ interface Props {
   error?: string
   /** true면 다운로드 전용(다운로드/바로보기 링크만 표시, 삭제 불가) */
   readonly?: boolean
+  /**
+   * 겉모습. 기본 "default" = 기존 그대로(삭제 14px 회색 + lucide X),
+   * "circle" = Figma file_upload__atomic__pc 시안(파일명 #131416, 삭제 15px + 회색 원 x 아이콘).
+   */
+  variant?: "default" | "circle"
   class?: HTMLAttributes["class"]
 }
 
@@ -39,6 +45,7 @@ const props = withDefaults(defineProps<Props>(), {
   uploaded: false,
   error: undefined,
   readonly: false,
+  variant: "default",
   class: undefined,
 })
 
@@ -84,7 +91,9 @@ function onRemove(e: Event) {
     >
       <span
         class="flex-1 min-w-0 truncate text-[1.5rem]"
-        :class="displayName ? 'text-[var(--Text-body_0)]' : 'text-[var(--Text-body_disable)]'"
+        :class="displayName
+          ? (variant === 'circle' ? 'text-[#131416]' : 'text-[var(--Text-body_0)]')
+          : 'text-[var(--Text-body_disable)]'"
       >
         {{ displayName ?? hint }}
       </span>
@@ -115,12 +124,23 @@ function onRemove(e: Event) {
 
       <!-- upload / error: 삭제 -->
       <button
-        v-else-if="displayName"
+        v-else-if="displayName && variant !== 'circle'"
         type="button"
         class="flex items-center gap-1 shrink-0 text-[1.4rem] text-[var(--Text-body_1)] hover:text-[var(--danger)]"
         @click="onRemove"
       >
         삭제 <X class="size-4" />
+      </button>
+
+      <!-- upload / error: 삭제 (variant="circle") — Figma file_upload__atomic__pc 최신 시안.
+           라벨 15px/--Text-body_0 + 회색 원 x 아이콘. 기존 표시는 위 블록 그대로 두고 추가한 것 -->
+      <button
+        v-else-if="displayName"
+        type="button"
+        class="flex items-center gap-1 shrink-0 text-[1.5rem] text-[var(--Text-body_0)] hover:text-[var(--danger)]"
+        @click="onRemove"
+      >
+        삭제 <Icon name="deleteCircle" :size="16" />
       </button>
 
       <input
