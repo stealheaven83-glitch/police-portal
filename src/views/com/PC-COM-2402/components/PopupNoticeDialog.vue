@@ -69,7 +69,7 @@
           label-class="sr-only"
         />
         <Button type="button" variant="secondary" size="sm" @click="pickFile">파일선택</Button>
-        <span class="pc-com-2402-file-hint">* 파일첨부는 {{ MAX_FILE_SIZE_MB }}M까지만 가능</span>
+        <span class="lp-file-hint">* 파일첨부는 {{ MAX_FILE_SIZE_MB }}M까지만 가능</span>
         <!-- 실제 file input 은 '파일선택' 버튼이 대신 열기 때문에 감춘다 -->
         <input
           ref="fileInputEl"

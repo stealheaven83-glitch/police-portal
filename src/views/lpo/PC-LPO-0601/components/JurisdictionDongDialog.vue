@@ -6,10 +6,10 @@
     :show-footer="false"
     @update:open="emit('update:open', $event)"
   >
-    <div class="pc-lpo-0601-dialog-body">
-      <div class="search-area pc-lpo-0601-dong-search">
+    <div class="lp-dialog-body">
+      <div class="search-area lp-search-form-gap">
         <div class="group-gap1">
-          <label class="pc-lpo-0601-search-label" for="dong-search-sido">시도</label>
+          <label class="readonly-text lp-nowrap" for="dong-search-sido">시도</label>
           <SelectField
             id="dong-search-sido"
             v-model="searchSido"
@@ -20,7 +20,7 @@
           />
         </div>
         <div class="group-gap1">
-          <label class="pc-lpo-0601-search-label" for="dong-search-sigungu">시군구</label>
+          <label class="readonly-text lp-nowrap" for="dong-search-sigungu">시군구</label>
           <SelectField
             id="dong-search-sigungu"
             v-model="searchSigungu"
@@ -32,7 +32,7 @@
           />
         </div>
         <div class="group-gap1">
-          <label class="pc-lpo-0601-search-label" for="dong-search-name">행정동명</label>
+          <label class="readonly-text lp-nowrap" for="dong-search-name">행정동명</label>
           <InputField2
             id="dong-search-name"
             v-model="searchDongName"
@@ -55,7 +55,7 @@
         @row-dbl-click="onResultDblClick"
       />
 
-      <h2 class="pop-title-sub pc-lpo-0601-dialog-subtitle">현재 행정동</h2>
+      <h2 class="pop-title-sub lp-dialog-subtitle">현재 행정동</h2>
 
       <TabulatorGrid
         ref="currentGridRef"
@@ -70,7 +70,7 @@
     </div>
 
     <template #footer>
-      <div class="pc-lpo-0601-dialog-footer">
+      <div class="lp-dialog-footer">
         <Button type="button" variant="tertiary2" size="md" @click="emit('update:open', false)">
           닫기
         </Button>

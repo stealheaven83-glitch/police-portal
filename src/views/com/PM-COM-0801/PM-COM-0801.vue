@@ -1,14 +1,14 @@
 <template>
-  <div class="pm-com-0801-wrap">
+  <div class="lp-page-scroll">
     <SearchBar
       v-model="keyword"
-      class="pm-com-0801-search"
+      class="lp-search-hero"
       label="통합검색어"
       @search="onSearch"
     />
 
     <SearchKeywordPanel
-      class="pm-com-0801-panel"
+      class="lp-content-panel"
       :recent="recentKeywords"
       :recommended="recommendedKeywords"
       @select="onSelectKeyword"

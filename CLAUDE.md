@@ -47,7 +47,8 @@ CLAUDE.md 는 매 세션 자동으로 전문이 실리고, 아래 문서들은 *
   `PC-LPO-07xx`다.
   ⚠ 표가 284행이라 **통째로 읽지 말고 `grep -n "무기" screen-id-map.md` 로 찾는다.**
 - `component-guide.md` — §1 재사용 원칙의 실행 편. Figma instance 이름 → 코드 역인덱스,
-  **공통 CSS 클래스**(§12), 이름이 비슷한 형제 구분표도 여기 있다.
+  **공통 CSS 클래스 표**(§12 — 클래스 / 파일 / **의도** / 쓰는 곳), 이름이 비슷한 형제 구분표도
+  여기 있다. **CSS 를 새로 만들기 전에 `node scripts/css-find.cjs "선언"` 을 먼저 돌린다**(§1-2).
 - `docs/review.md` — **검토 요청("검토해줘", "이상한 거 있나 봐줘")을 받으면 반드시 먼저 펼친다.**
   무엇을 보고 무엇을 안 보는지(범위), 항목 7개, 결과를 어떻게 남기는지가 거기 있다.
   기억으로 검토하지 않는다 — 항목이 계속 는다.
@@ -83,7 +84,7 @@ CLAUDE.md 는 매 세션 자동으로 전문이 실리고, 아래 문서들은 *
 5. **컴포넌트를 고른다** — `component-guide.md`. 프레임의 `instance` 이름이 답이다(§10 역인덱스).
    `custom/**`·`ui/**` 는 그 자리에서 다시 나열한다 — 기억으로 판단하지 않는다(§1).
 6. **만든다** — `views/{domain}/{화면ID}/` 안에서만. **라우터는 안 건드린다**(§4 — 이미 등록돼
-   있다). **`presets.ts`(LNB)도 안 건드린다(§4).** 화면 전용 CSS 는 `styles.css` 에 화면ID 프리픽스로(§1-2).
+   있다). **`presets.ts`(LNB)도 안 건드린다(§4).** 새 CSS 는 `police-common.css` 에 `.lp-*` 공통 이름으로(§1-2).
 7. **Figma 이미지와 나란히 놓고** 빠진 영역이 없나 본다(§9).
 8. **인계 메모를 남긴다**(§11) — 특히 **추론한 동작**과 **"LNB 프리셋 미등록"**.
 
@@ -116,25 +117,24 @@ CLAUDE.md 는 매 세션 자동으로 전문이 실리고, 아래 문서들은 *
   추가만** 한다 — 이름·순서·구조는 그대로 두고 필요한 속성만 붙인다(§4 는 아예 건드리지 말라고 한다).
 - 통합이 정말 필요해 보이면 **실행하지 말고 인계 메모(§11)에 한 줄로 알리기만** 한다.
 
-### 인라인 스타일 금지 — 화면 CSS 는 `styles.css`(§1-2)
+### 인라인 스타일 금지 — CSS 는 공통 파일에(§1-2)
 컴포넌트가 노출한 CSS 변수(`--flex-col-min-w` 등)를 호출부에서 바꿀 때도 인라인
-(`style="--flex-col-min-w:0"`)으로 덮지 않는다. `styles.css`에 변수를 재정의하는 클래스를
-만들어 `class`로 입힌다(이름 규칙은 §1-2):
+(`style="--flex-col-min-w:0"`)으로 덮지 않는다. 변수를 재정의하는 클래스를 만들어
+`class`로 입힌다(이름 규칙은 §1-2):
 ```css
-/* styles.css — PC-LPO-0215 블록 */
-.pc-lpo-0215-narrow-col { --flex-col-min-w: 0; }
+/* police-override.css — 컴포넌트 변수를 덮으므로 override 쪽 */
+.lp-narrow-col { --flex-col-min-w: 0; }
 ```
 ```html
-<FlexCol class="pc-lpo-0215-narrow-col">
+<FlexCol class="lp-narrow-col">
 ```
-이 오버라이드 클래스도 재사용 원칙을 따른다 — 한 화면이면 `styles.css`의 그 화면 블록, 두 화면
-이상 반복이면 아래 CSS 우선순위에 맞는 공통 파일로.
+이 오버라이드 클래스도 처음부터 공통 이름으로 만든다 — 한 화면만 쓰더라도 마찬가지다(§1-2).
 (`FlexGrid.module.css` 주석과 `flex-grid.vue`(8곳)는 반대로 인라인 style을
 안내/구현 중 — 미수정, 새로 쓸 때 따라 하지 않는다.)
 
 ### 화면 템플릿에 테일윈드 유틸(`flex`, `mt-4`, `text-[1.5rem]`) 직접 사용 금지
 왜: 디자인이 바뀔 때 클래스 하나만 고치면 전체 반영되게 하려는 것. 흩뿌리면 화면마다 손봐야 한다.
-- 한 화면 전용이면 `styles.css`에 이름 있는 클래스로(§1-2), 반복이면 아래 CSS 우선순위를 따른다.
+- 한 번만 쓰이더라도 `police-common.css` 에 이름 있는 공통 클래스로 만든다(§1-2).
 - **적용 범위는 화면(페이지 `.vue`/그 화면 컴포저블)뿐.** `src/components/**` 재사용 컴포넌트가
   내부에서 테일윈드 쓰는 건 무관(고칠 곳이 한 파일이라 흩어질 문제가 없다, 예: `layoutHeader.vue`
   의 `defaultClass`/`titleClass`).
@@ -148,34 +148,56 @@ CLAUDE.md 는 매 세션 자동으로 전문이 실리고, 아래 문서들은 *
     CSS 값도 된다). 이때 `w-25` 가 같이 있으면 폭이 고정돼 padding 이 먹지 않는다.
     표는 `component-guide.md` §8-1 에 있다.
 - **테일윈드 문자열을 화면/컴포저블 JS 변수·computed에 담아 `:class`로 바인딩하는 것도 위반**
-  (예: `const cardClass='flex items-center gap-2 p-4 rounded'`). `styles.css`에 진짜 CSS
+  (예: `const cardClass='flex items-center gap-2 p-4 rounded'`). `police-common.css` 에 진짜 CSS
   클래스로 뽑는다(§1-2).
 - 기존 화면(2201/2204/2401 등)은 이 규칙 이전 것이라 테일윈드가 남아있다 — 새 화면부터 적용,
   기존은 차차 정리.
 
 ### CSS는 "최대한 공통을 활용한다" — 이 말은 두 가지다
-**① 공통에 있으면 그걸 쓴다. ② 없으면 화면 전용으로 만들지 말고 공통에 새로 만든다.**
-②를 빠뜨리는 실수가 잦다 — "공통에 없네" 하고 화면 전용으로 만들어 버리면, 다음 화면이
-같은 걸 또 만들고 결국 화면마다 값이 갈라진다. **없으면 공통에 추가하는 것이 기본값이다.**
+**① 공통에 있으면 그걸 쓴다. ② 없으면 공통에 새로 만든다.**
+**화면 전용 CSS 라는 개념이 없다.** 한 번만 쓰이더라도 처음부터 공통 파일에 공통 이름으로
+만든다(§1-2). "나중에 승격"도 없다 — 그 단계가 실제로 작동하지 않아 중복이 20그룹 쌓였고,
+그중 6그룹은 이미 공통에 있는 걸 모르고 다시 만든 것이었다.
 
-**① 있는지 찾는 순서:**
-1. **디자인 토큰** — `public/portal/asset/css/common/police-style.css`(전역 로드됨, 페이지에서
-   import 안 함). 색·모서리는 hex 하드코딩 말고 `var(--Text-body_1)`처럼 토큰을 쓴다.
-2. **공통 유틸/레이아웃 클래스** — 같은 파일에 `.search-area` `.list-actions` `.btn-wrap` 같은
-   것들이 있다. 같은 역할의 클래스를 새로 만들기 전에 먼저 뒤진다.
-3. **컴포넌트 레벨 공통 CSS** — 라벨-값 표는
-   `src/components/custom/info-table/InfoTable.module.css`, 그리드는
-   `src/assets/css/tabulator-theme.css`(그리드에 전역 적용됨, 다시 스타일링 불필요).
+**① 있는지 찾는다 — 세 파일을 세 번 본다(선언 → 이름 → 의도).**
+`police-style.css` · `police-common.css` · `police-override.css` 는 **찾을 때 한 덩어리다.**
+"어느 파일부터"가 아니라 **무엇으로 찾느냐**가 순서다. 세 단계를 다 거친다 — 하나라도
+건너뛰면 이미 있는 걸 또 만들거나(1·2단계 누락), 남의 스타일을 잘못 가져다 쓴다(3단계 누락).
+
+1. **선언으로 찾는다 (문자)** — 이름으로 뒤지면 놓친다. 스크립트가 세 파일을 전부 훑는다:
+   ```bash
+   node scripts/css-find.cjs "flex:1; min-height:0; overflow-y:auto"
+   ```
+   선언 순서가 달라도 잡고, **완전 일치 / 부분 일치**를 나눠 보여준다.
+   - **완전 일치** → 후보다. 그대로 확정하지 말고 3단계로 간다.
+   - **부분 일치** → 그 클래스를 쓰고 **차이나는 선언만** 새 클래스로 덧붙인다.
+     **기존 클래스는 고치지 않는다**(다른 화면이 쓰고 있다).
+     ```html
+     <div class="detail-scroll lp-panel-pad">
+     ```
+2. **이름으로 찾는다 (역할)** — 선언이 안 걸려도 같은 역할의 클래스가 있을 수 있다(값만 조금
+   다른 경우). `component-guide.md` §12 표를 역할로 훑는다. 스크립트는 정확히 찾을 때,
+   표는 **뭐가 있는지** 볼 때 — 둘 다 필요하다.
+3. **의도로 판단한다 (맥락)** — §12 표의 **의도** 칸을 읽는다. **값이 같아도 의도가 다르면
+   쓰지 않고 새로 만든다.** 지금 묶으면 나중에 한쪽만 값이 바뀔 때 다른 화면이 같이 깨진다.
+   - 예: `flex:1; min-height:0; overflow-y:auto` 가 `.detail-scroll`(상세 패널 **안쪽** 스크롤)과
+     `.lp-page-scroll`(**페이지 본문** 스크롤) 둘로 나뉘어 있는 게 이 이유다. 선언은 같다.
+   - 새로 만들 때도 **이름을 넓게 짓지 않는다** — `.lp-main` 은 아무나 갖다 쓰지만
+     `.lp-answer-main` 은 안 그런다. 이름이 곧 오용 방어다.
+
+그 밖에:
+- **디자인 토큰** — 색·모서리는 hex 하드코딩 말고 `var(--Text-body_1)`처럼 토큰을 쓴다.
+- **컴포넌트 레벨 공통 CSS** — 라벨-값 표는
+  `src/components/custom/info-table/InfoTable.module.css`, 그리드는
+  `src/assets/css/tabulator-theme.css`(그리드에 전역 적용됨, 다시 스타일링 불필요).
 
 **② 없을 때 어디에 만드나:**
-- **색·크기·모서리 값** → `police-style.css`에 **토큰(`--Xxx`)으로 추가.** 화면 CSS에
-  hex를 박지 않는다.
-- **역할이 있는 레이아웃·유틸 클래스**(버튼줄, 검색영역, 정렬 등) → `police-style.css`에
-  **공통 클래스로 추가.** 이름은 기존 것들과 같은 결로(`.btn-wrap`, `.list-actions` 참고).
+- **색·크기·모서리 값** → 토큰(`--Xxx`)으로. 화면에 hex를 박지 않는다.
+- **일반 스타일** → **`police-common.css`** (기본값, §1-2).
+- **컴포넌트·라이브러리·테일윈드를 덮어야 하는 것** → **`police-override.css`** (§1-2).
 - **특정 컴포넌트에 딸린 스타일** → 그 컴포넌트 폴더의 `*.module.css`.
-- **그 화면에서만 쓰는 스타일** → `public/portal/asset/css/common/styles.css`(아래 §1-2).
-  화면 폴더에 `style/*.module.css` 를 **새로 만들지 않는다.**
-- 공통에 추가했으면 **`component-guide.md` §12 표에 한 줄 추가**한다(그래야 다음 사람이 찾는다).
+- **`police-style.css` 에는 추가하지 않는다** — 퍼블리싱 원본이라 읽기 전용이다(§1-2).
+- 만들었으면 **`component-guide.md` §12 표에 한 줄 추가**한다(클래스 / 파일 / 의도 / 쓰는 곳).
 
 **⚠ 화면 분할·패널은 화면 CSS 로 직접 만들지 않는다.** `display:grid` 로 2분할을 짜거나
 `.panel { border; border-radius; background }` 같은 걸 화면 CSS 에 만들고 있으면 잘못 가고 있는
@@ -229,9 +251,9 @@ CLAUDE.md 는 매 세션 자동으로 전문이 실리고, 아래 문서들은 *
 
 1. **파일 구성** — `PC-XXX-NNNN.vue` + `composable/PC-XXX-NNNN.ts` 둘뿐이다. **`route.ts` 는 만들지
    않는다**(§4). `style/` 폴더도 **만들지 않는다**(0215가 그렇다 — 공통 클래스로 해결).
-   화면 전용 CSS 가 필요하면 `styles.css`(§1-2).
+   CSS 가 필요하면 `police-common.css`(§1-2).
 2. **`.vue` 블록 순서** — `<template>` → `<script setup>` 순서로 고정한다. **화면 폴더의
-   `components/` 팝업까지 같은 순서.** `<style>` 블록은 두지 않는다(화면 CSS 는 `styles.css`, §1-2).
+   `components/` 팝업까지 같은 순서.** `<style>` 블록은 두지 않는다(CSS 는 `police-common.css`, §1-2).
    ```
    1  <template>
    2  <script setup lang="ts">
@@ -257,63 +279,97 @@ CLAUDE.md 는 매 세션 자동으로 전문이 실리고, 아래 문서들은 *
 표시 오류를 16개 화면에서, 죽은 브레드크럼 링크를 11개 화면 19곳에서 일괄 수정했다. **그래도 기준 파일이 완전무결하다고 가정하지 않는다** — 복사하기 전에 위 9개 항목을
 그 파일에서 실제로 확인하고, 어긋난 게 보이면 사용자에게 알린다. 기준 파일이 바뀌면 이 표도 갱신.
 
-## 1-2. 화면 전용 CSS — `styles.css` 한 파일에 모은다
-그 화면에서만 쓰는 스타일은 **`public/portal/asset/css/common/styles.css` 한 파일**에 모은다.
-화면 폴더에 `style/*.module.css` 를 새로 만들지 않는다. 흩어져 있으면 "이거 저 화면에도 있네"를
-영영 못 보고, 승격(아래) 대상을 찾을 수가 없다.
+## 1-2. CSS 파일 세 개 — 역할이 다르다, 화면 전용은 없다
+**모든 스타일은 공통이다.** 한 화면만 쓰더라도 처음부터 공통 파일에 공통 이름으로 만든다.
+"화면 전용 CSS" 도 "나중에 승격" 도 없다 — 그 단계가 실제로 작동하지 않았다(중복 20그룹,
+그중 6그룹은 이미 공통에 있는 걸 모르고 다시 만든 것). 걷어올 게 없으면 실패할 것도 없다.
 
-**로드**: `police-entry.css` 가 **`layer()` 없이** import 한다 → 전역 로드된다.
-화면에서 import 하지 않는다(`public/` 이라 Vite CSS 파이프라인 밖이라 import 자체가 안 된다).
+| 파일 | 참고 | 기입 | 무엇 |
+|---|---|---|---|
+| `police-style.css` | ✅ | ❌ | 퍼블리싱 원본(reset·헤더/푸터·포털 화면). **읽기 전용** |
+| `police-common.css` | ✅ | ✅ | 우리 공통 스타일 — **새 스타일은 기본적으로 여기** |
+| `police-override.css` | ✅ | ✅ | 컴포넌트·라이브러리·테일윈드를 **덮어야 하는 것만** |
 
-**우선순위: 공통보다 이게 이긴다.** 레이어 없는 CSS 는 `@layer` 안의 모든 것을 이기므로,
-`styles.css` 는 `police-style.css`(layer police)·shadcn(components)·테일윈드(utilities)를
-**항상 덮는다.** 화면에서 공통을 덮어쓸 때 `!important` 를 쓸 필요가 없다.
+세 파일 다 `public/portal/asset/css/common/` 에 있고 `police-entry.css` 가 전역 로드한다.
+화면에서 import 하지 않는다(`public/` 이라 Vite CSS 파이프라인 밖이다).
 
-**클래스명은 화면ID 프리픽스로 유니크하게.** 전역이라 이름이 겹치면 남의 화면이 깨진다.
-형식은 `.{화면ID 소문자}-{역할}`:
-```css
-.pc-lpo-0215-wrapper     { … }
-.pc-lpo-0215-narrow-col  { --flex-col-min-w: 0; }
+### 찾을 때는 세 파일이 한 덩어리다
+"police-style 먼저 보고 없으면 common" 같은 **순서가 아니다.** 어느 파일에 있든 상관없이
+§1 ①의 절차(`scripts/css-find.cjs` → `component-guide.md` §12 표)로 한 번에 찾는다.
+
+### 만들 때만 갈린다 — 기준은 "덮어야 하느냐" 하나
 ```
-- 역할부는 kebab-case. `.wrapper` `.narrowCol` 처럼 **프리픽스 없는 이름은 금지.**
+새 스타일이 필요하다
+  └─ 컴포넌트·라이브러리·테일윈드가 이미 먹인 스타일을 덮어야 하나?
+       ├─ 아니오 → police-common.css     ← 기본값. 대부분 여기다
+       └─ 예     → police-override.css
+```
+override 로 가는 건 "common 에 자리가 없어서"가 아니라 **레이어를 넘어서야 해서**다.
+override 대상의 실제 모습:
+- Tabulator·VueDatePicker 같은 **라이브러리 내부 클래스**를 겨냥한다(`.tabulator-cell` 등)
+- shadcn/custom 컴포넌트가 이미 먹인 스타일을 되돌린다
+- 컴포넌트가 노출한 **CSS 변수를 재정의**한다(`--flex-col-min-w: 0`)
+
+**애매하면 고민하지 말고 `police-common.css` 에 쓰고, 화면에서 안 먹으면 override 로 옮긴다.**
+안 먹는 원인이 레이어 하나뿐이라 옮기면 해결된다.
+
+### 왜 두 파일인가 — 레이어 때문이다 (합칠 수 없다)
+`index.html` 의 레이어 순서:
+```
+properties → theme → base → police → components → utilities → screen
+```
+- `police-style.css` · `police-common.css` → `layer(police)`
+- `police-override.css` → `layer(screen)` (utilities 뒤 = 테일윈드·shadcn 을 덮는다)
+
+**`@layer` 비교는 명시도보다 위**라서, `layer(police)` 안에 있는 한 파일 맨 아래에 두든
+셀렉터를 아무리 길게 쓰든 `layer(utilities)` 의 한 줄짜리 유틸에게 진다. 그래서 덮어야 하는
+스타일은 물리적으로 다른 레이어에 있어야 한다.
+
+`police-style.css` 는 레이어 위치를 옮길 수 없다 — `police > base` 여야 police reset 이
+테일윈드 preflight 를 덮고(포털 화면 정상), `utilities > police` 여야 shadcn 이 정상이다.
+
+`police-common.css` 는 `police-style.css` **다음에** import 되므로, 같은 레이어에서 소스 순서가
+뒤라 원본과 붙으면 이쪽이 이긴다. 원본을 안 건드려도 덮을 수 있다.
+
+> `!important` 는 레이어 순서가 **뒤집힌다** — layered `!important` 가 unlayered 보다 강하다.
+> Tabulator 처럼 JS 가 인라인 style 을 써 넣는 경우 말고는 쓸 일이 없다.
+
+### 클래스명 — `.lp-{역할}`
+```css
+.lp-detail-scroll { … }    /* 우리 것 */
+.detail-scroll    { … }    /* police-style.css 원본 — 건드리지 않는 것 */
+```
+- **`lp` 접두사는 필수다.** 원본이 `card` `title` `value` `wrap` `note` 같은 **범용어 159개**를
+  이미 점유하고 있고, 우리 파일이 뒤에 로드돼 **우리가 이기므로** 이름이 겹치면 포털 화면
+  (헤더/푸터/공지)이 조용히 깨진다. 접두사가 그걸 구조적으로 막고, 코드만 봐도 우리 것/원본이
+  구분된다.
+- **화면ID를 이름에 넣지 않는다.** 한 화면만 쓰더라도 역할로 짓는다.
+- 역할부는 kebab-case. **이름을 넓게 짓지 않는다** — `.lp-main` 은 아무나 갖다 쓰지만
+  `.lp-answer-main` 은 안 그런다. 이름이 곧 오용 방어다.
 
 > ### ⚠ 클래스명은 **어디서든 케밥케이스다 — 카멜케이스는 쓰지 않는다**
-> `styles.css` 든 `police-style.css` 든 `*.module.css` 든 예외 없다.
+> `police-common.css` 든 `police-override.css` 든 `*.module.css` 든 예외 없다.
 > `.detailLayout` `.photoBox` `.transferHead` ❌ → `.detail-layout` `.photo-box` `.transfer-head` ✅
 >
 > **왜**: CSS Modules(`*.module.css`)를 쓸 때 `styles.detailLayout` 으로 꺼내려고 카멜로 쓰는 습관이
-> 남아 있다. 그런데 그 파일에서 스타일을 공통·`styles.css` 로 옮기면 템플릿은 `class="detail-layout"`
+> 남아 있다. 그런데 그 파일에서 스타일을 공통으로 옮기면 템플릿은 `class="detail-layout"`
 > 처럼 **문자열 케밥**으로 바뀌므로, 카멜 이름은 그 자리에서 아무것도 안 걸리는 죽은 코드가 된다.
 > 실제로 PC-LPO-0801 에서 한 파일에 `.photo-frame` 과 `.photoFrame img` 가 섞여 **둘 다 미매칭**된
 > 채로 남았다(2026-09-04 정리됨).
-- 그 화면 전용 팝업·컴포넌트(`components/` 밑)도 **부모 화면ID 프리픽스**를 쓴다.
-- 화면군(한 컴포넌트가 여러 화면ID, §3 패턴A)은 **대표 화면ID 하나로** 통일
-  (예: 0701~0714 → `.pc-lpo-0701-*`).
 
-**파일은 화면ID 오름차순 블록으로 나눈다.** 3명이 한 파일을 건드리기 때문이다:
-```css
-/* ── PC-LPO-0215 사고자/자원근무자 현황 ─────────────────────────── */
-.pc-lpo-0215-wrapper { … }
+### 만들었으면 §12 표에 등재한다 — **의도 칸이 핵심이다**
+`component-guide.md` §12 에 `클래스 / 파일 / 의도 / 쓰는 곳` 한 줄을 추가한다.
+클래스명만 나열된 표는 오용을 부른다 — 다음 사람이 이름만 보고 갖다 쓰면, 한쪽이 값을 바꾸는
+순간 다른 화면이 깨진다. **쓸 때도 의도 칸을 읽고 쓴다.**
 
-/* ── PC-LPO-0801 인사관리 ───────────────────────────────── */
-```
-- **자기 블록만 만진다.** 남의 블록은 읽기만 한다(§1 "합치지 않는다"와 같은 이유).
-- 새 블록은 정렬 위치에 끼워 넣는다 — 그래야 다른 화면 작업과 diff 가 안 겹친다.
-
-**여기에 뭘 넣나** — §1 의 "공통 우선"은 그대로다. `styles.css` 는 **공통에 둘 수 없는 것만**
-받는다: 그 화면 고유의 배치, 특정 컬럼 폭, 컴포넌트 CSS 변수 오버라이드 등. 여기서도 색·모서리는
-hex 를 박지 말고 `var(--Text-body_1)` 토큰을 쓴다. 화면 분할은 `LayoutSplit` 을 쓴다(§1).
-
-**공통 승격은 배치로.** 여러 화면 블록에 똑같은 스타일이 쌓이면 `police-style.css` 공통
-클래스로 올린다. 다만 **작업하다 각자 하지 않는다** — 공유 파일과 여러 화면 블록을 동시에
-건드려서 충돌이 확정이다(§4 라우터 등록과 같은 이유). 사용자가 명시 요청할 때 한 사람이
-몰아서 한다:
-> "styles.css 중복된 거 공통으로 승격해줘"
-
-승격한 클래스는 `component-guide.md` §12 표에 등재한다(§1).
-
-**기존 `style/*.module.css`(19개)는 그대로 둔다.** 새 화면부터 적용한다 — 일괄 이관하면 위
-우선순위 차이 때문에 19개 화면을 전부 눈으로 재확인해야 한다. 기존 화면은 차차 정리.
+### 기존 것 정리 상태
+- `styles.css`(화면ID 프리픽스 146규칙)는 **2026-09-04 에 없앴다.** 전부 `.lp-*` 로 이름을 바꿔
+  common/override 로 옮기고 `.vue` 124건을 치환했다.
+- **`police-style.css` 안에 우리 공통이 +625줄 섞여 있다**(`.list-actions` `.btn-wrap`
+  `.search-area` `.detail-scroll` 등, 사용 224건+). 이것도 `police-common.css` 로 옮겨야
+  원본이 진짜 읽기 전용이 된다 — **별도 배치로 남아 있다.** 그때까지 그 클래스들은
+  접두사 없이 그대로 쓴다(멀쩡히 동작한다).
+- 화면 폴더의 `style/*.module.css`(19개)도 그대로 둔다. 새로 만들지는 않는다.
 
 ## 2. 화면 폴더 구조
 화면ID(`PC-XXX-NNNN`)는 **`screen-id-map.md`에서 찾는다 — 직접 정하지 않는다.**
@@ -327,8 +383,8 @@ views/{domain}/PC-XXX-NNNN/
 찾기 때문이다(§4) — 어긋나면 라우트는 살아 있는데 NotReady("아직 작업하지 않은 화면입니다")가
 뜬다. 라우트 파일은 만들지 않는다.
 
-⚠ 화면 폴더에 `style/` 은 **만들지 않는다.** 그 화면 전용 CSS 는 공용 `styles.css` 한 파일에
-화면ID 프리픽스 클래스로 모은다(§1-2). 기존 화면에 남아 있는 `style/*.module.css` 는 그대로 둔다.
+⚠ 화면 폴더에 `style/` 은 **만들지 않는다.** CSS 는 `police-common.css`(덮어야 하면
+`police-override.css`)에 `.lp-*` 공통 이름으로 만든다(§1-2). 기존 화면에 남아 있는 `style/*.module.css` 는 그대로 둔다.
 - 여러 화면ID가 한 페이지를 공유(예: PC-LPO-0701 — 탭/팝업이 실은 컴포넌트 하나)하면
   composable/components를 그 페이지 폴더 밑에 → §3 **패턴A**(provide/inject).
 - 진짜 별개 페이지들이 도메인만 공유하면 도메인 레벨 `views/{domain}/composable/`·`components/`
@@ -607,8 +663,8 @@ const ok = await dialog.confirm({ title: '저장 하시겠습니까?', btnOk: '�
 > 후보: `PC-LPO-0706`(무기 탭 › 목록) / `PC-LPO-0707`(무기 탭 › 등록/상세/수정)
 > 어느 화면ID로 만들까요?
 
-**왜 멈춰야 하나:** 화면ID가 틀리면 폴더명·라우트 path/name·`screenGroup`·`defineOptions`·
-`styles.css` 클래스 프리픽스가 **전부 같이 틀어진다**(§2·§4·§5). 나중에 여섯 군데를 고쳐야 하고,
+**왜 멈춰야 하나:** 화면ID가 틀리면 폴더명·라우트 path/name·`screenGroup`·`defineOptions`가
+**전부 같이 틀어진다**(§2·§4·§5). 나중에 여러 군데를 고쳐야 하고,
 `defineOptions`가 어긋나면 KeepAlive가 조용히 깨져서 발견도 늦다. 만들기 전에 묻는 게 훨씬 싸다.
 화면ID 체계는 IA 소관이라 **새 ID를 임의로 만들어내면 안 된다**(`screen-id-map.md` 가 정본).
 

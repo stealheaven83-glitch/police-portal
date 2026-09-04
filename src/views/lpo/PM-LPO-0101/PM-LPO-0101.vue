@@ -45,7 +45,7 @@
   </SearchWrapper>
 
   <div class="list-actions space-between">
-    <div class="pm-lpo-0101-toolbar-left">
+    <div class="lp-toolbar-left">
       <Checkbox
         :model-value="isAllSelected"
         label="전체 선택"
@@ -53,7 +53,7 @@
       />
       <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelected">선택 삭제</Button>
     </div>
-    <div class="pm-lpo-0101-toolbar-right">
+    <div class="lp-toolbar-right">
       <Switch
         :model-value="form.importantOnly"
         variant="none"
@@ -65,14 +65,14 @@
   </div>
 
   <ScrollWrapper>
-    <ul v-if="pagedMemos.length" class="pm-lpo-0101-list">
+    <ul v-if="pagedMemos.length" class="lp-card-grid">
       <li v-for="memo in pagedMemos" :key="memo.id">
         <article
-          class="pm-lpo-0101-card"
-          :class="{ 'pm-lpo-0101-card-selected': selectedIds.has(memo.id) }"
+          class="lp-memo-card"
+          :class="{ 'lp-memo-card-selected': selectedIds.has(memo.id) }"
           @click="openDetail(memo)"
         >
-          <div class="pm-lpo-0101-card-check">
+          <div class="lp-memo-card-check">
             <Checkbox
               :model-value="selectedIds.has(memo.id)"
               aria-label="메모 선택"
@@ -80,17 +80,17 @@
               @click.stop
             />
           </div>
-          <div class="pm-lpo-0101-card-body">
-            <div class="pm-lpo-0101-card-titlerow">
-              <h3 class="pm-lpo-0101-card-title">
-                <button type="button" class="pm-lpo-0101-card-titlebtn" @click.stop="openDetail(memo)">
+          <div class="lp-memo-card-body">
+            <div class="lp-memo-card-titlerow">
+              <h3 class="lp-memo-card-title">
+                <button type="button" class="lp-memo-card-titlebtn" @click.stop="openDetail(memo)">
                   {{ memo.title }}
                 </button>
               </h3>
-              <div class="pm-lpo-0101-card-actions">
+              <div class="lp-memo-card-actions">
                 <button
                   type="button"
-                  class="pm-lpo-0101-card-iconbtn"
+                  class="lp-icon-btn lp-icon-btn-24"
                   :aria-label="memo.important ? '중요 해제' : '중요 표시'"
                   @click.stop="toggleImportant(memo.id)"
                 >
@@ -98,7 +98,7 @@
                 </button>
                 <button
                   type="button"
-                  class="pm-lpo-0101-card-iconbtn"
+                  class="lp-icon-btn lp-icon-btn-24"
                   aria-label="공유"
                   @click.stop="openShare()"
                 >
@@ -106,8 +106,8 @@
                 </button>
               </div>
             </div>
-            <p class="pm-lpo-0101-card-preview">{{ memo.preview }}</p>
-            <div class="pm-lpo-0101-card-meta">
+            <p class="lp-memo-card-preview">{{ memo.preview }}</p>
+            <div class="lp-memo-card-meta">
               <span v-if="activeTab !== 'mine'">{{ memo.person }}</span>
               <span>{{ memo.date }}</span>
               <span>{{ memo.time }}</span>

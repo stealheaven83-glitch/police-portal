@@ -11,13 +11,13 @@
     </template>
   </PageHeader>
 
-  <div class="btn-wrap pc-lpo-0601-toolbar">
+  <div class="btn-wrap lp-page-toolbar">
     <div class="group-gap1">
       <span class="dept-name">부서</span>
       <DepartmentCascadeSelect v-model="department4Search" size="sm" />
     </div>
     <div class="group-gap2">
-      <span class="pc-lpo-0601-modified">{{ modifiedInfo }}</span>
+      <span class="lp-meta-nowrap">{{ modifiedInfo }}</span>
       <div class="btn-wrap-group">
         <Button type="button" variant="tertiary2" size="sm" @click="onPrint">인쇄</Button>
         <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
@@ -27,8 +27,8 @@
 
   <ScrollWrapper>
     <!-- ── 부서정보 ─────────────────────────────────────────── -->
-    <section class="pc-lpo-0601-section" aria-labelledby="dept-info-heading">
-      <h2 id="dept-info-heading" class="pc-lpo-0601-section-title">부서정보</h2>
+    <section class="lp-section" aria-labelledby="dept-info-heading">
+      <h2 id="dept-info-heading" class="lp-heading-lg lp-section-title">부서정보</h2>
 
       <InfoTable :columns="3">
         <InfoField label="부서명">{{ department.name }}</InfoField>
@@ -61,7 +61,7 @@
               class="!space-y-0"
               input-class="w-[8rem]"
             />
-            <span class="pc-lpo-0601-inline-text">경찰관 현원 {{ officerHeadcount }}명</span>
+            <span class="readonly-text lp-nowrap">경찰관 현원 {{ officerHeadcount }}명</span>
           </div>
         </InfoField>
 
@@ -117,7 +117,7 @@
         </InfoField>
       </InfoTable>
 
-      <InfoTable :columns="4" class="pc-lpo-0601-table-gap">
+      <InfoTable :columns="4" class="lp-table-gap">
         <InfoField label="근무형태" for="dept-work-type">
           <SelectField
             id="dept-work-type"
@@ -161,7 +161,7 @@
         </InfoField>
       </InfoTable>
 
-      <InfoTable :columns="2" class="pc-lpo-0601-table-gap">
+      <InfoTable :columns="2" class="lp-table-gap">
         <InfoField label="유연 파출소 여부">
           <div class="group-gap1">
             <Checkbox v-model="department.flexibleUse" aria-label="유연 파출소 여부 사용" />
@@ -175,7 +175,7 @@
               trigger-class="w-[16.4rem]"
               aria-label="통합운영 관서"
             />
-            <span class="pc-lpo-0601-inline-text">지역파출소1, 지역파출소2</span>
+            <span class="readonly-text lp-nowrap">지역파출소1, 지역파출소2</span>
           </div>
         </InfoField>
 
@@ -192,7 +192,7 @@
               trigger-class="w-[16.4rem]"
               aria-label="중심관서 통합운영 관서"
             />
-            <span class="pc-lpo-0601-inline-text">지역파출소1, 지역파출소2</span>
+            <span class="readonly-text lp-nowrap">지역파출소1, 지역파출소2</span>
           </div>
         </InfoField>
 
@@ -217,13 +217,13 @@
     </section>
 
     <!-- ── 관내정보 ─────────────────────────────────────────── -->
-    <section class="pc-lpo-0601-section" aria-labelledby="district-info-heading">
-      <h2 id="district-info-heading" class="pc-lpo-0601-section-title">관내정보</h2>
+    <section class="lp-section" aria-labelledby="district-info-heading">
+      <h2 id="district-info-heading" class="lp-heading-lg lp-section-title">관내정보</h2>
 
       <InfoTable :columns="2">
         <InfoField label="관내정보">
-          <div class="pc-lpo-0601-summary-row">
-            <span class="pc-lpo-0601-inline-text">{{ district.dongSummary }}</span>
+          <div class="lp-summary-row">
+            <span class="readonly-text">{{ district.dongSummary }}</span>
             <Button type="button" variant="tertiary" size="xs" @click="dongDialogOpen = true">
               행정동 수정
             </Button>
@@ -232,7 +232,7 @@
 
         <InfoField label="인구">
           <div class="group-gap1">
-            <span class="pc-lpo-0601-inline-text">총인구 {{ district.totalPopulation }}명</span>
+            <span class="readonly-text lp-nowrap">총인구 {{ district.totalPopulation }}명</span>
             <InputField2
               v-model="district.male"
               label="남자"
@@ -253,8 +253,8 @@
         </InfoField>
 
         <InfoField label="가구" full>
-          <div class="pc-lpo-0601-count-row">
-            <span class="pc-lpo-0601-inline-text">가구수 {{ district.households }}</span>
+          <div class="lp-field-row">
+            <span class="readonly-text lp-nowrap">가구수 {{ district.households }}</span>
             <InputField2
               v-model="district.detachedHouse"
               label="단독주택수"
@@ -320,15 +320,15 @@
           <TableWrapper
             :columns="patrolColumns"
             :items="patrolVehicles"
-            class="pc-lpo-0601-patrol-table"
+            class="lp-table-left"
           >
             <template #cell-vehicle="{ item }">
-              <span class="pc-lpo-0601-cell-text">{{ item.vehicle }}</span>
+              <span class="readonly-text">{{ item.vehicle }}</span>
             </template>
 
             <template #cell-area="{ item }">
-              <div class="pc-lpo-0601-cell-action">
-                <span class="pc-lpo-0601-cell-text">{{ item.area }}</span>
+              <div class="lp-row-between">
+                <span class="readonly-text">{{ item.area }}</span>
                 <Button type="button" variant="tertiary" size="xs" @click="openMapDialog(item)">
                   관할구역 관리
                 </Button>
@@ -347,12 +347,12 @@
             </template>
 
             <template #cell-areaDetail="{ item }">
-              <div class="pc-lpo-0601-cell-action">
+              <div class="lp-row-between">
                 <template v-if="item.areaDetail">
-                  <span class="pc-lpo-0601-cell-text">{{ item.areaDetail }}</span>
+                  <span class="readonly-text">{{ item.areaDetail }}</span>
                   <button
                     type="button"
-                    class="pc-lpo-0601-icon-button"
+                    class="lp-icon-btn lp-icon-btn-dark"
                     @click="patrolDetailStubOpen = true"
                   >
                     <Icon name="search" :size="20" />
@@ -386,7 +386,7 @@
     </section>
 
     <!-- ── 치안센터 ─────────────────────────────────────────── -->
-    <section class="pc-lpo-0601-section" aria-labelledby="safety-center-heading">
+    <section class="lp-section" aria-labelledby="safety-center-heading">
       <div class="section-bar">
         <h2 id="safety-center-heading">치안센터</h2>
         <div class="section-bar-actions">
@@ -396,7 +396,7 @@
           <Button type="button" variant="tertiary2" size="sm" @click="onAddSafetyCenter">추가</Button>
           <button
             type="button"
-            class="pc-lpo-0601-section-toggle"
+            class="lp-icon-btn lp-icon-btn-dark lp-icon-btn-32"
             :aria-expanded="safetyCenterOpen"
             aria-controls="safety-center-panel"
             @click="safetyCenterOpen = !safetyCenterOpen"
@@ -422,7 +422,7 @@
     </section>
 
     <!-- ── 연혁 ─────────────────────────────────────────────── -->
-    <section class="pc-lpo-0601-section" aria-labelledby="history-heading">
+    <section class="lp-section" aria-labelledby="history-heading">
       <div class="section-bar">
         <h2 id="history-heading">연혁</h2>
         <div class="section-bar-actions">
@@ -432,7 +432,7 @@
           <Button type="button" variant="tertiary2" size="sm" @click="onAddHistory">추가</Button>
           <button
             type="button"
-            class="pc-lpo-0601-section-toggle"
+            class="lp-icon-btn lp-icon-btn-dark lp-icon-btn-32"
             :aria-expanded="historyOpen"
             aria-controls="history-panel"
             @click="historyOpen = !historyOpen"

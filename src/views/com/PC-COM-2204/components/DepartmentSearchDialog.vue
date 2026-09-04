@@ -6,10 +6,10 @@
     :show-close-button="true"
   >
     <!-- 권한명 ↔ 부서조회 검색 -->
-    <div class="pc-com-2204-dept-head">
+    <div class="lp-row-between lp-dialog-head">
       <span class="group-gap2">
         <span class="dept-name">권한명:</span>
-        <span class="pc-com-2204-dept-name">{{ activePermission?.name }}</span>
+        <span class="lp-dialog-head-title">{{ activePermission?.name }}</span>
       </span>
       <InputField2
         v-model="keyword"
@@ -27,9 +27,9 @@
     </div>
 
     <!-- 선택 사용자 칩 줄 -->
-    <div class="pc-com-2204-selected-bar">
+    <div class="lp-selected-bar">
       <span class="dept-name">선택 사용자</span>
-      <TagList class="pc-com-2204-selected-tags">
+      <TagList class="lp-flex-fill">
         <Tag
           v-for="user in selectedUsers"
           :key="user.userId"
@@ -43,21 +43,21 @@
     </div>
 
     <!-- 부서 정보 / 사용자 정보 2분할 -->
-    <div class="pc-com-2204-dept-panes">
-      <section class="pc-com-2204-pane pc-com-2204-pane-dept" aria-labelledby="dept-info-heading">
-        <h3 id="dept-info-heading" class="pc-com-2204-pane-title">부서 정보</h3>
+    <div class="lp-pane-box">
+      <section class="lp-pane lp-pane lp-pane-fixed" aria-labelledby="dept-info-heading">
+        <h3 id="dept-info-heading" class="lp-pane-title">부서 정보</h3>
         <TabulatorGrid
           v-model:data="deptRows"
           :columns="deptColumns"
           height="32rem"
-          :row-class="(row: any) => (isActiveDept(row) ? 'pc-com-2204-active-row' : undefined)"
+          :row-class="(row: any) => (isActiveDept(row) ? 'lp-grid-active-row' : undefined)"
           placeholder="부서가 없습니다"
           @row-click="onDeptRowClick"
         />
       </section>
 
-      <section class="pc-com-2204-pane" aria-labelledby="user-info-heading">
-        <h3 id="user-info-heading" class="pc-com-2204-pane-title">사용자 정보</h3>
+      <section class="lp-pane" aria-labelledby="user-info-heading">
+        <h3 id="user-info-heading" class="lp-pane-title">사용자 정보</h3>
         <TabulatorGrid
           ref="userGridRef"
           :data="usersInActiveDept"
@@ -135,7 +135,7 @@ const userGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 
 const userColumns: TabulatorGridColumn[] = [
   // 시안에서 사용자ID 만 밑줄(링크처럼) — 밑줄은 styles.css 가 이 클래스로 붙인다
-  { title: '사용자ID', field: 'userId', hozAlign: 'center', cssClass: 'pc-com-2204-userid-cell' },
+  { title: '사용자ID', field: 'userId', hozAlign: 'center', cssClass: 'lp-grid-link-cell' },
   { title: '계급', field: 'rank', width: 90, hozAlign: 'center' },
   { title: '성명', field: 'name', width: 90, hozAlign: 'center' },
 ]

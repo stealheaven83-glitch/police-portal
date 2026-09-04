@@ -38,37 +38,69 @@
 
 ```bash
 grep -rnE '<(table|thead|tbody)\b' src/views/{도메인}/{화면ID}/
-grep -rnE 'display: *(grid|flex)' public/portal/asset/css/common/styles.css   # 해당 화면 블록만
+grep -rnE 'display: *(grid|flex)' public/portal/asset/css/common/police-common.css
 ```
 
-### 2. 공통 CSS 를 썼는가 → 규칙 CLAUDE.md §1 ①② · 목록 `component-guide.md` §12
+### 2. 공통 CSS 를 **찾아보고** 썼는가 → 규칙 CLAUDE.md §1 ①② · 목록 `component-guide.md` §12
+
+**화면 전용 CSS 는 없다.** 한 화면만 쓰더라도 공통 파일에 공통 이름으로 만든다. "나중에 승격"도
+없으니 **중복은 더 이상 정상이 아니다 — 발견하면 지적한다.**
+
+찾는 절차가 세 단계(**선언 → 이름 → 의도**)라, 검토도 세 단계를 다 밟았는지 본다.
+
+- **① 선언으로 찾았는가** — 새로 만든 클래스의 선언을 그대로 넣어 돌려본다.
+  완전 일치가 나오면 **왜 새로 만들었는지**가 인계 메모에 있어야 한다(의도가 달라서라면 통과).
+  ```bash
+  node scripts/css-find.cjs "flex:1; min-height:0; overflow-y:auto"
+  ```
+- **② 이름으로 찾았는가** — `.search-area` `.list-actions` `.btn-wrap` `.group-gap2` 처럼
+  **같은 역할의 공통 클래스**를 두고 새로 만들지 않았는가.
+- **③ 의도가 맞는가** — 값이 같다고 아무거나 가져다 쓰지 않았는가.
+  `.detail-scroll`(상세 패널 **안쪽**)과 `.lp-page-scroll`(**페이지 본문**)처럼 선언이 같아도
+  의도가 다른 쌍이 있다. **의도가 다른데 재사용한 것도 지적 대상이다** — 한쪽이 값을 바꾸면
+  다른 화면이 같이 깨진다.
+- **부분 일치인데 통째로 새로 만들지 않았는가** — 기존 클래스 + 차이나는 선언만 덧붙이는 게 맞다
+  (`class="detail-scroll lp-panel-pad"`). 기존 클래스를 **고쳐서** 맞춘 것은 더 큰 지적이다.
 - hex 하드코딩 없이 토큰(`var(--Text-body_1)`)을 쓰는가
-- `.search-area` `.list-actions` `.btn-wrap` `.group-gap2` 같은 **같은 역할의 공통 클래스**를
-  두고 새로 만들지 않았는가
-- **`police-style.css` 에 새로 올렸거나 고쳤다면 `component-guide.md` §12 표에 등재했는가**
-  ← 빠뜨리기 제일 쉽고, 빠뜨리면 다음 사람이 공통을 못 찾아 또 만든다
+- **§12 표에 등재했는가 — 의도 칸까지 채웠는가**
+  ← 빠뜨리기 제일 쉽다. 클래스명만 있는 줄은 다음 사람이 ③을 못 해서 오용한다.
 
-> `styles.css` 에 비슷한 게 있는지는 **찾지 않는다.** 거기는 승격 대기 저장소라 중복이 정상이다.
+### 3. CSS 를 어느 파일에 넣었는가 → 규칙 CLAUDE.md §1-2
 
-### 3. 화면 전용 CSS 위치 → 규칙 CLAUDE.md §1-2
+| 파일 | 기입 | 무엇이 들어가야 하나 |
+|---|---|---|
+| `police-style.css` | ❌ | 퍼블리싱 원본. **여기에 추가했으면 지적** |
+| `police-common.css` | ✅ | 기본값. 대부분 여기 |
+| `police-override.css` | ✅ | 컴포넌트·라이브러리·테일윈드를 **덮는 것만** |
+
+- **`police-style.css` 에 새 규칙을 넣지 않았는가** (읽기 전용)
+- **override 에 일반 스타일이 들어가지 않았는가** — 덮을 이유가 없는데 여기 있으면,
+  다음 사람이 "왜 여기 있지"를 판단할 수 없게 된다. 반대로 **덮어야 하는 걸 common 에 넣어**
+  안 먹고 있는 것도 본다(레이어에 밀린다).
 - 화면 폴더에 **`style/*.module.css` 를 새로 만들지 않았는가**
-- 화면 전용 CSS 가 `public/portal/asset/css/common/styles.css` 에 있는가
 - **인라인 `style=` 이 없는가**(컴포넌트 CSS 변수를 덮을 때도 클래스로 한다)
 
 ```bash
+git diff --stat public/portal/asset/css/common/police-style.css   # 변경 있으면 지적
 ls src/views/{도메인}/{화면ID}/style 2>/dev/null && echo '❌ style/ 폴더 있음'
 grep -rn 'style="' src/views/{도메인}/{화면ID}/
 ```
 
-### 4. 클래스 명명·블록 위치 → 규칙 CLAUDE.md §1-2
-- `.{화면ID 소문자}-{역할}` 프리픽스인가 (`.pc-lpo-0601-map`)
+### 4. 클래스 명명 → 규칙 CLAUDE.md §1-2
+
+- **`.lp-{역할}` 인가.** `lp` 접두사가 없으면 지적 — 원본이 `card` `title` `value` `wrap` 같은
+  범용어 159개를 점유하고 있고, 우리 파일이 뒤에 로드돼 **우리가 이기므로** 겹치면 포털 화면이
+  조용히 깨진다.
+- **화면ID가 이름에 들어가지 않았는가** (`.pc-lpo-0601-map` ❌ → `.lp-map-frame` ✅)
+- **이름이 너무 넓지 않은가** — `.lp-main` `.lp-box` 처럼 아무 데나 붙일 수 있는 이름은,
+  다음 사람이 의도를 확인하지 않고 갖다 쓰게 만든다.
 - **카멜케이스가 없는가** — `.detailLayout` `.photoBox` 는 파일 종류와 무관하게 금지
-- 자기 화면ID 블록 안에 있고, 그 블록이 **화면ID 오름차순 자리**에 끼워졌는가
-- 남의 블록을 건드리지 않았는가
 
 ```bash
-grep -n '^/\* ──' public/portal/asset/css/common/styles.css        # 블록 순서
-grep -nE '^\s*\.[a-z0-9-]*[a-z][A-Z]' public/portal/asset/css/common/styles.css   # 카멜
+grep -n '^\.' public/portal/asset/css/common/police-common.css | grep -v '\.lp-'   # 접두사 없는 것
+grep -n '^\.' public/portal/asset/css/common/police-override.css | grep -v '\.lp-'
+grep -nE '^\s*\.[a-z0-9-]*[a-z][A-Z]' public/portal/asset/css/common/police-*.css  # 카멜
+grep -nE '\.(pc|pm|mo)-[a-z]{3}-[0-9]{4}-' public/portal/asset/css/common/police-*.css  # 화면ID
 ```
 
 ### 5. 화면 템플릿에 테일윈드가 없는가 → 규칙 CLAUDE.md §1

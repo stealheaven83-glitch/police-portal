@@ -6,8 +6,8 @@
     :show-footer="false"
     @update:open="emit('update:open', $event)"
   >
-    <div class="pc-lpo-0601-dialog-body">
-      <div class="pc-lpo-0601-map-toolbar">
+    <div class="lp-dialog-body">
+      <div class="lp-map-toolbar">
         <SelectField
           v-model="selectedVehicle"
           :options="patrolVehicleOptions"
@@ -30,7 +30,7 @@
         <Button type="button" variant="tertiary2" size="sm" @click="onReset">초기화</Button>
       </div>
 
-      <div class="pc-lpo-0601-map">
+      <div class="lp-map-frame">
         <img
           src="/portal/asset/images/img/img_patrol_area_map.png"
           alt="순찰차별 관할구역 지도"
@@ -39,7 +39,7 @@
     </div>
 
     <template #footer>
-      <div class="pc-lpo-0601-dialog-footer">
+      <div class="lp-dialog-footer">
         <Button type="button" variant="tertiary2" size="md" @click="emit('update:open', false)">
           닫기
         </Button>

@@ -1,7 +1,7 @@
 <template>
   <GenericDialog2 v-model:open="vehicle112DialogOpen" title="112차량 조회" :size="560" :show-close-button="false">
     <div :class="styles.searchRow">
-      <label class="pc-lpo-0701-vehicle112-label" for="vehicle112-keyword">출동요소명</label>
+      <label class="lp-label-text" for="vehicle112-keyword">출동요소명</label>
       <InputField2
         id="vehicle112-keyword"
         v-model="vehicle112Keyword"

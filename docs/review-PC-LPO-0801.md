@@ -1,5 +1,13 @@
 # PC-LPO-0801 인사관리 — 검토 결과
 
+> ⚠ **CSS 관련 판단은 낡았다 (2026-09-04 저녁 CSS 체제 개편).**
+> 이 문서는 `styles.css`(화면 전용 CSS) + "나중에 승격" 체제에서 쓴 것이다. 그 체제는 없어졌다 —
+> `styles.css` 는 삭제됐고, CSS 는 `police-style`(원본·읽기전용) / `police-common`(기본) /
+> `police-override`(덮을 때) 세 파일에 `.lp-*` 이름으로 들어간다. **승격도 없다.**
+> 특히 아래 "`styles.css` 와의 중복은 지적이 아니다"(4-2)는 **지금은 반대다 — 중복은 지적한다.**
+> 현행 규칙은 CLAUDE.md §1-2, 검토 항목은 `docs/review.md` 2~4 를 본다.
+> (이 문서는 그때의 기록이라 그대로 둔다. CSS 외 항목은 여전히 유효하다.)
+
 - 1차: 2026-09-03 / **2차: 2026-09-04 (이 문서는 2차 기준으로 갱신됨)**
 - 대상: `src/views/lpo/PC-LPO-0801/` 폴더 전체
   (`PC-LPO-0801.vue` 507줄 / `composable/PC-LPO-0801.ts` 266줄 / `components/DeptSearchDialog.vue` 132줄)
@@ -120,7 +128,11 @@ reka-ui `RadioGroupRoot` 래퍼라 그룹마다 role/roving tabindex 가 따로 
 §12 표가 `police-style.css`(1500줄)를 대신 보는 창구라, 표에 없으면 공통에 올려놓고도 다음 사람이
 못 찾는다.
 
-> **`styles.css` 와의 중복은 지적이 아니다(09-04 확인).** `styles.css` 는 승격 대기 저장소라
+> ⛔ **아래 문단은 폐기됐다(2026-09-04 저녁). 지금은 중복을 지적한다 — 문서 맨 위 배너 참조.**
+> 여기서 예고한 "STT 승격 시 값 맞추기"는 실제로 그렇게 처리됐다: `PC-STT-0103` 이 공통
+> `.photo-frame` 을 쓰고, 차이나는 배경색만 `.lp-photo-frame-fill` 델타로 붙였다.
+>
+> ~~**`styles.css` 와의 중복은 지적이 아니다(09-04 확인).**~~ `styles.css` 는 승격 대기 저장소라
 > 뒤질 필요가 없고 중복이 남아 있어도 정상이다. 이 화면은 `police-style.css` 를 보고 없어서 만든
 > 것이니 §1의 ② 대로 한 것이다. (`PC-STT-0103` 의 `.pc-stt-0103-photo-frame` 이 `styles.css` 에
 > 먼저 있었지만 — `dfb93eb` → `0d6fd6d` — 아직 승격 안 된 것일 뿐이다.)

@@ -45,7 +45,7 @@
           :table-options="selectByCheckboxOnly"
           class="flex-1"
           height="100%"
-          :row-class="(row: any) => (row.rowKey === activePermissionKey ? 'pc-com-2204-active-row' : undefined)"
+          :row-class="(row: any) => (row.rowKey === activePermissionKey ? 'lp-grid-active-row' : undefined)"
           placeholder="등록된 권한이 없습니다"
           @row-click="onPermissionRowClick"
           @row-selection-changed="selectedPermissionCount = $event.length"
@@ -58,9 +58,9 @@
         <template #center>
           <span class="group-gap2">
             <span class="dept-name">권한ID</span>
-            <span class="pc-com-2204-active-value">{{ activePermission?.id }}</span>
+            <span class="lp-panel-head-em">{{ activePermission?.id }}</span>
             <span class="dept-name">권한명</span>
-            <span class="pc-com-2204-active-value">{{ activePermission?.name }}</span>
+            <span class="lp-panel-head-em">{{ activePermission?.name }}</span>
           </span>
         </template>
         <template #actions>
@@ -70,7 +70,7 @@
         <TabulatorGrid
           v-model:data="menuPermissions"
           :columns="menuColumns"
-          class="pc-com-2204-menu-grid flex-1"
+          class="lp-perm-menu-grid flex-1"
           height="100%"
           placeholder="메뉴 정보가 없습니다"
         />
@@ -171,9 +171,9 @@ const permissionColumns: TabulatorGridColumn[] = [
     buttonVariant: 'tertiary',
     buttonSize: 'xs',
     // 비어있으면 "부서 조회" 버튼, 이미 지정돼있으면 그 요약 텍스트 + 돋보기 아이콘.
-    // 아이콘은 styles.css 의 .pc-com-2204-note-cell 이 붙인다 — 공용 button 셀이 라벨을
+    // 아이콘은 styles.css 의 .lp-grid-search-cell 이 붙인다 — 공용 button 셀이 라벨을
     // textContent 로 넣어서 <span class="grid-icon-search"> 를 라벨에 못 실어 보내기 때문.
-    cssClass: 'pc-com-2204-note-cell',
+    cssClass: 'lp-grid-search-cell',
     buttonVisible: (row) => !(row as PermissionRow).deptNote,
     buttonLabel: (row) => (row as PermissionRow).deptNote || '부서 조회',
     onButtonClick: (row) => openDeptSearch((row as PermissionRow).rowKey),
@@ -218,7 +218,7 @@ async function onSavePermissions() {
 /**
  * 메뉴명은 depth 3단이 각각 컬럼인데 헤더는 "메뉴명" 하나로 묶인다.
  * Tabulator 6.x 는 데이터 셀 병합이 없어 헤더 그룹(columns 중첩)이 유일한 수단이고,
- * 자식 컬럼의 빈 title 줄은 CSS(.pc-com-2204-menu-grid)로 접어서 한 줄처럼 보이게 한다.
+ * 자식 컬럼의 빈 title 줄은 CSS(.lp-perm-menu-grid)로 접어서 한 줄처럼 보이게 한다.
  */
 const menuColumns: TabulatorGridColumn[] = [
   { title: '메뉴ID', field: 'menuId', width: 140, hozAlign: 'center' },
@@ -234,7 +234,7 @@ const menuColumns: TabulatorGridColumn[] = [
         // 시안에서 2depth 칸만 회색으로 칠해져 있다 — 값이 있는 셀에만 표시 클래스를 붙인다
         formatter: (cell: any) => {
           const value = cell.getValue()
-          if (value) cell.getElement().classList.add('pc-com-2204-depth-cell')
+          if (value) cell.getElement().classList.add('lp-grid-depth-cell')
           return value
         },
       },

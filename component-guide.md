@@ -4,7 +4,7 @@ CLAUDE.md §1(재사용 원칙)의 실행 편. §1은 "찾아봐라"까지 말�
 나오는지"**를 말한다. 새 화면을 시작할 때 §1-1 기준 파일과 함께 본다.
 
 경로는 전부 `src/components/` 기준. `custom/`이 1순위, `ui/`(shadcn-vue 프리미티브)가 2순위.
-**공통 CSS는 §12**를 본다 — 화면 전용 CSS(`styles.css`)를 쓰기 전에 거기부터 뒤진다.
+**공통 CSS는 §12**를 본다 — 새 스타일을 만들기 전에 거기부터 뒤진다(화면 전용 CSS 는 없다).
 
 ---
 
@@ -332,12 +332,39 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 
 ---
 
-## 12. 공통 CSS — 화면 전용 CSS를 쓰기 전에 여기부터
+## 12. 공통 CSS — 새 스타일을 만들기 전에 여기부터
 
-`public/portal/asset/css/common/police-style.css`가 **전역 로드**된다(페이지에서 import 안 함).
-CLAUDE.md §1의 CSS 우선순위 ①②를 실행으로 옮긴 것 — 같은 역할 클래스를 새로 만들기 전에 찾는다.
+**화면 전용 CSS 는 없다.** 한 화면만 쓰더라도 처음부터 공통 파일에 공통 이름으로 만든다
+(CLAUDE.md §1-2). 파일은 셋이고, 셋 다 `public/portal/asset/css/common/` 에서 전역 로드된다.
 
-### 자주 쓰는 레이아웃 클래스
+| 파일 | 참고 | 기입 | 무엇 | 이름 |
+|---|---|---|---|---|
+| `police-style.css` | ✅ | ❌ | 퍼블리싱 원본(reset·헤더/푸터·포털). **읽기 전용** | 접두사 없음 |
+| `police-common.css` | ✅ | ✅ | 우리 공통 — **새 스타일은 기본적으로 여기** | `.lp-*` |
+| `police-override.css` | ✅ | ✅ | 컴포넌트·라이브러리·테일윈드를 **덮어야 하는 것만** | `.lp-*` |
+
+**찾을 때 세 파일은 한 덩어리다** — "어느 파일부터"가 아니다.
+**만들 때만** 갈리고, 기준은 "덮어야 하느냐" 하나다(자세한 건 CLAUDE.md §1-2).
+
+### 먼저 이걸 돌린다 — 이름이 아니라 **선언**으로 찾는다
+
+```bash
+node scripts/css-find.cjs "flex:1; min-height:0; overflow-y:auto"
+```
+세 파일을 전부 훑어 **완전 일치 / 부분 일치**를 나눠 보여준다(선언 순서가 달라도 잡는다).
+- **완전 일치** → 그 클래스를 쓴다. 단 아래 표의 **의도** 칸을 보고 판단한다 —
+  값만 우연히 같고 의도가 다르면 쓰지 않고 새로 만든다.
+- **부분 일치** → 그 클래스를 쓰고 **차이나는 선언만** 새 클래스로 덧붙인다.
+  기존 클래스는 고치지 않는다(다른 화면이 쓰고 있다).
+
+아래 표들은 **사람이 훑어볼 때** 쓴다. 스크립트는 정확히 찾을 때, 표는 뭐가 있는지 볼 때.
+
+---
+
+### 12-1. `police-style.css` (원본) — 자주 쓰는 레이아웃
+
+⚠ 이 파일에는 우리가 과거에 추가한 공통 클래스가 +625줄 섞여 있다. `police-common.css` 로
+옮기는 작업이 **별도 배치로 남아 있다.** 그때까지 이 클래스들은 접두사 없이 그대로 쓴다.
 
 | 이럴 때 | 클래스 | 실제 |
 |---|---|---|
@@ -353,20 +380,21 @@ CLAUDE.md §1의 CSS 우선순위 ①②를 실행으로 옮긴 것 — 같은 �
 | 스크롤되는 본문 영역 | `.layout-wrap` | padding 2rem 2.4rem, overflow-y auto |
 | 그리드 위 여백 | `.grid-wrap` | margin-top 2rem |
 
-### 인사 상세형 레이아웃 (사진 + 폼 + 하위 표)
+#### 인사 상세형 레이아웃 (사진 + 폼 + 하위 표)
 
-증명사진 칸 옆에 라벨-값 폼이 붙고 아래에 관련 표가 오는 상세 화면용. PC-LPO-0801 에서 올렸다.
+증명사진 칸 옆에 라벨-값 폼이 붙고 아래에 관련 표가 오는 상세 화면용.
+PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 
 | 이럴 때 | 클래스 | 실제 |
 |---|---|---|
-| 사진 칸 + 폼 가로 배치 | `.detail-layout` | flex, align-start, gap 2rem |
+| 사진 칸 + 폼 가로 배치 | `.detail-layout` | flex, align-start, gap 2rem (2.4rem 이 필요하면 `.lp-detail-layout-wide` 를 같이) |
 | 그 안 폼 영역 | `.detail-fields` | flex 1, min-width 0 |
-| 패널보다 길어질 때 이 영역만 스크롤 | `.detail-scroll` | flex 1, min-height 0, overflow-y auto (`ScrollWrapper` 를 쓰면 불필요) |
+| 상세 패널보다 길어질 때 이 영역만 스크롤 | `.detail-scroll` | flex 1, min-height 0, overflow-y auto (`ScrollWrapper` 를 쓰면 불필요) |
 | 사진 칸 세로 묶음 | `.photo-box` | flex-column, gap 1.2rem, 폭 12rem 고정 |
-| 증명사진 액자 | `.photo-frame` | 12×16.4rem, border+radius, 안쪽 `img` 는 `object-fit: cover` |
+| 증명사진 액자 | `.photo-frame` | 12×16.4rem, border+radius, 안쪽 `img` 는 `object-fit: cover` (회색 배경이 필요하면 `.lp-photo-frame-fill` 을 같이) |
 | 사진 미등록 기본 이미지 | `.photo-frame .photo-empty` | 자르지 않고 원본 크기로 가운데 |
 | 라벨 폭이 다른 `InfoTable` 두 개를 한 표처럼 잇기 | `.form-rest` | `border-top: 0` — 아래 표의 윗선을 지워 선 두 겹을 막는다 |
-| 조회값만 보여주는 칸(입력 아님) | `.readonly-text` | 1.5rem, `--Text-body_0` |
+| 조회값만 보여주는 칸(입력 아님) | `.readonly-text` | 1.5rem, `--Text-body_0` (줄바꿈 막으려면 `.lp-nowrap` 을 같이) |
 | 안내 문구 중 강조 부분 | `.notice-strong` | `--Base--point`, 700 |
 | 상세 폼 아래 하위 표 구역 | `.transfer-section` | 위쪽 6px 회색 구분선 + 여백, flex-column |
 | 그 구역 제목줄(제목 + 우측 버튼) | `.transfer-head` / `.transfer-title` | space-between / 1.7rem 700 |
@@ -375,7 +403,7 @@ CLAUDE.md §1의 CSS 우선순위 ①②를 실행으로 옮긴 것 — 같은 �
 있을 때 칸 끝까지 늘려주는 규칙이다. 값 칸에 체크박스·셀렉트 같은 형제가 있으면 안 걸리니,
 그럴 땐 `DatePicker` 에 `class="w-37"` 처럼 폭을 직접 준다.
 
-### 유틸
+#### 유틸
 
 | 용도 | 클래스 |
 |---|---|
@@ -386,27 +414,138 @@ CLAUDE.md §1의 CSS 우선순위 ①②를 실행으로 옮긴 것 — 같은 �
 | 부서명 강조 | `.dept-name` |
 | 팝업 제목 | `.pop-title` `.pop-title-sub` `.pop-title-lv2` |
 
+---
+
+### 12-2. `police-common.css` (`.lp-*`) — 우리 공통
+
+**의도 칸을 읽고 쓴다.** 값이 맞아 보여도 의도가 다르면 새로 만든다 — 지금 묶어두면 나중에
+한쪽만 값이 바뀔 때 다른 화면이 같이 깨진다.
+
+#### 텍스트
+
+| 클래스 | 의도 | 쓰는 곳 |
+|---|---|---|
+| `.lp-heading-lg` | 구역·카드 제목(1.9rem 700) | 0601, 0802, IRC-0101 |
+| `.lp-heading-md` | 한 단계 작은 제목(1.7rem 700) | IRC-0101 |
+| `.lp-body-text` | 읽는 본문 문단(1.7rem) | IRC-0101 |
+| `.lp-label-text` | 입력 옆 보조 라벨·안내(1.5rem `--Text-body_1`) | 0701 |
+| `.lp-note-text` | 작성시각 같은 부수 정보(1.5rem `--Text-body_2`) | (미사용) |
+| `.lp-nowrap` | 줄바꿈 금지 — `.readonly-text` 등과 **함께** 쓴다 | 0601 |
+| `.lp-hit` | 검색 결과 건수처럼 제목 안 `<b>` 만 파랗게 | 0802 |
+| `.lp-panel-head-em` | 패널 제목줄에 같이 보여주는 값(`--Base--point` 600) | 2204 |
+
+#### 배치
+
+| 클래스 | 의도 | 쓰는 곳 |
+|---|---|---|
+| `.lp-flex-fill` | 남는 가로폭을 채우되 내용이 넘치지 않게(flex 1 / min-width 0) | 2204, IRC-0101 |
+| `.lp-row-between` | 한 줄에 좌우로 벌려 놓기 | 2204, 0601, 0802 |
+| `.lp-summary-row` | 값 텍스트 + 우측 버튼 (표 셀 안, 자기도 늘어남) | 0601 |
+| `.lp-field-row` | 라벨+입력 여러 쌍이 한 줄에 늘어서고 좁아지면 줄바꿈 | 0601 |
+| `.lp-page-scroll` | **페이지 본문** 이 넘칠 때 이 영역만 세로 스크롤 (상세 패널 안쪽은 `.detail-scroll`) | 0801, 0802, IRC-0101 |
+| `.lp-page-toolbar` | 화면 위쪽 부서선택 + 우측 버튼 줄 | 0601 |
+| `.lp-section` / `.lp-section-title` | 구역 사이 간격 / 구역 제목 여백(`.lp-heading-lg` 와 함께) | 0601 |
+| `.lp-section-head` | 제목줄 아래 실선(`.lp-row-between` 과 함께) | 0802 |
+| `.lp-table-gap` | 표 위 여백 | 0601 |
+| `.lp-meta-nowrap` | 조회 화면 위쪽 '최종 수정일' 한 줄 | 0601 |
+
+#### 아이콘 버튼
+
+| 클래스 | 의도 | 쓰는 곳 |
+|---|---|---|
+| `.lp-icon-btn` | 테두리·배경 없는 아이콘 전용 버튼(크기는 아래 것과 조합) | 0601, LPO-0101 |
+| `.lp-icon-btn-24` / `.lp-icon-btn-32` | 그 버튼 크기 | LPO-0101 / 0601 |
+| `.lp-icon-btn-dark` | 상속색이 아니라 본문색으로 고정 | 0601 |
+| `.lp-icon-row` | 아이콘 여러 개가 가로로 놓이는 줄 | (미사용) |
+
+#### 2분할 상자 · 팝업
+
+| 클래스 | 의도 | 쓰는 곳 |
+|---|---|---|
+| `.lp-pane-box` / `.lp-pane` / `.lp-pane-fixed` / `.lp-pane-title` | 테두리 안에서 좌우로 나뉘는 목록 상자(폼 화면 2분할은 `LayoutSplit`) | 2204 |
+| `.lp-selected-bar` | 선택한 항목을 칩으로 늘어놓는 회색 바 | 2204 |
+| `.lp-dialog-head` / `.lp-dialog-head-title` | 팝업 본문 위쪽 제목줄(`.lp-row-between` 과 함께) | 2204 |
+| `.lp-dialog-body` / `.lp-dialog-subtitle` / `.lp-dialog-footer` | 팝업 본문 세로 묶음 / 부제 / 우측 버튼줄 | 0601 |
+| `.lp-search-form-gap` | 팝업 안 검색 폼의 행·열 간격 | 0601 |
+
+#### 통합검색 · 시나리오 검색 (본문을 가운데 정렬하는 화면)
+
+| 클래스 | 의도 | 쓰는 곳 |
+|---|---|---|
+| `.lp-search-hero` | 큰 검색바 — 위 여백 크게(검색 전) | 0801, 0802 |
+| `.lp-search-center` | 검색한 뒤라 위 여백 없이 붙는 검색바 | IRC-0101 |
+| `.lp-content-panel` / `.lp-content-panel-pad` | 본문 폭 120rem 가운데 / 좌우 여백 | 0801, 0802, IRC-0101 |
+| `.lp-result-section` / `.lp-result-item` / `.lp-result-summary` | 카테고리 구역 / 결과 한 건 / 2줄 말줄임 요약 | 0802 |
+| `.lp-result-pagination` | 결과 아래 페이지네이션 여백 | 0802 |
+| `.lp-link-list` / `.lp-path-link` | 메뉴 경로 링크만 나열 / 그 링크(Figma button_link) | 0802 |
+| `.lp-ai-answer` + `-head` `-icon` `-body` | AI 생성 답변 상자 | IRC-0101 |
+| `.lp-answer-block` / `.lp-block-title` / `.lp-bullet-list` / `.lp-answer-note` | 답변 안 소구역 / 그 제목 여백 / 불릿 / 하단 주의문 | IRC-0101 |
+| `.lp-ref-column` / `.lp-ref-card` / `.lp-ref-card-desc` | 우측 참고자료 칸 / 카드 / 2줄 말줄임 설명 | IRC-0101 |
+
+#### 메모 목록 카드 · 등록 폼
+
+| 클래스 | 의도 | 쓰는 곳 |
+|---|---|---|
+| `.lp-toolbar-left` / `.lp-toolbar-right` | 목록 위 컨트롤 바 좌/우 그룹(Figma 실측 24 / 32px — `group-gap` 은 4·8·12뿐) | LPO-0101 |
+| `.lp-card-grid` | 카드 최소 46rem, 남는 폭 균등 분배(≈3열) | LPO-0101 |
+| `.lp-memo-card` + `-selected` `-check` `-body` `-titlerow` `-title` `-titlebtn` `-actions` `-preview` `-meta` | 메모 카드 한 장 (Figma 'Memo Li') | LPO-0101 |
+| `.lp-narrow-form` / `.lp-field` / `.lp-form-actions-center` | 가운데 정렬 등록 폼(본문 1000px) / 라벨+입력 세로쌍 / 하단 가운데 버튼줄 | (미사용) |
+| `.lp-summary-box` + `-filled` `-loading` `-redo` | AI 요약 영역(빈 상태 점선 / 채워지면 실선) | (미사용) |
+| `.lp-dropzone` / `.lp-dropzone-txt` | 첨부파일 드롭존 | (미사용) |
+| `.lp-file-list` `-count` `-item` `-name` `-remove` | 첨부파일 목록 | (미사용) |
+| `.lp-file-hint` | 첨부 버튼 옆 용량 안내(좁아지면 줄바꿈) | 2402 |
+
+> **(미사용)** 은 PM-LPO-0104(메모 등록) 화면이 아직 없어서다. 스타일은 남겨 뒀다 — 지우지 말고,
+> 그 화면을 만들 때 그대로 쓴다.
+
+#### 원본과 함께 쓰는 델타
+
+| 클래스 | 의도 | 쓰는 곳 |
+|---|---|---|
+| `.lp-detail-layout-wide` | `.detail-layout` 의 gap 2rem → 2.4rem | PC-STT-0103 |
+| `.lp-photo-frame-fill` | `.photo-frame` 에 회색 배경을 얹는다 | PC-STT-0103 |
+
+---
+
+### 12-3. `police-override.css` (`.lp-*`) — 덮어야 하는 것
+
+`layer(screen)` 이라 테일윈드·shadcn·원본을 전부 덮는다. **여기 있는 이유가 곧 의도다** —
+일반 스타일을 여기 넣지 않는다(그러면 왜 여기 있는지 다음 사람이 판단할 수 없다).
+
+| 클래스 | 무엇을 덮나 | 쓰는 곳 |
+|---|---|---|
+| `.lp-grid-active-row` | Tabulator 행 배경 — "지금 오른쪽 상세에 떠 있는 행". 체크박스 다중선택(`.tabulator-selected`)과 별개 개념 | 2204, 0801, STT-0103 |
+| `.lp-grid-link-cell` | 값이 링크처럼 보여야 하는 셀(밑줄) | 2204 |
+| `.lp-perm-menu-grid` | Tabulator 가 JS 로 넣는 그룹헤더 높이(빈 서브헤더 줄 접기, `!important` 필요) | 2204 |
+| `.lp-grid-depth-cell` | 2depth 메뉴 칸 회색 배경 | 2204 |
+| `.lp-grid-search-cell` | button 셀 라벨 뒤에 돋보기 아이콘을 가상요소로 얹기 | 2204 |
+| `.lp-table-left` | `TableWrapper` 의 가운데 정렬을 좌측으로 되돌림 | 0601 |
+| `.lp-segmented-tabs` | 탭 컴포넌트의 간격·모서리를 세그먼트 형태로 | 0802 |
+| `.lp-dialog-body .form-note` | 팝업 안에서 공통 `.form-note` 의 아래 여백 해제 | 0601 |
+| `.lp-dropzone-sub` | `.lp-dropzone-txt p` 의 크기·색 되돌리기 | (미사용) |
+
+---
+
 ### 색·크기는 반드시 토큰으로
 
 hex를 직접 쓰지 않는다. `var(--Text-body_1)`, `var(--Base-primary)`, `var(--Border_gray02)`,
 `var(--Surface-primary)`, `var(--Radius-medium3)`, `var(--Alert-danger-surface)` 등이 있다.
 대응 토큰이 정말 없을 때만 hex(선례: `Badge.vue`의 `#fff6e5`).
 
-### 그래도 없을 때 — **화면 전용으로 만들지 말고 공통에 추가한다**
-
-"최대한 공통을 활용한다"는 **① 있으면 쓴다 + ② 없으면 공통에 만든다** 두 가지다(CLAUDE.md §1).
-②를 빠뜨리고 화면 전용으로 만들면, 다음 화면이 같은 걸 또 만들어 값이 갈라진다.
+### 그래도 없을 때 — 어디에 만드나
 
 | 만들려는 것 | 어디에 |
 |---|---|
-| 색·크기·모서리 값 | `police-style.css`에 **토큰(`--Xxx`)으로** 추가. 화면에 hex 박지 않는다 |
-| 역할 있는 레이아웃·유틸 클래스 | `police-style.css`에 **공통 클래스로** 추가 (`.btn-wrap` 등과 같은 결로 명명) |
+| 색·크기·모서리 값 | **토큰(`--Xxx`)으로.** 화면에 hex 박지 않는다 |
+| 일반 스타일 | **`police-common.css`** — 한 번만 쓰이더라도 여기. 이름은 `.lp-{역할}` |
+| 컴포넌트·라이브러리·테일윈드를 덮어야 하는 것 | **`police-override.css`** |
 | 특정 컴포넌트에 딸린 스타일 | 그 컴포넌트 폴더의 `*.module.css` |
 | 라벨-값 표 관련 | `custom/info-table/InfoTable.module.css` (이미 공통, 필수점 `.requiredDot`, 안내문구 `.hint`/`.hintSuccess`) |
 | 그리드 관련 | `src/assets/css/tabulator-theme.css` (전역 적용, 다시 스타일링 불필요) |
-| **그 화면에서만 쓰는 것** | `public/portal/asset/css/common/styles.css` 에 화면ID 프리픽스 클래스로(`.pc-lpo-0215-wrapper`) — **CLAUDE.md §1-2**. 화면 폴더에 `style/*.module.css` 를 새로 만들지 않는다. **애매하면 공통으로 만든다** |
+| **`police-style.css` 에는 추가하지 않는다** | 퍼블리싱 원본이라 읽기 전용 |
 
-공통에 추가했으면 **위 §12 표에 한 줄 추가**한다 — 그래야 다음 사람이 찾아 쓴다.
+만들었으면 **위 12-2 / 12-3 표에 한 줄 추가**한다 — `클래스 / 의도 / 쓰는 곳`.
+**의도를 빼먹지 않는다.** 그게 다음 사람이 오용하지 않게 막는 유일한 장치다.
 
 > 화면 템플릿에 테일윈드 유틸(`flex`, `mt-4`)을 직접 쓰지 않는다 — CLAUDE.md §1.
 > 재사용 컴포넌트(`src/components/**`) 내부는 무관하다.

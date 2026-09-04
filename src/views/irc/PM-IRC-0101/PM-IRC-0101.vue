@@ -11,10 +11,10 @@
     </template>
   </PageHeader>
 
-  <div class="pm-irc-0101-wrap">
+  <div class="lp-page-scroll">
     <SearchBar
       v-model="keyword"
-      class="pm-irc-0101-search"
+      class="lp-search-center"
       label="사건대응 시나리오 검색어"
       status="검색 원활"
       @search="onSearch"
@@ -23,7 +23,7 @@
     <!-- 검색 전: 최근검색어 · 추천검색어 -->
     <SearchKeywordPanel
       v-if="!searched"
-      class="pm-irc-0101-panel"
+      class="lp-content-panel"
       :recent="recentKeywords"
       :recommended="recommendedKeywords"
       @select="onSelectKeyword"
@@ -32,37 +32,37 @@
     />
 
     <!-- 검색 후: AI 생성 답변 -->
-    <section v-else class="pm-irc-0101-answer" aria-labelledby="irc-answer-title">
-      <h2 id="irc-answer-title" class="pm-irc-0101-answer-head">
-        <Sparkles class="pm-irc-0101-answer-icon" aria-hidden="true" />
+    <section v-else class="lp-ai-answer" aria-labelledby="irc-answer-title">
+      <h2 id="irc-answer-title" class="lp-ai-answer-head">
+        <Sparkles class="lp-ai-answer-icon" aria-hidden="true" />
         AI 생성 답변
       </h2>
 
-      <div class="pm-irc-0101-answer-body">
-        <div class="pm-irc-0101-answer-main">
-          <p class="pm-irc-0101-paragraph">{{ answer.intro }}</p>
+      <div class="lp-ai-answer-body">
+        <div class="lp-flex-fill">
+          <p class="lp-body-text">{{ answer.intro }}</p>
 
-          <div v-for="block in answer.blocks" :key="block.heading" class="pm-irc-0101-block">
-            <h3 v-if="block.heading" class="pm-irc-0101-block-title">{{ block.heading }}</h3>
-            <p v-for="text in block.paragraphs" :key="text" class="pm-irc-0101-paragraph">
+          <div v-for="block in answer.blocks" :key="block.heading" class="lp-answer-block">
+            <h3 v-if="block.heading" class="lp-heading-lg lp-block-title">{{ block.heading }}</h3>
+            <p v-for="text in block.paragraphs" :key="text" class="lp-body-text">
               {{ text }}
             </p>
-            <ul v-if="block.bullets?.length" class="pm-irc-0101-bullets">
+            <ul v-if="block.bullets?.length" class="lp-bullet-list">
               <li v-for="text in block.bullets" :key="text">{{ text }}</li>
             </ul>
           </div>
         </div>
 
-        <aside class="pm-irc-0101-refs">
-          <h3 class="pm-irc-0101-refs-title">참고자료</h3>
-          <article v-for="ref in answer.references" :key="ref.title" class="pm-irc-0101-ref-card">
-            <h4 class="pm-irc-0101-ref-card-title">{{ ref.title }}</h4>
-            <p class="pm-irc-0101-ref-card-desc">{{ ref.description }}</p>
+        <aside class="lp-ref-column">
+          <h3 class="lp-heading-md">참고자료</h3>
+          <article v-for="ref in answer.references" :key="ref.title" class="lp-ref-card">
+            <h4 class="lp-heading-md">{{ ref.title }}</h4>
+            <p class="lp-ref-card-desc">{{ ref.description }}</p>
           </article>
         </aside>
       </div>
 
-      <p class="pm-irc-0101-answer-note">※ 본 답변은 AI가 생성한 내용입니다.</p>
+      <p class="lp-answer-note">※ 본 답변은 AI가 생성한 내용입니다.</p>
     </section>
   </div>
 </template>

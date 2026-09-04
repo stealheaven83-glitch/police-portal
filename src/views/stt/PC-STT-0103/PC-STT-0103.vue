@@ -36,7 +36,7 @@
   <div class="list-actions space-between">
     <p class="form-note">
       * 개인정보를 공무수행 목적외 사적으로 조회 또는 유출하여 타인의 비밀을 침해하거나 누설할 경우
-      <span class="pc-stt-0103-notice-strong">5년이하의 징역 또는 5천만원 이하의 벌금</span>에 처해집니다.
+      <span class="notice-strong">5년이하의 징역 또는 5천만원 이하의 벌금</span>에 처해집니다.
     </p>
     <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
   </div>
@@ -49,7 +49,7 @@
           :columns="listColumns"
           class="flex-1"
           height="100%"
-          :row-class="(row: any) => (row.rowKey === activeRowKey ? 'pc-stt-0103-active-row' : undefined)"
+          :row-class="(row: any) => (row.rowKey === activeRowKey ? 'lp-grid-active-row' : undefined)"
           placeholder="조회된 인사 정보가 없습니다"
           @row-click="onListRowClick"
         />
@@ -58,14 +58,14 @@
 
     <template #layout-2>
       <LayoutPanel title="인사 상세">
-        <div class="pc-stt-0103-detail-scroll">
-          <div class="pc-stt-0103-detail-layout">
-            <div class="pc-stt-0103-photo-box">
-              <div class="pc-stt-0103-photo-frame">
+        <div class="detail-scroll">
+          <div class="detail-layout lp-detail-layout-wide">
+            <div class="photo-box">
+              <div class="photo-frame lp-photo-frame-fill">
                 <!-- 사진이 없으면 시안의 기본 프로필 이미지를 원본 크기로 가운데 둔다 -->
                 <img
                   :src="detail.photoUrl ?? defaultPhoto"
-                  :class="detail.photoUrl ? undefined : 'pc-stt-0103-photo-empty'"
+                  :class="detail.photoUrl ? undefined : 'photo-empty'"
                   :alt="detail.photoUrl ? '등록된 증명사진' : '등록된 증명사진 없음'"
                 >
               </div>
@@ -73,7 +73,7 @@
               <input ref="fileInputRef" type="file" accept="image/*" hidden @change="onPhotoChange">
             </div>
 
-            <div class="pc-stt-0103-detail-fields">
+            <div class="detail-fields">
               <InfoTable :columns="2" size="100">
                 <InfoField label="성명">
                   <span>홍길동</span>
@@ -106,7 +106,7 @@
               </InfoTable>
 
               <!-- 나머지는 전체폭 1단. 시안 라벨 148px / 값 384px -->
-              <InfoTable :columns="1" size="148" class="pc-stt-0103-form-rest">
+              <InfoTable :columns="1" size="148" class="form-rest">
                 <InfoField label="경찰관 배명 일자" for="personnel-officer-assigned">
                   <DatePicker id="personnel-officer-assigned" v-model="detail.officerAssignedDate" size="sm" class="flex-1" input-class="w-full" />
                 </InfoField>
@@ -271,9 +271,9 @@
             </div>
           </div>
 
-          <section class="pc-stt-0103-transfer-section" aria-labelledby="transfer-heading">
-            <div class="pc-stt-0103-transfer-head">
-              <h3 id="transfer-heading" class="pc-stt-0103-transfer-title">전입 전출 현황</h3>
+          <section class="transfer-section" aria-labelledby="transfer-heading">
+            <div class="transfer-head">
+              <h3 id="transfer-heading" class="transfer-title">전입 전출 현황</h3>
               <div class="btn-wrap-group">
                 <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelectedTransfers">선택삭제</Button>
                 <Button type="button" variant="secondary" size="sm" @click="onAddTransfer">추가</Button>

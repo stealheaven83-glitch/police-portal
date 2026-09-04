@@ -1,6 +1,6 @@
 <template>
   <!-- 모바일 앱 헤더 (<768) -->
-  <header :class="[styles.mHeader, styles.mobileOnly]">
+  <!-- <header :class="[styles.mHeader, styles.mobileOnly]">
     <button type="button" :class="styles.mHeaderBtn" aria-label="뒤로" @click="goBack">
       <Icon name="arrowLeft" :size="24" />
     </button>
@@ -8,7 +8,7 @@
     <button type="button" :class="styles.mHeaderBtn" aria-label="메뉴" @click="onMenu">
       <Icon name="menu" :size="20" />
     </button>
-  </header>
+  </header> -->
 
   <!-- PC 헤더 (≥768) -->
   <PageHeader :class="styles.pcOnly">

@@ -1,25 +1,25 @@
 <template>
-  <div class="pm-com-0802-wrap">
+  <div class="lp-page-scroll">
     <SearchBar
       v-model="keyword"
-      class="pm-com-0802-search"
+      class="lp-search-hero"
       label="통합검색어"
       @search="onSearch"
     />
 
-    <div class="pm-com-0802-body">
+    <div class="lp-content-panel lp-content-panel-pad">
       <Tabs v-model="activeTab">
-        <TabsList variant="fill" tone="secondary" class="pm-com-0802-tabs">
+        <TabsList variant="fill" tone="secondary" class="lp-segmented-tabs">
           <TabsTrigger v-for="tab in resultTabs" :key="tab.value" :value="tab.value">
             {{ tab.label }}({{ tab.count.toLocaleString() }})
           </TabsTrigger>
         </TabsList>
       </Tabs>
 
-      <section v-for="section in visibleSections" :key="section.tab" class="pm-com-0802-section">
-        <div class="pm-com-0802-section-head">
-          <h2 class="pm-com-0802-section-title">
-            {{ section.title }} <b>{{ section.total }}건</b>
+      <section v-for="section in visibleSections" :key="section.tab" class="lp-result-section">
+        <div class="lp-row-between lp-section-head">
+          <h2 class="lp-heading-lg">
+            {{ section.title }} <b class="lp-hit">{{ section.total }}건</b>
           </h2>
           <Button type="button" variant="text" size="xs" @click="onMore(section.title)">
             더보기
@@ -27,9 +27,9 @@
         </div>
 
         <!-- 메뉴 구역: 메뉴 경로 링크만 나열된다 -->
-        <ul v-if="section.menus?.length" class="pm-com-0802-menu-list">
+        <ul v-if="section.menus?.length" class="lp-link-list">
           <li v-for="menu in section.menus" :key="menu.path">
-            <button type="button" class="pm-com-0802-link" @click="onMove(menu.path)">
+            <button type="button" class="lp-path-link" @click="onMove(menu.path)">
               {{ menu.path }}
             </button>
           </li>
@@ -37,10 +37,10 @@
 
         <!-- 본문이 있는 구역 -->
         <template v-if="section.contents?.length">
-          <article v-for="item in section.contents" :key="item.id" class="pm-com-0802-item">
-            <h3 class="pm-com-0802-item-title">{{ item.title }}</h3>
-            <p class="pm-com-0802-item-summary">{{ item.summary }}</p>
-            <button type="button" class="pm-com-0802-link" @click="onMove(item.path)">
+          <article v-for="item in section.contents" :key="item.id" class="lp-result-item">
+            <h3 class="lp-heading-lg">{{ item.title }}</h3>
+            <p class="lp-result-summary">{{ item.summary }}</p>
+            <button type="button" class="lp-path-link" @click="onMove(item.path)">
               {{ item.path }}
             </button>
           </article>
@@ -50,7 +50,7 @@
       </section>
 
       <CustomPagination
-        class="pm-com-0802-pagination"
+        class="lp-result-pagination"
         simple
         :current-page="currentPage"
         :total-pages="99"

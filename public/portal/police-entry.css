@@ -1,21 +1,24 @@
 @charset "UTF-8";
 
 /*
- * 퍼블리싱 원본(reference-publisher/police-portal) CSS 진입점.
+ * CSS 진입점. 레이어 순서는 index.html 최상단에서 아래와 같이 선언한다.
  *
- * 원본 파일은 한 글자도 수정하지 않고, 여기서 layer(police) 로 감싸서만 불러온다.
- * 레이어 순서는 index.html 최상단에서 아래와 같이 선언한다.
+ *   properties → theme → base → police → components → utilities → screen
  *
- *   properties → theme → base → police → components → utilities
- *
- * - police > base   : police reset 이 Tailwind preflight 를 덮는다 (포털 화면 정상)
+ * - police > base      : police reset 이 Tailwind preflight 를 덮는다 (포털 화면 정상)
  * - utilities > police : shadcn 유틸리티가 police reset 을 덮는다 (shadcn 정상)
+ * - screen > utilities : 우리가 컴포넌트·테일윈드를 덮어야 할 때 쓰는 자리
  *
  * 이 파일은 public/ 에 있으므로 Vite CSS 파이프라인을 타지 않는다.
  * 덕분에 police-style.css 안의 상대경로(../../images, ../../fonts)가 그대로 동작하고,
  * 원본에 존재하는 오타 경로(url(../..fonts/...))로 인한 빌드 실패도 발생하지 않는다.
  */
 
+/*
+ * ① 퍼블리싱 원본(reference-publisher/police-portal). **읽기 전용 — 추가·수정 금지.**
+ *    지금까지 우리 공통 클래스가 이 파일 뒤쪽에 섞여 들어갔다(+625줄). 그건 별도 배치로
+ *    police-common.css 로 옮긴다. 오늘부터 새로 추가하지 않는다. (CLAUDE.md §1-2)
+ */
 @import url("./asset/css/common/police-style.css") layer(police);
 @import url("./asset/css/common/swiper-bundle.min.css") layer(police);
 @import url("./asset/css/common/pub01.css") layer(police);
@@ -23,11 +26,15 @@
 @import url("./asset/css/common/pub03.css") layer(police);
 
 /*
- * 화면 전용 CSS 모음 (CLAUDE.md §1-2).
- *
- * layer() 로 감싸지 않는다 — 레이어 없는 CSS 는 @layer 안의 모든 것을 이기므로,
- * 화면 전용 스타일이 police-style.css(layer police) / shadcn(components) /
- * 테일윈드(utilities) 를 항상 덮는다. 화면에서 !important 를 쓸 필요가 없다.
- * 클래스명은 화면ID 프리픽스로 유니크하게(.pc-lpo-0215-wrapper) — 전역이라 겹치면 깨진다.
+ * ② 우리가 만든 공통 스타일 — **새 스타일은 기본적으로 여기.**
+ *    police-style.css 와 같은 layer(police) 지만 뒤에 오므로, 원본과 붙으면 이쪽이 이긴다.
+ *    클래스명은 .lp-* (접두사 없는 이름은 원본 소유라 겹치면 포털 화면이 깨진다).
  */
-@import url("./asset/css/common/styles.css");
+@import url("./asset/css/common/police-common.css") layer(police);
+
+/*
+ * ③ 컴포넌트·라이브러리·테일윈드를 **덮어야 하는** 것만.
+ *    layer(screen) 은 utilities 뒤라서 shadcn·테일윈드까지 전부 덮는다.
+ *    ②와 이름 규칙·공통성은 똑같고, 나뉘는 기준은 "덮어야 하느냐" 하나뿐이다.
+ */
+@import url("./asset/css/common/police-override.css") layer(screen);

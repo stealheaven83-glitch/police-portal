@@ -49,7 +49,7 @@
               :columns="infoColumns"
               class="flex-1"
               height="100%"
-              :row-class="(row: any) => (isActiveRow(row) ? 'pc-lpo-0801-dept-active-row' : undefined)"
+              :row-class="(row: any) => (isActiveRow(row) ? 'lp-grid-active-row' : undefined)"
               placeholder="부서 정보가 없습니다"
               @row-click="onInfoRowClick"
             />

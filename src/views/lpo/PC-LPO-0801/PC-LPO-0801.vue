@@ -49,7 +49,7 @@
           :columns="listColumns"
           class="flex-1"
           height="100%"
-          :row-class="(row: any) => (row.rowKey === activeRowKey ? 'pc-lpo-0801-active-row' : undefined)"
+          :row-class="(row: any) => (row.rowKey === activeRowKey ? 'lp-grid-active-row' : undefined)"
           placeholder="조회된 인사 정보가 없습니다"
           @row-click="onListRowClick"
         />

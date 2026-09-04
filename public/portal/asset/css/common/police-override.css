@@ -1,0 +1,121 @@
+@charset "UTF-8";
+
+/*
+ * 컴포넌트·라이브러리·테일윈드를 덮어야 하는 공통 스타일. 규칙 전문은 CLAUDE.md §1-2.
+ *
+ * police-common.css 와 역할만 다르다 — 둘 다 공통이고 이름 규칙도 같다(.lp-*).
+ * 나누는 기준은 "얼마나 공통이냐"가 아니라 "덮어야 하느냐" 하나다:
+ *
+ *   - Tabulator·VueDatePicker 같은 라이브러리 내부 클래스를 겨냥한다
+ *   - shadcn/custom 컴포넌트가 이미 먹인 스타일을 되돌린다
+ *   - 컴포넌트가 노출한 CSS 변수를 재정의한다
+ *
+ * 위가 아니면 police-common.css 에 쓴다(그쪽이 기본값).
+ *
+ * police-entry.css 가 layer(screen) 으로 import 하고, index.html 의 레이어 순서에서
+ * screen 이 utilities 뒤에 온다 → 테일윈드·shadcn·police 를 전부 덮는다.
+ * 그래서 여기서는 !important 가 거의 필요 없다.
+ * (예외: Tabulator 처럼 JS 가 인라인 style 을 써 넣는 경우는 !important 가 필요하다)
+ *
+ * 판단이 애매하면 police-common.css 에 쓰고, 화면에서 안 먹으면 여기로 옮긴다.
+ */
+
+/* ══ 그리드(Tabulator) ════════════════════════════════════════ */
+
+/*
+ * "지금 오른쪽 상세에 떠 있는 행" 강조.
+ * 체크박스 다중선택(.tabulator-selected)과는 별개 개념이라 그걸 못 쓴다.
+ * 쓰는 곳: PC-COM-2204 · PC-LPO-0801(2곳) · PC-STT-0103
+ */
+.lp-grid-active-row {
+  background-color: var(--Surface-primary);
+}
+.lp-grid-active-row .tabulator-cell {
+  color: var(--Base-primary);
+  font-weight: 700;
+}
+
+/* 값이 링크처럼 보여야 하는 셀(사용자ID 등) */
+.lp-grid-link-cell.tabulator-cell {
+  text-decoration: underline;
+}
+
+/*
+ * 그룹 헤더 밑에 생기는 빈 서브헤더 줄(level1/2/3)을 접어 한 줄처럼 보이게 한다.
+ * 컬럼 구조는 기획 스펙이라 그대로 두고 높이만 0 으로 만든다.
+ * Tabulator 가 그룹 헤더 높이를 JS 로 인라인 계산해 넣으므로 !important 로 덮는다.
+ */
+.lp-perm-menu-grid .tabulator-col-group-cols {
+  height: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden;
+  border-top: none !important;
+}
+
+/* 메뉴명 2depth 칸은 시안에서 회색으로 칠해져 있다 */
+.lp-perm-menu-grid .tabulator-cell.lp-grid-depth-cell {
+  background-color: var(--Background-gray01);
+}
+
+/*
+ * 값이 있는 행의 라벨 뒤에 돋보기 아이콘을 붙인다(시안 11710:112376).
+ * TabulatorGrid 의 button 셀은 값이 있으면 라벨을 담은 <span> 하나만 그리는데,
+ * 그 라벨을 textContent 로 넣어서 <span class="grid-icon-search"> 를 실어 보낼 수 없다.
+ * 그래서 그 <span> 에 가상요소로 같은 아이콘을 얹는다.
+ */
+.lp-grid-search-cell > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.lp-grid-search-cell > span::after {
+  content: "";
+  flex-shrink: 0;
+  width: 2.6rem;
+  height: 2.6rem;
+  background: url("../../images/icon/btn search-circle.svg") no-repeat center / 2.6rem auto;
+}
+
+/* ══ 표(TableWrapper) ═════════════════════════════════════════ */
+
+/* 셀을 좌측 정렬로 되돌린다(TableWrapper 기본은 가운데) */
+.lp-table-left td {
+  text-align: left;
+}
+
+/* ══ 탭 컴포넌트 ══════════════════════════════════════════════ */
+
+/*
+ * 시안의 탭은 칸끼리 붙은 세그먼트 형태다 — 기본 tab 컴포넌트의 간격을 없애고
+ * 바깥 모서리만 둥글린다(테두리는 겹쳐서 한 줄로 보이게 -1px 씩 당긴다).
+ */
+.lp-segmented-tabs {
+  gap: 0;
+}
+.lp-segmented-tabs > button {
+  border-radius: 0;
+}
+.lp-segmented-tabs > button + button {
+  margin-left: -1px;
+}
+.lp-segmented-tabs > button:first-child {
+  border-top-left-radius: var(--Radius-medium1);
+  border-bottom-left-radius: var(--Radius-medium1);
+}
+.lp-segmented-tabs > button:last-child {
+  border-top-right-radius: var(--Radius-medium1);
+  border-bottom-right-radius: var(--Radius-medium1);
+}
+
+/* ══ 공통 클래스 부분 해제 ════════════════════════════════════ */
+
+/* 팝업 본문 안에서는 .form-note 의 아래 여백을 없앤다(.lp-dialog-body 가 gap 으로 잡는다) */
+.lp-dialog-body .form-note {
+  margin-bottom: 0;
+}
+
+/* 드롭존 안내문 둘째 줄 — .lp-dropzone-txt p 의 크기·색을 되돌린다 */
+.lp-dropzone-sub {
+  font-size: 1.3rem;
+  color: var(--Text-body_1);
+}
