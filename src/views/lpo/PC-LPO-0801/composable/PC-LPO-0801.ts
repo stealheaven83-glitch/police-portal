@@ -183,22 +183,71 @@ export interface DeptInfoRow {
   dept: string
 }
 
-/** 시안의 트리 — 지역경찰포털 아래 본청 / 경찰대학 */
+/**
+ * 부서 트리 목업 — 지역경찰포털 아래 관서(본청 · 경찰대학 · 부산청), 그 아래 부서.
+ * 잎 노드의 name 은 '부서 정보' 표의 dept 와 같은 값이라, 나중에 트리 선택으로
+ * 우측 목록을 거를 때 station + name 으로 바로 짝지을 수 있다.
+ */
 export function createDeptTree(): DeptTreeNode[] {
   return [
     {
       name: '지역경찰포털',
       children: [
-        { name: '본청', station: '본청' },
+        {
+          name: '본청',
+          station: '본청',
+          children: [
+            { name: '기획조정관', station: '본청' },
+            { name: '경무인사기획관', station: '본청' },
+            {
+              name: '범죄예방대응국',
+              station: '본청',
+              children: [
+                { name: '지역경찰운영과', station: '본청' },
+                { name: '범죄예방기획계', station: '본청' },
+                { name: '여성청소년범죄수사', station: '본청' },
+              ],
+            },
+            { name: '생활안전교통국', station: '본청' },
+            { name: '수사기획조정관', station: '본청' },
+            { name: '형사국', station: '본청' },
+            { name: '사이버수사국', station: '본청' },
+            { name: '안보수사국', station: '본청' },
+            { name: '치안상황관리관', station: '본청' },
+          ],
+        },
         {
           name: '경찰대학',
           station: '경찰대학',
           children: [
-            { name: '경찰대학 교무처', station: '경찰대학' },
-            { name: '경찰대학 교수부', station: '경찰대학' },
-            { name: '경찰대학 운영지원과', station: '경찰대학' },
-            { name: '경찰대학 학생지도부', station: '경찰대학' },
-            { name: '경찰대학 도서관', station: '경찰대학' },
+            { name: '교무처', station: '경찰대학' },
+            { name: '교수부', station: '경찰대학' },
+            { name: '운영지원과', station: '경찰대학' },
+            { name: '학생지도부', station: '경찰대학' },
+            { name: '도서관', station: '경찰대학' },
+            { name: '생활지도과', station: '경찰대학' },
+            { name: '치안정책연구소', station: '경찰대학' },
+            { name: '수사보안연수원', station: '경찰대학' },
+            { name: '교육훈련과', station: '경찰대학' },
+            { name: '학생과', station: '경찰대학' },
+          ],
+        },
+        {
+          name: '부산청',
+          station: '부산청',
+          children: [
+            { name: '청문감사인권관', station: '부산청' },
+            { name: '공공안전부', station: '부산청' },
+            {
+              name: '수사부',
+              station: '부산청',
+              children: [
+                { name: '강력범죄수사대', station: '부산청' },
+                { name: '사이버수사대', station: '부산청' },
+              ],
+            },
+            { name: '사상경찰서', station: '부산청' },
+            { name: '해운대경찰서', station: '부산청' },
           ],
         },
       ],
@@ -206,7 +255,10 @@ export function createDeptTree(): DeptTreeNode[] {
   ]
 }
 
-/** 시안의 '부서 정보' 5행 */
+/**
+ * '부서 정보' 목업.
+ * 앞 5행이 시안에 그려진 것이고, 나머지는 스크롤·조회 동작을 확인하려고 덧붙였다.
+ */
 export function createDeptInfoRows(): DeptInfoRow[] {
   return [
     { station: '경찰대학', dept: '교무처' },
@@ -214,6 +266,21 @@ export function createDeptInfoRows(): DeptInfoRow[] {
     { station: '경찰대학', dept: '운영지원과' },
     { station: '경찰대학', dept: '학생지도부' },
     { station: '경찰대학', dept: '도서관' },
+    { station: '경찰대학', dept: '생활지도과' },
+    { station: '경찰대학', dept: '치안정책연구소' },
+    { station: '경찰대학', dept: '수사보안연수원' },
+    { station: '경찰대학', dept: '교육훈련과' },
+    { station: '경찰대학', dept: '학생과' },
+    { station: '본청', dept: '기획조정관' },
+    { station: '본청', dept: '경무인사기획관' },
+    { station: '본청', dept: '범죄예방대응국' },
+    { station: '본청', dept: '지역경찰운영과' },
+    { station: '본청', dept: '생활안전교통국' },
+    { station: '본청', dept: '수사기획조정관' },
+    { station: '본청', dept: '형사국' },
+    { station: '본청', dept: '사이버수사국' },
+    { station: '본청', dept: '안보수사국' },
+    { station: '본청', dept: '치안상황관리관' },
   ]
 }
 

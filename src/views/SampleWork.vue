@@ -133,7 +133,7 @@ const vIf = ref(false);
     </template>
   </SearchWrapper>
   <button @click="vIf = true">클릭</button>
-  <LayoutSplite :count="3">
+  <LaycoutSplite :count="3">
     <template #layout-1>
       <LayoutHeader title="왼쪽" >
         <template #right>
@@ -153,7 +153,7 @@ const vIf = ref(false);
     <template #layout-4>
       <LayoutHeader title="오른쪽" />
     </template>
-  </LayoutSplite>
+  </LaycoutSplite>
 </template>
 
 <style scoped>

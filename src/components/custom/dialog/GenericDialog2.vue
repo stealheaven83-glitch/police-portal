@@ -43,6 +43,12 @@ const props = withDefaults(
     cancelText?: string
     /** 오버레이 클릭/ESC 로 닫기 방지 */
     persistent?: boolean
+    /**
+     * 팝업 높이 고정(숫자면 px). 시안이 높이까지 정한 팝업에 쓴다.
+     * 주지 않으면 지금까지처럼 내용 높이만큼 늘어난다.
+     * 지정해도 max-h-[85dvh] 는 그대로 걸리므로 화면보다 커지지 않는다.
+     */
+    height?: DialogSize
   }>(),
   {
     title: '',
@@ -55,6 +61,12 @@ const props = withDefaults(
     persistent: false,
   },
 )
+
+/** height 를 준 팝업만 높이를 고정한다 — 본문(flex-1)이 남은 높이를 가져간다 */
+const heightStyle = computed(() => {
+  if (props.height === undefined) return undefined
+  return { height: typeof props.height === 'number' ? `${props.height}px` : props.height }
+})
 
 const emit = defineEmits<{
   (e: 'update:open', value: boolean): void
@@ -167,7 +179,7 @@ function handleCancel() {
       :show-close-button="showCloseButton"
       class="dialog-wrap px-10 py-6 gap-0 flex flex-col max-h-[85dvh]"
       :class="sizeClass"
-      :style="sizeStyle"
+      :style="[sizeStyle, heightStyle]"
       @pointer-down-outside="(e: Event) => persistent && e.preventDefault()"
       @escape-key-down="(e: Event) => persistent && e.preventDefault()"
       >

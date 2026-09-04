@@ -3,49 +3,59 @@
     v-model:open="open"
     title="부서 조회"
     :size="800"
+    :height="640"
     :show-close-button="true"
   >
-    <!-- 검색줄 — 시안 입력 608px + 조회 버튼 100px -->
-    <div class="pc-lpo-0801-dept-search">
-      <InputField2
-        v-model="keyword"
-        size="sm"
-        class="!space-y-0 pc-lpo-0801-dept-keyword"
-        input-class="w-full"
-        label="부서 조회어"
-        label-class="sr-only"
-        placeholder="부서 조회"
-      />
-      <Button type="button" variant="secondary" size="sm" class="w-25" @click="onSearch">조회</Button>
-    </div>
-
-    <!-- 부서(트리) / 부서 정보(표) 2분할 — 시안 300 : 414 -->
-    <div class="pc-lpo-0801-dept-panes">
-      <section class="pc-lpo-0801-dept-pane pc-lpo-0801-dept-pane-tree" aria-labelledby="dept-tree-heading">
-        <h3 id="dept-tree-heading" class="pc-lpo-0801-dept-pane-title">부서</h3>
-        <div class="pc-lpo-0801-dept-tree">
-          <TreeView
-            v-model="deptTree"
-            :selected="selectedNode"
-            show-icon
-            tree-line
-            :draggable="false"
-            @update:selected="onNodeSelected"
-          />
-        </div>
-      </section>
-
-      <section class="pc-lpo-0801-dept-pane" aria-labelledby="dept-info-heading">
-        <h3 id="dept-info-heading" class="pc-lpo-0801-dept-pane-title">부서 정보</h3>
-        <TabulatorGrid
-          v-model:data="infoRows"
-          :columns="infoColumns"
-          height="27.5rem"
-          :row-class="(row: any) => (isActiveRow(row) ? 'pc-lpo-0801-dept-active-row' : undefined)"
-          placeholder="부서 정보가 없습니다"
-          @row-click="onInfoRowClick"
+    <div class="pop-body">
+      <!-- 검색줄 — 시안 입력 608px + 조회 버튼 100px -->
+      <div class="pop-search-area">
+        <InputField2
+          v-model="keyword"
+          size="sm"
+          class="!space-y-0 "
+          input-class="w-full"
+          label="부서 조회어"
+          label-class="sr-only"
+          placeholder="부서 조회"
         />
-      </section>
+        <Button type="button" variant="secondary" size="sm" class="w-25" @click="onSearch">조회</Button>
+      </div>
+
+      <!-- 부서(트리) / 부서 정보(표) 2분할 — 시안 720x420, 좌 300 : 우 414 -->
+      <div class="pop-layout">
+        <section class="pop-layout-col w300" aria-labelledby="dept-tree-heading">
+          <div class="pop-layout-head">
+            <h3 id="dept-tree-heading" class="pop-layout-title">부서</h3>
+          </div>
+          <div class="pop-layout-body flush">
+            <TreeView
+              v-model="deptTree"
+              :selected="selectedNode"
+              show-icon
+              tree-line
+              :draggable="false"
+              @update:selected="onNodeSelected"
+            />
+          </div>
+        </section>
+
+        <section class="pop-layout-col" aria-labelledby="dept-info-heading">
+          <div class="pop-layout-head">
+            <h3 id="dept-info-heading" class="pop-layout-title">부서 정보</h3>
+          </div>
+          <div class="pop-layout-body">
+            <TabulatorGrid
+              v-model:data="infoRows"
+              :columns="infoColumns"
+              class="flex-1"
+              height="100%"
+              :row-class="(row: any) => (isActiveRow(row) ? 'pc-lpo-0801-dept-active-row' : undefined)"
+              placeholder="부서 정보가 없습니다"
+              @row-click="onInfoRowClick"
+            />
+          </div>
+        </section>
+      </div>
     </div>
 
     <template #footer>

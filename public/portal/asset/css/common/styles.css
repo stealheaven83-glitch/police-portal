@@ -300,51 +300,6 @@
   font-weight: 700;
 }
 
-/* 팝업 검색줄 — 시안 입력 608px + 조회 버튼 100px */
-.pc-lpo-0801-dept-search {
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-  margin-bottom: 1.6rem;
-}
-.pc-lpo-0801-dept-keyword {
-  flex: 1;
-  min-width: 0;
-}
-
-/* 부서(트리) / 부서 정보(표) 2분할 상자 — 시안 300 : 414 */
-.pc-lpo-0801-dept-panes {
-  display: flex;
-  overflow: hidden;
-  border: 1px solid var(--Border_gray02);
-  border-radius: var(--Radius-medium2);
-}
-.pc-lpo-0801-dept-pane {
-  display: flex;
-  flex: 1 1 0;
-  min-width: 0;
-  flex-direction: column;
-}
-.pc-lpo-0801-dept-pane-tree {
-  flex: 0 0 30rem;
-  border-right: 1px solid var(--Border_gray02);
-}
-.pc-lpo-0801-dept-pane-title {
-  padding: 1rem 1.6rem;
-  border-bottom: 1px solid var(--Border_gray02);
-  background-color: var(--Background-gray01);
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--Text-body_0);
-}
-
-/* 트리는 깊어지면 가로로도 넘치므로 양방향 스크롤을 준다(시안에 가로 스크롤바가 있다) */
-.pc-lpo-0801-dept-tree {
-  height: 27.5rem;
-  padding: 0.8rem 0;
-  overflow: auto;
-}
-
 /* 우측 표에서 지금 고른 행 */
 .pc-lpo-0801-dept-active-row {
   background-color: var(--Surface-primary);
