@@ -65,6 +65,7 @@
           </ul>
         </PopoverContent>
       </Popover>
+
     </div>
 
     <FullCalendar ref="calendarRef" :options="calendarOptions" />
@@ -89,6 +90,9 @@ const categories = {
   assigned: { id: 'assigned', label: '센터조사관 본인에게 배당받은 사건', dot: '#34A2FC', bg: '#F0F7FF', text: '#1E2124' },
 }
 const categoryList = Object.values(categories)
+
+/** 일정을 누르면 화면에서 상세 팝업을 연다 (PM-PUB-0405 조사예약) */
+const emit = defineEmits(['event-click'])
 
 const legendOpen = ref(false)
 const calendarRef = ref(null)
@@ -165,6 +169,9 @@ const calendarOptions = reactive({
   eventContent: (arg) => {
     const time = arg.timeText ? `${arg.timeText} ` : ''
     return { html: `<span class="fc-event-pill">${time}${arg.event.title}</span>` }
+  },
+  eventClick: (info) => {
+    emit('event-click', info.event)
   },
   eventDidMount: (info) => {
     const dotColor = info.event.extendedProps.dot

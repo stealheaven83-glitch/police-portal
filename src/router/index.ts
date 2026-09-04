@@ -869,6 +869,98 @@ const router = createRouter({
                 title: '정신응급대응팀 등록'
             }
         },
+        /*
+         * 아래 넷은 화면군이다 — 한 컴포넌트가 여러 화면ID를 가진다(CLAUDE.md §3 패턴A, §4 예외).
+         * screenGroup 을 공통으로 주지 않으면 Layout.vue 의 :key 때문에 이동할 때마다 리마운트된다.
+         * plannedRoutes 는 여기 적힌 name 을 taken 으로 걸러 중복 등록하지 않는다.
+         */
+
+        /* (구) 자료조회 — 가정폭력 / 아동학대 / 스토킹 탭 */
+        {
+            path: '/views/pub/PC-PUB-0208',
+            name: 'PC-PUB-0208',
+            component: () => import('../views/pub/PC-PUB-0208/PC-PUB-0208.vue'),
+            meta: { layout: 'WorkLayout', title: '(구) 자료조회 - 가정폭력', screenGroup: 'PC-PUB-0208' }
+        },
+        {
+            path: '/views/pub/PC-PUB-0209',
+            name: 'PC-PUB-0209',
+            component: () => import('../views/pub/PC-PUB-0208/PC-PUB-0208.vue'),
+            meta: { layout: 'WorkLayout', title: '(구) 자료조회 - 아동학대', screenGroup: 'PC-PUB-0208' }
+        },
+        {
+            path: '/views/pub/PC-PUB-0210',
+            name: 'PC-PUB-0210',
+            component: () => import('../views/pub/PC-PUB-0208/PC-PUB-0208.vue'),
+            meta: { layout: 'WorkLayout', title: '(구) 자료조회 - 스토킹', screenGroup: 'PC-PUB-0208' }
+        },
+
+        /* 해바라기센터 관리 — 상세 · 등록은 목록 위에 뜨는 팝업이다 */
+        {
+            path: '/views/pub/PM-PUB-0401',
+            name: 'PM-PUB-0401',
+            component: () => import('../views/pub/PM-PUB-0401/PM-PUB-0401.vue'),
+            meta: { layout: 'WorkLayout', title: '해바라기센터 관리', screenGroup: 'PM-PUB-0401' }
+        },
+        {
+            path: '/views/pub/PC-PUB-0402',
+            name: 'PC-PUB-0402',
+            component: () => import('../views/pub/PM-PUB-0401/PM-PUB-0401.vue'),
+            meta: { layout: 'WorkLayout', title: '해바라기센터 상세', screenGroup: 'PM-PUB-0401' }
+        },
+        {
+            path: '/views/pub/PC-PUB-0403',
+            name: 'PC-PUB-0403',
+            component: () => import('../views/pub/PM-PUB-0401/PM-PUB-0401.vue'),
+            meta: { layout: 'WorkLayout', title: '해바라기센터 등록', screenGroup: 'PM-PUB-0401' }
+        },
+
+        /* 해바라기센터 사용자 — 사용자 상세 · 등록도 팝업이다 */
+        {
+            path: '/views/pub/PM-PUB-0404',
+            name: 'PM-PUB-0404',
+            component: () => import('../views/pub/PM-PUB-0404/PM-PUB-0404.vue'),
+            meta: { layout: 'WorkLayout', title: '해바라기센터 사용자', screenGroup: 'PM-PUB-0404' }
+        },
+        {
+            path: '/views/pub/PC-PUB-0417',
+            name: 'PC-PUB-0417',
+            component: () => import('../views/pub/PM-PUB-0404/PM-PUB-0404.vue'),
+            meta: { layout: 'WorkLayout', title: '해바라기센터 사용자 상세/수정', screenGroup: 'PM-PUB-0404' }
+        },
+        {
+            path: '/views/pub/PC-PUB-0418',
+            name: 'PC-PUB-0418',
+            component: () => import('../views/pub/PM-PUB-0404/PM-PUB-0404.vue'),
+            meta: { layout: 'WorkLayout', title: '해바라기센터 사용자 등록', screenGroup: 'PM-PUB-0404' }
+        },
+
+        /* 조사예약 — 월간/주간은 달력 안의 토글이고, 상세 · 등록은 팝업이다 */
+        {
+            path: '/views/pub/PM-PUB-0405',
+            name: 'PM-PUB-0405',
+            component: () => import('../views/pub/PM-PUB-0405/PM-PUB-0405.vue'),
+            meta: { layout: 'WorkLayout', title: '조사예약 목록(월별)', screenGroup: 'PM-PUB-0405' }
+        },
+        {
+            path: '/views/pub/PC-PUB-0406',
+            name: 'PC-PUB-0406',
+            component: () => import('../views/pub/PM-PUB-0405/PM-PUB-0405.vue'),
+            meta: { layout: 'WorkLayout', title: '조사예약 목록(주간별)', screenGroup: 'PM-PUB-0405' }
+        },
+        {
+            path: '/views/pub/PC-PUB-0407',
+            name: 'PC-PUB-0407',
+            component: () => import('../views/pub/PM-PUB-0405/PM-PUB-0405.vue'),
+            meta: { layout: 'WorkLayout', title: '조사예약 상세', screenGroup: 'PM-PUB-0405' }
+        },
+        {
+            path: '/views/pub/PC-PUB-0408',
+            name: 'PC-PUB-0408',
+            component: () => import('../views/pub/PM-PUB-0405/PM-PUB-0405.vue'),
+            meta: { layout: 'WorkLayout', title: '조사예약 등록', screenGroup: 'PM-PUB-0405' }
+        },
+
         {
             path: '/views/stt/PC-STT-0103',
             name: 'PC-STT-0103',

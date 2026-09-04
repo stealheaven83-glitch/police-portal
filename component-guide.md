@@ -440,6 +440,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 |---|---|---|
 | `.lp-flex-fill` | 남는 가로폭을 채우되 내용이 넘치지 않게(flex 1 / min-width 0) | 2204, IRC-0101 |
 | `.lp-row-between` | 한 줄에 좌우로 벌려 놓기 | 2204, 0601, 0802 |
+| `.lp-unit-row` | 한 값을 여러 칸으로 쪼갠 줄 — 작은 입력 + 단위 글자('시' '분' '세' '~') | PUB-0405 |
 | `.lp-summary-row` | 값 텍스트 + 우측 버튼 (표 셀 안, 자기도 늘어남) | 0601 |
 | `.lp-field-row` | 라벨+입력 여러 쌍이 한 줄에 늘어서고 좁아지면 줄바꿈 | 0601 |
 | `.lp-page-scroll` | **페이지 본문** 이 넘칠 때 이 영역만 세로 스크롤 (상세 패널 안쪽은 `.detail-scroll`) | 0801, 0802, IRC-0101 |
@@ -448,6 +449,12 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-section-head` | 제목줄 아래 실선(`.lp-row-between` 과 함께) | 0802 |
 | `.lp-table-gap` | 표 위 여백 | 0601 |
 | `.lp-meta-nowrap` | 조회 화면 위쪽 '최종 수정일' 한 줄 | 0601 |
+| `.lp-placeholder-box` | 채울 것이 아직 정해지지 않은 자리(시안의 회색 상자) | PUB-0113 |
+| `.lp-form-box` / `.lp-form-box-center` | 라벨 칸 없이 컨트롤만 들어가는 테두리 상자(라디오·체크박스 줄) / 그 안을 가운데로. 라벨-값 표면 `InfoTable` | PUB-0702, PUB-0208 |
+| `.lp-link-danger` | 아이콘 + 붉은 글자로 주의를 끄는 링크(Figma button_link 경고 톤). 파란 경로 링크는 `.lp-path-link` | PUB-0701 |
+| `.lp-survey-list` / `.lp-survey-item` / `.lp-survey-choice` | 테두리 없는 설문 문항 나열(좌 문항 · 우 선택지). 라벨-값 표는 `InfoTable` | PUB-0201 |
+| `.lp-score-box` | 설문 합계 점수 줄(가운데 정렬 회색 띠) | PUB-0201 |
+| `.lp-status-done` | 결재선 등에서 '완료' 상태만 색으로 구분 | PUB-0702 |
 
 #### 아이콘 버튼
 
@@ -523,6 +530,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-segmented-tabs` | 탭 컴포넌트의 간격·모서리를 세그먼트 형태로 | 0802 |
 | `.lp-dialog-body .form-note` | 팝업 안에서 공통 `.form-note` 의 아래 여백 해제 | 0601 |
 | `.lp-dropzone-sub` | `.lp-dropzone-txt p` 의 크기·색 되돌리기 | (미사용) |
+| `.lp-info-nested` | `InfoField` 값 칸에 `InfoTable` 을 한 번 더 넣을 때 `.control` 여백·중복 테두리 제거(라벨 병합처럼 보이게) | PUB-0111 |
 
 ---
 

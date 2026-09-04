@@ -119,3 +119,19 @@
   font-size: 1.3rem;
   color: var(--Text-body_1);
 }
+
+/* InfoField 값 칸에 InfoTable 을 한 번 더 넣어 라벨 병합처럼 보이게 할 때
+   (PM-PUB-0111 범죄 통계 — '범죄' 한 칸이 하위 3줄을 묶는다).
+   .control 의 안쪽 여백과 중복 테두리를 지워 셀에 딱 맞춘다. */
+.lp-info-nested > [class*='control'] {
+  padding: 0;
+  gap: 0;
+}
+.lp-info-nested > [class*='control'] > [class*='grid'] {
+  width: 100%;
+  border-top: 0;
+  border-left: 0;
+}
+.lp-info-nested > [class*='control'] > [class*='grid'] > [class*='field']:last-child {
+  border-bottom: 0;
+}

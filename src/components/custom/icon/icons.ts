@@ -14,8 +14,13 @@ import StarIcon from '@/assets/images/icons/star.svg?component'
 import StarFillIcon from '@/assets/images/icons/starFill.svg?component'
 import AttachIcon from '@/assets/images/icons/attach.svg?component'
 import ShareIcon from '@/assets/images/icons/share.svg?component'
+<<<<<<< Updated upstream
 // Figma file_upload__atomic__pc 의 '삭제' 옆 아이콘 — 회색 원 + x
 import DeleteCircleIcon from '@/assets/images/icons/deleteCircle.svg?component'
+=======
+// Figma icon/system-info — 채워진 원 안의 i. currentColor 라 글자색을 따라간다
+import SystemInfoIcon from '@/assets/images/icons/systemInfo.svg?component'
+>>>>>>> Stashed changes
 
 export const icons = {
   search: SearchIcon,
@@ -32,7 +37,11 @@ export const icons = {
   starFill: StarFillIcon,
   attach: AttachIcon,
   share: ShareIcon,
+<<<<<<< Updated upstream
   deleteCircle: DeleteCircleIcon,
+=======
+  systemInfo: SystemInfoIcon,
+>>>>>>> Stashed changes
 }
 
 export type IconName = keyof typeof icons
