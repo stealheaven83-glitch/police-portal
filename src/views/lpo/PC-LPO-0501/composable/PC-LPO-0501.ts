@@ -15,6 +15,62 @@ export interface DispatchAllowanceRow {
   arrivedAt: string;
 }
 
+export interface DispatchAllowanceDetail extends Pick<
+  DispatchAllowanceRow,
+  "receiptNo" | "caseNo" | "receivedAt"
+> {
+  arrivedAt: string;
+  closedAt: string;
+  dispatcher: string;
+  closer: string;
+  reporter: string;
+  contact: string;
+  reportLocation: string;
+  processingResult: string;
+}
+
+const dispatchAllowanceDetails: Record<number, DispatchAllowanceDetail> = {
+  3: {
+    receiptNo: "00001[CODE C2]",
+    caseNo: "00001[CODE C2]",
+    receivedAt: "2026-08-01 00:49",
+    arrivedAt: "2026-08-01 00:56",
+    closedAt: "2026-08-01 01:32",
+    dispatcher: "홍길동 경사",
+    closer: "김경찰 경위",
+    reporter: "김민수",
+    contact: "010-1234-5678",
+    reportLocation: "서울특별시 중구 장충동 빠리바게트 앞",
+    processingResult: "현장 출동 후 주변 수색 및 보호자 연락 조치",
+  },
+  2: {
+    receiptNo: "00002[CODE C2]",
+    caseNo: "00002[CODE C2]",
+    receivedAt: "2026-08-01 01:18",
+    arrivedAt: "2026-08-01 01:25",
+    closedAt: "2026-08-01 01:51",
+    dispatcher: "이순신 경장",
+    closer: "박경찰 경위",
+    reporter: "이영희",
+    contact: "010-2345-6789",
+    reportLocation: "서울특별시 중구 신당동 주택가",
+    processingResult: "분리 조치 후 피해자 안전 확인 및 사건 인계",
+  },
+  1: {
+    receiptNo: "00003[CODE C2]",
+    caseNo: "00003[CODE C2]",
+    receivedAt: "2026-08-01 02:10",
+    arrivedAt: "2026-08-01 02:17",
+    closedAt: "2026-08-01 02:38",
+    dispatcher: "강감찬 경사",
+    closer: "최경찰 경위",
+    reporter: "박철수",
+    contact: "010-3456-7890",
+    reportLocation: "서울특별시 중구 을지로 입구",
+    processingResult: "귀가 안내 후 보호자에게 인계",
+  },
+};
+
 export interface ManualRegistrationForm {
   applyDept: string;
   receiptNo: string;
@@ -147,6 +203,8 @@ export function useDispatchAllowanceList() {
   });
   const advancedSearchOpen = ref(false);
   const manualRegisterOpen = ref(false);
+  const detailDialogOpen = ref(false);
+  const detail = ref<DispatchAllowanceDetail | null>(null);
   const manualForm = ref<ManualRegistrationForm>(
     createManualRegistrationForm(),
   );
@@ -173,6 +231,23 @@ export function useDispatchAllowanceList() {
 
   function closeManualRegister() {
     manualRegisterOpen.value = false;
+  }
+
+  function openDetail(row: DispatchAllowanceRow) {
+    detail.value = dispatchAllowanceDetails[row.no] ?? {
+      receiptNo: row.receiptNo,
+      caseNo: row.caseNo,
+      receivedAt: row.receivedAt,
+      arrivedAt: row.arrivedAt,
+      closedAt: row.arrivedAt,
+      dispatcher: "-",
+      closer: "-",
+      reporter: "-",
+      contact: "-",
+      reportLocation: "-",
+      processingResult: row.onSiteAction,
+    };
+    detailDialogOpen.value = true;
   }
 
   function saveManualRegistration() {
@@ -209,6 +284,8 @@ export function useDispatchAllowanceList() {
     department,
     advancedSearchOpen,
     manualRegisterOpen,
+    detailDialogOpen,
+    detail,
     manualForm,
     dateFrom,
     dateTo,
@@ -216,6 +293,7 @@ export function useDispatchAllowanceList() {
     rows,
     openManualRegister,
     closeManualRegister,
+    openDetail,
     saveManualRegistration,
     applyReport112,
   };

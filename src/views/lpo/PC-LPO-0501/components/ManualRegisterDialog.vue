@@ -122,7 +122,6 @@
 </template>
 
 <script setup lang="ts">
-import { toast } from "vue-sonner";
 import GenericDialog2 from "@/components/custom/dialog/GenericDialog2.vue";
 import { Button } from "@/components/custom/button";
 import { InfoTable, InfoField } from "@/components/custom/info-table";
@@ -138,6 +137,7 @@ import {
 import { Checkbox } from "@/components/custom/checkbox";
 import styles from "@/components/custom/info-table/InfoTable.module.css";
 import { ref } from "vue";
+import { useDialog } from "@/composable/dialog/dialog";
 defineOptions({ name: "ManualRegisterDialog" });
 
 // check state
@@ -159,9 +159,18 @@ const emit = defineEmits<{
   (e: "save"): void;
 }>();
 
-function onSave() {
-  emit("save");
-  toast.success("저장되었습니다.");
+const dialog = useDialog();
+
+async function onSave() {
+  const result = await dialog.confirm({
+    title: "저장하시겠습니까?",
+    btnOk: "확인",
+    btnCancel: "취소",
+  });
+  if (!result.confirmed) return;
+
+  // TODO: API 연동. 변경된 행만 보내려면 gridRef.getDirtyRows() 를 쓴다.
+  await dialog.alert({ title: "저장되었습니다.", btnCancel: "확인" });
 }
 </script>
 
