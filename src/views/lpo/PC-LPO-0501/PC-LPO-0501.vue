@@ -60,6 +60,12 @@
     placeholder="조회된 출동수당 내역이 없습니다"
     @row-selection-changed="selectedCount = $event.length"
   />
+
+  <ManualRegisterDialog
+    v-model:open="manualRegisterOpen"
+    :form="manualForm"
+    @save="saveManualRegistration"
+  />
 </template>
 
 <script setup lang="ts">
@@ -79,6 +85,7 @@ import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useDispatchAllowanceList } from './composable/PC-LPO-0501'
+import ManualRegisterDialog from './components/ManualRegisterDialog.vue'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
 defineOptions({ name: 'PcLpo0501' })
 
@@ -91,7 +98,18 @@ const navItems = [
   { label: '출동수당 조회' },
 ]
 
-const { department, advancedSearchOpen, dateFrom, dateTo, keyword, rows } = useDispatchAllowanceList()
+const {
+  department,
+  advancedSearchOpen,
+  manualRegisterOpen,
+  manualForm,
+  dateFrom,
+  dateTo,
+  keyword,
+  rows,
+  openManualRegister,
+  saveManualRegistration,
+} = useDispatchAllowanceList()
 
 const columns: TabulatorGridColumn[] = [
   { title: '번호', field: 'no', width: 60, hozAlign: 'center' },
@@ -116,7 +134,7 @@ function onDownloadExcel() {
 }
 
 function onManualRegister() {
-  toast.success('임의등록 화면은 준비 중입니다.')
+  openManualRegister()
 }
 
 function onSave() {

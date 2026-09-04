@@ -377,7 +377,7 @@ hex를 직접 쓰지 않는다. `var(--Text-body_1)`, `var(--Base-primary)`, `va
 | 색·크기·모서리 값 | `police-style.css`에 **토큰(`--Xxx`)으로** 추가. 화면에 hex 박지 않는다 |
 | 역할 있는 레이아웃·유틸 클래스 | `police-style.css`에 **공통 클래스로** 추가 (`.btn-wrap` 등과 같은 결로 명명) |
 | 특정 컴포넌트에 딸린 스타일 | 그 컴포넌트 폴더의 `*.module.css` |
-| 라벨-값 표 관련 | `custom/info-table/InfoTable.module.css` (이미 공통) |
+| 라벨-값 표 관련 | `custom/info-table/InfoTable.module.css` (이미 공통, 필수점 `.requiredDot`, 안내문구 `.hint`/`.hintSuccess`) |
 | 그리드 관련 | `src/assets/css/tabulator-theme.css` (전역 적용, 다시 스타일링 불필요) |
 | **그 화면에서만 쓰는 것** | `public/portal/asset/css/common/styles.css` 에 화면ID 프리픽스 클래스로(`.pc-lpo-0215-wrapper`) — **CLAUDE.md §1-2**. 화면 폴더에 `style/*.module.css` 를 새로 만들지 않는다. **애매하면 공통으로 만든다** |
 

@@ -143,18 +143,28 @@
   border-radius: 50%;
 }
 
-.hint {
+.hint,
+.hintSuccess {
   font-size: 1.5rem;
-  color: var(--Base--point, #d32f2f);
   white-space: nowrap;
   font-weight: 400;
+  color: var(--hint-color);
 }
 
-.hint:before {
+.hint:before,
+.hintSuccess:before {
   content: '＊';
-  color: var(--Base--point);
+  color: var(--hint-color);
   border-radius: 50%;
   margin-right: 0.4rem;
+}
+
+.hint {
+  --hint-color: var(--Base--point, #d32f2f);
+}
+
+.hintSuccess {
+  --hint-color: var(--success, #00880b);
 }
 
 .tempVehicleRow {
