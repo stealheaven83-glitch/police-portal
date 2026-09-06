@@ -30,8 +30,8 @@
     </template>
   </SearchWrapper>
 
-  <div class="mt-[1.6rem] flex justify-end">
-    <Button type="button" variant="tertiary2" size="sm" @click="onDownloadExcel">
+  <div class="list-actions">
+    <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
       <Download :size="16" aria-hidden="true" />
       엑셀다운로드
     </Button>
@@ -39,9 +39,10 @@
 
   <TabulatorGrid
     ref="gridRef"
-    class="mt-[1.2rem] flex-1"
+    class="flex-1"
     :columns="columns"
     :data="rows"
+    :row-class="(row) => (row.id === '합계' ? 'row-total' : undefined)"
     height="100%"
     min-height="40rem"
     placeholder="조회된 활동현황이 없습니다"

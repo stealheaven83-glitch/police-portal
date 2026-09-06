@@ -4,10 +4,10 @@
       <PageTitle title="출동수당 취합(일별)" />
     </template>
     <template #right>
-      <span class="group-gap2">
+      <div class="group-gap2">
         <Breadcrumb :items="navItems" />
         <HelpButton />
-      </span>
+      </div>
     </template>
   </PageHeader>
 
@@ -33,13 +33,12 @@
             triggerClass="w-20"
           />
         </div>
-
         <SelectField
           label="신청자"
           v-model="applicant"
           :options="applicantOptions"
           size="sm"
-          triggerClass="w-32"
+          triggerClass="w-50"
         />
         <SelectField
           label="신청구분"
@@ -67,7 +66,6 @@
     :columns="columns"
     :data="rows"
     layout="fitDataFill"
-    height="40rem"
     placeholder="조회된 출동수당 취합 내역이 없습니다"
     show-pagination
     :items-per-page="10"

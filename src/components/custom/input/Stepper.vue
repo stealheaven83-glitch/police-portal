@@ -74,7 +74,7 @@ function onBlur(e: Event) {
   >
     <button
       type="button"
-      class="flex h-full w-9 shrink-0 items-center justify-center text-[var(--Text-body_1)] outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--Border_primary)] disabled:cursor-not-allowed disabled:text-[var(--Text-body_disable)]"
+      class="flex h-full w-9 items-center justify-center text-[var(--Text-body_1)] outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--Border_primary)] disabled:cursor-not-allowed disabled:text-[var(--Text-body_disable)]"
       :disabled="!canDecrease"
       :aria-label="label ? `${label} 감소` : '감소'"
       @click="decrease"

@@ -275,9 +275,9 @@
             <div class="transfer-head">
               <h3 id="transfer-heading" class="transfer-title">전입 전출 현황</h3>
               <div class="btn-wrap-group">
-                <Button type="button" variant="tertiary2" size="xs" @click="onDeleteSelectedTransfers">선택삭제</Button>
-                <Button type="button" variant="secondary" size="xs" @click="onAddTransfer">추가</Button>
-                <Button type="button" variant="primary" size="xs" @click="onSaveTransfers">저장</Button>
+                <Button type="button" variant="tertiary2" size="xs" padding="12" @click="onDeleteSelectedTransfers">선택삭제</Button>
+                <Button type="button" variant="secondary" size="xs" padding="12" @click="onAddTransfer">추가</Button>
+                <Button type="button" variant="primary" size="xs" padding="12" @click="onSaveTransfers">저장</Button>
               </div>
             </div>
 

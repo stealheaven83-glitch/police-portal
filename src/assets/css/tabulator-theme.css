@@ -37,6 +37,7 @@
   border-right: 0;
   border-top: none;
   background-color: #fff;
+  justify-content: center;
 }
 
 .tabulator .tabulator-header .tabulator-col .tabulator-col-content {
@@ -168,6 +169,12 @@
   color: var(--Base--point);
 }
 
+/* 합계/총계 행 강조 (rowClass 로 지정). Tabulator 6.x 는 데이터 셀 병합(colspan)을
+   지원하지 않으므로 Figma 처럼 여러 컬럼을 하나로 합치지 못하고, 굵게만 표시한다. */
+.tabulator-row.row-total .tabulator-cell {
+  font-weight: 700;
+}
+
 /* 행 높이 슬라이더 반영 (종합 그리드 한정) */
 /* - 셀은 inline-flex 로 세로 중앙 정렬(가로 배치는 유지) */
 /* - block 레벨 flex 를 쓰면 셀이 세로로 쌓여 그리드가 깨지므로 inline-flex 사용 */
@@ -191,8 +198,8 @@
   border-right: 0;
 }
 .tabulator-row.tabulator-selected .tabulator-cell {
-  color: var(--Text-body_0);
-  font-weight: 400;
+  color: var(--Base-primary);
+  font-weight: 700;
 }
 
 .tabulator .tabulator-header {

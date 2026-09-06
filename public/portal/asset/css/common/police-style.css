@@ -178,6 +178,8 @@ body {
   -webkit-tap-highlight-color: transparent;
   scroll-behavior: smooth;
   letter-spacing: 0;
+  scrollbar-width: thin;
+  scrollbar-color: #BACBDE #F4F5F6;
 }
 
 html {

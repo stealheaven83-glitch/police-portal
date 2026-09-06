@@ -3,7 +3,7 @@
     v-model:open="open"
     title="부서 조회"
     :size="800"
-    :height="640"
+    :height="640" 
     :show-close-button="true"
   >
     <div class="pop-body">

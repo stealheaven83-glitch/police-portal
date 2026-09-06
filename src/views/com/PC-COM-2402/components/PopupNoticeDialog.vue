@@ -92,6 +92,7 @@
             label="가로"
             label-position="left"
             class="!space-y-0"
+            :clearable="false"
           />
           <span>px</span>
         </span>
@@ -103,6 +104,8 @@
             label="세로"
             label-position="left"
             class="!space-y-0"
+            :clearable="false"
+
           />
           <span>px</span>
         </span>
@@ -117,7 +120,8 @@
             input-class="w-20"
             label="왼쪽"
             label-position="left"
-            class="!space-y-0"
+            :clearable="false"
+
           />
           <span>px</span>
         </span>
@@ -129,6 +133,7 @@
             label="위로"
             label-position="left"
             class="!space-y-0"
+            :clearable="false"
           />
           <span>px</span>
         </span>

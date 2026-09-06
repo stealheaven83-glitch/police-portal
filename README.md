@@ -25,7 +25,7 @@ pnpm이 없다면 아래 중 하나로 설치합니다.
 ```bash
 # Node 16.13+ 에 내장된 corepack 사용 (권장)
 corepack enable
-corepack prepare pnpm@10.28.2 --activate
+corepack prepare pnpm@10.33.3 --activate
 
 
 # 또는 npm 으로 전역 설치

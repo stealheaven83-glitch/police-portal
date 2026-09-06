@@ -24,7 +24,7 @@
       <DepartmentCascadeSelect v-model="department" size="sm" />
     </template>
     <template #form>
-      <div class="search-area">
+      <div class="search-area"> 
         <DateRangePicker
           v-model:from="receiptFrom"
           v-model:to="receiptTo"

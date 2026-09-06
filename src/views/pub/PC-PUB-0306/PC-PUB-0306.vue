@@ -29,21 +29,19 @@
       <Button variant="secondary" size="sm">조회</Button>
     </template>
   </SearchWrapper>
-
-  <div class="mt-[1.6rem] flex justify-end">
-    <Button type="button" variant="tertiary2" size="sm" @click="onDownloadExcel">
+  <div class="list-actions">
+    <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
       <Download :size="16" aria-hidden="true" />
       엑셀다운로드
     </Button>
   </div>
-
   <TabulatorGrid
     ref="gridRef"
-    class="mt-[1.2rem] flex-1"
+    class="flex-1"
     :columns="columns"
     :data="rows"
+    :row-class="(row) => (row.id === '합계' ? 'row-total' : undefined)"
     height="100%"
-    min-height="40rem"
     placeholder="조회된 단체가 없습니다"
   />
 </template>
@@ -144,7 +142,7 @@ const rows = computed<StatusRow[]>(() => {
 
 const columns: TabulatorGridColumn[] = [
   { title: '번호', field: 'id', width: 70, hozAlign: 'center' },
-  { title: '관서', field: 'dept', hozAlign: 'center' },
+  { title: '관서', field: 'dept', width:200, hozAlign: 'center' },
   { title: '단체종류', field: 'groupType', hozAlign: 'center' },
   { title: '단체명', field: 'groupName', hozAlign: 'center' },
   { title: '인원', field: 'memberCount', hozAlign: 'center' },

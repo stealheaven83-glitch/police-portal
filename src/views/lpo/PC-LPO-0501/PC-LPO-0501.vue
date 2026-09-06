@@ -64,9 +64,16 @@
         <Download :size="16" aria-hidden="true" />
         엑셀다운로드
       </Button>
+       <Button
+        type="button"
+        variant="tertiary"
+        size="sm"
+        @click="onManualRegister"
+        >삭제</Button
+      >     
       <Button
         type="button"
-        variant="secondary"
+        variant="tertiary2"
         size="sm"
         @click="onManualRegister"
         >임의등록</Button
@@ -118,6 +125,10 @@ import { useSideMenuSetup } from "@/composable/menu/useSideMenuSetup";
 import { localPoliceMenu } from "@/composable/menu/sidemenu/presets";
 import { useBottomTabSetup } from "@/composable/tab/useBottomTabSetup";
 import {
+  useAutoTrigger,
+  type ScreenTriggerMap,
+} from "@/composables/useAutoTrigger";
+import {
   useDispatchAllowanceList,
   type DispatchAllowanceRow,
 } from "./composable/PC-LPO-0501";
@@ -156,16 +167,24 @@ const {
   saveManualRegistration,
 } = useDispatchAllowanceList();
 
+// 화면ID(PC-LPO-0501 목록 / PC-LPO-0502 임의등록 팝업) ↔ URL 동기화.
+// router.ts 에 0502 를 이 컴포넌트를 재사용하는 별도 라우트로 등록해뒀다(PC-LPO-0701 과 동일 패턴).
+const screenTriggers: ScreenTriggerMap = {
+  "PC-LPO-0501": [],
+  "PC-LPO-0502": [[manualRegisterOpen, true]],
+};
+useAutoTrigger(screenTriggers);
+
 const columns: TabulatorGridColumn[] = [
   { title: "번호", field: "no", width: 60, hozAlign: "center" },
   { title: "신청부서", field: "applyDept", hozAlign: "center" },
   {
-    title: "타지역 관서(전소속 부서)",
+    title: "타지역 관서<br/>(전소속 부서)",
     field: "otherStation",
     hozAlign: "center",
   },
   {
-    title: "타지역관서(전소속부서) 실적가져오기",
+    title: "타지역관서<br/>(전소속부서)<br/> 실적가져오기",
     field: "otherStationRef",
     hozAlign: "center",
   },

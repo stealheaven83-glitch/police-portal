@@ -151,6 +151,20 @@ const router = createRouter({
             meta: {
                 layout: 'WorkLayout',
                 title: '출동수당조회',
+                // Layout.vue 가 <component :key="route.meta.screenGroup ?? route.fullPath">로 렌더링한다.
+                // PC-LPO-0502(임의등록 팝업)가 같은 컴포넌트를 useAutoTrigger 로 공유하므로
+                // screenGroup 을 공통으로 줘서 이동할 때 리마운트되지 않게 한다.
+                screenGroup: 'PC-LPO-0501',
+            }
+        },
+        {
+            path: '/views/lpo/PC-LPO-0502',
+            name: 'PC-LPO-0502',
+            component: () => import('../views/lpo/PC-LPO-0501/PC-LPO-0501.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '출동수당조회',
+                screenGroup: 'PC-LPO-0501',
             }
         },
         {

@@ -12,7 +12,7 @@
             id="manual-apply-dept"
             v-model="form.applyDept"
             size="sm"
-            class="!space-y-0 flex-1"
+            class="flex-1"
           />
           <Button
             type="button"
@@ -33,7 +33,7 @@
             id="manual-receipt-no"
             v-model="form.receiptNo"
             size="sm"
-            class="!space-y-0 flex-1"
+            class="flex-1"
             input-class="w-full"
           />
           <Checkbox v-model="is112Search" label="112사건조회" />
@@ -65,11 +65,9 @@
         </span>
       </InfoField>
       <InfoField label="신고내용" full>
-        <div class="pc-lpo-0501-report-content">
-          장충동 빠리바게트 앞쪽// 50대 남자분이 도로가에 쓰러져 잇다면서//
-          119도 불럿다면서 장충동 빠리바게트 앞쪽// 50대 남자분이 도로가에
+          장충동 빠리바게트 앞쪽<br> 50대 남자분이 도로가에 쓰러져 잇다면서//
+          119도 불럿다면서 장충동 빠리바게트 앞쪽<br/> 50대 남자분이 도로가에
           쓰러져 잇다면서// 119도 불럿다면서
-        </div>
       </InfoField>
 
       <InfoField for="manual-on-site-action" full>
@@ -83,12 +81,12 @@
         />
       </InfoField>
 
-      <InfoField for="manual-on-site-action" full>
+      <InfoField for="manual-reason" full>
         <template #label>임의등록사유</template>
         <TextareaField
-          id="manual-on-site-action"
-          v-model="form.onSiteAction"
-          class="w-full !space-y-0"
+          id="manual-reason"
+          v-model="form.manualReason"
+          class="w-full"
           textarea-class="w-full"
           :height="112"
         />
@@ -173,14 +171,3 @@ async function onSave() {
   await dialog.alert({ title: "저장되었습니다.", btnCancel: "확인" });
 }
 </script>
-
-<style scoped>
-.pc-lpo-0501-report-content {
-  display: flex;
-  align-items: flex-start;
-  width: 100%;
-  min-height: 9.3rem;
-  line-height: 1.5;
-  white-space: pre-line;
-}
-</style>
