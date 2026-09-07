@@ -3,7 +3,6 @@
     :open="open"
     title="순찰차별 관할구역 관리"
     :size="800"
-    :show-footer="false"
     @update:open="emit('update:open', $event)"
   >
     <div class="lp-dialog-body">
@@ -27,9 +26,8 @@
           input-class="w-full"
         />
         <Button type="button" variant="secondary" size="sm" @click="onDraw">순찰구역 그리기</Button>
-        <Button type="button" variant="tertiary2" size="sm" @click="onReset">초기화</Button>
+        <Button type="button" variant="tertiary2" size="sm" @click="onReset" padding="16">초기화</Button>
       </div>
-
       <div class="lp-map-frame">
         <img
           src="/portal/asset/images/img/img_patrol_area_map.png"
@@ -37,7 +35,6 @@
         />
       </div>
     </div>
-
     <template #footer>
       <div class="lp-dialog-footer">
         <Button type="button" variant="tertiary2" size="md" @click="emit('update:open', false)">

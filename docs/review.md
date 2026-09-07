@@ -19,7 +19,7 @@
 - 저장이 목록에 반영되는지, 유효성 검사, 실제 삭제 — 개발팀 몫이다
 - LNB 활성표시(`openIndex`·`activeChild`) — `presets.ts` 에 `path` 를 채우면
   `useSideMenuSetup` 의 `syncActiveByRoute()` 가 자동으로 처리한다.
-  화면마다 사람이 대조할 일이 아니라 **프리셋 배치 작업으로 없앤다**(CLAUDE.md §4·§5).
+  화면마다 사람이 대조할 일이 아니라 **프리셋 배치 작업으로 없앤다**(docs/create.md §3).
 
 동작이 비어 있다고 무조건 감점하지 않는다. Figma 에 안 그려진 동작은 비워둬도 되고,
 그 사실이 인계 메모에 적혀 있으면 통과다(CLAUDE.md 서두).
@@ -41,7 +41,7 @@ grep -rnE '<(table|thead|tbody)\b' src/views/{도메인}/{화면ID}/
 grep -rnE 'display: *(grid|flex)' public/portal/asset/css/common/police-common.css
 ```
 
-### 2. 공통 CSS 를 **찾아보고** 썼는가 → 규칙 CLAUDE.md §1 ①② · 목록 `component-guide.md` §12
+### 2. 공통 CSS 를 **찾아보고** 썼는가 → 규칙 CLAUDE.md §2 ①② · 목록 `component-guide.md` §12
 
 **화면 전용 CSS 는 없다.** 한 화면만 쓰더라도 공통 파일에 공통 이름으로 만든다. "나중에 승격"도
 없으니 **중복은 더 이상 정상이 아니다 — 발견하면 지적한다.**
@@ -65,7 +65,7 @@ grep -rnE 'display: *(grid|flex)' public/portal/asset/css/common/police-common.c
 - **§12 표에 등재했는가 — 의도 칸까지 채웠는가**
   ← 빠뜨리기 제일 쉽다. 클래스명만 있는 줄은 다음 사람이 ③을 못 해서 오용한다.
 
-### 3. CSS 를 어느 파일에 넣었는가 → 규칙 CLAUDE.md §1-2
+### 3. CSS 를 어느 파일에 넣었는가 → 규칙 CLAUDE.md §2
 
 | 파일 | 기입 | 무엇이 들어가야 하나 |
 |---|---|---|
@@ -86,7 +86,7 @@ ls src/views/{도메인}/{화면ID}/style 2>/dev/null && echo '❌ style/ 폴더
 grep -rn 'style="' src/views/{도메인}/{화면ID}/
 ```
 
-### 4. 클래스 명명 → 규칙 CLAUDE.md §1-2
+### 4. 클래스 명명 → 규칙 CLAUDE.md §2
 
 - **`.lp-{역할}` 인가.** `lp` 접두사가 없으면 지적 — 원본이 `card` `title` `value` `wrap` 같은
   범용어 159개를 점유하고 있고, 우리 파일이 뒤에 로드돼 **우리가 이기므로** 겹치면 포털 화면이
@@ -107,7 +107,7 @@ grep -nE '\.(pc|pm|mo)-[a-z]{3}-[0-9]{4}-' public/portal/asset/css/common/police
 일반 태그(`<div>` `<span>`)에 붙은 것과, JS 변수·computed 에 담아 `:class` 로 바인딩한 것이 위반.
 **컴포넌트에 넘기는 `class`/`input-class` prop 은 허용**(`<InputField2 input-class="w-40" />`).
 
-### 6. 블록 순서 → 규칙 CLAUDE.md §1-1 2번
+### 6. 블록 순서 → 규칙 CLAUDE.md §3
 `<template>` 먼저, `<script setup>` 나중. **`<style>` 블록은 두지 않는다.**
 화면 파일과 그 폴더의 `components/` 팝업까지 전부 같은 순서다.
 
@@ -115,7 +115,7 @@ grep -nE '\.(pc|pm|mo)-[a-z]{3}-[0-9]{4}-' public/portal/asset/css/common/police
 head -1 src/views/{도메인}/{화면ID}/{화면ID}.vue        # <template> 이어야 한다
 ```
 
-### 7. 코드 스타일이 `PC-LPO-0215` 와 같은가 → 규칙 CLAUDE.md §1-1
+### 7. 코드 스타일이 `PC-LPO-0215` 와 같은가 → 규칙 CLAUDE.md §3
 기준 파일은 `src/views/lpo/PC-LPO-0215/PC-LPO-0215.vue` 하나다. 화면 유형이 달라도 이걸 따른다.
 줄 끝 세미콜론 없음 / 화살표 상수 아닌 `function` 선언 / import 순서(vue → 외부 → 공통 컴포넌트 →
 화면 composable → menu·tab) / 검색 옵션은 composable 에 `export const xxxOptions`.

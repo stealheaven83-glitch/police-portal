@@ -10,46 +10,23 @@
       </div>
     </template>
   </PageHeader>
-
-  <div class="lp-page-toolbar">
-    <!-- <template #department>
+  <SearchWrapper>
+    <template #department>
       <span class="dept-name">부서</span>
       <DepartmentCascadeSelect v-model="department4Search" size="sm" />
-    </template> -->
-
-    <SearchWrapper>
-      <template #department>
-        <span class="dept-name">부서</span>
-        <DepartmentCascadeSelect v-model="department4Search" size="sm" />
-      </template>
-      <template #topRightSection>
-        <span class="lp-meta-nowrap">{{ modifiedInfo }}</span>
-        <div class="btn-wrap-group">
-          <Button type="button" variant="tertiary2" size="sm" @click="onPrint">인쇄</Button>
-          <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
-        </div>
-      </template>
-
-      <!-- <div class="group-gap3">
-        <span class="dept-name">부서</span>
-        <DepartmentCascadeSelect v-model="department4Search" size="sm" />
-      </div> -->
-
-    </SearchWrapper>
-    <!-- <div class="group-gap2">
+    </template>
+    <template #topRightSection>
       <span class="lp-meta-nowrap">{{ modifiedInfo }}</span>
       <div class="btn-wrap-group">
         <Button type="button" variant="tertiary2" size="sm" @click="onPrint">인쇄</Button>
         <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
       </div>
-    </div> -->
-    
-  </div>
-
-  <ScrollWrapper>
+    </template>
+  </SearchWrapper>
+  <ScrollWrapper class="border-t border-t-[]">
     <!-- ── 부서정보 ─────────────────────────────────────────── -->
     <section class="lp-section" aria-labelledby="dept-info-heading">
-      <h2 id="dept-info-heading" class="lp-heading-lg lp-section-title">부서정보</h2>
+      <h2 id="dept-info-heading" class="lp-heading-md lp-section-title">부서정보</h2>
 
       <InfoTable :columns="3">
         <InfoField label="부서명">{{ department.name }}</InfoField>
@@ -337,19 +314,26 @@
 
         <InfoField label="전체 관할구역" full>{{ district.wholeArea }}</InfoField>
 
-        <InfoField label="순찰차별 관할구역" full>
-          <TableWrapper
+        <!--
+          값 칸에 표가 통째로 들어가는 칸이라 InfoField 에 lp-field-flush 를 줘서 안쪽 여백을
+          없애고, 표는 FieldTable(회색 헤더·상단선 없음·hover 없음)로 그린다 — 본문에 단독으로
+          놓는 TableWrapper 와 다른 자리다.
+        -->
+        <InfoField label="순찰차별 관할구역" full class="lp-field-flush">
+          <FieldTable
             :columns="patrolColumns"
             :items="patrolVehicles"
-            class="lp-table-left"
+            caption="순찰차별 관할구역"
+            placeholder="등록된 순찰차가 없습니다"
           >
             <template #cell-vehicle="{ item }">
               <span class="readonly-text">{{ item.vehicle }}</span>
             </template>
 
+            <!-- 관할구역이 비어 있으면 등록 버튼만 왼쪽에 놓인다(Figma 순마21호 행) -->
             <template #cell-area="{ item }">
               <div class="lp-row-between">
-                <span class="readonly-text">{{ item.area }}</span>
+                <span v-if="item.area" class="readonly-text">{{ item.area }}</span>
                 <Button type="button" variant="tertiary" size="xs" @click="openMapDialog(item)">
                   관할구역 관리
                 </Button>
@@ -391,7 +375,7 @@
                 </Button>
               </div>
             </template>
-          </TableWrapper>
+          </FieldTable>
         </InfoField>
 
         <InfoField label="지역특성 및 중점 추진사항" full for="district-features">
@@ -519,7 +503,7 @@ import AddressInput from '@/components/custom/address/AddressInput.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
-import TableWrapper from '@/components/custom/table/TableWrapper.vue'
+import FieldTable, { type FieldTableColumn } from '@/components/custom/table/FieldTable.vue'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { Icon } from '@/components/custom/icon'
 import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
@@ -569,7 +553,7 @@ const modifiedInfo = '수정일 : 2024-09-01 [홍길동]'
 
 /* ── 순찰차별 관할구역 표 ─────────────────────────────────────── */
 
-const patrolColumns = [
+const patrolColumns: FieldTableColumn[] = [
   { key: 'vehicle', label: '순찰차', width: '20rem' },
   { key: 'area', label: '관할구역' },
   { key: 'areaName', label: '순찰구역명', width: '20rem' },

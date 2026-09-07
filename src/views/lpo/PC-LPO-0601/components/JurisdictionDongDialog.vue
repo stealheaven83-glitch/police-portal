@@ -3,12 +3,11 @@
     :open="open"
     title="관할행정동 검색"
     :size="800"
-    :show-footer="false"
     @update:open="emit('update:open', $event)"
   >
     <div class="lp-dialog-body">
       <div class="search-area lp-search-form-gap">
-        <div class="group-gap1">
+        <div class="group-gap3">
           <label class="readonly-text lp-nowrap" for="dong-search-sido">시도</label>
           <SelectField
             id="dong-search-sido"
@@ -16,10 +15,10 @@
             :options="sidoOptions"
             size="sm"
             class="!space-y-0"
-            trigger-class="w-[13rem]"
+            trigger-class="w-[12.4rem]"
           />
         </div>
-        <div class="group-gap1">
+        <div class="group-gap3">
           <label class="readonly-text lp-nowrap" for="dong-search-sigungu">시군구</label>
           <SelectField
             id="dong-search-sigungu"
@@ -28,45 +27,46 @@
             placeholder="선택"
             size="sm"
             class="!space-y-0"
-            trigger-class="w-[13rem]"
+            trigger-class="w-[12.4rem]"
           />
         </div>
-        <div class="group-gap1">
+        <div class="group-gap3">
           <label class="readonly-text lp-nowrap" for="dong-search-name">행정동명</label>
           <InputField2
             id="dong-search-name"
             v-model="searchDongName"
             size="sm"
             class="!space-y-0"
-            input-class="w-[13rem]"
+            input-class="w-[12.4rem]"
           />
         </div>
-        <Button type="button" variant="secondary" size="sm" @click="onSearch">조회</Button>
+        <Button type="button" variant="secondary" size="sm" class="min-w-20" @click="onSearch">조회</Button>
       </div>
 
-      <p class="form-note">* 행정동 검색결과를 더블 클릭 시 하단 표에 추가가 됩니다.</p>
-
-      <TabulatorGrid
-        :columns="resultColumns"
-        :data="searchResult"
-        select-mode="single"
-        height="240px"
-        placeholder="검색된 행정동이 없습니다"
-        @row-dbl-click="onResultDblClick"
-      />
-
-      <h2 class="pop-title-sub lp-dialog-subtitle">현재 행정동</h2>
-
-      <TabulatorGrid
-        ref="currentGridRef"
-        :columns="currentColumns"
-        :data="dongs"
-        select-mode="checkbox"
-        height="180px"
-        placeholder="등록된 행정동이 없습니다"
-        @update:data="emit('update:dongs', $event as DongRow[])"
-        @row-selection-changed="selectedCount = $event.length"
-      />
+      <div>
+        <p class="lp-block-title lp-note-text">* 행정동 검색결과를 더블 클릭 시 하단 표에 추가가 됩니다.</p>
+        <TabulatorGrid
+          :columns="resultColumns"
+          :data="searchResult"
+          select-mode="single"
+          height="284px"
+          placeholder="검색된 행정동이 없습니다"
+          @row-dbl-click="onResultDblClick"
+        />
+      </div>
+      <div>
+        <h2 class="lp-dialog-head-title lp-block-title">현재 행정동</h2>
+        <TabulatorGrid
+          ref="currentGridRef"
+          :columns="currentColumns"
+          :data="dongs"
+          select-mode="checkbox"
+          height="180px"
+          placeholder="등록된 행정동이 없습니다"
+          @update:data="emit('update:dongs', $event as DongRow[])"
+          @row-selection-changed="selectedCount = $event.length"
+        />
+      </div>
     </div>
 
     <template #footer>

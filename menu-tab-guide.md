@@ -83,9 +83,9 @@ useSideMenuSetup({
 useSideMenuSetup(false)
 ```
 
-⚠ **어느 형태를 쓸지는 `CLAUDE.md` §5 를 본다.** `useSideMenuSetup` 은 **비동기**라, 문자열 키(1번)를
+⚠ **어느 형태를 쓸지는 `docs/create.md` §3 을 본다.** `useSideMenuSetup` 은 **비동기**라, 문자열 키(1번)를
 쓰고 같은 tick 에 `setActiveChild` 를 부르면 경합이 난다. 화면마다 다른 `activeChild`/`openIndex` 가
-필요하면 2번(인라인 전개)을 쓴다. 그 값을 구하는 방법도 CLAUDE.md §5 에 있다 — 추측하면 틀린다
+필요하면 2번(인라인 전개)을 쓴다. 그 값을 구하는 방법도 docs/create.md §3 에 있다 — 추측하면 틀린다
 (16개 화면에서 틀렸었다).
 
 ---
@@ -160,8 +160,8 @@ defineOptions({
 
 ## 6. 신규 화면을 만들 때
 
-**절차는 여기 없다 — `CLAUDE.md` 를 본다.** 화면 만드는 순서는 CLAUDE.md §0-1(시작 절차),
-폴더 구조는 §2, 라우터는 §4, LNB·하단탭 설정값은 §5 에 있다.
+**절차는 여기 없다 — `CLAUDE.md` 를 본다.** 화면 만드는 순서는 docs/create.md §1(시작 절차),
+폴더 구조·라우터·LNB 설정값은 docs/create.md §3 에 있다.
 
 이 문서는 **"메뉴와 탭이 어떻게 동작하는가"** 만 설명한다. 절차를 두 곳에 두면 어느 쪽이
 최신인지 갈려서 반대로 만들게 된다 — 실제로 이 자리에 있던 Step-by-Step 이 CLAUDE.md §4 와
@@ -174,7 +174,7 @@ defineOptions({
 | 탭을 옮겼다 오면 입력값이 날아간다 | §5.2 `defineOptions({ name })` 필수 규칙 |
 | `name` 이 왜 `componentName` 과 같아야 하나 | §5.1 KeepAlive 동작 방식 |
 | 탭을 닫으면 상태가 어떻게 되나 | §5.4 메모리 해제 |
-| LNB 활성표시가 엉킨다 | §3.1 `ownerId`/`claim()` — 그리고 **CLAUDE.md §5**(해결 방법) |
+| LNB 활성표시가 엉킨다 | §3.1 `ownerId`/`claim()` — 그리고 **docs/create.md §3**(해결 방법) |
 | `useBottomTabSetup` 에 뭘 넘기나 | §7 `BottomTabItem` 인터페이스 |
 
 ---

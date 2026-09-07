@@ -21,7 +21,7 @@ export interface TextSelectOption {
 
 /**
  * 텍스트형 셀렉트(select_text). 변형 정의는 `textSelectVariants.ts` 참고.
- * ⚠ `<script setup>`은 런타임 값을 export할 수 없어 cva를 별도 .ts로 뺐다(CLAUDE.md §8).
+ * ⚠ `<script setup>`은 런타임 값을 export할 수 없어 cva를 별도 .ts로 뺐다(CLAUDE.md §5).
  */
 interface Props {
   options: TextSelectOption[]

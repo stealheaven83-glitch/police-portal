@@ -46,7 +46,7 @@
   ├─ views/lpo/PC-LPO-0701/            ← 폴더 (※ 화면군이면 대표ID 폴더 하나)
   ├─ router path: /views/lpo/PC-LPO-0706
   ├─ router name: 'PC-LPO-0706'
-  ├─ router meta.screenGroup           ← 화면군일 때 공통 대표ID (CLAUDE.md §3)
+  ├─ router meta.screenGroup           ← 화면군일 때 공통 대표ID (docs/create/tab-popup.md)
   ├─ defineOptions({ name: 'XxxYyy' }) ← useBottomTabSetup의 componentName과 일치 (§5)
   └─ style/PC-XXX-NNNN.module.css
 ```

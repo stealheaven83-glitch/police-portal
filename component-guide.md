@@ -1,7 +1,7 @@
 # 컴포넌트 고르기 가이드 — "이럴 땐 이거"
 
 CLAUDE.md §1(재사용 원칙)의 실행 편. §1은 "찾아봐라"까지 말하고, 이 문서는 **"찾으면 뭐가
-나오는지"**를 말한다. 새 화면을 시작할 때 §1-1 기준 파일과 함께 본다.
+나오는지"**를 말한다. 새 화면을 시작할 때 `docs/create.md` §2 의 유형 문서와 함께 본다.
 
 경로는 전부 `src/components/` 기준. `custom/`이 1순위, `ui/`(shadcn-vue 프리미티브)가 2순위.
 **공통 CSS는 §12**를 본다 — 새 스타일을 만들기 전에 거기부터 뒤진다(화면 전용 CSS 는 없다).
@@ -76,16 +76,30 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 |---|---|
 | **목록 그리드 (기본)** | `custom/tabulator/TabulatorGrid.vue` (27개 화면) |
 | 그리드 위 제목 + 버튼 줄 | `custom/grid-title/GridTitle.vue` |
-| 셀 인라인 편집 | `TabulatorGrid` 컬럼에 `cellType` (CLAUDE.md §6-1) — 직접 input 마운트 금지 |
-| 체크박스 다중선택 + 추가/선택삭제 | `select-mode="checkbox"` + `addRow`/`deleteSelected` (CLAUDE.md §6) |
+| 셀 인라인 편집 | `TabulatorGrid` 컬럼에 `cellType` (아래 §3-1) — 직접 input 마운트 금지 |
+| 체크박스 다중선택 + 추가/선택삭제 | `select-mode="checkbox"` + `addRow`/`deleteSelected` (아래 §3-1) |
 | 페이지네이션 | `TabulatorGrid`의 `show-pagination` — 별도 `Pagination` 불필요 |
 | 그리드 밖 독립 페이지네이션 | `custom/pagination/Pagination.vue` (드묾) |
 | ㄴ 페이지 버튼만 가운데(총 건수·건수 셀렉트 없이) | `Pagination`의 `simple` prop (Figma `pagination__pc`) |
-| 정적인 표(그리드 기능 불필요) | `custom/table/TableWrapper.vue` |
+| 정적인 표(그리드 기능 불필요) — **본문에 단독으로** | `custom/table/TableWrapper.vue` |
+| 정적인 표 — **InfoField 값 칸 안에** | `custom/table/FieldTable.vue` + InfoField 에 `class="lp-field-flush"` |
 | 트리 | `custom/tree/TreeView.vue` |
 | **결과가 비었을 때** | `custom/empty/NoData.vue` |
 
 그리드 스타일은 `src/assets/css/tabulator-theme.css`가 전역 적용된다 — 다시 스타일링하지 않는다.
+
+### 3-1. `TabulatorGrid` 사용법 — 이미 있는 것을 직접 구현하지 않는다
+- **체크박스 다중선택 + 추가/선택삭제**: `select-mode="checkbox"` + `ref.addRow(data, top)` / `ref.deleteSelected()`. 예: `PC-COM-2301.vue`.
+- **`@row-selection-changed` 는 데이터가 아니라 Tabulator `RowComponent` 배열**을 넘긴다. 필드가 필요하면 `row.getData()` 로 꺼낸다(이미 데이터인 경우까지 방어적으로 — `PM-PUB-0103` 참고).
+- **셀 인라인 편집은 컬럼 정의에 `cellType` 만 지정한다.** 셀마다 커스텀 input/select 를 마운트하지 않는다.
+  - `cellType:'input'` — 텍스트 인라인 편집
+  - `cellType:'checkbox'` — 체크박스 셀(전체/읽기/편집 같은 권한 매트릭스)
+  - `cellType:'select'` — `selectOptions` 배열과 함께 쓰는 드롭다운(`PC-COM-2401` 목록수/페이지수)
+  - `cellType:'button'` — `buttonLabel`/`buttonVariant`/`buttonVisible`/`onButtonClick` 으로 행마다 다른 라벨·표시여부의 버튼(`PC-COM-2204` "부서 조회")
+- **페이지네이션 그리드에 맨 아래 추가**(`addRow(data, false)`)는 보고 있는 페이지에 안 나타난다 — 추가 후 `gridRef.value?.setPage('last')` 로 따라간다(`PC-COM-2401`). 맨 위 추가(`addRow(data, true)`)는 항상 1페이지라 불필요하다.
+- **컬럼이 많아 가로 스크롤이 필요하면** `layout="fitDataFill"` + 각 컬럼에 고정 `width`. 기본 `fitColumns` 는 폭을 컨테이너에 맞춰 나눈다.
+- KeepAlive 재활성화 시 그리드가 안 그려지던 버그는 컴포넌트가 `onActivated` → `redraw(true)` 로 처리한다 — 화면에서 신경 쓸 필요 없다.
+- 목록을 갱신할 때는 **배열 재할당**(`CLAUDE.md` §5) — `splice` 는 `:data` watch 가 못 잡는다.
 
 ---
 
@@ -146,12 +160,12 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 |---|---|
 | **레이어 팝업 (기본)** | **`custom/dialog/GenericDialog2.vue`** (19개 화면) |
 | 폼이 들어간 팝업 | `custom/dialog/FormDialog.vue` |
-| 되돌릴 수 없는 작업 확인 | `custom/dialog/ConfirmDialog2.vue` — **CLAUDE.md §7 조건 확인** |
+| 되돌릴 수 없는 작업 확인 | `custom/dialog/ConfirmDialog2.vue` — **CLAUDE.md §4 조건 확인** |
 | 버튼 하나짜리 강제 확인 | `custom/dialog/AlertDialog2.vue` — 남용 금지, 보통은 toast |
 | 아직 로직이 없는 팝업 자리 | `custom/dialog/EmptyStubDialog.vue` (6개 화면) |
 | 모바일 하단 시트 | `custom/bottom-sheet/BottomSheet.vue` |
 
-> **일반 저장/삭제에는 `confirm`을 붙이지 않는다.** toast가 기본이다 — CLAUDE.md §7.
+> **일반 저장/삭제에는 `confirm`을 붙이지 않는다.** toast가 기본이다 — CLAUDE.md §4.
 
 ---
 
@@ -159,7 +173,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 
 | 이럴 때 | 이걸 쓴다 |
 |---|---|
-| 저장/삭제 성공, 필수값 누락 경고 | **toast** (CLAUDE.md §7) — 컴포넌트 아님 |
+| 저장/삭제 성공, 필수값 누락 경고 | **toast** (CLAUDE.md §4) — 컴포넌트 아님 |
 | 결과/경고 박스(성공·실패·주의) | `custom/alert/Alert.vue` |
 | 이해를 돕는 설명 박스 | `custom/infobox/InfoBox.vue` |
 | 페이지 상단 긴급 공지 띠 | `custom/alert/CriticalAlert.vue` |
@@ -182,7 +196,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | 제목·설명·태그를 묶은 카드 | `custom/card/Card.vue` |
 | 접었다 펴는 여러 항목 | `custom/accordion/` |
 | 접었다 펴는 한 덩어리("더보기") | `custom/disclosure/Disclosure.vue` |
-| 아이콘 | **Figma 것을 `icons.ts` 에 등록해 `<Icon name="…" />`** — 없을 때만 `lucide-vue-next` (CLAUDE.md §9) |
+| 아이콘 | **Figma 것을 `icons.ts` 에 등록해 `<Icon name="…" />`** — 없을 때만 `lucide-vue-next` (`docs/create.md` §4) |
 
 ---
 
@@ -249,13 +263,18 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | `MultiCheckSelect` | 다중선택(체크 목록 + 확인 버튼) |
 | `ui/native-select` | 프리미티브. 위 셋으로 안 될 때만 |
 
-**TabulatorGrid / TableWrapper / InfoTable**
+**TabulatorGrid / TableWrapper / FieldTable / InfoTable**
 
-| | 무엇 |
-|---|---|
-| `TabulatorGrid` | 목록 그리드(정렬·페이지네이션·선택·인라인편집) |
-| `TableWrapper` | 기능 없는 정적 표 |
-| `InfoTable` | 표가 아니라 **라벨-값 정보 표**(등록/상세 폼) |
+| | 무엇 | 놓이는 자리 |
+|---|---|---|
+| `TabulatorGrid` | 목록 그리드(정렬·페이지네이션·선택·인라인편집) | 본문 |
+| `TableWrapper` | 기능 없는 정적 표. 상단 진한 선 + 흰 헤더 + 행 hover 강조 + 가운데 정렬 | 본문에 **단독** |
+| `FieldTable` | 기능 없는 정적 표. 회색 헤더(라벨칸과 같은 톤) + 상단선 없음 + hover 없음 + 왼쪽 정렬 | **InfoField 값 칸 안** |
+| `InfoTable` | 표가 아니라 **라벨-값 정보 표**(등록/상세 폼) | 본문 |
+
+> 컬럼 헤더 행이 있는 표는 `InfoField` 로 못 만든다 — InfoField 는 행마다 **왼쪽 라벨**이 붙는
+> 구조라 컬럼 헤더 개념이 없다. 바깥은 `InfoField`, 안쪽은 `FieldTable` 로 이중 구성한다
+> (PC-LPO-0601 관내현황 › 순찰차별 관할구역).
 
 **SearchWrapper / SearchBar / search__pc** — 셋 다 "검색"이라 제일 헷갈린다.
 
@@ -337,7 +356,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 ## 12. 공통 CSS — 새 스타일을 만들기 전에 여기부터
 
 **화면 전용 CSS 는 없다.** 한 화면만 쓰더라도 처음부터 공통 파일에 공통 이름으로 만든다
-(CLAUDE.md §1-2). 파일은 셋이고, 셋 다 `public/portal/asset/css/common/` 에서 전역 로드된다.
+(CLAUDE.md §2). 파일은 셋이고, 셋 다 `public/portal/asset/css/common/` 에서 전역 로드된다.
 
 | 파일 | 참고 | 기입 | 무엇 | 이름 |
 |---|---|---|---|---|
@@ -346,7 +365,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | `police-override.css` | ✅ | ✅ | 컴포넌트·라이브러리·테일윈드를 **덮어야 하는 것만** | `.lp-*` |
 
 **찾을 때 세 파일은 한 덩어리다** — "어느 파일부터"가 아니다.
-**만들 때만** 갈리고, 기준은 "덮어야 하느냐" 하나다(자세한 건 CLAUDE.md §1-2).
+**만들 때만** 갈리고, 기준은 "덮어야 하느냐" 하나다(자세한 건 CLAUDE.md §2).
 
 ### 먼저 이걸 돌린다 — 이름이 아니라 **선언**으로 찾는다
 
@@ -514,6 +533,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-duty-table` `-col-date` `-col-side` `-line` `-remove` | 근무현황 표(한 칸에 여러 줄이 들어가 Tabulator 를 못 쓴다) | LPO-0216 |
 | `.lp-em-primary` / `.lp-em-danger` | 문장 안 한 낱말만 색으로 강조(굵기는 `<b>` 가) | LPO-0208, 0216, 0217 |
 | `.lp-field-inline` | 라벨 아래 입력+버튼이 한 줄로 붙는 칸(부서명 + 부서 검색) | COM-1003, 1004 |
+| `.lp-field-table` `-center` `-empty` | `FieldTable` 전용 — InfoField 칸 안에 들어가는 정적 표 | LPO-0601 |
 | `.lp-notice-form` `-actions` | 게시판 글 등록/수정 폼(본문 폭을 꽉 쓴다). **가운데 1000px 폼은 `.lp-narrow-form`** | COM-1003, 1004 |
 | `.lp-notice-detail` `-badges` `-dept` `-title` `-meta` `-thumb` `-body` `-detail-actions` | 게시판 글 상세 | COM-1002 |
 | `.lp-comment-area` `-write` `-list` `-item` `-head` `-writer` `-date` `-more` `-body` `-actions` `-reply-btn` `-replies` | 댓글·대댓글 영역(CommentThread) | COM-1002 |
@@ -548,6 +568,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-dialog-body .form-note` | 팝업 안에서 공통 `.form-note` 의 아래 여백 해제 | 0601 |
 | `.lp-dropzone-sub` | `.lp-dropzone-txt p` 의 크기·색 되돌리기 | LPO-0104 |
 | `.lp-cell-danger` | Tabulator 셀 안의 미완료 값만 빨간 글씨(셀 색은 테마 CSS 가 먼저 먹는다) | LPO-0304 |
+| `.lp-field-flush` | InfoField 값 칸의 안쪽 여백 제거(표를 칸에 딱 붙일 때). `.control` 이 CSS Module 해시 이름이라 마지막 자식으로 짚는다 | LPO-0601 |
 | `.lp-info-nested` | `InfoField` 값 칸에 `InfoTable` 을 한 번 더 넣을 때 `.control` 여백·중복 테두리 제거(라벨 병합처럼 보이게) | PUB-0111 |
 
 ---
@@ -566,7 +587,7 @@ hex를 직접 쓰지 않는다. `var(--Text-body_1)`, `var(--Base-primary)`, `va
 | 일반 스타일 | **`police-common.css`** — 한 번만 쓰이더라도 여기. 이름은 `.lp-{역할}` |
 | 컴포넌트·라이브러리·테일윈드를 덮어야 하는 것 | **`police-override.css`** |
 | 특정 컴포넌트에 딸린 스타일 | 그 컴포넌트 폴더의 `*.module.css` |
-| 라벨-값 표 관련 | `custom/info-table/InfoTable.module.css` (이미 공통, 필수점 `.requiredDot`, 안내문구 `.hint`/`.hintSuccess`, 칸 사이 세로선 `.info-table-divided`) |
+| 라벨-값 표 관련 | `custom/info-table/InfoTable.module.css` (이미 공통, 필수점 `.requiredDot`, 안내문구 `.hint`/`.hintSuccess`) |
 | 그리드 관련 | `src/assets/css/tabulator-theme.css` (전역 적용, 다시 스타일링 불필요) |
 | **`police-style.css` 에는 추가하지 않는다** | 퍼블리싱 원본이라 읽기 전용 |
 
@@ -610,7 +631,7 @@ Figma 값을 그대로 px로 쓰면 10배로 뜬다.
 
 ### 아이콘 — Figma 것을 가져온다
 **PPT 이미지를 보고 `lucide-vue-next` 에서 비슷한 걸 고르지 않는다.** Figma 에 아이콘이
-130개 등록돼 있고 그게 확정본이다(CLAUDE.md §9).
+130개 등록돼 있고 그게 확정본이다(`docs/create.md` §4).
 
 ```
 Figma 프레임에서 아이콘 확인 → get_design_context 응답의 asset URL 로 SVG 내려받기
@@ -622,7 +643,7 @@ Figma 프레임에서 아이콘 확인 → get_design_context 응답의 asset UR
 지금 `icons.ts` 에 6개뿐이라 기존 화면들이 lucide 로 때우고 있다(23곳).
 **새로 만드는 화면부터는 Figma 아이콘을 등록해서 쓴다** — 등록하면 다음 화면이 재사용한다.
 이것도 공통화다(§1). Figma 에 없는 아이콘만 `lucide-vue-next` 를 쓰고, 그 사실을 인계 메모에
-남긴다(CLAUDE.md §11).
+남긴다(`docs/create.md` §5).
 
 ### 재사용 컴포넌트 안에서는 테일윈드를 써도 된다
 CLAUDE.md §1이 금지하는 건 **화면(`views/**`) 템플릿**이다. `src/components/**` 내부는 고칠 곳이

@@ -204,7 +204,7 @@ const router = createRouter({
         {
             // PC-COM-2204 와 같은 파일을 가리킨다 — useAutoTrigger 로 이 화면ID에 진입하면
             // "부서조회" 팝업이 바로 열린 상태로 보인다. 어느 권한 행에 대한 조회인지는 URL만으로
-            // 알 수 없어(비대칭 팝업, CLAUDE.md §3 참고) 특정 행을 물지 않고 그냥 팝업만 연다 —
+            // 알 수 없어(비대칭 팝업, docs/create/tab-popup.md §4 참고) 특정 행을 물지 않고 그냥 팝업만 연다 —
             // 퍼블리싱 검수 단계에서 화면ID 단위로 직접 열어볼 수 있게 하는 용도.
             path: '/views/com/PC-COM-2205',
             name: 'PC-COM-2205',
@@ -931,7 +931,7 @@ const router = createRouter({
         },
         {
             // PC-COM-2201 과 같은 파일을 가리킨다 — 사용자정보 팝업(PC-COM-2202)은 사용자목록에서
-            // 아이디를 눌러야 그 행 값으로 채워지는 비대칭 팝업이라(CLAUDE.md §3) URL 만으로는 열지
+            // 아이디를 눌러야 그 행 값으로 채워지는 비대칭 팝업이라(docs/create/tab-popup.md §4) URL 만으로는 열지
             // 않는다. 이 경로로 들어오면 사용자 권한관리 목록이 뜨고, 아이디를 누르면 팝업이 열린다.
             path: '/views/com/PC-COM-2202',
             name: 'PC-COM-2202',
@@ -1195,7 +1195,7 @@ const router = createRouter({
             }
         },
         /*
-         * 아래 넷은 화면군이다 — 한 컴포넌트가 여러 화면ID를 가진다(CLAUDE.md §3 패턴A, §4 예외).
+         * 아래 넷은 화면군이다 — 한 컴포넌트가 여러 화면ID를 가진다(docs/create/tab-popup.md §1).
          * screenGroup 을 공통으로 주지 않으면 Layout.vue 의 :key 때문에 이동할 때마다 리마운트된다.
          * plannedRoutes 는 여기 적힌 name 을 taken 으로 걸러 중복 등록하지 않는다.
          */

@@ -1,3 +1,6 @@
+override
+
+
 @charset "UTF-8";
 
 /*
@@ -258,3 +261,9 @@
   gap: 0;
 }
 
+/* InfoField 값 칸의 기본 안쪽 여백을 없앤다 — 표(FieldTable)를 칸에 딱 붙일 때만 쓴다.
+   InfoTable.module.css 의 .control 은 해시된 이름이라 클래스명으로 못 겨냥해서,
+   그리드 두 번째 칸(=값 영역)을 마지막 자식으로 짚는다 */
+.lp-field-flush > :last-child {
+  padding: 0;
+}

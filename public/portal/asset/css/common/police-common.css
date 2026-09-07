@@ -1,3 +1,5 @@
+common
+
 @charset "UTF-8";
 
 /*
@@ -121,12 +123,6 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-}
-
-/* 화면 위쪽 부서선택 + 우측 버튼 줄 */
-.lp-page-toolbar {
-  padding-bottom: 1.6rem;
-  border: 1px solid var(--Border-grid-header);
 }
 
 /* ══ 아이콘 버튼 ══════════════════════════════════════════════ */
@@ -332,6 +328,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
+  position: relative;
 }
 .lp-dialog-subtitle {
   margin-top: 0.4rem;
@@ -344,7 +341,10 @@
 }
 /* 팝업 안 검색 폼의 행·열 간격 */
 .lp-search-form-gap {
-  gap: 1.6rem 2.4rem;
+  padding: 1.6rem;
+  gap: unset;
+  justify-content: space-between;
+  border-radius: var(--Radius-medium3);
 }
 
 /* ══ 지도 ═════════════════════════════════════════════════════ */
@@ -353,8 +353,15 @@
   display: flex;
   align-items: center;
   gap: 0.8rem;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  padding: 1.2rem 2rem;
+  z-index: 1;
 }
 .lp-map-frame {
+  position: relative;
   overflow: hidden;
   border: 0.1rem solid var(--Border_gray02);
   border-radius: var(--Radius-medium2);
@@ -1505,94 +1512,44 @@
   margin-top: 1.6rem;
 }
 
-/*
- * 사진 4칸(간이 범죄예방진단 상세 - 취약/개선 상황사진).
- * Figma 11125:74691 기준 — 112사건 표 마지막 줄에 붙는 칸이라 표와 같은 여백(1.2rem)·아래선을 쓴다.
- * 이름에 lp- 를 붙이는 이유: police-style.css 원본이 .photo-box / .photo-empty 를 이미
- * 다른 뜻(인사관리 증명사진 12rem 칸)으로 쓰고 있어서, 접두사가 없으면 그 화면들이 깨진다.
- */
-.lp-photo-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 2rem;
-  padding: 1.2rem;
-  border-bottom: 1px solid var(--Border_gray03);
-  list-style: none;
-}
-
-@media (max-width: 64rem) {
-  .lp-photo-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 36rem) {
-  .lp-photo-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-.lp-photo-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  min-width: 0;
-}
-
-.lp-photo-label {
-  font-size: 1.5rem;
-  line-height: 1.5;
-  color: var(--Text-body_0);
-}
-
-.lp-photo-box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 10rem;
-  border: 1px solid var(--Border_gray02);
-  background: #fff;
-  overflow: hidden;
-}
-
-.lp-photo-img {
+/* ── InfoField 값 칸 안에 들어가는 정적 표(FieldTable) ───────────────────── */
+/* 헤더가 InfoTable 라벨 칸과 같은 회색이라 이어 붙었을 때 한 덩어리로 보인다.
+   본문에 단독으로 놓는 표(TableWrapper)와 달리 상단 진한 선·hover 강조가 없다 */
+.lp-field-table {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  border-collapse: collapse;
+  table-layout: fixed;
 }
-
-/* 사진이 없을 때 시안이 넣는 그래픽 — 아이콘 + 'No Image' 글자가 각각 별도 SVG 다 */
-.lp-photo-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
+.lp-field-table th,
+.lp-field-table td {
+  padding: 1rem 1.6rem;
+  font-size: 1.5rem;
+  border-right: 0.1rem solid var(--Border_gray03, #e6e8ea);
+  border-bottom: 0.1rem solid var(--Border_gray03, #e6e8ea);
 }
-
-.lp-photo-empty-icon {
-  width: 5.76rem;
-  height: 5.76rem;
+.lp-field-table th:last-child,
+.lp-field-table td:last-child {
+  border-right: 0;
 }
-
-.lp-photo-empty-label {
-  width: 6.56rem;
-  height: 1.33rem;
+.lp-field-table tbody tr:last-child td {
+  border-bottom: 0;
 }
-
-.lp-photo-meta {
-  margin: 0;
-  font-size: 1.3rem;
-  line-height: 1.5;
+.lp-field-table thead th {
+  font-weight: 400;
   color: var(--Text-body_1);
+  text-align: center;
+  background: var(--Background-gray01);
 }
-
-.lp-photo-actions {
-  display: flex;
-  gap: 0.6rem;
-  padding-top: 0.4rem;
+.lp-field-table tbody td {
+  color: var(--Text-body_0);
+  text-align: left;
+  vertical-align: middle;
+  background: var(--white);
 }
-
-/* 버튼 둘이 칸 폭을 반씩 나눠 갖는다(시안). Button 의 min-width 는 padding prop 이 0 으로 푼다 */
-.lp-photo-actions > * {
-  flex: 1 1 0;
+.lp-field-table-center {
+  text-align: center;
+}
+.lp-field-table-empty {
+  color: var(--Text-body_2);
+  text-align: center;
 }
