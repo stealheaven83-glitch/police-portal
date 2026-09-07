@@ -125,7 +125,8 @@
 
 /* 화면 위쪽 부서선택 + 우측 버튼 줄 */
 .lp-page-toolbar {
-  margin-bottom: 2rem;
+  padding-bottom: 1.6rem;
+  border: 1px solid var(--Border-grid-header);
 }
 
 /* ══ 아이콘 버튼 ══════════════════════════════════════════════ */

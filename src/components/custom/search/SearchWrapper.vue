@@ -1,29 +1,60 @@
 <template>
-    <div class="flex flex-col gap-3 w-full min-w-0 mb-[20px]">
-      <div v-if="$slots.department || collapsible" class="flex items-center gap-6 ">
-        <div :class="cn('flex items-center gap-2', props.departmentClass)">
-          <slot name="department" />
-        </div>
-        <button
-          v-if="collapsible"
-          type="button"
-          class="inline-flex items-center gap-1 shrink-0 text-[15px] font-semibold text-[var(--Text-body_1)]"
-          :aria-expanded="expanded"
-          @click="toggle"
-        >
-          상세조회 
-          <ChevronDown :size="14" class="transition-transform duration-200" :class="expanded ? 'rotate-180' : ''" />
-        </button>
+  <div>
+    <div class="w-full flex justify-between items-center" :class="collapsible ? 'mb-[20px]' : ''">
+      <div v-if="$slots.department || collapsible" class="flex items-center gap-6">
+          <div :class="cn('flex items-center gap-3', props.departmentClass)">
+            <slot name="department" />
+          </div>
+          <button
+            v-if="collapsible"
+            type="button"
+            class="inline-flex items-center gap-1 shrink-0 text-[15px] font-semibold text-[var(--Text-body_1)]"
+            :aria-expanded="expanded"
+            @click="toggle"
+          >
+            상세조회 
+            <ChevronDown :size="14" class="transition-transform duration-200" :class="expanded ? 'rotate-180' : ''" />
+          </button>
       </div>
-      <div v-show="!collapsible || expanded" :class="cn(defaultClass, props.class)">
-          <div class="flex flex-col justify-center py-5 px-6 ">
-            <slot name="form" />
-          </div>
-          <div class="flex items-end py-5 px-6">
-            <slot name="btns" />
-          </div>
-        </div>
+      <slot name="topRightSection"></slot>
     </div>
+    <div v-if="collapsible" v-show="expanded" :class="cn(defaultClass, props.class)">
+      <div class="flex flex-col justify-center py-5 px-6 ">
+        <slot name="form" />
+      </div>
+      <div class="flex items-end py-5 px-6">
+        <slot name="btns" />
+      </div>
+    </div>
+
+    <!-- <div class="flex flex-col gap-3 w-full min-w-0" :class="collapsible ? 'mb-[20px]' : ''">
+      <div v-if="$slots.department || collapsible" class="flex items-center gap-6">
+        <div>
+          <div :class="cn('flex items-center gap-2', props.departmentClass)">
+            <slot name="department" />
+          </div>
+          <button
+            v-if="collapsible"
+            type="button"
+            class="inline-flex items-center gap-1 shrink-0 text-[15px] font-semibold text-[var(--Text-body_1)]"
+            :aria-expanded="expanded"
+            @click="toggle"
+          >
+            상세조회 
+            <ChevronDown :size="14" class="transition-transform duration-200" :class="expanded ? 'rotate-180' : ''" />
+          </button>
+        </div>
+      </div>
+      <div v-if="collapsible" v-show="expanded" :class="cn(defaultClass, props.class)">
+        <div class="flex flex-col justify-center py-5 px-6 ">
+          <slot name="form" />
+        </div>
+        <div class="flex items-end py-5 px-6">
+          <slot name="btns" />
+        </div>
+      </div>
+    </div> -->
+  </div>
 </template>
 
 <script setup lang="ts">

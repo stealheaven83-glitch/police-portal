@@ -11,18 +11,39 @@
     </template>
   </PageHeader>
 
-  <div class="btn-wrap lp-page-toolbar">
-    <div class="group-gap1">
+  <div class="lp-page-toolbar">
+    <!-- <template #department>
       <span class="dept-name">부서</span>
       <DepartmentCascadeSelect v-model="department4Search" size="sm" />
-    </div>
-    <div class="group-gap2">
+    </template> -->
+
+    <SearchWrapper>
+      <template #department>
+        <span class="dept-name">부서</span>
+        <DepartmentCascadeSelect v-model="department4Search" size="sm" />
+      </template>
+      <template #topRightSection>
+        <span class="lp-meta-nowrap">{{ modifiedInfo }}</span>
+        <div class="btn-wrap-group">
+          <Button type="button" variant="tertiary2" size="sm" @click="onPrint">인쇄</Button>
+          <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
+        </div>
+      </template>
+
+      <!-- <div class="group-gap3">
+        <span class="dept-name">부서</span>
+        <DepartmentCascadeSelect v-model="department4Search" size="sm" />
+      </div> -->
+
+    </SearchWrapper>
+    <!-- <div class="group-gap2">
       <span class="lp-meta-nowrap">{{ modifiedInfo }}</span>
       <div class="btn-wrap-group">
         <Button type="button" variant="tertiary2" size="sm" @click="onPrint">인쇄</Button>
         <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
       </div>
-    </div>
+    </div> -->
+    
   </div>
 
   <ScrollWrapper>
@@ -478,6 +499,7 @@
 </template>
 
 <script setup lang="ts">
+import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import { ref } from 'vue'
 import { Minus, Plus } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
