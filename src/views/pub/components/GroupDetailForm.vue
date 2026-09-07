@@ -12,7 +12,6 @@ import type { DepartmentValue } from '@/components/custom/select/DepartmentCasca
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import AddressSearchDialog from './AddressSearchDialog.vue'
 import { groupTypeOptions, equipmentColumnLabels, type GroupDetailForm } from '../composable/publicSafety'
-import styles from '../style/GroupDetailForm.module.css'
 
 /**
  * 단체정보 상세(PC-PUB-0302)/등록(PC-PUB-0303) 공용 폼.
@@ -116,108 +115,111 @@ const memberTotal = computed(() => props.form.memberMale + props.form.memberFema
 </script>
 
 <template>
-  <h2 :class="styles.formTitle">방범협력단체 정보</h2>
+  <section class="lp-section" aria-labelledby="group-info-heading">
+    <h2 id="group-info-heading" class="lp-heading-md lp-section-title">방범협력단체 정보</h2>
 
-  <!--
-    시안 기준 3열 배치. 주소가 두 행을 차지하고(row-span) 나머지 칸은 그리드 자동 배치로 흘러간다:
-    1행 단체종류/단체명/설립일 · 2행 대표자명/전화번호/구성인원 · 3행 보험가입인원/주소/주요활동지역
-    · 4행 보유차량수(+주소 이어짐) · 5행 비고(전체 폭)
-  -->
-  <InfoTable :columns="3" :class="styles.infoTable">
-    <InfoField v-if="mode === 'new'" label="부서" full>
-      <DepartmentCascadeSelect v-model="department" size="sm" />
-    </InfoField>
+    <!--
+      시안 기준 3열 배치. 주소가 두 행을 차지하고(row-span) 나머지 칸은 그리드 자동 배치로 흘러간다:
+      1행 단체종류/단체명/설립일 · 2행 대표자명/전화번호/구성인원 · 3행 보험가입인원/주소/주요활동지역
+      · 4행 보유차량수(+주소 이어짐) · 5행 비고(전체 폭)
+    -->
+    <!-- 라벨 열은 시안대로 120px — InfoTable 기본값(14rem)보다 좁다 -->
+    <InfoTable :columns="3" size="120">
+      <InfoField v-if="mode === 'new'" label="부서" full>
+        <DepartmentCascadeSelect v-model="department" size="sm" />
+      </InfoField>
 
-    <InfoField for="group-type" label="단체종류">
-      <div :class="styles.row">
-        <SelectField
-          id="group-type"
-          v-model="form.groupType"
-          :options="groupTypeOptions"
+      <InfoField for="group-type" label="단체종류">
+        <div class="group-gap2 lp-flex-fill">
+          <SelectField
+            id="group-type"
+            v-model="form.groupType"
+            :options="groupTypeOptions"
+            size="sm"
+            trigger-class="w-full"
+            class="!space-y-0 flex-1"
+            placeholder="선택"
+          />
+          <InputField2
+            v-if="isEtcType"
+            v-model="form.groupTypeEtc"
+            size="sm"
+            placeholder="단체종류 입력"
+            class="!space-y-0 flex-1"
+          />
+        </div>
+      </InfoField>
+      <InfoField for="group-name" label="단체명">
+        <InputField2 id="group-name" v-model="form.groupName" size="sm" class="!space-y-0 flex-1" />
+      </InfoField>
+      <InfoField for="group-founded-date" label="설립일">
+        <DatePicker id="group-founded-date" v-model="form.foundedDate" size="sm" class="!space-y-0 flex-1" />
+      </InfoField>
+
+      <InfoField for="group-leader" label="대표자명">
+        <InputField2 id="group-leader" v-model="form.leaderName" size="sm" class="!space-y-0 flex-1" />
+      </InfoField>
+      <InfoField for="group-phone" label="전화번호">
+        <InputField2 id="group-phone" v-model="form.phone" size="sm" class="!space-y-0 flex-1" />
+      </InfoField>
+      <InfoField label="구성인원">
+        <div class="lp-field-row">
+          <span class="lp-nowrap">{{ memberTotal }} 명</span>
+          <span class="group-gap3">
+            <span>남자</span>
+            <Stepper v-model="form.memberMale" :min="0" label="남자 인원" class="w-[9.2rem]" />
+          </span>
+          <span class="group-gap3">
+            <span>여자</span>
+            <Stepper v-model="form.memberFemale" :min="0" label="여자 인원" class="w-[9.2rem]" />
+          </span>
+        </div>
+      </InfoField>
+
+      <InfoField label="보험가입인원">
+        <Stepper v-model="form.insuredCount" :min="0" label="보험가입인원" class="w-[17.6rem]" />
+      </InfoField>
+      <InfoField label="주소" layout="column" :row-span="2">
+        <InputField2
+          id="group-address"
+          v-model="form.address"
           size="sm"
-          trigger-class="w-full"
-          class="!space-y-0 flex-1"
-          placeholder="선택"
+          class="!space-y-0 w-full"
+          placeholder="주소검색"
+          readonly
+          :icon="searchIcon"
+          icon-class="size-5"
+          icon-label="주소 검색"
+          search
+          @icon-click="addressSearchOpen = true"
         />
         <InputField2
-          v-if="isEtcType"
-          v-model="form.groupTypeEtc"
+          id="group-address-detail"
+          v-model="form.addressDetail"
           size="sm"
-          placeholder="단체종류 입력"
-          class="!space-y-0 flex-1"
+          class="!space-y-0 w-full"
+          placeholder="상세주소"
         />
-      </div>
-    </InfoField>
-    <InfoField for="group-name" label="단체명">
-      <InputField2 id="group-name" v-model="form.groupName" size="sm" class="!space-y-0 flex-1" />
-    </InfoField>
-    <InfoField for="group-founded-date" label="설립일">
-      <DatePicker id="group-founded-date" v-model="form.foundedDate" size="sm" class="!space-y-0 flex-1" />
-    </InfoField>
+      </InfoField>
+      <InfoField for="group-activity-area" label="주요활동지역 및 활동시간">
+        <InputField2 id="group-activity-area" v-model="form.activityAreaTime" size="sm" class="!space-y-0 flex-1" />
+      </InfoField>
 
-    <InfoField for="group-leader" label="대표자명">
-      <InputField2 id="group-leader" v-model="form.leaderName" size="sm" class="!space-y-0 flex-1" />
-    </InfoField>
-    <InfoField for="group-phone" label="전화번호">
-      <InputField2 id="group-phone" v-model="form.phone" size="sm" class="!space-y-0 flex-1" />
-    </InfoField>
-    <InfoField label="구성인원">
-      <div :class="styles.memberRow">
-        <span :class="styles.memberTotal">{{ memberTotal }} 명</span>
-        <span :class="styles.memberGroup">
-          <span>남자</span>
-          <Stepper v-model="form.memberMale" :min="0" label="남자 인원" class="w-[9.2rem]" />
-        </span>
-        <span :class="styles.memberGroup">
-          <span>여자</span>
-          <Stepper v-model="form.memberFemale" :min="0" label="여자 인원" class="w-[9.2rem]" />
-        </span>
-      </div>
-    </InfoField>
+      <InfoField label="보유차량수">
+        <Stepper v-model="form.vehicleCount" :min="0" label="보유차량수" class="w-[17.6rem]" />
+      </InfoField>
+      <!-- 주소가 두 행을 차지해 비는 칸. 표 테두리를 시안처럼 이어 주기만 하는 자리라 읽어줄 내용이 없다 -->
+      <InfoField class="lp-info-blank-cell" aria-hidden="true" />
 
-    <InfoField label="보험가입인원">
-      <Stepper v-model="form.insuredCount" :min="0" label="보험가입인원" class="w-[17.6rem]" />
-    </InfoField>
-    <InfoField label="주소" layout="column" :row-span="2">
-      <InputField2
-        id="group-address"
-        v-model="form.address"
-        size="sm"
-        class="!space-y-0 w-full"
-        placeholder="주소검색"
-        readonly
-        :icon="searchIcon"
-        icon-class="size-5"
-        icon-label="주소 검색"
-        search
-        @icon-click="addressSearchOpen = true"
-      />
-      <InputField2
-        id="group-address-detail"
-        v-model="form.addressDetail"
-        size="sm"
-        class="!space-y-0 w-full"
-        placeholder="상세주소"
-      />
-    </InfoField>
-    <InfoField for="group-activity-area" label="주요활동지역 및 활동시간">
-      <InputField2 id="group-activity-area" v-model="form.activityAreaTime" size="sm" class="!space-y-0 flex-1" />
-    </InfoField>
+      <InfoField for="group-note" label="비고" full layout="column">
+        <TextareaField id="group-note" v-model="form.note" class="w-full !space-y-0" textarea-class="w-full" :height="80" />
+      </InfoField>
+    </InfoTable>
+  </section>
 
-    <InfoField label="보유차량수">
-      <Stepper v-model="form.vehicleCount" :min="0" label="보유차량수" class="w-[17.6rem]" />
-    </InfoField>
-    <!-- 주소가 두 행을 차지해 비는 칸. 표 테두리를 시안처럼 이어 주기만 하는 자리라 읽어줄 내용이 없다 -->
-    <InfoField :class="styles.emptyField" aria-hidden="true" />
-
-    <InfoField for="group-note" label="비고" full layout="column">
-      <TextareaField id="group-note" v-model="form.note" class="w-full !space-y-0" textarea-class="w-full" :height="80" />
-    </InfoField>
-  </InfoTable>
-
-  <section :class="styles.section">
+  <section class="lp-section" aria-labelledby="equipment-heading">
     <div class="section-bar">
-      <h2>장비지원 현황</h2>
+      <h2 id="equipment-heading">장비지원 현황</h2>
       <div class="section-bar-actions">
         <Button type="button" variant="tertiary2" size="xs" @click="equipmentGridRef?.deleteSelected()">선택삭제</Button>
         <Button type="button" variant="tertiary2" size="xs" @click="addEquipmentRow">추가</Button>
@@ -226,7 +228,7 @@ const memberTotal = computed(() => props.form.memberMale + props.form.memberFema
     <TabulatorGrid
       ref="equipmentGridRef"
       v-model:data="form.equipmentSupport"
-      :class="styles.sectionGrid"
+      class="grid-wrap"
       :columns="equipmentColumns"
       select-mode="checkbox"
       height="18rem"
@@ -234,9 +236,9 @@ const memberTotal = computed(() => props.form.memberMale + props.form.memberFema
     />
   </section>
 
-  <section :class="styles.section">
+  <section class="lp-section" aria-labelledby="budget-heading">
     <div class="section-bar">
-      <h2>지자체 예산 지원 현황</h2>
+      <h2 id="budget-heading">지자체 예산 지원 현황</h2>
       <div class="section-bar-actions">
         <Button type="button" variant="tertiary2" size="xs" @click="budgetGridRef?.deleteSelected()">선택삭제</Button>
         <Button type="button" variant="tertiary2" size="xs" @click="addBudgetRow">추가</Button>
@@ -245,7 +247,7 @@ const memberTotal = computed(() => props.form.memberMale + props.form.memberFema
     <TabulatorGrid
       ref="budgetGridRef"
       v-model:data="form.budgetSupport"
-      :class="styles.sectionGrid"
+      class="grid-wrap"
       :columns="budgetColumns"
       select-mode="checkbox"
       height="18rem"
@@ -253,9 +255,9 @@ const memberTotal = computed(() => props.form.memberMale + props.form.memberFema
     />
   </section>
 
-  <section :class="styles.section">
+  <section class="lp-section" aria-labelledby="award-heading">
     <div class="section-bar">
-      <h2>포상 현황</h2>
+      <h2 id="award-heading">포상 현황</h2>
       <div class="section-bar-actions">
         <Button type="button" variant="tertiary2" size="xs" @click="awardGridRef?.deleteSelected()">선택삭제</Button>
         <Button type="button" variant="tertiary2" size="xs" @click="addAwardRow">추가</Button>
@@ -264,7 +266,7 @@ const memberTotal = computed(() => props.form.memberMale + props.form.memberFema
     <TabulatorGrid
       ref="awardGridRef"
       v-model:data="form.awards"
-      :class="styles.sectionGrid"
+      class="grid-wrap"
       :columns="awardColumns"
       select-mode="checkbox"
       height="18rem"

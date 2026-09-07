@@ -2,7 +2,7 @@
   <PageHeader>
     <template #left>
       <PageTitle title="권한 관리" />
-    </template>
+    </template>      
     <template #right>
       <span class="group-gap2">
         <Breadcrumb :items="navItems" />
@@ -70,7 +70,7 @@
         <TabulatorGrid
           v-model:data="menuPermissions"
           :columns="menuColumns"
-          class="lp-perm-menu-grid flex-1"
+          class="flex-1"
           height="100%"
           placeholder="메뉴 정보가 없습니다"
         />
@@ -79,8 +79,7 @@
   </LayoutSplit>
 
   <DepartmentSearchDialog />
-  <!-- 전체 사용자 팝업(PC-COM-2207)은 시안을 아직 못 받아 자리만 잡아둔다 -->
-  <EmptyStubDialog v-model:open="allUsersOpen" title="전체 사용자" />
+  <AllUsersDialog />
 </template>
 
 <script setup lang="ts">
@@ -95,8 +94,8 @@ import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import LayoutSplit from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
-import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
 import DepartmentSearchDialog from './components/DepartmentSearchDialog.vue'
+import AllUsersDialog from './components/AllUsersDialog.vue'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { systemAdminMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
@@ -129,7 +128,6 @@ const {
   activePermissionKey,
   menuPermissions,
   keyword,
-  allUsersOpen,
   selectPermission,
   createPermissionRow,
   openDeptSearch,

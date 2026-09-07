@@ -11,13 +11,10 @@
     </template>
   </PageHeader>
 
-  <div :class="styles.pageActions">
-    <div :class="styles.pageActionButtons">
+  <div class="list-actions line-bottom">
       <Button type="button" variant="tertiary2" size="sm"  @click="goList">목록</Button>
       <Button type="button" variant="primary" size="sm"  @click="onSave">저장</Button>
-    </div>
   </div>
-
   <GroupDetailForm :form="form" mode="new" />
 </template>
 

@@ -180,6 +180,17 @@ common
   margin-top: 1.2rem;
 }
 
+/*
+ * InfoTable 에서 옆 칸이 두 행을 차지(row-span)해 비는 자리를 메우는 빈 칸.
+ * 표 테두리를 시안처럼 이어 주기만 하는 칸이라, 1열로 접히면(InfoTable 과 같은 62.5rem)
+ * 빈 줄로만 남으므로 감춘다.
+ */
+@media (max-width: 62.5rem) {
+  .lp-info-blank-cell {
+    display: none;
+  }
+}
+
 /* 라벨 칸 없이 컨트롤만 들어가는 테두리 상자(라디오·체크박스 줄, 보조 입력 묶음).
    라벨-값 표가 필요하면 이게 아니라 InfoTable 을 쓴다. */
 .lp-form-box {
@@ -281,12 +292,19 @@ common
   overflow: hidden;
   border: 1px solid var(--Border_gray02);
   border-radius: var(--Radius-medium2);
+  gap:0.6rem;
+}
+.lp-pane-wrap{
+  padding:12px 12px 20px;
 }
 .lp-pane {
   display: flex;
   flex: 1 1 0;
   min-width: 0;
   flex-direction: column;
+}
+.lp-pane + .lp-pane{
+  border-left:1px solid var(--Border_gray0);
 }
 /* 좌측처럼 폭을 고정하는 칸 */
 .lp-pane-fixed {
@@ -315,14 +333,40 @@ common
 
 /* ══ 팝업 ═════════════════════════════════════════════════════ */
 
-/* 팝업 본문 위쪽 제목줄 (.lp-row-between 과 함께) */
+/*
+ * 페이지네이션으로 끝나는 팝업 본문. `.pop-body` 가 overflow:hidden 이라
+ * Pagination 이 달고 있는 -8px 음수 아래여백만큼 페이저 아래가 잘린다 —
+ * 그만큼 아래를 비워 둔다(패딩 안쪽은 클리핑되지 않는다).
+ */
+.lp-pop-body-pager {
+  padding-bottom: 0.8rem;
+}
+
+/* 팝업 본문 위쪽 제목줄 (.lp-row-between 과 함께).
+   .pop-body 안에서는 제 높이만 쓰고 남는 높이를 그리드에 넘긴다 */
 .lp-dialog-head {
+  flex-shrink: 0;
   margin-bottom: 1.2rem;
 }
+/*
+ * 팝업 머리의 "라벨: 값" 한 줄(Figma 10577:111184). 라벨과 값이 크기·굵기는 같고 색만 다르다.
+ * 줄 배치는 공통 .group-gap3(gap 1.2rem)를 같이 쓴다.
+ * 페이지 액션바의 .list-actions-title/.list-actions-part 와 생김새가 닮았지만 그쪽은 2rem/700 이라 별개다.
+ */
+.lp-dialog-head-title,
+.lp-dialog-head-label {
+  font-size: 1.9rem;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
 .lp-dialog-head-title {
-  font-size: 1.5rem;
-  font-weight: 700;
   color: var(--Text-body_0);
+}
+
+.lp-dialog-head-label {
+  color: var(--Text-body_2);
 }
 .lp-dialog-body {
   display: flex;
@@ -1552,4 +1596,77 @@ common
 .lp-field-table-empty {
   color: var(--Text-body_2);
   text-align: center;
+}
+
+/*
+ * 참고사항 통계 칸(범죄 특성 · 인구 사회학적 특성) — 한 칸 안에 [등급][수치] 두 조각이 들어간다.
+ * 시안은 둘이 각각 표의 칸이라 사이에 세로선이 있다. InfoField 값 영역은 기본이
+ * "여백 + gap 으로 늘어놓기" 라서, 이 표에서만 그 여백을 걷어내고 두 조각을 칸처럼 나눈다.
+ */
+.lp-stat-field > div:last-child {
+  padding: 0;
+  gap: 0;
+}
+
+.lp-stat-grade,
+.lp-stat-value {
+  display: flex;
+  align-items: center;
+  /* 세로선이 칸 높이를 꽉 채우도록 값 영역 높이만큼 늘린다 */
+  align-self: stretch;
+  padding: 0.8rem 1.2rem;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+}
+
+.lp-stat-grade {
+  flex: 0 0 11rem;
+  justify-content: center;
+}
+
+.lp-stat-value {
+  flex: 1 1 0;
+  min-width: 0;
+  border-left: 1px solid var(--Border_gray03);
+}
+
+/*
+ * 그리드 위에 얹는 회색 제목 바 — 왼쪽에 표 이름, 오른쪽에 건수(Figma 10894:24493).
+ * 건수의 숫자만 포인트색이라 숫자를 따로 감싼다.
+ * LayoutPanel 의 제목줄(.lp-pane-title)과 달리 면이 채워진 한 줄이라 별개다.
+ */
+.lp-grid-title {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 2.4rem;
+  padding: 0.8rem 2rem;
+  border: 1px solid var(--Border_gray02);
+  border-radius: var(--Radius-medium3);
+  background: var(--Background-gray01);
+  font-size: 1.7rem;
+  font-weight: 600;
+  line-height: 1.5;
+  height:4.8rem;
+  color: var(--Text-body_0);
+}
+
+.lp-grid-title + .tabulator-root{
+  margin-top:1.6rem;
+}
+
+.lp-grid-title-label {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.lp-grid-title-count {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.lp-grid-title-num {
+  color: var(--Base--point);
+  font-weight: inherit;
 }

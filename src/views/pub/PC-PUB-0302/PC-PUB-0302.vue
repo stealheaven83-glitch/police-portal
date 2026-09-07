@@ -11,16 +11,17 @@
     </template>
   </PageHeader>
 
-  <div class="list-actions space-between line">
+  <div class="list-actions space-between">
     <p class="list-actions-title"><span class="list-actions-part">부서:</span> {{ form.dept }}</p>
     <div class="group-gap3">
-    <Button type="button" variant="tertiary2" size="sm" @click="goList">목록</Button>
-    <Button type="button" variant="tertiary2" size="sm" :disabled="form.id == null" @click="onDelete">삭제</Button>
-    <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
+      <Button type="button" variant="tertiary2" size="sm" @click="goList">목록</Button>
+      <Button type="button" variant="tertiary2" size="sm" @click="onDelete">삭제</Button>
+      <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
     </div>
   </div>
-
+<ScrollWrapper>
   <GroupDetailForm :form="form" mode="edit" /> 
+  </ScrollWrapper>
 </template>
 
 <script setup lang="ts">
@@ -38,6 +39,7 @@ import GroupDetailForm from '../components/GroupDetailForm.vue'
 import { usePublicSafetyStore, createEmptyGroupForm } from '../composable/publicSafety'
 import styles from '../style/pageActions.module.css'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
+import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
 defineOptions({ name: 'PcPub0302' })
 
 const navItems = [
