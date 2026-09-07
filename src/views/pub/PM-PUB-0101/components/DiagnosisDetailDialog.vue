@@ -71,7 +71,7 @@
         <InputField2
           v-model="detailForm.addressDetail"
           size="sm"
-          class="!space-y-0 w-1/2"
+          class="!space-y-0 w-40"
           input-class="w-full"
           placeholder="상세주소"
           label="상세 주소"
@@ -105,16 +105,16 @@
 
     <div class="pop-title-lv2"><h3>1) 범죄 특성</h3></div>
     <InfoTable :columns="2" popup>
-      <InfoField v-for="stat in crimeStats" :key="stat.label" :label="stat.label">
-        <span :class="styles.statGrade">{{ stat.grade }}</span>
-        <span>{{ stat.value }}</span>
+      <InfoField v-for="stat in crimeStats" :key="stat.label" :label="stat.label" class="lp-stat-field">
+        <span class="lp-stat-grade">{{ stat.grade }}</span>
+        <span class="lp-stat-value">{{ stat.value }}</span>
       </InfoField>
     </InfoTable>
     <div class="pop-title-lv2"><h3>2) 인구 사회학적 특성</h3></div>
     <InfoTable :columns="2" popup>
-      <InfoField v-for="stat in demographicStats" :key="stat.label" :label="stat.label">
-        <span :class="styles.statGrade">{{ stat.grade }}</span>
-        <span>{{ stat.value }}</span>
+      <InfoField v-for="stat in demographicStats" :key="stat.label" :label="stat.label" class="lp-stat-field">
+        <span class="lp-stat-grade">{{ stat.grade }}</span>
+        <span class="lp-stat-value">{{ stat.value }}</span>
       </InfoField>
     </InfoTable>
     
@@ -304,7 +304,6 @@ import {
   surveySections,
   incidentColumns,
 } from '../composable/PM-PUB-0102'
-import styles from '../style/PM-PUB-0101.module.css'
 import photoEmptyLabel from '@/assets/images/icons/photoEmptyLabel.svg?url'
 
 /* 사진 미등록 아이콘 — PM-PUB-0103 사진자료 팝업 등이 쓰는 공통 SVG */

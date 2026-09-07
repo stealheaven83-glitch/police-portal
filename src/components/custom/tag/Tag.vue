@@ -54,7 +54,7 @@ const isButton = computed(() => props.type === "button")
       :aria-label="`${label ?? ''} 삭제`"
       @click.stop="emit('delete')"
     >
-      <X class="size-4" />
+      <img src="/portal/asset/images/icon/ico_clear_16.svg" alt="" class="size-4" />
     </button>
   </component>
 </template>

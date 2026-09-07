@@ -469,6 +469,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-section` / `.lp-section-title` | 구역 사이 간격 / 구역 제목 여백(`.lp-heading-lg` 와 함께) | 0601 |
 | `.lp-section-head` | 제목줄 아래 실선(`.lp-row-between` 과 함께) | 0802 |
 | `.lp-table-gap` | 표 위 여백 | 0601 |
+| `.lp-info-blank-cell` | `InfoTable` 에서 옆 칸이 두 행을 차지(row-span)해 비는 칸. 표 테두리만 이어 주는 자리라 1열로 접히면 감춘다 | PUB-0302/0303 |
 | `.lp-meta-nowrap` | 조회 화면 위쪽 '최종 수정일' 한 줄 | 0601 |
 | `.lp-placeholder-box` | 채울 것이 아직 정해지지 않은 자리(시안의 회색 상자) | PUB-0113 |
 | `.lp-form-box` / `.lp-form-box-center` | 라벨 칸 없이 컨트롤만 들어가는 테두리 상자(라디오·체크박스 줄) / 그 안을 가운데로. 라벨-값 표면 `InfoTable` | PUB-0702, PUB-0208 |
@@ -492,7 +493,9 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 |---|---|---|
 | `.lp-pane-box` / `.lp-pane` / `.lp-pane-fixed` / `.lp-pane-title` | 테두리 안에서 좌우로 나뉘는 목록 상자(폼 화면 2분할은 `LayoutSplit`) | 2204 |
 | `.lp-selected-bar` | 선택한 항목을 칩으로 늘어놓는 회색 바 | 2204 |
-| `.lp-dialog-head` / `.lp-dialog-head-title` | 팝업 본문 위쪽 제목줄(`.lp-row-between` 과 함께) | 2204 |
+| `.lp-dialog-head` / `.lp-dialog-head-title` / `.lp-dialog-head-label` | 팝업 본문 위쪽 제목줄(`.lp-row-between` 과 함께). `-label`+`-title` 은 "권한명: 범죄예방대응국" 처럼 **크기·굵기는 같고 색만 다른** 라벨·값 짝(1.9rem/600). 줄 배치는 `.group-gap3`. 페이지 액션바의 `.list-actions-title`/`.list-actions-part`(2rem/700)와는 별개다 | 2204 |
+| `.lp-grid-title` `-label` `-count` `-num` | 그리드 위에 얹는 회색 제목 바(왼쪽 표 이름 + 오른쪽 건수, 숫자만 포인트색). 면이 채워진 한 줄이라 `LayoutPanel` 의 `.lp-pane-title` 과는 별개 | 2207 전체 사용자 팝업 |
+| `.lp-pop-body-pager` | 페이지네이션으로 끝나는 팝업 본문(`.pop-body` 와 함께). `.pop-body` 의 overflow:hidden 이 Pagination 의 -8px 음수 아래여백을 잘라먹는 것을 막는다 | 2207 전체 사용자 팝업 |
 | `.lp-dialog-body` / `.lp-dialog-subtitle` / `.lp-dialog-footer` | 팝업 본문 세로 묶음 / 부제 / 우측 버튼줄 | 0601 |
 | `.lp-search-form-gap` | 팝업 안 검색 폼의 행·열 간격 | 0601 |
 
@@ -538,6 +541,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-notice-detail` `-badges` `-dept` `-title` `-meta` `-thumb` `-body` `-detail-actions` | 게시판 글 상세 | COM-1002 |
 | `.lp-comment-area` `-write` `-list` `-item` `-head` `-writer` `-date` `-more` `-body` `-actions` `-reply-btn` `-replies` | 댓글·대댓글 영역(CommentThread) | COM-1002 |
 | `.lp-photo-grid` `-item` `-label` `-box` `-img` `-empty` `-empty-icon` `-empty-label` `-meta` `-actions` | 진단 상세의 취약/개선 상황사진 4칸(112사건 표 아래에 붙는 칸). **`police-style.css` 의 `.photo-box`/`.photo-empty` 는 인사관리 증명사진용 12rem 칸이라 서로 다른 것 — 이름이 비슷해도 섞어 쓰지 않는다** | PUB-0101 |
+| `.lp-stat-field` `.lp-stat-grade` `.lp-stat-value` | 라벨-값 표의 한 칸에 [등급][수치] 두 조각이 들어가는 통계 표. 값 영역 여백을 걷어내고 두 조각 사이에 세로선을 넣는다 | PUB-0101 참고사항 |
 
 > 위 등록 폼·요약·드롭존 스타일은 원래 PM-LPO-0104(메모 등록)를 위해 미리 만들어 둔 것이었고,
 > 그 화면이 생기면서 실제로 쓰이기 시작했다.

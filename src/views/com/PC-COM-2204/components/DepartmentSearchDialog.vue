@@ -7,12 +7,12 @@
   >
     <!-- 권한명 ↔ 부서조회 검색 -->
     <div class="lp-row-between lp-dialog-head">
-      <span class="group-gap2">
-        <span class="dept-name">권한명:</span>
+      <span class="group-gap3">
+        <span class="lp-dialog-head-label">권한명:</span>
         <span class="lp-dialog-head-title">{{ activePermission?.name }}</span>
       </span>
       <InputField2
-        v-model="keyword"
+        v-model="keyword" 
         size="sm"
         input-class="w-60"
         class="!space-y-0"
@@ -39,35 +39,40 @@
           @delete="removeSelectedUser(user.userId)"
         />
       </TagList>
-      <Button type="button" variant="secondary" size="sm" @click="allUsersOpen = true">전체 사용자</Button>
+      <Button type="button" variant="secondary" size="xs" @click="allUsersOpen = true">전체 사용자</Button>
     </div>
 
     <!-- 부서 정보 / 사용자 정보 2분할 -->
     <div class="lp-pane-box">
-      <section class="lp-pane lp-pane lp-pane-fixed" aria-labelledby="dept-info-heading">
+      <section class="lp-pane lp-pane-fixed" aria-labelledby="dept-info-heading">
         <h3 id="dept-info-heading" class="lp-pane-title">부서 정보</h3>
-        <TabulatorGrid
-          v-model:data="deptRows"
-          :columns="deptColumns"
-          height="32rem"
-          :row-class="(row: any) => (isActiveDept(row) ? 'lp-grid-active-row' : undefined)"
-          placeholder="부서가 없습니다"
-          @row-click="onDeptRowClick"
-        />
+        <div class="lp-pane-wrap">
+          <TabulatorGrid
+            v-model:data="deptRows"
+            :columns="deptColumns"
+            height="32rem"
+            :row-class="(row: any) => (isActiveDept(row) ? 'lp-grid-active-row' : undefined)"
+            placeholder="부서가 없습니다"
+            @row-click="onDeptRowClick"
+          />
+        </div>
+
       </section>
 
       <section class="lp-pane" aria-labelledby="user-info-heading">
         <h3 id="user-info-heading" class="lp-pane-title">사용자 정보</h3>
-        <TabulatorGrid
-          ref="userGridRef"
-          :data="usersInActiveDept"
-          :columns="userColumns"
-          select-mode="checkbox"
-          height="32rem"
-          placeholder="사용자가 없습니다"
-          @table-built="syncSelectedUsers"
-          @row-selection-changed="onUserSelectionChanged"
-        />
+        <div class="lp-pane-wrap">
+          <TabulatorGrid
+            ref="userGridRef"
+            :data="usersInActiveDept"
+            :columns="userColumns"
+            select-mode="checkbox"
+            height="32rem"
+            placeholder="사용자가 없습니다"
+            @table-built="syncSelectedUsers"
+            @row-selection-changed="onUserSelectionChanged"
+          />
+        </div>
       </section>
     </div>
 

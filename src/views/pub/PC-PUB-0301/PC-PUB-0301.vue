@@ -11,10 +11,12 @@
     </template>
   </PageHeader>
 
-  <div class="dept-area">
-    <span class="dept-name">부서</span>
-    <DepartmentCascadeSelect v-model="department" size="sm" />
-  </div>
+  <SearchWrapper>
+    <template #department>
+      <span class="dept-name">부서</span>
+      <DepartmentCascadeSelect v-model="department" size="sm" />
+    </template>
+  </SearchWrapper>
 
   <div class="list-actions">
     <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
@@ -44,6 +46,7 @@ import { Download } from 'lucide-vue-next'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
+import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import { Button } from '@/components/custom/button'
