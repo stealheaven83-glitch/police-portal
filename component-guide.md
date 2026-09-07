@@ -513,6 +513,10 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-stepper` `-btn` `-value` | 숫자 증감 입력(`NumberStepper`) 전용 | LPO-0214 |
 | `.lp-duty-table` `-col-date` `-col-side` `-line` `-remove` | 근무현황 표(한 칸에 여러 줄이 들어가 Tabulator 를 못 쓴다) | LPO-0216 |
 | `.lp-em-primary` / `.lp-em-danger` | 문장 안 한 낱말만 색으로 강조(굵기는 `<b>` 가) | LPO-0208, 0216, 0217 |
+| `.lp-field-inline` | 라벨 아래 입력+버튼이 한 줄로 붙는 칸(부서명 + 부서 검색) | COM-1003, 1004 |
+| `.lp-notice-form` `-actions` | 게시판 글 등록/수정 폼(본문 폭을 꽉 쓴다). **가운데 1000px 폼은 `.lp-narrow-form`** | COM-1003, 1004 |
+| `.lp-notice-detail` `-badges` `-dept` `-title` `-meta` `-thumb` `-body` `-detail-actions` | 게시판 글 상세 | COM-1002 |
+| `.lp-comment-area` `-write` `-list` `-item` `-head` `-writer` `-date` `-more` `-body` `-actions` `-reply-btn` `-replies` | 댓글·대댓글 영역(CommentThread) | COM-1002 |
 
 > 위 등록 폼·요약·드롭존 스타일은 원래 PM-LPO-0104(메모 등록)를 위해 미리 만들어 둔 것이었고,
 > 그 화면이 생기면서 실제로 쓰이기 시작했다.

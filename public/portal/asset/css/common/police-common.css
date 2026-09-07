@@ -1347,3 +1347,160 @@
 .lp-duty-remove:hover {
   color: var(--danger);
 }
+
+/* 라벨 아래 입력과 버튼이 한 줄로 붙는 칸(부서명 + 부서 검색 등) */
+.lp-field-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+/* ── 게시판 글 등록/수정 폼 ──────────────────────────────────────────────── */
+/* .lp-narrow-form(1000px 가운데 정렬)과 달리 본문 폭을 꽉 쓰는 게시판 폼이다 */
+.lp-notice-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-bottom: 3.2rem;
+}
+.lp-notice-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  padding-top: 0.4rem;
+}
+
+/* ── 게시판 글 상세 ──────────────────────────────────────────────────────── */
+.lp-notice-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-bottom: 3.2rem;
+}
+.lp-notice-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem;
+}
+.lp-notice-dept {
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
+}
+.lp-notice-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--Text-body_0);
+}
+.lp-notice-meta {
+  padding-bottom: 1.6rem;
+  border-bottom: 0.1rem solid var(--Border_gray02);
+}
+/* 본문 대표 이미지 자리 — Figma 는 회색 박스로만 그려져 있다 */
+.lp-notice-thumb {
+  width: 100%;
+  max-width: 54rem;
+  height: 28rem;
+  margin: 0 auto;
+  background: var(--Background-gray01);
+}
+.lp-notice-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.lp-notice-detail-actions {
+  padding-top: 1.6rem;
+  border-top: 0.1rem solid var(--Border_gray02);
+}
+
+/* ── 댓글 영역 ───────────────────────────────────────────────────────────── */
+.lp-comment-area {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  padding: 2rem;
+  border: 0.1rem solid var(--Border_gray02);
+  border-radius: var(--Radius-medium2);
+}
+.lp-comment-write {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.lp-comment-list {
+  display: flex;
+  flex-direction: column;
+}
+.lp-comment-item {
+  padding: 1.6rem 0;
+  border-top: 0.1rem solid var(--Border_gray02);
+}
+.lp-comment {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.lp-comment-head {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.lp-comment-writer {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+}
+.lp-comment-date {
+  flex: 1;
+  min-width: 0;
+  font-size: 1.3rem;
+  color: var(--Text-body_2);
+}
+.lp-comment-more {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  padding: 0;
+  color: var(--Text-body_2);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.lp-comment-more:hover {
+  color: var(--Text-body_0);
+}
+.lp-comment-body {
+  font-size: 1.5rem;
+  line-height: 1.6;
+  color: var(--Text-body_0);
+}
+.lp-comment-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+}
+.lp-comment-reply-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  align-self: flex-start;
+  padding: 0;
+  font-size: 1.3rem;
+  color: var(--Text-body_1);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.lp-comment-reply-btn:hover {
+  color: var(--Base-primary);
+}
+/* 대댓글은 한 단 들여쓴다 */
+.lp-comment-replies {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  padding-left: 3.2rem;
+  margin-top: 1.6rem;
+}

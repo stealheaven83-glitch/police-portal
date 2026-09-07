@@ -52,6 +52,7 @@
     show-pagination
     :items-per-page="10"
     @row-selection-changed="selectedCount = $event.length"
+    @row-click="onRowClick"
   />
 
   <div class="list-actions">
@@ -62,6 +63,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
@@ -75,8 +77,16 @@ import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useNoticeList, authorFilterOptions, searchFieldOptions } from './composable/PM-COM-1001'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { useNoticeStore, bulletinMenu } from '../composable/notice'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
 defineOptions({ name: 'PmCom1001' })
+
+// LNB: 게시판 > 공지사항 (presets.ts 에 게시판 메뉴가 아직 없어 도메인 composable 의 구성을 쓴다)
+useSideMenuSetup(bulletinMenu)
+
+const router = useRouter()
+const { selectNotice } = useNoticeStore()
 
 const navItems = [
   { label: '홈', path: '/' },
@@ -133,7 +143,13 @@ function onDeleteSelected() {
 }
 
 function onRegister() {
-  toast.success('등록 화면은 준비 중입니다.')
+  router.push({ name: 'PM-COM-1004' })
+}
+
+/** 제목을 누르면 상세(PM-COM-1002)로 간다 */
+function onRowClick(_event: unknown, row: { getData: () => { id?: number } }) {
+  selectNotice(row.getData().id ?? 1)
+  router.push({ name: 'PM-COM-1002' })
 }
 
 useBottomTabSetup({
