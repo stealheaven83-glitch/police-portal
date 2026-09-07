@@ -517,6 +517,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-notice-form` `-actions` | 게시판 글 등록/수정 폼(본문 폭을 꽉 쓴다). **가운데 1000px 폼은 `.lp-narrow-form`** | COM-1003, 1004 |
 | `.lp-notice-detail` `-badges` `-dept` `-title` `-meta` `-thumb` `-body` `-detail-actions` | 게시판 글 상세 | COM-1002 |
 | `.lp-comment-area` `-write` `-list` `-item` `-head` `-writer` `-date` `-more` `-body` `-actions` `-reply-btn` `-replies` | 댓글·대댓글 영역(CommentThread) | COM-1002 |
+| `.lp-photo-grid` `-item` `-label` `-box` `-img` `-empty` `-empty-icon` `-empty-label` `-meta` `-actions` | 진단 상세의 취약/개선 상황사진 4칸(112사건 표 아래에 붙는 칸). **`police-style.css` 의 `.photo-box`/`.photo-empty` 는 인사관리 증명사진용 12rem 칸이라 서로 다른 것 — 이름이 비슷해도 섞어 쓰지 않는다** | PUB-0101 |
 
 > 위 등록 폼·요약·드롭존 스타일은 원래 PM-LPO-0104(메모 등록)를 위해 미리 만들어 둔 것이었고,
 > 그 화면이 생기면서 실제로 쓰이기 시작했다.

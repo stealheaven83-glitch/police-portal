@@ -1097,7 +1097,7 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
 }
 .pop-title-sub.space-between{
   display:flex;
-  justify-content:center; 
+  justify-content:space-between; 
   align-items:center;
 }
 .pop-title-lv2{

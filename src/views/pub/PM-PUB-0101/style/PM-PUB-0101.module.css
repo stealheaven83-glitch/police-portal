@@ -78,84 +78,10 @@
   gap: 0.4rem;
 }
 
-/* 통보 체크박스 줄 — 문장 중간에 셀렉트가 끼어드는 형태 */
-.notifyRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.8rem;
-  margin: 2.4rem 0 1.6rem;
-  font-size: 1.5rem;
-  color: var(--Text-body_0);
-}
 
 .incidentHead {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.2rem;
-}
-
-/* 사진 4칸. 좁아지면 2칸 → 1칸으로 접는다 */
-.photoGrid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1.6rem;
-  margin-top: 1.6rem;
-}
-
-@media (max-width: 64rem) {
-  .photoGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 36rem) {
-  .photoGrid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-.photoLabel {
-  display: block;
-  margin-bottom: 0.6rem;
-  font-size: 1.5rem;
-  color: var(--Text-body_0);
-}
-
-.photoBox {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  aspect-ratio: 4 / 3;
-  border: 1px solid var(--Border_gray03);
-  background: #fff;
-  overflow: hidden;
-}
-
-.photoImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.photoEmpty {
-  font-size: 1.3rem;
-  color: var(--Text-body_disable);
-}
-
-.photoMeta {
-  margin: 0.6rem 0;
-  font-size: 1.3rem;
-  color: var(--Text-body_2);
-}
-
-.photoActions {
-  display: flex;
-  gap: 0.8rem;
-}
-
-/* 파일 입력은 '사진변경' 버튼이 대신 열기 때문에 화면에서 감춘다 */
-.fileInput {
-  display: none;
 }

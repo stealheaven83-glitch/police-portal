@@ -140,3 +140,121 @@
 .lp-cell-danger {
   color: var(--danger);
 }
+
+/* 통보 체크박스 줄 — 문장 중간에 셀렉트가 끼어드는 형태 */
+.sub-title-between {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 2.4rem 0 1.6rem;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+}
+.sub-title-between span{
+  font-size: 1.7rem;
+}
+
+
+/* 척도 10칸이 줄바꿈되면 읽을 수 없어 이 표만 가로로 스크롤시킨다 */
+.prevention-scroll {
+  margin-top: 1.2rem;
+  overflow-x: auto;
+}
+
+/* 시안은 섹션(체감 안전도 / 범죄예방의식도)마다 표가 하나씩이다 */
+.prevention-table {
+  min-width: 72rem;
+  border-top: 0.1rem solid var(--Border_gray03);
+}
+
+.prevention-table + .prevention-table {
+  margin-top: 0.6rem;
+}
+
+.prevention-row {
+  display: flex;
+  align-items: stretch;
+}
+
+/* 라벨 칸 — 남는 폭을 다 차지한다(시안 720px 기준 280px) */
+.prevention-head,
+.prevention-question {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0.8rem 2rem;
+  border-bottom: 0.1rem solid var(--Border_gray03);
+  background: var(--Background-gray01);
+  font-size: 1.5rem;
+  line-height: 1.3;
+  color: var(--Text-body_1);
+  word-break: break-word;
+}
+
+.prevention-head {
+  font-weight: 600;
+}
+
+/* 척도 — 44px 칸 10개(숫자줄 32px + 선택줄 44px) */
+.prevention-scale {
+  flex: 0 0 auto;
+  width: 44rem;
+}
+
+.prevention-nums,
+.prevention-choices {
+  display: flex;
+  
+}
+
+.prevention-num {
+  display: flex;
+  width: 4.4rem;
+  height: 3.2rem;
+  align-items: center;
+  justify-content: center;
+  border-right: 0.1rem solid var(--Border_gray03);
+  border-bottom: 0.1rem solid var(--Border_gray03);
+  background: var(--white);
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+}
+
+/* 표 오른쪽 끝에는 세로선이 없다(시안) */
+.prevention-num:last-child {
+  border-right: 0;
+}
+
+/* 섹션 첫 줄은 숫자만 있고 선택칸이 비어 있다 — 라벨 칸과 같은 회색 */
+.prevention-blank {
+  height: 4.4rem;
+  border-bottom: 0.1rem solid var(--Border_gray03);
+  background: var(--Background-gray01);
+}
+
+.prevention-choice {
+  display: flex;
+  width: 4.4rem;
+  height: 4.4rem;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 0.1rem solid var(--Border_gray03);
+  background: var(--white);
+
+}
+.prevention-choice label{
+  gap:0;
+}
+/*
+ * RadioGroupItem 은 라벨이 있으면 [동그라미][간격][라벨] 로 벌어진다.
+ * 여기서는 숫자를 윗줄에 따로 두고 라벨은 sr-only 라, 간격을 없애야 동그라미가 칸 정가운데에 온다.
+ */
+.prevention-choice :deep(label) {
+  gap: 0;
+}
+
