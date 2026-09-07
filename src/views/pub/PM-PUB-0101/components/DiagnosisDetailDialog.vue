@@ -7,10 +7,9 @@
   >
     <!-- ── 진단 카드 ─────────────────────────────── -->
     <div class="pop-title-sub"><h2>간이 범죄예방진단 카드({{ detailTypeLabel }})</h2></div>
-    <InfoTable :columns="2">
+    <InfoTable :columns="2" popup>
       <InfoField label="부서">{{ detailForm.dept }}</InfoField>
       <InfoField label="관리번호">{{ detailForm.managementNo }}</InfoField>
-
       <InfoField label="유형" for="detail-type">
         <SelectField
           id="detail-type"
@@ -18,7 +17,7 @@
           :options="detailTypeOptions"
           size="sm"
           trigger-class="w-full"
-          class="!space-y-0 flex-1"
+          class="flex-1"
         />
       </InfoField>
       <InfoField label="진단일자" for="detail-date">
@@ -26,13 +25,13 @@
           id="detail-date"
           v-model="detailForm.diagnosedAt"
           size="sm"
-          class="!space-y-0 flex-1"
+          class="flex-1"
           input-class="w-full"
         />
       </InfoField>
 
       <InfoField label="현금다액업소 여부" full>
-        <RadioGroup v-model="detailForm.cashIntensive" class="flex items-center gap-6">
+        <RadioGroup v-model="detailForm.cashIntensive" :class="infoStyles['info-table-radio']">
           <RadioGroupItem value="Y" label="여" />
           <RadioGroupItem value="N" label="부" />
         </RadioGroup>
@@ -42,7 +41,7 @@
     <!-- ── 일반현황 ─────────────────────────────── -->
     <div class="pop-title-sub"><h2>일반현황</h2></div>
 
-    <InfoTable :columns="2">
+    <InfoTable :columns="2" popup>
       <InfoField label="진단사유" for="detail-reason">
         <SelectField
           id="detail-reason"
@@ -54,7 +53,7 @@
         />
       </InfoField>
 
-      <InfoField label="주소" layout="column">
+      <InfoField label="주소" layout="column" :row-span="2">
         <div class="flex w-full items-center gap-2">
           <InputField2
             v-model="detailForm.addressRoad"
@@ -96,12 +95,12 @@
           input-class="w-full"
         />
       </InfoField>
-      <InfoField label="관할동" for="detail-district">
+      <InfoField label="관할동" for="detail-district" full>
         <InputField2
           id="detail-district"
           v-model="detailForm.district"
           size="sm"
-          class="!space-y-0 flex-1"
+          class="!space-y-0"
           input-class="w-full"
         />
       </InfoField>
@@ -111,14 +110,14 @@
     <div class="pop-title-sub"><h2>참고사항</h2></div>
 
     <div class="pop-title-lv2"><h3>1) 범죄 특성</h3></div>
-    <InfoTable :columns="2">
+    <InfoTable :columns="2" popup>
       <InfoField v-for="stat in crimeStats" :key="stat.label" :label="stat.label">
         <span :class="styles.statGrade">{{ stat.grade }}</span>
         <span>{{ stat.value }}</span>
       </InfoField>
     </InfoTable>
     <div class="pop-title-lv2"><h3>2) 인구 사회학적 특성</h3></div>
-    <InfoTable :columns="2">
+    <InfoTable :columns="2" popup>
       <InfoField v-for="stat in demographicStats" :key="stat.label" :label="stat.label">
         <span :class="styles.statGrade">{{ stat.grade }}</span>
         <span>{{ stat.value }}</span>
@@ -126,8 +125,7 @@
     </InfoTable>
     
     <div class="pop-title-lv2"><h3>3) 예방 자료</h3></div>
-    <div :class="styles.scaleScroll">
-      <InfoTable :columns="1" :class="styles.surveyTable">
+      <InfoTable :columns="1" popup>
         <template v-for="section in surveySections" :key="section.id">
           <!--
             종합 표시 행이라 입력하지 않는다(시안의 회색 척도).
@@ -160,7 +158,7 @@
           </InfoField>
         </template>
       </InfoTable>
-    </div>
+
 
     <!-- ── 통보 · 관련의견 ───────────────────────── -->
     <div :class="styles.notifyRow">
@@ -191,7 +189,7 @@
       <span>에게 통보</span>
     </div>
 
-    <InfoTable :columns="1">
+    <InfoTable :columns="1" popup>
       <InfoField label="관련의견" for="detail-opinion">
         <TextareaField
           id="detail-opinion"
@@ -203,10 +201,10 @@
     </InfoTable>
 
     <!-- ── 112사건 등록 ─────────────────────────── -->
-    <div :class="styles.incidentHead">
-      <div class="pop-title-sub"><h2>참고사항</h2></div>
-      <Button type="button" variant="secondary" size="sm" @click="addIncident">112신고 등록</Button>
-    </div>
+
+
+      <div class="pop-title-sub space-between"><h2>112사건 등록</h2>       <Button type="button" variant="secondary" size="xs" @click="addIncident">112신고 등록</Button></div>
+
 
     <TableWrapper
       :columns="incidentColumns"
@@ -255,8 +253,8 @@
       </li>
     </ul>
 
-    <InfoTable :columns="1" class="mt-6">
-      <InfoField label="비고" for="detail-note">
+    <InfoTable :columns="1" popup size="100">
+      <InfoField label="비고" for="detail-note" >
         <TextareaField
           id="detail-note"
           v-model="detailForm.note"
@@ -292,6 +290,7 @@ import { Checkbox } from '@/components/custom/checkbox'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
 import TableWrapper from '@/components/custom/table/TableWrapper.vue'
 import { DiagnosisListKey } from '../composable/PM-PUB-0101'
+import infoStyles from '@/components/custom/info-table/InfoTable.module.css'
 import {
   detailTypeOptions,
   detailReasonOptions,

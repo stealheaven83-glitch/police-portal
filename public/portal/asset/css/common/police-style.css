@@ -1066,7 +1066,17 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   gap: 0.8rem;
   margin: 0 0 2rem 0;
 }
+.list-actions.line{
+  border-top:1px solid #1E2124;
+}
+.list-actions-title{
+  font-size: 2rem;
+  font-weight: 700;
+}
 
+.list-actions-title .list-actions-part{
+  color:var(--Text-body_2);
+}
 .grid-wrap{
   margin-top:2rem;
 }
@@ -1084,6 +1094,11 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   color:var(--Text-body_0);
   line-height:1.5;
   font-weight:700;
+}
+.pop-title-sub.space-between{
+  display:flex;
+  justify-content:center; 
+  align-items:center;
 }
 .pop-title-lv2{
   margin-top: 0.8rem;

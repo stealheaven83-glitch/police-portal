@@ -10,12 +10,12 @@
       </span>
     </template>
   </PageHeader>
-  <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
+  <SearchWrapper  v-model:expanded="advancedSearchOpen">
     <template #department>
       <span class="dept-name">부서</span>
       <DepartmentCascadeSelect v-model="department" size="sm" />
     </template>
-    <template #form>
+    <!-- <template #form>
       <div class="search-area">
         <div class="group-gap2">
           <DatePicker v-model="dateFrom" label="근무일자" size="sm" inputClass="w-40" />
@@ -28,7 +28,7 @@
     </template>
     <template #btns>
       <Button variant="secondary" size="sm">조회</Button>
-    </template>
+    </template> -->
   </SearchWrapper>
 
   <div class="list-actions">

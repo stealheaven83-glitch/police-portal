@@ -1401,7 +1401,7 @@ defineExpose({
     <!-- 시안(메모 검색결과없음)에서는 0건일 때 페이지네이션 바가 통째로 사라진다 -->
     <Pagination
       v-if="showPagination && totalElements > 0 && !cardView"
-      class="mt-[20px] shrink-0"
+      class="shrink-0"
       :current-page="currentPage"
       :total-pages="totalPages"
       :items-per-page="pageSize"

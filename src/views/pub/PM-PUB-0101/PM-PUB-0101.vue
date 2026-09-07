@@ -21,63 +21,58 @@
         <DepartmentCascadeSelect v-model="searchForm.department" size="sm" />
       </template>
       <template #form>
+        <!-- 시안 1행: 관리번호 · 상호명 · 유형 · 통보유무 · 현금다액업소 -->
         <div class="search-area">
-          <!-- 시안 1행: 관리번호 · 상호명 · 유형 · 통보유무 · 현금다액업소 -->
-          <div :class="styles.searchRow">
-            <InputField2 v-model="searchForm.managementNo" label="관리번호" size="sm" inputClass="w-40" />
-            <InputField2 v-model="searchForm.bizName" label="상호명" size="sm" inputClass="w-40" />
-            <SelectField
-              v-model="searchForm.type"
-              label="유형"
-              :options="typeOptions"
-              size="sm"
-              triggerClass="w-40"
-            />
-            <SelectField
-              v-model="searchForm.notified"
-              label="통보유무"
-              :options="notifiedOptions"
-              size="sm"
-              triggerClass="w-40"
-            />
-            <SelectField
-              v-model="searchForm.cashIntensive"
-              label="현금다액업소"
-              :options="cashIntensiveOptions"
-              size="sm"
-              triggerClass="w-40"
-            />
-          </div>
+          <InputField2 v-model="searchForm.managementNo" label="관리번호" size="sm" inputClass="w-40" />
+          <InputField2 v-model="searchForm.bizName" label="상호명" size="sm" inputClass="w-40" />
+          <SelectField
+            v-model="searchForm.type"
+            label="유형"
+            :options="typeOptions"
+            size="sm"
+            triggerClass="w-40"
+          />
+          <SelectField
+            v-model="searchForm.notified"
+            label="통보유무"
+            :options="notifiedOptions"
+            size="sm"
+            triggerClass="w-40"
+          />
+          <SelectField
+            v-model="searchForm.cashIntensive"
+            label="현금다액업소"
+            :options="cashIntensiveOptions"
+            size="sm"
+            triggerClass="w-40"
+          />
 
-          <!-- 시안 2행: 진단일자(기간) · 진단사유 · 진단자 -->
-          <div :class="styles.searchRow">
-            <div :class="styles.dateRange">
-              <DatePicker
-                v-model="searchForm.diagnosedFrom"
-                label="진단일자"
-                size="sm"
-                inputClass="w-40"
-                placeholder="YYYY-MM-DD"
-              />
-              <span :class="styles.dateSeparator" aria-hidden="true">~</span>
-              <DatePicker
-                v-model="searchForm.diagnosedTo"
-                size="sm"
-                inputClass="w-40"
-                placeholder="YYYY-MM-DD"
-                label="진단일자 종료일"
-                labelClass="sr-only"
-              />
-            </div>
-            <SelectField
-              v-model="searchForm.reason"
-              label="진단사유"
-              :options="reasonOptions"
-              size="sm"
-              triggerClass="w-40"
-            />
-            <InputField2 v-model="searchForm.diagnoser" label="진단자" size="sm" inputClass="w-40" />
-          </div>
+        <div class="group-gap2">
+          <DatePicker
+            v-model="searchForm.diagnosedFrom"
+            label="진단일자"
+            size="sm"
+            inputClass="w-40"
+            placeholder="YYYY-MM-DD"
+          />
+          <span :class="styles.dateSeparator" aria-hidden="true">~</span>
+          <DatePicker
+            v-model="searchForm.diagnosedTo"
+            size="sm"
+            inputClass="w-40"
+            placeholder="YYYY-MM-DD"
+            label="진단일자 종료일"
+            labelClass="sr-only"
+          />
+        </div>
+        <SelectField
+          v-model="searchForm.reason"
+          label="진단사유"
+          :options="reasonOptions"
+          size="sm"
+          triggerClass="w-40"
+        />
+        <InputField2 v-model="searchForm.diagnoser" label="진단자" size="sm" inputClass="w-40" />
         </div>
       </template>
       <template #btns>
@@ -86,7 +81,7 @@
     </SearchWrapper>
 
   <div class="list-actions"> 
-    <Button type="button" variant="tertiary2" size="sm" @click="onDownloadExcel">
+    <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
       <Download :size="16" aria-hidden="true" />
       엑셀다운로드
     </Button>

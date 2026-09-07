@@ -565,7 +565,7 @@ hex를 직접 쓰지 않는다. `var(--Text-body_1)`, `var(--Base-primary)`, `va
 | 일반 스타일 | **`police-common.css`** — 한 번만 쓰이더라도 여기. 이름은 `.lp-{역할}` |
 | 컴포넌트·라이브러리·테일윈드를 덮어야 하는 것 | **`police-override.css`** |
 | 특정 컴포넌트에 딸린 스타일 | 그 컴포넌트 폴더의 `*.module.css` |
-| 라벨-값 표 관련 | `custom/info-table/InfoTable.module.css` (이미 공통, 필수점 `.requiredDot`, 안내문구 `.hint`/`.hintSuccess`) |
+| 라벨-값 표 관련 | `custom/info-table/InfoTable.module.css` (이미 공통, 필수점 `.requiredDot`, 안내문구 `.hint`/`.hintSuccess`, 칸 사이 세로선 `.info-table-divided`) |
 | 그리드 관련 | `src/assets/css/tabulator-theme.css` (전역 적용, 다시 스타일링 불필요) |
 | **`police-style.css` 에는 추가하지 않는다** | 퍼블리싱 원본이라 읽기 전용 |
 

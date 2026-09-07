@@ -40,6 +40,9 @@
   <LayoutSplite :count="2" :widths="[55, 45]">
     <template #layout-1>
       <LayoutPanel title="주취자센터관리">
+        <template #actions>
+          <Button type="button" variant="primary" size="sm" @click="onNew">등록</Button>
+        </template>
         <TabulatorGrid
           class="flex-1"
           :columns="columns"
@@ -152,6 +155,14 @@ function onSave() {
   store.saveCenter(form)
   toast.success('저장되었습니다.')
   // 연속 등록을 위해 폼을 비운다
+  Object.assign(form, createEmptyCenterForm())
+}
+
+/**
+ * 목록 패널의 '등록' — PM-PUB-0411 에서 넘어와도 같은 자리에 버튼이 그대로 보이게 둔다.
+ * 이 화면이 이미 등록 화면이라 이동 대신 우측 폼만 새로 비운다.
+ */
+function onNew() {
   Object.assign(form, createEmptyCenterForm())
 }
 

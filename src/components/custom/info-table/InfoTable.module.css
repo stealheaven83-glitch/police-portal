@@ -251,6 +251,16 @@
   gap: 0.8rem 2.4rem;
   align-items:center;
 }
+
+/*
+ * 칸 사이에 세로 구분선을 넣는다(표 오른쪽 끝선도 같이 생긴다).
+ * 기본 표는 라벨 칸의 회색 배경으로 경계가 보이지만, 값 영역이 다시 여러 조각으로 나뉘는 표
+ * (범죄 특성 = 등급 + 수치)는 그것만으로 칸이 구분되지 않아 옆 칸과 붙어 보인다.
+ * 표 전체에 기본으로 켜면 이미 만든 표 40여 개의 모양이 다 바뀌므로 필요한 표에서만 켠다.
+ */
+.info-table-divided .field {
+  border-right: 1px solid var(--Border_gray03, #e6e8ea);
+}
 .flex-wrap{
   flex-wrap:wrap;
 }

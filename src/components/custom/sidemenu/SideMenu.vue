@@ -191,7 +191,7 @@ function selectChild(event: MouseEvent, child: SideMenuItem) {
   font-weight: 700;
   border-radius: 0.8rem;
 }
-.left-menu .lnb .depth1 .depth2 .depth2-item a:hover:after {
+.left-menu .lnb .depth1 .depth2 .depth2-item a:hover:after,.left-menu .lnb .depth1 .depth2 .depth2-item.active a:after {
   content: "";
   display: block;
   position: absolute;
