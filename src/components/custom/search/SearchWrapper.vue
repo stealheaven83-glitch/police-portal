@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="w-full flex justify-between items-center" :class="collapsible ? 'mb-[20px]' : ''">
+  <div class="mb-[20px]">
+    <div class="w-full flex justify-between items-center">
       <div v-if="$slots.department || collapsible" class="flex items-center gap-6">
           <div :class="cn('flex items-center gap-3', props.departmentClass)">
             <slot name="department" />
@@ -82,7 +82,7 @@ function toggle() {
   expanded.value = !expanded.value
 }
 
-const defaultClass = 'w-full flex justify-between items-stretch bg-[var(--Background-gray01)] rounded-[12px]'
+const defaultClass = 'w-full flex justify-between items-stretch bg-[var(--Background-gray01)] rounded-[12px] mt-[20px]'
 </script>
 
 
