@@ -44,7 +44,7 @@
       </div>
 
       <div>
-        <p class="lp-block-title lp-note-text">* 행정동 검색결과를 더블 클릭 시 하단 표에 추가가 됩니다.</p>
+        <p class="lp-block-title lp-note-text2">* 행정동 검색결과를 더블 클릭 시 하단 표에 추가가 됩니다.</p>
         <TabulatorGrid
           :columns="resultColumns"
           :data="searchResult"

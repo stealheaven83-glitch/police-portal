@@ -53,6 +53,10 @@ common
   font-size: 1.5rem;
   color: var(--Text-body_2);
 }
+.lp-note-text2 {
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
+}
 
 /* 줄바꿈 금지 — readonly-text 등과 함께 쓴다 */
 .lp-nowrap {
