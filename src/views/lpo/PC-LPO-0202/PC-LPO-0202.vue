@@ -17,7 +17,7 @@
       <DepartmentCascadeSelect v-model="department" :tree="departmentTree" size="sm" select-class="w-40" />
     </div>
     <div class="flex gap-3">
-      <Button type="button" variant="tertiary2" size="sm" class="w-30" @click="openManageDialog('甲지 일괄 출력')">甲지 일괄 출력</Button>
+      <Button type="button" variant="tertiary2" size="sm" class="w-30" @click="bulkPrintOpen = true">甲지 일괄 출력</Button>
       <Button type="button" variant="tertiary2" size="sm" @click="onPrint">인쇄</Button>
     </div>
   </div>
@@ -43,10 +43,10 @@
 
     <div class="group-gap3">
       <Button type="button" variant="tertiary2" size="sm" @click="resetScheduleGrid">甲지 초기화</Button>
-      <Button type="button" variant="secondary" size="sm" @click="openManageDialog('순찰구역 관리')">순찰구역</Button>
-      <Button type="button" variant="secondary" size="sm" @click="openManageDialog('교대복구')">교대복구</Button>
-      <Button type="button" variant="secondary" size="sm" @click="openManageDialog('근무관리')">근무관리</Button>
-      <Button type="button" variant="secondary" size="sm" @click="openManageDialog('시간관리')">시간관리</Button>
+      <Button type="button" variant="secondary" size="sm" @click="patrolAreaOpen = true">순찰구역</Button>
+      <Button type="button" variant="secondary" size="sm" @click="scheduleCopyOpen = true">교대복구</Button>
+      <Button type="button" variant="secondary" size="sm" @click="workManageOpen = true">근무관리</Button>
+      <Button type="button" variant="secondary" size="sm" @click="timeManageOpen = true">시간관리</Button>
       <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
     </div>
   </div>
@@ -106,7 +106,7 @@
             <h4>자원근무자</h4>
             <div class="group-gap2">
               <Button type="button" variant="tertiary2" size="xs" @click="removeSelectedVolunteers">삭제</Button>
-              <Button type="button" variant="secondary" size="xs" @click="openWorkerAddDialog('volunteer')">추가</Button>
+              <Button type="button" variant="secondary" size="xs" @click="volunteerAddOpen = true">추가</Button>
             </div>
           </div>
           <table class="table-style1">
@@ -153,7 +153,7 @@
             <h4>사고자</h4>
             <div class="group-gap2">
               <Button type="button" variant="tertiary2" size="xs" @click="removeSelectedIncidents">삭제</Button>
-              <Button type="button" variant="secondary" size="xs" @click="addIncidentWorker">추가</Button>
+              <Button type="button" variant="secondary" size="xs" @click="incidentAddOpen = true">추가</Button>
             </div>
           </div>
           <table class="table-style1">
@@ -231,8 +231,8 @@
                     :key="idx"
                     role="button"
                     tabindex="0"
-                    @click="openAssignCell(row.label, timeSlots[idx])"
-                    @keydown.enter="openAssignCell(row.label, timeSlots[idx])"
+                    @click="openAssignCell(row)"
+                    @keydown.enter="openAssignCell(row)"
                   >
                     <span v-for="(name, ni) in cell" :key="ni">{{ name }}</span>
                   </td>
@@ -253,9 +253,16 @@
   </LayoutSplite>
   
 
-  <EmptyStubDialog v-model:open="manageDialogOpen" :title="manageDialogTitle" description="아직 준비 중인 관리 화면입니다." />
-  <EmptyStubDialog v-model:open="assignDialogOpen" :title="assignDialogTitle" description="근무자를 선택해 배정합니다." />
   <WorkerAddDialog />
+  <WorkManageDialog />
+  <TimeManageDialog />
+  <PatrolAreaDialog />
+  <BulkPrintDialog />
+  <WorkUserPickDialog />
+  <KeyNoteDialog />
+  <VolunteerAddDialog />
+  <IncidentAddDialog />
+  <ScheduleCopyDialog />
 </template>
 
 <script setup lang="ts">
@@ -274,11 +281,19 @@ import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
 import { Checkbox } from '@/components/custom/checkbox'
 import { Button } from '@/components/custom/button'
-import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
-import { useWorkSchedule, WorkScheduleKey, timeSlots, teamOptions } from './composable/useWorkSchedule'
+import { useWorkSchedule, WorkScheduleKey, timeSlots, teamOptions, type ScheduleRow } from './composable/useWorkSchedule'
 import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutHeader from '@/components/custom/content-layout/layoutHeader.vue'
 import WorkerAddDialog from './components/WorkerAddDialog.vue'
+import WorkManageDialog from './components/WorkManageDialog.vue'
+import TimeManageDialog from './components/TimeManageDialog.vue'
+import PatrolAreaDialog from './components/PatrolAreaDialog.vue'
+import BulkPrintDialog from './components/BulkPrintDialog.vue'
+import WorkUserPickDialog from './components/WorkUserPickDialog.vue'
+import KeyNoteDialog from './components/KeyNoteDialog.vue'
+import VolunteerAddDialog from './components/VolunteerAddDialog.vue'
+import IncidentAddDialog from './components/IncidentAddDialog.vue'
+import ScheduleCopyDialog from './components/ScheduleCopyDialog.vue'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
@@ -306,10 +321,20 @@ const {
   importantNotes,
   targetDate,
   removeVolunteerWorkers,
-  addIncidentWorker,
   removeIncidentWorkers,
   shiftWorkDate,
   openWorkerAddDialog,
+
+  // 팝업 열림 상태(PC-LPO-0205~0213) — useWorkScheduleDialogs 에서 온다
+  workManageOpen,
+  timeManageOpen,
+  patrolAreaOpen,
+  bulkPrintOpen,
+  workUserPickOpen,
+  keyNoteOpen,
+  volunteerAddOpen,
+  incidentAddOpen,
+  scheduleCopyOpen,
 } = workSchedule
 
 const departmentTree: DepartmentNode[] = [
@@ -343,14 +368,6 @@ function removeSelectedIncidents() {
   incidentSelection.value.clear()
 }
 
-/** 순찰구역/교대복구/근무관리/시간관리/불러오기/일괄출력 — 아직 설계되지 않은 하위 화면들의 공통 빈 모달 */
-const manageDialogOpen = ref(false)
-const manageDialogTitle = ref('')
-function openManageDialog(title: string) {
-  manageDialogTitle.value = title
-  manageDialogOpen.value = true
-}
-
 function resetScheduleGrid() {
   for (const row of scheduleRows.value) {
     if (row.type === 'variable') row.cells = row.cells.map((): string[] => [])
@@ -366,12 +383,18 @@ function onSave() {
   toast.success('저장되었습니다.')
 }
 
-/** 근무지정표 셀 클릭 시 배정 — 실제 배정 UI는 아직 없어 빈 모달로 대체 */
-const assignDialogOpen = ref(false)
-const assignDialogTitle = ref('')
-function openAssignCell(rowLabel: string, slot: string) {
-  assignDialogTitle.value = `${rowLabel} · ${slot} 근무 배정`
-  assignDialogOpen.value = true
+/**
+ * 근무지정표 셀 클릭 시 배정.
+ * - 중점사항 행(variable)은 중점사항 입력 팝업(PC-LPO-0213)
+ * - 그 외 근무 행(fixed)은 근무 사용자 선택 팝업(PC-LPO-0212)
+ * Figma 에 어느 셀이 어느 팝업을 여는지는 그려져 있지 않아 행 유형으로 갈랐다.
+ */
+function openAssignCell(row: ScheduleRow) {
+  if (row.type === 'variable') {
+    keyNoteOpen.value = true
+    return
+  }
+  workUserPickOpen.value = true
 }
 </script>
 

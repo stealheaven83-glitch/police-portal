@@ -135,3 +135,8 @@
 .lp-info-nested > [class*='control'] > [class*='grid'] > [class*='field']:last-child {
   border-bottom: 0;
 }
+
+/* Tabulator 셀 안에서 미완료 값(미확인 등)만 빨간 글씨로 — 셀 색은 테마 CSS 가 먼저 먹는다 */
+.lp-cell-danger {
+  color: var(--danger);
+}

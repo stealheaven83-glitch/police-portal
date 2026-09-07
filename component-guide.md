@@ -317,7 +317,9 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | `부서영역` | `custom/select/DepartmentCascadeSelect.vue` |
 | `Input Label`, `필수입력` | `custom/info-table/InfoField.vue` |
 | `divider` | `ui/separator` |
-| `calendar` | `custom/calendar/calendar.vue` |
+| `calendar` | `custom/calendar/calendar.vue` (FullCalendar 기반 — 주간/월간 토글·범례 포함) |
+| 월 그리드 조회 달력(근무일정조회 등) | `custom/calendar/MonthScheduleCalendar.vue` — 연도·월 셀렉트 + 날짜칸에 배지/시간, `day-detail` 슬롯으로 칸 클릭 팝오버 |
+| 숫자 증감 입력(− 값 ＋) | `custom/input/NumberStepper.vue` |
 | `LNB Menu`, `header_templet__pc`, `masthead`, `footer__pc`, `main_menu*` | 화면에서 쓰지 않는다 — `Layout.vue`/`custom/sidemenu` 담당 |
 | `search__pc` | 헤더 통합검색 → `layout/portal/PortalHeader.vue` |
 | `Form`(통합검색 대형 입력창, 13315:97548) | `custom/search/SearchBar.vue` |
@@ -429,7 +431,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-heading-md` | 한 단계 작은 제목(1.7rem 700) | IRC-0101 |
 | `.lp-body-text` | 읽는 본문 문단(1.7rem) | IRC-0101 |
 | `.lp-label-text` | 입력 옆 보조 라벨·안내(1.5rem `--Text-body_1`) | 0701 |
-| `.lp-note-text` | 작성시각 같은 부수 정보(1.5rem `--Text-body_2`) | (미사용) |
+| `.lp-note-text` | 작성시각 같은 부수 정보(1.5rem `--Text-body_2`) | LPO-0102, 0104, 0207 |
 | `.lp-nowrap` | 줄바꿈 금지 — `.readonly-text` 등과 **함께** 쓴다 | 0601 |
 | `.lp-hit` | 검색 결과 건수처럼 제목 안 `<b>` 만 파랗게 | 0802 |
 | `.lp-panel-head-em` | 패널 제목줄에 같이 보여주는 값(`--Base--point` 600) | 2204 |
@@ -463,7 +465,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-icon-btn` | 테두리·배경 없는 아이콘 전용 버튼(크기는 아래 것과 조합) | 0601, LPO-0101 |
 | `.lp-icon-btn-24` / `.lp-icon-btn-32` | 그 버튼 크기 | LPO-0101 / 0601 |
 | `.lp-icon-btn-dark` | 상속색이 아니라 본문색으로 고정 | 0601 |
-| `.lp-icon-row` | 아이콘 여러 개가 가로로 놓이는 줄 | (미사용) |
+| `.lp-icon-row` | 아이콘 여러 개가 가로로 놓이는 줄 | LPO-0102, 0104, 0122 |
 
 #### 2분할 상자 · 팝업
 
@@ -496,14 +498,24 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-toolbar-left` / `.lp-toolbar-right` | 목록 위 컨트롤 바 좌/우 그룹(Figma 실측 24 / 32px — `group-gap` 은 4·8·12뿐) | LPO-0101 |
 | `.lp-card-grid` | 카드 최소 46rem, 남는 폭 균등 분배(≈3열) | LPO-0101 |
 | `.lp-memo-card` + `-selected` `-check` `-body` `-titlerow` `-title` `-titlebtn` `-actions` `-preview` `-meta` | 메모 카드 한 장 (Figma 'Memo Li') | LPO-0101 |
-| `.lp-narrow-form` / `.lp-field` / `.lp-form-actions-center` | 가운데 정렬 등록 폼(본문 1000px) / 라벨+입력 세로쌍 / 하단 가운데 버튼줄 | (미사용) |
-| `.lp-summary-box` + `-filled` `-loading` `-redo` | AI 요약 영역(빈 상태 점선 / 채워지면 실선) | (미사용) |
-| `.lp-dropzone` / `.lp-dropzone-txt` | 첨부파일 드롭존 | (미사용) |
-| `.lp-file-list` `-count` `-item` `-name` `-remove` | 첨부파일 목록 | (미사용) |
+| `.lp-narrow-form` / `.lp-field` / `.lp-form-actions-center` | 가운데 정렬 등록 폼(본문 1000px) / 라벨+입력 세로쌍 / 하단 가운데 버튼줄 | LPO-0102, 0104 |
+| `.lp-summary-box` + `-filled` `-loading` `-redo` | AI 요약 영역(빈 상태 점선 / 채워지면 실선) | LPO-0104 |
+| `.lp-dropzone` / `.lp-dropzone-txt` | 첨부파일 드롭존 | LPO-0104 |
+| `.lp-file-list` `-count` `-item` `-name` `-remove` | 첨부파일 목록(구분선 방식) | LPO-0104 |
 | `.lp-file-hint` | 첨부 버튼 옆 용량 안내(좁아지면 줄바꿈) | 2402 |
+| `.lp-summary-box-read` | 읽기 전용 요약 블록(테두리 없이 채워진 면). **입력용은 `-filled`** | LPO-0102 |
+| `.lp-file-boxes` / `.lp-file-box` / `.lp-file-link` | 첨부파일을 테두리 박스로 나열 / 박스 한 줄 / 그 안의 다운로드·삭제 링크. **구분선 방식은 `.lp-file-item`** | LPO-0102, 0104, 0217 |
+| `.lp-hidden-input` | 버튼/드롭존이 대신 여는 숨은 file input | LPO-0104, 0217 |
+| `.lp-cal` `-toolbar` `-grid` `-head` `-cell` `-cell-out` `-cell-open` `-daterow` `-date` `-sun` `-sat` `-holiday` `-events` `-event` `-event-time` `-popover` `-popover-head` `-popover-list` `-popover-row` `-popover-names` | 월간 일정 달력(`MonthScheduleCalendar`) 전용. FullCalendar 기반 `calendar.vue` 와 별개 | LPO-0108 |
+| `.lp-setting-bar` | 화면 위쪽 설정 한 줄(회색 면) | LPO-0122 |
+| `.lp-mainset-preview` `-col` `-slot` `-slot-reverse` `-badge` `-card` `-card-title` `-card-img` `-empty` `-empty-tall` `-guide` `-menus` `-group-title` `-menu-item` | 메인화면 카드 배치 설정 | LPO-0122 |
+| `.lp-imgpick-grid` `-tile` `-tile-on` `-tile-off` `-thumb` `-pick` | 이미지 선택 팝업의 타일 그리드 | LPO-0122 |
+| `.lp-stepper` `-btn` `-value` | 숫자 증감 입력(`NumberStepper`) 전용 | LPO-0214 |
+| `.lp-duty-table` `-col-date` `-col-side` `-line` `-remove` | 근무현황 표(한 칸에 여러 줄이 들어가 Tabulator 를 못 쓴다) | LPO-0216 |
+| `.lp-em-primary` / `.lp-em-danger` | 문장 안 한 낱말만 색으로 강조(굵기는 `<b>` 가) | LPO-0208, 0216, 0217 |
 
-> **(미사용)** 은 PM-LPO-0104(메모 등록) 화면이 아직 없어서다. 스타일은 남겨 뒀다 — 지우지 말고,
-> 그 화면을 만들 때 그대로 쓴다.
+> 위 등록 폼·요약·드롭존 스타일은 원래 PM-LPO-0104(메모 등록)를 위해 미리 만들어 둔 것이었고,
+> 그 화면이 생기면서 실제로 쓰이기 시작했다.
 
 #### 원본과 함께 쓰는 델타
 
@@ -529,7 +541,8 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-table-left` | `TableWrapper` 의 가운데 정렬을 좌측으로 되돌림 | 0601 |
 | `.lp-segmented-tabs` | 탭 컴포넌트의 간격·모서리를 세그먼트 형태로 | 0802 |
 | `.lp-dialog-body .form-note` | 팝업 안에서 공통 `.form-note` 의 아래 여백 해제 | 0601 |
-| `.lp-dropzone-sub` | `.lp-dropzone-txt p` 의 크기·색 되돌리기 | (미사용) |
+| `.lp-dropzone-sub` | `.lp-dropzone-txt p` 의 크기·색 되돌리기 | LPO-0104 |
+| `.lp-cell-danger` | Tabulator 셀 안의 미완료 값만 빨간 글씨(셀 색은 테마 CSS 가 먼저 먹는다) | LPO-0304 |
 | `.lp-info-nested` | `InfoField` 값 칸에 `InfoTable` 을 한 번 더 넣을 때 `.control` 여백·중복 테두리 제거(라벨 병합처럼 보이게) | PUB-0111 |
 
 ---

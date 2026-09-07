@@ -936,3 +936,414 @@
   line-height: 1.5;
   color: var(--Base-primary);
 }
+
+/* 첨부파일을 FileUpload(테두리 박스)로 나열할 때의 세로 간격 — .lp-file-item(구분선 방식)과 다르다 */
+.lp-file-boxes {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* 테두리 있는 첨부파일 한 줄 — FileUpload 컴포넌트가 안 맞는 조합(다운로드+삭제)일 때 쓴다 */
+.lp-file-box {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  height: 4.8rem;
+  padding: 0 1.6rem;
+  background: var(--white);
+  border: 0.1rem solid var(--Border_gray02);
+  border-radius: var(--Radius-medium3);
+}
+.lp-file-link {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0;
+  font-size: 1.4rem;
+  color: var(--Text-body_1);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.lp-file-link:hover {
+  color: var(--Base-primary);
+}
+
+/* 화면에 안 보이는 file input — 버튼/드롭존이 대신 열어준다 */
+.lp-hidden-input {
+  display: none;
+}
+
+/* 읽기 전용 요약 블록 — 입력 화면의 점선/실선 테두리 대신 채워진 면(메모 상세) */
+.lp-summary-box-read {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.2rem;
+  background: var(--Surface-secondary);
+  border: 0;
+}
+
+/* 문장 안에서 한 낱말만 강조할 때 — 굵기는 b 태그가, 색만 여기서 준다 */
+.lp-em-primary {
+  color: var(--Base-primary);
+}
+.lp-em-danger {
+  color: var(--danger);
+}
+
+/* ── 월간 일정 달력(MonthScheduleCalendar) ──────────────────────────────── */
+/* 조회 전용 월 그리드. FullCalendar 기반 calendar.vue 와 별개다 */
+.lp-cal {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+.lp-cal-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.6rem;
+}
+.lp-cal-grid {
+  display: grid;
+  flex: 1;
+  min-height: 0;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 1fr;
+  border-top: 0.1rem solid var(--Border_gray01);
+  border-left: 0.1rem solid var(--Border_gray02);
+}
+.lp-cal-head {
+  padding: 0.8rem 0;
+  font-size: 1.5rem;
+  color: var(--Text-body_1);
+  text-align: center;
+  background: var(--Background-gray01);
+  border-right: 0.1rem solid var(--Border_gray02);
+  border-bottom: 0.1rem solid var(--Border_gray02);
+}
+.lp-cal-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-height: 10rem;
+  padding: 1rem;
+  background: var(--white);
+  border-right: 0.1rem solid var(--Border_gray02);
+  border-bottom: 0.1rem solid var(--Border_gray02);
+  cursor: pointer;
+}
+.lp-cal-cell:hover {
+  background: var(--Surface-secondary);
+}
+.lp-cal-cell-out {
+  background: var(--Background-gray01);
+}
+.lp-cal-cell-out .lp-cal-date {
+  color: var(--Text-body_disable);
+}
+.lp-cal-cell-open {
+  outline: 0.2rem solid var(--Base-primary);
+  outline-offset: -0.2rem;
+}
+.lp-cal-daterow {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.lp-cal-date {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+}
+.lp-cal-sun,
+.lp-cal-holiday {
+  color: var(--danger);
+}
+.lp-cal-sat {
+  color: var(--Base-primary);
+}
+.lp-cal-holiday {
+  font-size: 1.4rem;
+}
+.lp-cal-events {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.lp-cal-event {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.lp-cal-event-time {
+  font-size: 1.4rem;
+  color: var(--Text-body_0);
+}
+.lp-cal-popover {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  width: 34rem;
+}
+.lp-cal-popover-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+}
+.lp-cal-popover-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.lp-cal-popover-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  font-size: 1.4rem;
+  color: var(--Text-body_0);
+}
+.lp-cal-popover-names {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── 화면설정(메인화면 카드 배치) ────────────────────────────────────────── */
+.lp-setting-bar {
+  padding: 2rem 2.4rem;
+  margin-bottom: 2.4rem;
+  background: var(--Background-gray01);
+  border-radius: var(--Radius-medium2);
+}
+.lp-mainset-preview {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) 1.4fr;
+  gap: 1.6rem;
+  margin: 1.6rem 0 2.4rem;
+}
+.lp-mainset-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+.lp-mainset-slot {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 1.2rem;
+}
+.lp-mainset-slot-reverse {
+  flex-direction: row-reverse;
+}
+.lp-mainset-badge {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--white);
+  background: var(--Base-primary);
+  border-radius: 50%;
+}
+.lp-mainset-card {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 11rem;
+  padding: 1.6rem;
+  background: var(--Background-gray01);
+  border-radius: var(--Radius-medium3);
+}
+.lp-mainset-card-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+}
+/* Figma 3D 일러스트가 들어갈 자리 — 이미지 확정 전까지 빈 칸으로 둔다 */
+.lp-mainset-card-img {
+  align-self: flex-end;
+  width: 5.6rem;
+  height: 4rem;
+}
+.lp-mainset-empty {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 11rem;
+  font-size: 1.5rem;
+  color: var(--Text-body_2);
+  border: 0.1rem dashed var(--Border_gray01);
+  border-radius: var(--Radius-medium3);
+}
+.lp-mainset-empty-tall {
+  height: 100%;
+}
+.lp-mainset-guide {
+  padding: 2rem;
+  border: 0.1rem solid var(--Border_gray02);
+  border-radius: var(--Radius-medium2);
+}
+.lp-mainset-menus {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2.4rem;
+  padding: 2.4rem;
+  border: 0.1rem solid var(--Border_gray02);
+  border-radius: var(--Radius-medium2);
+}
+.lp-mainset-group-title {
+  margin-bottom: 1.6rem;
+  font-size: 1.5rem;
+  color: var(--Text-body_1);
+}
+.lp-mainset-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 4rem;
+}
+
+/* ── 이미지 선택 팝업 ────────────────────────────────────────────────────── */
+.lp-imgpick-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1.2rem;
+}
+.lp-imgpick-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  align-items: center;
+  padding: 1.2rem;
+  background: var(--Background-gray01);
+  border: 0.1rem solid transparent;
+  border-radius: var(--Radius-medium2);
+  cursor: pointer;
+}
+.lp-imgpick-tile-on {
+  background: var(--Surface-primary);
+  border-color: var(--Base-primary);
+}
+.lp-imgpick-tile-off {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+/* Figma 3D 일러스트가 들어갈 자리 — 확정 전까지 이름만 보여준다 */
+.lp-imgpick-thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 5.6rem;
+  font-size: 1.3rem;
+  color: var(--Text-body_2);
+}
+.lp-imgpick-pick {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1.4rem;
+  color: var(--Text-body_1);
+}
+
+/* 숫자 증감 입력(NumberStepper) — 마이너스 값 플러스 */
+.lp-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 4rem;
+  padding: 0 0.8rem;
+  background: var(--white);
+  border: 0.1rem solid var(--Border_gray02);
+  border-radius: var(--Radius-medium1);
+}
+.lp-stepper-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  font-size: 1.5rem;
+  color: var(--Text-body_1);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.lp-stepper-btn:disabled {
+  color: var(--Text-body_disable);
+  cursor: not-allowed;
+}
+.lp-stepper-value {
+  min-width: 3.2rem;
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
+  text-align: center;
+}
+
+/* ── 근무현황 표(일자별 근무·자원근무자·사고자) ─────────────────────────── */
+/* 한 칸에 여러 줄이 들어가는 조회용 표라 Tabulator 대신 마크업 표를 쓴다 */
+.lp-duty-table {
+  width: 100%;
+  margin-bottom: 2.4rem;
+  border-top: 0.1rem solid var(--Border_gray01);
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.lp-duty-col-date {
+  width: 8rem;
+}
+.lp-duty-col-side {
+  width: 20rem;
+}
+.lp-duty-table th,
+.lp-duty-table td {
+  padding: 1rem 1.2rem;
+  font-size: 1.4rem;
+  color: var(--Text-body_0);
+  vertical-align: top;
+  border-right: 0.1rem solid var(--Border_gray02);
+  border-bottom: 0.1rem solid var(--Border_gray02);
+}
+.lp-duty-table thead th {
+  font-weight: 500;
+  color: var(--Text-body_1);
+  text-align: center;
+  vertical-align: middle;
+  background: var(--Background-gray01);
+}
+.lp-duty-table tbody th {
+  text-align: center;
+  vertical-align: middle;
+}
+.lp-duty-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  line-height: 1.6;
+}
+.lp-duty-remove {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  color: var(--Text-body_2);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.lp-duty-remove:hover {
+  color: var(--danger);
+}

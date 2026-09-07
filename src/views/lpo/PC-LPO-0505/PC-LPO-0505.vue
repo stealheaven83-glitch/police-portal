@@ -33,11 +33,19 @@
     </SearchWrapper>
   </div>
 
-  <div class="list-actions">
-    <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
-      <Download :size="16" aria-hidden="true" />
-      엑셀다운로드
-    </Button>
+  <div class="list-actions space-between">
+    <span class="lp-toolbar-left">
+      <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
+        <Download :size="16" aria-hidden="true" />
+        엑셀다운로드
+      </Button>
+    </span>
+    <span class="lp-toolbar-right">
+      <Button type="button" variant="tertiary2" size="sm" @click="approveOpen = true">승인관리</Button>
+      <Button type="button" variant="tertiary2" size="sm" @click="cancelOpen = true">승인취소관리</Button>
+      <Button type="button" variant="tertiary2" size="sm" @click="otherApplyOpen = true">타직원 출동수당 신청</Button>
+      <Button type="button" variant="secondary" size="sm" @click="dispatchInfoOpen = true">출동사건정보</Button>
+    </span>
   </div>
 
   <TabulatorGrid
@@ -52,10 +60,15 @@
     show-pagination
     :items-per-page="10"
   />
+
+  <ApproveManageDialog />
+  <ApproveCancelDialog />
+  <OtherApplyDialog />
+  <DispatchInfoDialog />
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, provide, ref } from 'vue'
 import { Download } from 'lucide-vue-next'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
@@ -70,6 +83,11 @@ import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useDispatchSummaryMonthly, applicantOptions, applyTypeOptions } from './composable/PC-LPO-0505'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
+import ApproveManageDialog from './components/ApproveManageDialog.vue'
+import ApproveCancelDialog from './components/ApproveCancelDialog.vue'
+import OtherApplyDialog from './components/OtherApplyDialog.vue'
+import DispatchInfoDialog from './components/DispatchInfoDialog.vue'
+import { useDispatchSummaryDialogs, DispatchSummaryDialogKey } from './composable/dialogs'
 defineOptions({ name: 'PcLpo0505' })
 
 useSideMenuSetup({ ...localPoliceMenu, openIndex: 3, activeChild: '승인관리' })
@@ -80,6 +98,11 @@ const navItems = [
   { label: '출동수당' },
   { label: '출동수당 취합(월별)' },
 ]
+
+/** 이 화면에서 열리는 팝업(PC-LPO-0506~0510)들의 상태 — 팝업 컴포넌트가 inject 한다 */
+const dialogs = useDispatchSummaryDialogs()
+provide(DispatchSummaryDialogKey, dialogs)
+const { approveOpen, cancelOpen, otherApplyOpen, dispatchInfoOpen } = dialogs
 
 const yearOptions = [
   { label: '2026', value: '2026' },

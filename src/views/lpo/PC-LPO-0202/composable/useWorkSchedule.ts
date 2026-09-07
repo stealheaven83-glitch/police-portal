@@ -1,4 +1,5 @@
 import { ref, type InjectionKey } from 'vue'
+import { useWorkScheduleDialogs } from './useWorkScheduleDialogs'
 
 export interface SelectOption {
   label: string
@@ -82,6 +83,9 @@ const WORKER_POOL: WorkerCandidate[] = [
 ]
 
 export function useWorkSchedule() {
+  /** 이 화면에서 열리는 팝업(PC-LPO-0205~0213)들의 상태 — 같은 스토어로 provide 된다 */
+  const dialogs = useWorkScheduleDialogs()
+
   const workDate = ref('2026.08.11.')
   const shift = ref<'day' | 'night'>('day')
 
@@ -247,6 +251,8 @@ export function useWorkSchedule() {
     searchWorkerCandidates,
     openWorkerAddDialog,
     confirmWorkerAdd,
+
+    ...dialogs,
   }
 }
 

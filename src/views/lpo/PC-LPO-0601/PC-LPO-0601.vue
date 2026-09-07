@@ -353,7 +353,7 @@
                   <button
                     type="button"
                     class="lp-icon-btn lp-icon-btn-dark"
-                    @click="patrolDetailStubOpen = true"
+                    @click="openPatrolDetail(item.vehicle)"
                   >
                     <Icon name="search" :size="20" />
                     <span class="blind">{{ item.vehicle }} 순찰구역 상세 보기</span>
@@ -364,7 +364,7 @@
                   type="button"
                   variant="tertiary"
                   size="xs"
-                  @click="patrolDetailStubOpen = true"
+                  @click="openPatrolDetail(item.vehicle)"
                 >
                   순찰구역 등록
                 </Button>
@@ -470,7 +470,11 @@
   />
 
   <EmptyStubDialog v-model:open="addressStubOpen" title="주소 검색" />
-  <EmptyStubDialog v-model:open="patrolDetailStubOpen" title="순찰구역 상세" />
+  <PatrolAreaDetailDialog
+    v-model:open="patrolDetailStubOpen"
+    :area-name="patrolDetailAreaName"
+    @search-address="addressStubOpen = true"
+  />
 </template>
 
 <script setup lang="ts">
@@ -499,6 +503,7 @@ import { Icon } from '@/components/custom/icon'
 import EmptyStubDialog from '@/components/custom/dialog/EmptyStubDialog.vue'
 import PatrolAreaMapDialog from './components/PatrolAreaMapDialog.vue'
 import JurisdictionDongDialog from './components/JurisdictionDongDialog.vue'
+import PatrolAreaDetailDialog from './components/PatrolAreaDetailDialog.vue'
 import {
   useJurisdictionStatus,
   integratedOfficeOptions,
@@ -566,6 +571,12 @@ function onMapSave(payload: { vehicle: string; memo: string }) {
 
 /** 순찰구역 상세(PC-LPO-0604)는 Figma 미제공 — 자리만 잡아 둔다 */
 const patrolDetailStubOpen = ref(false)
+/** 순찰구역 상세 팝업(PC-LPO-0604)이 보고 있는 순찰차 이름 */
+const patrolDetailAreaName = ref('')
+function openPatrolDetail(vehicle: string) {
+  patrolDetailAreaName.value = vehicle
+  patrolDetailStubOpen.value = true
+}
 
 /* ── 관할행정동 검색 팝업 ─────────────────────────────────────── */
 

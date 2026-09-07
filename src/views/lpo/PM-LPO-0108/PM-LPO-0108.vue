@@ -1,0 +1,84 @@
+<template>
+  <PageHeader>
+    <template #left>
+      <PageTitle title="근무일정조회" />
+    </template>
+    <template #right>
+      <span class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </span>
+    </template>
+  </PageHeader>
+
+  <MonthScheduleCalendar
+    v-model:year="year"
+    v-model:month="month"
+    :days="days"
+    :year-from="2020"
+    :year-to="2030"
+  >
+    <template #day-detail="{ date, close }">
+      <div class="lp-cal-popover-head">
+        <span>{{ formatDay(date) }}</span>
+        <button type="button" class="lp-icon-btn lp-icon-btn-24" aria-label="닫기" @click="close">
+          <Icon name="closePop" :size="20" />
+        </button>
+      </div>
+
+      <ul v-if="dutiesOn(date).length" class="lp-cal-popover-list">
+        <li v-for="(duty, i) in dutiesOn(date)" :key="i" class="lp-cal-popover-row">
+          <Badge :color="KIND_COLOR[duty.kind]" variant="solid" size="sm" shape="sm">{{ duty.kind }}</Badge>
+          <span v-if="duty.time" class="lp-nowrap">{{ duty.time }}</span>
+          <span v-if="duty.name">{{ duty.name }}</span>
+          <Badge v-if="duty.volunteer" color="warning" variant="solid-pastel" size="sm" shape="sm">자원</Badge>
+          <span v-if="duty.reason">{{ duty.reason }}</span>
+          <span v-if="duty.members?.length" class="lp-cal-popover-names">{{ duty.members.join(', ') }}</span>
+        </li>
+      </ul>
+      <p v-else class="lp-note-text">등록된 근무가 없습니다.</p>
+
+      <div class="lp-summary-redo">
+        <Button type="button" variant="tertiary2" size="sm" padding="12" @click="close">닫기</Button>
+      </div>
+    </template>
+  </MonthScheduleCalendar>
+</template>
+
+<script setup lang="ts">
+import PageHeader from '@/components/custom/title/PageHeader.vue'
+import PageTitle from '@/components/custom/title/PageTitle.vue'
+import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
+import HelpButton from '@/components/custom/button/HelpButton.vue'
+import MonthScheduleCalendar from '@/components/custom/calendar/MonthScheduleCalendar.vue'
+import { Badge } from '@/components/custom/badge'
+import Icon from '@/components/custom/icon/Icon.vue'
+import { Button } from '@/components/custom/button'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
+import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
+import { useDutySchedule } from './composable/PM-LPO-0108'
+
+defineOptions({
+  name: 'PmLpo0108',
+})
+
+// LNB: 개인수첩 > 근무일정 조회
+useSideMenuSetup({ ...localPoliceMenu, openIndex: 0, activeChild: '근무일정 조회' })
+
+const navItems = [
+  { label: '홈', path: '/' },
+  { label: '지역경찰' },
+  { label: '개인수첩' },
+  { label: '근무일정조회' },
+]
+
+const { year, month, days, dutiesOn, formatDay, KIND_COLOR } = useDutySchedule()
+
+useBottomTabSetup({
+  value: 'PM-LPO-0108',
+  label: '근무일정조회',
+  path: '/views/lpo/PM-LPO-0108',
+  componentName: 'PmLpo0108',
+})
+</script>
