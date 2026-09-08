@@ -170,7 +170,7 @@ const activityColumns: { key: SumKey; label: string }[] = [
 ]
 
 const specialColumns: { key: SumKey; label: string }[] = [
-  { key: 'jointArrest', label: '합동검거' },ㄹ
+  { key: 'jointArrest', label: '합동검거' },
   { key: 'crimeReport', label: '범죄신고' },
   { key: 'drunkProtection', label: '주취자보호' },
   { key: 'elderlyProtection', label: '노약자보호' },
