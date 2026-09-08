@@ -23,7 +23,7 @@
       </div>
     </template>
   </SearchWrapper>
-  <ScrollWrapper class="border-t border-t-[]">
+  <ScrollWrapper>
     <!-- ── 부서정보 ─────────────────────────────────────────── -->
     <section class="lp-section" aria-labelledby="dept-info-heading">
       <h2 id="dept-info-heading" class="lp-heading-md lp-section-title">부서정보</h2>
@@ -402,17 +402,53 @@
           <button
             type="button"
             class="lp-icon-btn lp-icon-btn-dark lp-icon-btn-32"
-            :aria-expanded="safetyCenterOpen"
+            :aria-expanded="safetyCenterOpen[0]"
             aria-controls="safety-center-panel"
-            @click="safetyCenterOpen = !safetyCenterOpen"
+            @click="safetyCenterOpen[0] = !safetyCenterOpen[0]"
           >
-            <component :is="safetyCenterOpen ? Minus : Plus" :size="20" />
-            <span class="blind">치안센터 {{ safetyCenterOpen ? '접기' : '펼치기' }}</span>
+            <component :is="safetyCenterOpen[0] ? Minus : Plus" :size="20" />
+            <span class="blind">치안센터 {{ safetyCenterOpen[0] ? '접기' : '펼치기' }}</span>
           </button>
         </div>
       </div>
 
-      <div v-show="safetyCenterOpen" id="safety-center-panel" class="grid-wrap">
+      <div v-show="safetyCenterOpen[0]" id="safety-center-panel" class="grid-wrap">
+        <TabulatorGrid
+          ref="safetyCenterGridRef"
+          v-model:data="safetyCenters"
+          :columns="safetyCenterColumns"
+          select-mode="checkbox"
+          layout="fitDataFill"
+          height="228px"
+          placeholder="등록된 치안센터가 없습니다"
+          @row-selection-changed="safetyCenterSelected = $event.length"
+        />
+      </div>
+    </section>
+    <section class="lp-section" aria-labelledby="safety-center-heading">
+      <div class="section-bar">
+        <h2 id="safety-center-heading">치안센터</h2>
+        <div class="section-bar-actions">
+          <div class="group-gap3" v-if="safetyCenterOpen[1]">
+            <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSafetyCenters">
+              선택삭제
+            </Button>
+            <Button type="button" variant="tertiary2" size="sm" @click="onAddSafetyCenter">추가</Button>
+          </div>
+          <button
+            type="button"
+            class="lp-icon-btn lp-icon-btn-dark lp-icon-btn-32"
+            :aria-expanded="safetyCenterOpen[1]"
+            aria-controls="safety-center-panel"
+            @click="safetyCenterOpen[1] = !safetyCenterOpen[1]"
+          >
+            <component :is="safetyCenterOpen[1] ? Minus : Plus" :size="20" />
+            <span class="blind">치안센터 {{ safetyCenterOpen[1] ? '접기' : '펼치기' }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div v-show="safetyCenterOpen[1]" id="safety-center-panel" class="grid-wrap">
         <TabulatorGrid
           ref="safetyCenterGridRef"
           v-model:data="safetyCenters"
@@ -431,10 +467,12 @@
       <div class="section-bar">
         <h2 id="history-heading">연혁</h2>
         <div class="section-bar-actions">
-          <Button type="button" variant="tertiary2" size="sm" @click="onDeleteHistories">
-            선택삭제
-          </Button>
-          <Button type="button" variant="tertiary2" size="sm" @click="onAddHistory">추가</Button>
+          <div class="group-gap3" v-if="historyOpen">
+            <Button type="button" variant="tertiary2" size="sm" @click="onDeleteHistories">
+              선택삭제
+            </Button>
+            <Button type="button" variant="tertiary2" size="sm" @click="onAddHistory">추가</Button>
+          </div>
           <button
             type="button"
             class="lp-icon-btn lp-icon-btn-dark lp-icon-btn-32"
@@ -593,7 +631,7 @@ const addressStubOpen = ref(false)
 
 /* ── 치안센터 ────────────────────────────────────────────────── */
 
-const safetyCenterOpen = ref(true)
+const safetyCenterOpen = ref([true, true])
 const safetyCenterGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const safetyCenterSelected = ref(0)
 

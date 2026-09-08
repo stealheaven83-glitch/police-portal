@@ -11,7 +11,7 @@
     </template>
   </PageHeader>
 
-  <div class="mb-[1.2rem]">
+  <div>
     <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
       <template #department>
         <span class="dept-name">부서</span>

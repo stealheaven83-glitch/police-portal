@@ -1406,6 +1406,7 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
 .section-bar-actions{
   display:flex;
   gap:1.2rem;
+  align-items: center;
 }
 
 /*하단 탭메뉴 */
