@@ -537,7 +537,7 @@ header .header-in .header-container {
 header .header-in .header-container .header-branding {
   display: flex;
   justify-content: space-between;
-  padding: 1.4rem 0 1rem;
+  padding: 1.4rem 0 0.4rem;
 }
 header .header-in .header-container .header-branding .logo a {
   display: block;

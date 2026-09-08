@@ -267,3 +267,31 @@ override
 .lp-field-flush > :last-child {
   padding: 0;
 }
+
+/*
+ * 참고자료 아코디언 — custom/accordion 의 기본 모양을 시안(14400:107345)에 맞춘다.
+ * 그 컴포넌트는 트리거에 높이(4.8~5.6rem)·글자크기·아래선을, 본문에 위아래 여백을 미리 먹인다.
+ * 여기 참고자료는 "카드 안에 얹힌 한 줄"이라 그걸 걷어내고 카드 쪽에 여백을 준다.
+ * 덮는 대상이 테일윈드 유틸이라 common 이 아니라 이 파일이어야 먹는다.
+ */
+.lp-ref-item {
+  padding: 1.6rem 2rem;
+  border-bottom: 0;
+  border-radius: var(--Radius-xlarge2);
+  background-color: var(--Surface-primary);
+}
+
+/* 펼쳐도 제목 색이 변하지 않는다(컴포넌트 기본은 open 일 때 secondary 로 바뀐다) */
+.lp-ref-trigger,
+.lp-ref-trigger[data-state='open'] {
+  height: auto;
+  padding: 0;
+  border-bottom: 0;
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
+}
+
+/* 제목줄 ↔ 설명 사이 간격만 남긴다 */
+.lp-ref-body {
+  padding: 1.2rem 0 0;
+}

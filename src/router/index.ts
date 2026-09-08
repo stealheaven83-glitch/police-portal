@@ -19,29 +19,29 @@ const router = createRouter({
             name: 'login',
             component: () => import('../views/Login.vue'),
         },
-        {
-            // 메모 화면군(0101 목록 · 0102 상세/수정 · 0104 등록)은 컴포넌트 하나가
-            // useAutoTrigger 로 URL↔화면 상태를 동기화한다. screenGroup 이 같아야
-            // Layout.vue 의 :key 가 안 바뀌어 화면 이동에도 리마운트되지 않는다.
-            path: '/views/lpo/PM-LPO-0101',
-            name: 'PM-LPO-0101',
-            component: () => import('../views/lpo/PM-LPO-0101/PM-LPO-0101.vue'),
-            meta: {
-                layout: 'WorkLayout',
-                title: '메모',
-                screenGroup: 'PM-LPO-0101',
-            }
-        },
-        {
-            path: '/views/lpo/PM-LPO-0102',
-            name: 'PM-LPO-0102',
-            component: () => import('../views/lpo/PM-LPO-0101/PM-LPO-0101.vue'),
-            meta: {
-                layout: 'WorkLayout',
-                title: '메모 상세/수정',
-                screenGroup: 'PM-LPO-0101',
-            }
-        },
+        // {
+        //     // 메모 화면군(0101 목록 · 0102 상세/수정 · 0104 등록)은 컴포넌트 하나가
+        //     // useAutoTrigger 로 URL↔화면 상태를 동기화한다. screenGroup 이 같아야
+        //     // Layout.vue 의 :key 가 안 바뀌어 화면 이동에도 리마운트되지 않는다.
+        //     path: '/views/lpo/PM-LPO-0101',
+        //     name: 'PM-LPO-0101',
+        //     component: () => import('../views/lpo/PM-LPO-0101/PM-LPO-0101.vue'),
+        //     meta: {
+        //         layout: 'WorkLayout',
+        //         title: '메모',
+        //         screenGroup: 'PM-LPO-0101',
+        //     }
+        // },
+        // {
+        //     path: '/views/lpo/PM-LPO-0102',
+        //     name: 'PM-LPO-0102',
+        //     component: () => import('../views/lpo/PM-LPO-0101/PM-LPO-0101.vue'),
+        //     meta: {
+        //         layout: 'WorkLayout',
+        //         title: '메모 상세/수정',
+        //         screenGroup: 'PM-LPO-0101',
+        //     }
+        // },
         {
             path: '/views/lpo/PM-LPO-0104',
             name: 'PM-LPO-0104',
@@ -116,16 +116,6 @@ const router = createRouter({
             meta: {
                 layout: 'WorkLayout',
                 title: '요청관리',
-            }
-        },
-        {
-            path: '/views/lpo/PC-LPO-0202',
-            name: 'PC-LPO-0202',
-            component: () => import('../views/lpo/PC-LPO-0202/PC-LPO-0202.vue'),
-            meta: {
-                layout: 'WorkLayout',
-                title: '근무지정표작성',
-                screenGroup: 'PC-LPO-0202',
             }
         },
         {
@@ -563,101 +553,6 @@ const router = createRouter({
         },
         /* LPO */
         /*
-         * 근무지정표작성(PC-LPO-0202) 안의 팝업들 — 각자 화면ID 는 있지만 별도 화면이 없고
-         * 같은 컴포넌트를 가리킨다. screenGroup 을 공통으로 줘서 이 화면군 안에서 이동할 때
-         * Layout.vue 의 :key 가 안 바뀌게 한다(PC-LPO-0701~0714 와 동일 패턴).
-         */
-        {
-            path: '/views/lpo/PC-LPO-0205',
-            name: 'PC-LPO-0205',
-            component: () => import('../views/lpo/PC-LPO-0202/PC-LPO-0202.vue'),
-            meta: {
-                layout: 'WorkLayout',
-                title: '자원근무자 관리 팝업',
-                screenGroup: 'PC-LPO-0202',
-            }
-        },
-        {
-            path: '/views/lpo/PC-LPO-0206',
-            name: 'PC-LPO-0206',
-            component: () => import('../views/lpo/PC-LPO-0202/PC-LPO-0202.vue'),
-            meta: {
-                layout: 'WorkLayout',
-                title: '사고자 관리 팝업',
-                screenGroup: 'PC-LPO-0202',
-            }
-        },
-        {
-            path: '/views/lpo/PC-LPO-0207',
-            name: 'PC-LPO-0207',
-            component: () => import('../views/lpo/PC-LPO-0202/PC-LPO-0202.vue'),
-            meta: {
-                layout: 'WorkLayout',
-                title: '근무관리 팝업',
-                screenGroup: 'PC-LPO-0202',
-            }
-        },
-        {
-            path: '/views/lpo/PC-LPO-0208',
-            name: 'PC-LPO-0208',
-            component: () => import('../views/lpo/PC-LPO-0202/PC-LPO-0202.vue'),
-            meta: {
-                layout: 'WorkLayout',
-                title: '시간관리 팝업',
-                screenGroup: 'PC-LPO-0202',
-            }
-        },
-        {
-            path: '/views/lpo/PC-LPO-0209',
-            name: 'PC-LPO-0209',
-            component: () => import('../views/lpo/PC-LPO-0202/PC-LPO-0202.vue'),
-            meta: {
-                layout: 'WorkLayout',
-                title: '순찰구역 관리',
-                screenGroup: 'PC-LPO-0202',
-            }
-        },
-        {
-            path: '/views/lpo/PC-LPO-0210',
-            name: 'PC-LPO-0210',
-            component: () => import('../views/lpo/PC-LPO-0202/PC-LPO-0202.vue'),
-            meta: {
-                layout: 'WorkLayout',
-                title: '순찰구역 상세 팝업',
-                screenGroup: 'PC-LPO-0202',
-            }
-        },
-        {
-            path: '/views/lpo/PC-LPO-0211',
-            name: 'PC-LPO-0211',
-            component: () => import('../views/lpo/PC-LPO-0202/PC-LPO-0202.vue'),
-            meta: {
-                layout: 'WorkLayout',
-                title: '甲지 일괄출력 팝업',
-                screenGroup: 'PC-LPO-0202',
-            }
-        },
-        {
-            path: '/views/lpo/PC-LPO-0212',
-            name: 'PC-LPO-0212',
-            component: () => import('../views/lpo/PC-LPO-0202/PC-LPO-0202.vue'),
-            meta: {
-                layout: 'WorkLayout',
-                title: '근무 사용자 선택 팝업',
-                screenGroup: 'PC-LPO-0202',
-            }
-        },
-        {
-            path: '/views/lpo/PC-LPO-0213',
-            name: 'PC-LPO-0213',
-            component: () => import('../views/lpo/PC-LPO-0202/PC-LPO-0202.vue'),
-            meta: {
-                layout: 'WorkLayout',
-                title: '중점사항 입력 팝업',
-                screenGroup: 'PC-LPO-0202',
-            }
-        },
-        /*
          * 근무현황(PC-LPO-0216) 안의 신청 팝업.
          */
         {
@@ -678,49 +573,6 @@ const router = createRouter({
                 layout: 'WorkLayout',
                 title: '자원근무 신청 팝업',
                 screenGroup: 'PC-LPO-0216',
-            }
-        },
-        /*
-         * 근무일지(乙) 등록(PM-LPO-0217) 안의 팝업들.
-         */
-        {
-            path: '/views/lpo/PM-LPO-0219',
-            name: 'PM-LPO-0219',
-            component: () => import('../views/lpo/PM-LPO-0217/PM-LPO-0217.vue'),
-            meta: {
-                layout: 'WorkLayout',
-                title: '112누락정보 팝업',
-                screenGroup: 'PM-LPO-0217',
-            }
-        },
-        {
-            path: '/views/lpo/PM-LPO-0220',
-            name: 'PM-LPO-0220',
-            component: () => import('../views/lpo/PM-LPO-0217/PM-LPO-0217.vue'),
-            meta: {
-                layout: 'WorkLayout',
-                title: '112신고 내역 상세 팝업',
-                screenGroup: 'PM-LPO-0217',
-            }
-        },
-        {
-            path: '/views/lpo/PM-LPO-0221',
-            name: 'PM-LPO-0221',
-            component: () => import('../views/lpo/PM-LPO-0217/PM-LPO-0217.vue'),
-            meta: {
-                layout: 'WorkLayout',
-                title: '처리자 관리 팝업',
-                screenGroup: 'PM-LPO-0217',
-            }
-        },
-        {
-            path: '/views/lpo/PM-LPO-0222',
-            name: 'PM-LPO-0222',
-            component: () => import('../views/lpo/PM-LPO-0217/PM-LPO-0217.vue'),
-            meta: {
-                layout: 'WorkLayout',
-                title: '파일 업로드 팝업',
-                screenGroup: 'PM-LPO-0217',
             }
         },
         /*
@@ -857,29 +709,6 @@ const router = createRouter({
                 layout: 'WorkLayout',
                 title: '근무현황',
                 screenGroup: 'PC-LPO-0216',
-            }
-        },
-        {
-            path: '/views/lpo/PM-LPO-0217',
-            name: 'PM-LPO-0217',
-            component: () => import('../views/lpo/PM-LPO-0217/PM-LPO-0217.vue'),
-            meta: {
-                layout: 'WorkLayout',
-                title: '근무일지(乙)등록',
-                screenGroup: 'PM-LPO-0217',
-            }
-        },
-        {
-            path: '/views/lpo/PC-LPO-0204',
-            name: 'PC-LPO-0204',
-            // 근무자 추가관리 팝업(PC-LPO-0204)은 아직 별도 화면이 없고, PC-LPO-0202(근무지정표작성)
-            // 안의 팝업으로만 존재한다. PC-LPO-0701~0714 가 한 컴포넌트를 여러 화면ID 라우트로
-            // 공유하는 것과 같은 방식으로, 이 라우트도 PC-LPO-0202.vue 를 그대로 가리킨다.
-            component: () => import('../views/lpo/PC-LPO-0202/PC-LPO-0202.vue'),
-            meta: {
-                layout: 'WorkLayout',
-                title: '근무자 추가관리 팝업',
-                screenGroup: 'PC-LPO-0202',
             }
         },
         {

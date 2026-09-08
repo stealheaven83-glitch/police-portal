@@ -39,10 +39,10 @@
       </h2>
 
       <div class="lp-ai-answer-body">
-        <div class="lp-flex-fill">
+        <div class="lp-answer-main">
           <p class="lp-body-text">{{ answer.intro }}</p>
 
-          <div v-for="block in answer.blocks" :key="block.heading" class="lp-answer-block">
+          <div v-for="(block, index) in answer.blocks" :key="index" class="lp-answer-block">
             <h3 v-if="block.heading" class="lp-heading-lg lp-block-title">{{ block.heading }}</h3>
             <p v-for="text in block.paragraphs" :key="text" class="lp-body-text">
               {{ text }}
@@ -51,18 +51,29 @@
               <li v-for="text in block.bullets" :key="text">{{ text }}</li>
             </ul>
           </div>
+
+          <p class="lp-answer-note">※ 본 답변은 AI가 생성한 내용입니다.</p>
         </div>
 
-        <aside class="lp-ref-column">
-          <h3 class="lp-heading-md">참고자료</h3>
-          <article v-for="ref in answer.references" :key="ref.title" class="lp-ref-card">
-            <h4 class="lp-heading-md">{{ ref.title }}</h4>
-            <p class="lp-ref-card-desc">{{ ref.description }}</p>
-          </article>
+        <aside class="lp-ref-column" aria-labelledby="irc-ref-title">
+          <h3 id="irc-ref-title" class="lp-heading-lg">참고자료</h3>
+          <Accordion v-model="openReference" type="single" collapsible class="lp-ref-list">
+            <AccordionItem
+              v-for="ref in answer.references"
+              :key="ref.title"
+              :value="ref.title"
+              class="lp-ref-item"
+            >
+              <AccordionTrigger class="lp-ref-trigger">{{ ref.title }}</AccordionTrigger>
+              <AccordionContent class="lp-ref-body">
+                <p class="lp-ref-desc">{{ ref.description }}</p>
+                <!-- 문서 연결은 개발팀이 잇는다 — 시안에 링크 대상이 없다 -->
+                <a v-if="ref.link" href="#" class="lp-ref-link">{{ ref.link }}</a>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </aside>
       </div>
-
-      <p class="lp-answer-note">※ 본 답변은 AI가 생성한 내용입니다.</p>
     </section>
   </div>
 </template>
@@ -76,6 +87,12 @@ import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
 import SearchBar from '@/components/custom/search/SearchBar.vue'
 import SearchKeywordPanel from '@/components/custom/search/SearchKeywordPanel.vue'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/custom/accordion'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useIncidentScenarioSearch } from './composable/PM-IRC-0101'
@@ -99,6 +116,7 @@ const {
   keyword,
   searched,
   answer,
+  openReference,
   recentKeywords,
   recommendedKeywords,
   removeRecent,
