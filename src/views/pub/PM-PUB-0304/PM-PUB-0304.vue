@@ -12,26 +12,26 @@
   </PageHeader>
 
 
-    <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
-      <template #department>
-        <span class="dept-name">부서</span>
-        <DepartmentCascadeSelect v-model="department" size="sm" />
-      </template>
-      <template #form>
-        <div class="search-area">
-          <SelectField v-model="groupTypeFilter" label="단체종류" :options="groupTypeFilterOptions" label-position="left" size="sm" triggerClass="w-32" />
-          <SelectField v-model="groupFilter" label="단체명" :options="groupFilterOptions" label-position="left" size="sm" triggerClass="w-40" />
+  <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
+    <template #department>
+      <span class="dept-name">부서</span>
+      <DepartmentCascadeSelect v-model="department" size="sm" />
+    </template>
+    <template #form>
+      <div class="search-area">
+        <SelectField v-model="groupTypeFilter" label="단체종류" :options="groupTypeFilterOptions" label-position="left" size="sm" triggerClass="w-32" />
+        <SelectField v-model="groupFilter" label="단체명" :options="groupFilterOptions" label-position="left" size="sm" triggerClass="w-40" />
+        <div class="group-gap3">
           <DatePicker v-model="dateFrom" label="활동일자" size="sm" inputClass="w-40" />
           <span aria-hidden="true">~</span>
           <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
         </div>
-      </template>
-      <template #btns>
-        <Button variant="secondary" size="sm">조회</Button>
-      </template>
-    </SearchWrapper>
-
-
+      </div>
+    </template>
+    <template #btns>
+      <Button variant="secondary" size="sm">조회</Button>
+    </template>
+  </SearchWrapper>
   <LayoutSplite :count="2" :widths="[54, 46]">
     <template #layout-1>
       <LayoutPanel title="단체활동기록 목록">
@@ -54,7 +54,6 @@
           :items-per-page="10"
           @row-selection-changed="selectRow"
           class="flex-1"
-
         />
       </LayoutPanel>
     </template>
@@ -63,7 +62,7 @@
       <LayoutPanel title="단체활동기록 상세">
         <template #actions>
           <template v-if="mode === 'edit'">
-            <Button type="button" variant="tertiary2" size="sm" :disabled="form.id == null" @click="onDelete">삭제</Button>
+            <Button type="button" variant="tertiary2" size="sm"  @click="onDelete">삭제</Button>
             <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
           </template>
           <template v-else-if="form.id != null">

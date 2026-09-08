@@ -10,7 +10,7 @@
       </span>
     </template>
   </PageHeader>
-  <SearchWrapper>
+  <SearchWrapper  v-model:expanded="advancedSearchOpen">
     <template #form>
       <div class="search-area">
         <div class="group-gap3">
@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { provide } from 'vue'
+import { provide, ref } from 'vue'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -73,6 +73,9 @@ const store = useAppVersionList()
 provide(AppVersionKey, store)
 
 const { searchCondition, keyword, rows, openNewDetail } = store
+
+/* SearchWrapper 는 collapsible 일 때만 form·btns 슬롯을 그린다. 접는 UI 는 없고 항상 펼친 채 쓴다 */
+const advancedSearchOpen = ref(true)
 
 const columns: TabulatorGridColumn[] = [
   { title: '번호', field: 'no', width: 70, hozAlign: 'center' },

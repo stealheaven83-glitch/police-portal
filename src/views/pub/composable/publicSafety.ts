@@ -228,6 +228,55 @@ function createMockActivities(groups: GroupListRow[]): ActivityListRow[] {
       })
     })
   })
+
+  /*
+   * 위 4건은 상세·수정 시나리오용이라 손대지 않고, 현황 화면(PC-PUB-0306/0307)이 여러 줄로
+   * 집계되는 모습이 보이게 아래로 더 쌓는다. 활동종류·관서·단체종류 조합이 골고루 생기도록
+   * 단체 전체 × 활동종류 전체를 돈다 — 0307 은 관서+단체종류+활동종류로 묶으므로 15줄이 된다.
+   */
+  type SpecialNote = Partial<Pick<ActivityListRow, 'jointArrest' | 'crimeReport' | 'drunkProtection' | 'elderlyProtection' | 'safeReturn' | 'etcActivity'>>
+  const extraSeeds: {
+    activityType: string
+    date: string
+    participants: number
+    from: string
+    to: string
+    special: SpecialNote
+  }[] = [
+    { activityType: 'patrol', date: '2026-05-20', participants: 6, from: '20:00', to: '22:00', special: { safeReturn: '귀가길 동행 2건' } },
+    { activityType: 'promotion', date: '2026-05-18', participants: 8, from: '14:00', to: '16:30', special: { crimeReport: '보이스피싱 의심 신고 1건' } },
+    { activityType: 'meeting', date: '2026-05-15', participants: 12, from: '19:00', to: '20:30', special: {} },
+    { activityType: 'education', date: '2026-05-12', participants: 15, from: '10:00', to: '12:00', special: { elderlyProtection: '독거노인 안부확인 3건' } },
+    { activityType: 'etc', date: '2026-05-08', participants: 4, from: '13:00', to: '14:00', special: { etcActivity: '환경정비 지원', jointArrest: '절도 피의자 검거 지원 1건' } },
+  ]
+  groups.forEach((group, gi) => {
+    extraSeeds.forEach((seed) => {
+      id += 1
+      rows.push({
+        id,
+        groupId: group.id,
+        date: seed.date,
+        dept: group.dept,
+        groupName: group.groupName,
+        groupType: group.groupType,
+        activityType: seed.activityType,
+        participantCount: seed.participants + gi,
+        timeFrom: seed.from,
+        timeTo: seed.to,
+        note: `${seed.date.replace(/-/g, '.')} ${seed.from}~${seed.to}간 ${group.groupName} 활동 진행.`,
+        address: group.address,
+        addressDetail: group.addressDetail,
+        jointArrest: '',
+        crimeReport: '',
+        drunkProtection: '',
+        elderlyProtection: '',
+        safeReturn: '',
+        etcActivity: '',
+        ...seed.special,
+      })
+    })
+  })
+
   return rows
 }
 

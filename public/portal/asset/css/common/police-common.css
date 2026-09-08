@@ -53,6 +53,14 @@ common
   font-size: 1.5rem;
   color: var(--Text-body_2);
 }
+/* ＊ 표시 + 안내 문구 한 줄 — 마커와 문구를 갈라 둬서 문구가 접혀도 마커 뒤에서 정렬된다 */
+.lp-mark-note {
+  display: flex;
+  gap: 0.4rem;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  color: var(--Text-body_0);
+}
 .lp-note-text2 {
   font-size: 1.5rem;
   color: var(--Text-body_0);
@@ -411,6 +419,11 @@ common
   padding: 1.2rem 2rem;
   z-index: 1;
 }
+/* 지도가 들어갈 자리 — 시안 크기로 키우고 모서리는 각지게. `.lp-placeholder-box` 와 함께 쓴다 */
+.lp-map-slot {
+  min-height: 41.8rem;
+  border-radius: 0;
+}
 .lp-map-frame {
   position: relative;
   overflow: hidden;
@@ -424,6 +437,17 @@ common
 }
 
 /* ══ 통합검색 · 시나리오 검색 (본문을 가운데 정렬하는 화면) ═══ */
+
+/*
+ * 브라우저가 input[type=search] 에 자동으로 그리는 기본 지우기(x) 버튼을 없앤다.
+ * 같은 자리에 우리 .lp-search-clear(police-override.css)를 그려서 두 개가 겹친다.
+ * police-style.css 의 리셋은 number 스피너와 ms-clear 만 다루고 이건 빠져 있다.
+ */
+.search-wrap .search-bar .input-search::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
 
 /* 큰 검색바 — 위 여백을 크게 띄워 화면 가운데로 */
 .lp-search-hero {

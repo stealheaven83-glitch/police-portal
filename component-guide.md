@@ -451,6 +451,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-body-text` | 읽는 본문 문단(1.7rem) | IRC-0101 |
 | `.lp-label-text` | 입력 옆 보조 라벨·안내(1.5rem `--Text-body_1`) | 0701 |
 | `.lp-note-text` | 작성시각 같은 부수 정보(1.5rem `--Text-body_2`) | LPO-0102, 0104, 0207 |
+| `.lp-mark-note` | `＊` 마커 + 안내 문구 한 줄(문구가 접혀도 마커 뒤에서 정렬). 마커 없는 `※` 안내는 `.form-note` | `AddressSearchDialog` |
 | `.lp-nowrap` | 줄바꿈 금지 — `.readonly-text` 등과 **함께** 쓴다 | 0601 |
 | `.lp-hit` | 검색 결과 건수처럼 제목 안 `<b>` 만 파랗게 | 0802 |
 | `.lp-panel-head-em` | 패널 제목줄에 같이 보여주는 값(`--Base--point` 600) | 2204 |
@@ -472,6 +473,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-info-blank-cell` | `InfoTable` 에서 옆 칸이 두 행을 차지(row-span)해 비는 칸. 표 테두리만 이어 주는 자리라 1열로 접히면 감춘다 | PUB-0302/0303 |
 | `.lp-meta-nowrap` | 조회 화면 위쪽 '최종 수정일' 한 줄 | 0601 |
 | `.lp-placeholder-box` | 채울 것이 아직 정해지지 않은 자리(시안의 회색 상자) | PUB-0113 |
+| `.lp-map-slot` | 그 회색 상자를 지도 자리 크기(41.8rem)로 키우고 모서리를 각지게 — `.lp-placeholder-box` 와 **함께** 쓴다 | `AddressSearchDialog` |
 | `.lp-form-box` / `.lp-form-box-center` | 라벨 칸 없이 컨트롤만 들어가는 테두리 상자(라디오·체크박스 줄) / 그 안을 가운데로. 라벨-값 표면 `InfoTable` | PUB-0702, PUB-0208 |
 | `.lp-link-danger` | 아이콘 + 붉은 글자로 주의를 끄는 링크(Figma button_link 경고 톤). 파란 경로 링크는 `.lp-path-link` | PUB-0701 |
 | `.lp-survey-list` / `.lp-survey-item` / `.lp-survey-choice` | 테두리 없는 설문 문항 나열(좌 문항 · 우 선택지). 라벨-값 표는 `InfoTable` | PUB-0201 |
@@ -504,6 +506,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | 클래스 | 의도 | 쓰는 곳 |
 |---|---|---|
 | `.lp-search-hero` | 큰 검색바 — 위 여백 크게(검색 전) | 0801, 0802 |
+| `.lp-search-clear` (+ `.lp-has-clear`) | 대형 검색바 안 "검색어 지우기" 버튼. 돋보기 왼쪽에 뜨고, 뜰 때만 입력 오른쪽 여백을 넓힌다(`.lp-has-clear` 는 `.search-bar` 에) | `SearchBar` |
 | `.lp-search-center` | 검색한 뒤라 위 여백 없이 붙는 검색바 | IRC-0101 |
 | `.lp-content-panel` / `.lp-content-panel-pad` | 본문 폭 120rem 가운데 / 좌우 여백 | 0801, 0802, IRC-0101 |
 | `.lp-keyword-split` | **override** — `SearchKeywordPanel` 두 칸을 시안 비율(795:356)로 나누고 사이에 세로 구분선. 컴포넌트 기본은 반반(`grid-cols-2`)에 구분선 없음. `lg` 이상에서만 걸어 모바일 1칸 접힘을 살린다 | IRC-0101 |
@@ -575,6 +578,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-grid-depth-cell` | 2depth 메뉴 칸 회색 배경 | 2204 |
 | `.lp-grid-search-cell` | button 셀 라벨 뒤에 돋보기 아이콘을 가상요소로 얹기 | 2204 |
 | `.lp-table-left` | `TableWrapper` 의 가운데 정렬을 좌측으로 되돌림 | 0601 |
+| `.lp-table-sticky` (+ `.lp-table-sticky-head2`) | `TableWrapper` 헤더와 합계 줄(`.row-total`)을 고정하고 본문만 스크롤. 높이는 `--lp-table-h`, 합계 줄 위치는 `--lp-thead-h`(2단 헤더면 `-head2` 를 같이) | PUB-0307 |
 | `.lp-segmented-tabs` | 탭 컴포넌트의 간격·모서리를 세그먼트 형태로 | 0802 |
 | `.lp-dialog-body .form-note` | 팝업 안에서 공통 `.form-note` 의 아래 여백 해제 | 0601 |
 | `.lp-dropzone-sub` | `.lp-dropzone-txt p` 의 크기·색 되돌리기 | LPO-0104 |

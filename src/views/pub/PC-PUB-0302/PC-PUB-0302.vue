@@ -19,8 +19,8 @@
       <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
     </div>
   </div>
-<ScrollWrapper>
-  <GroupDetailForm :form="form" mode="edit" /> 
+  <ScrollWrapper>
+    <GroupDetailForm :form="form" mode="edit" /> 
   </ScrollWrapper>
 </template>
 

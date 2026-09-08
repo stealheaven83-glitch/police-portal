@@ -3,20 +3,40 @@
     <div class="w-full overflow-hidden border-[#1E2124] border-t">
       <Table class="w-full">
         <TableCaption v-if="caption">{{ caption }}</TableCaption>
+        <!--
+          칸 폭은 colgroup 으로 준다. columns 의 width 를 <TableHead> 에 걸면 #header 슬롯으로
+          헤더를 직접 그리는 표(2단 헤더 등)에서는 아무 데도 안 닿고, colspan/rowspan 이 섞인
+          첫 행은 개별 칸 폭을 못 정한다. 리셋이 table-layout: fixed 라 col 폭이 그대로 먹는다.
+        -->
+        <colgroup>
+          <col v-for="column in columns" :key="column.key" :style="{ width: column.width || 'auto' }" />
+        </colgroup>
         <TableHeader class="bg-transparent">
-          <TableRow class="" >
-            <TableHead v-for="column in columns" :key="column.key" :class="cn('text-center text-[#464C53] font-bold border-b border-[#8A949E]')"
-              :style="{ width: column.width || 'auto' }">
-              {{ column.label }}
-            </TableHead>
-          </TableRow>
+          <!--
+            헤더를 통째로 바꿔 끼우는 자리. 2단 헤더(컬럼 그룹)처럼 columns 한 줄로는
+            못 그리는 표에서만 쓴다. 칸 모양이 기본 헤더와 어긋나지 않게 headClass 를 같이 넘긴다.
+            안 넘기면 아래 기본 헤더가 그대로 그려진다.
+          -->
+          <slot name="header" :head-class="headClass">
+            <TableRow class="" >
+              <TableHead v-for="column in columns" :key="column.key" :class="headClass">
+                {{ column.label }}
+              </TableHead>
+            </TableRow>
+          </slot>
         </TableHeader>
         <TableBody class="[&_tr:last-child]:!border-b">
+          <!--
+            합계/총계처럼 데이터 행이 아닌 줄을 맨 위에 끼운다. 진짜 <table> 이라 호출부에서
+            <TableCell :colspan="n"> 으로 칸을 합칠 수 있다(TabulatorGrid 는 colspan 이 없다).
+            안 쓰면 아무것도 그리지 않으므로 기존 화면에는 영향이 없다.
+          -->
+          <slot name="summary-row" :cell-class="bodyCellClass" />
           <TableRow v-for="(item, index) in paginatedItems" :key="index" class="hover:bg-[#F0F7FF]  hover:text-[#0054A6] hover:font-bold" :class="{
             'cursor-pointer': selectable,
             'bg-muted': selectedIndex === index
           }" @click="selectable ? selectRow(index, item) : undefined">
-            <TableCell v-for="column in columns" :key="column.key" class="text-center border-l border-[#E6E8EA] first:border-l-0 " :class="column.cellClass || ''">
+            <TableCell v-for="column in columns" :key="column.key" :class="cn(bodyCellClass, column.cellClass)">
               <slot :name="`cell-${column.key}`" :item="item" :column="column">
                 <template v-if="column.type === 'status'">
                   <Badge
@@ -142,6 +162,13 @@ const props = withDefaults(defineProps<Props>(), {
 
 // Emits 정의
 const emit = defineEmits(['page-change', 'select-row', 'update:itemsPerPage'])
+
+/**
+ * 칸 기본 모양. #header / #summary-row 슬롯으로 직접 그릴 때도 같은 모양을 쓰도록 넘겨준다
+ * (호출부 화면에 테일윈드 문자열을 흩뿌리지 않기 위함 — CLAUDE.md 1장).
+ */
+const headClass = 'text-center text-[#464C53] font-bold border-b border-[#8A949E]'
+const bodyCellClass = 'text-center border-l border-[#E6E8EA] first:border-l-0'
 
 // 페이지당 표시건수 select 변경 핸들러 (부모가 update:itemsPerPage 를 안 듣는 기존 사용처는 그대로 무동작)
 const onItemsPerPageSelect = (value: unknown) => {

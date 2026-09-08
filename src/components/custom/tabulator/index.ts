@@ -69,15 +69,6 @@ export interface TabulatorGridColumn {
    */
   cellPlaceholder?: string
   /**
-   * 입력 셀의 최대 글자수(native maxlength). 두 종류의 입력 셀에 다 걸린다 —
-   * InputField2(`cellClearable`/`cellIcon` 켠 셀)에는 prop 으로, 그냥 Input 인 셀에는
-   * attrs 폴스루로 native input 에 붙는다.
-   *
-   * 글자수 카운터(`12 / 20`)는 안 뜬다 — InputField2 의 `showCount` 가 기본 false 라
-   * 셀 높이가 늘어나지 않는다.
-   */
-  cellMaxLength?: number | string
-  /**
    * 값이 있을 때 입력 오른쪽에 지우기(X) 버튼을 보여준다.
    * 켜면 그 셀만 custom/input 의 InputField2 로 그린다(X 버튼이 그쪽에만 있다).
    */
@@ -91,6 +82,15 @@ export interface TabulatorGridColumn {
   cellIconLabel?: string
   /** cellIcon 버튼을 눌렀을 때 */
   onCellIconClick?: (rowData: any, cell: any) => void
+  /**
+   * 입력 셀의 최대 입력 글자수.
+   * 지정 시 InputField2/Input 에 maxlength 가 적용되고 초과 입력이 방지됩니다.
+   */
+  cellMaxlength?: number | string
+  /** cellMaxlength 의 별칭 (maxlength 로 지정해도 동일하게 동작) */
+  maxlength?: number | string
+  /** 글자수 카운터 표시 여부 (InputField2 에서 표시) */
+  cellShowCount?: boolean
 
   /* cellType: 'select' */
   /** 셀렉트 옵션 목록 */
@@ -131,4 +131,13 @@ export interface TabulatorGridColumn {
 export interface PageSizeOption {
   label: string
   value: string
+}
+
+/** 유효성 검사 실패 정보 */
+export interface TabulatorValidationError {
+  row: any
+  field: string
+  value?: any
+  message: string
+  cell?: any
 }

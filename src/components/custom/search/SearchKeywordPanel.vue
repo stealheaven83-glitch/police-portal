@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
-import { X, CircleX } from "lucide-vue-next"
+import { X } from "lucide-vue-next"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/custom/button"
+import Icon from "@/components/custom/icon/Icon.vue"
 
 /** 추천검색어 한 줄. trend 는 전 회차 대비 순위 변동(없으면 '-' 로 그린다) */
 export interface RecommendedKeyword {
@@ -57,7 +58,7 @@ const emit = defineEmits<{
           @click="emit('clear')"
         >
           전체 삭제
-          <CircleX class="size-[1.6rem]" aria-hidden="true" />
+          <Icon name="deleteCircle" size="1.6rem" />
         </Button>
       </div>
 

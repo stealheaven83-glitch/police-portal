@@ -11,7 +11,7 @@ import infoStyles from '@/components/custom/info-table/InfoTable.module.css'
 
 /**
  * 주소검색 팝업 — 전 화면 공용. `AddressInput` 의 `@search` 를 받아 화면에서 이걸 연다.
- * Figma: 8mQz91txveSEKO0ky7Ck6V / 12231:108236
+ * Figma: 8mQz91txveSEKO0ky7Ck6V / 12231:108236(도로명 찾기) · 12231:108380(GIS 찾기)
  *
  * 실제 주소 API 연동 전까지는 목업 목록에서 고르는 식으로 동작한다.
  * 고른 주소는 `@select` 로 (도로명주소, 상세주소) 순서로 넘긴다 — 상세주소만 필요 없는
@@ -37,7 +37,7 @@ const MOCK_ADDRESSES: AddressRow[] = Array.from({ length: 12 }, (_, index) => ({
 }))
 
 /* ── 탭 ───────────────────────────────────────────────────────────────── */
-/** 시안에 그려진 건 '도로명 찾기' 한 장뿐이라 나머지 두 탭도 같은 검색 폼을 쓴다 */
+/** '법정동 찾기'는 시안이 없어 '도로명 찾기'와 같은 검색 폼을 쓴다. 'GIS 찾기'만 지도 탭이다 */
 const activeTab = ref('road')
 const searchTabs = [
   { value: 'road', label: '도로명 찾기' },
@@ -136,75 +136,87 @@ function close() {
       </TabsList>
     </Tabs>
 
-    <InfoTable :columns="3" :size="80" popup>
-      <InfoField for="address-search-sido" label="시도">
-        <SelectField
-          id="address-search-sido"
-          v-model="sido"
-          :options="sidoOptions"
-          size="sm"
-          trigger-class="w-full"
-          class="!space-y-0 flex-1"
-        />
-      </InfoField>
-      <InfoField for="address-search-sigungu" label="시군구">
-        <SelectField
-          id="address-search-sigungu"
-          v-model="sigungu"
-          :options="sigunguOptions"
-          size="sm"
-          trigger-class="w-full"
-          class="!space-y-0 flex-1"
-        />
-      </InfoField>
-      <InfoField for="address-search-road" label="도로명">
-        <InputField2
-          id="address-search-road"
-          v-model="roadName"
-          size="sm"
-          class="!space-y-0 flex-1"
-          input-class="w-full"
-          @keyup.enter="onSearch"
-        />
-      </InfoField>
+    <!-- GIS 찾기 — 지도에서 위치를 골라 주소를 채우는 탭 -->
+    <template v-if="activeTab === 'gis'">
+      <p class="lp-mark-note">
+        <span>＊</span>
+        <span>주소를 조회하고자 하는 위치에 마우스 오른쪽 버튼을 누르면 주소가 입력됩니다.</span>
+      </p>
+      <!-- 지도는 GIS 연동 몫이라 자리만 비워 둔다 -->
+      <div class="lp-placeholder-box lp-map-slot"></div>
+    </template>
 
-      <InfoField for="address-search-main-no" label="주번호">
-        <InputField2
-          id="address-search-main-no"
-          v-model="mainNo"
-          size="sm"
-          class="!space-y-0 flex-1"
-          input-class="w-full"
-          @keyup.enter="onSearch"
-        />
-      </InfoField>
-      <InfoField for="address-search-sub-no" label="부번호">
-        <InputField2
-          id="address-search-sub-no"
-          v-model="subNo"
-          size="sm"
-          class="!space-y-0 flex-1"
-          input-class="w-full"
-          @keyup.enter="onSearch"
-        />
-      </InfoField>
-      <!-- 라벨 없이 버튼만 들어가는 칸 -->
-      <InfoField :class="infoStyles['info-table-actions']">
-        <Button type="button" variant="tertiary2" size="sm" padding="12" @click="onReset">초기화</Button>
-        <Button type="button" variant="secondary" size="sm" padding="12" @click="onSearch">검색</Button>
-      </InfoField>
-    </InfoTable>
+    <template v-else>
+      <InfoTable :columns="3" :size="80" popup>
+        <InfoField for="address-search-sido" label="시도">
+          <SelectField
+            id="address-search-sido"
+            v-model="sido"
+            :options="sidoOptions"
+            size="sm"
+            trigger-class="w-full"
+            class="!space-y-0 flex-1"
+          />
+        </InfoField>
+        <InfoField for="address-search-sigungu" label="시군구">
+          <SelectField
+            id="address-search-sigungu"
+            v-model="sigungu"
+            :options="sigunguOptions"
+            size="sm"
+            trigger-class="w-full"
+            class="!space-y-0 flex-1"
+          />
+        </InfoField>
+        <InfoField for="address-search-road" label="도로명">
+          <InputField2
+            id="address-search-road"
+            v-model="roadName"
+            size="sm"
+            class="!space-y-0 flex-1"
+            input-class="w-full"
+            @keyup.enter="onSearch"
+          />
+        </InfoField>
 
-    <TabulatorGrid
-      :data="results"
-      :columns="columns"
-      height="26rem"
-      placeholder="검색 조건을 입력해 주소를 찾아보세요."
-      show-pagination
-      :items-per-page="10"
-      :row-class="rowClass"
-      @row-click="onRowClick"
-    />
+        <InfoField for="address-search-main-no" label="주번호">
+          <InputField2
+            id="address-search-main-no"
+            v-model="mainNo"
+            size="sm"
+            class="!space-y-0 flex-1"
+            input-class="w-full"
+            @keyup.enter="onSearch"
+          />
+        </InfoField>
+        <InfoField for="address-search-sub-no" label="부번호">
+          <InputField2
+            id="address-search-sub-no"
+            v-model="subNo"
+            size="sm"
+            class="!space-y-0 flex-1"
+            input-class="w-full"
+            @keyup.enter="onSearch"
+          />
+        </InfoField>
+        <!-- 라벨 없이 버튼만 들어가는 칸 -->
+        <InfoField :class="infoStyles['info-table-actions']">
+          <Button type="button" variant="tertiary2" size="sm" padding="12" @click="onReset">초기화</Button>
+          <Button type="button" variant="secondary" size="sm" padding="12" @click="onSearch">검색</Button>
+        </InfoField>
+      </InfoTable>
+
+      <TabulatorGrid
+        :data="results"
+        :columns="columns"
+        height="26rem"
+        placeholder="검색 조건을 입력해 주소를 찾아보세요."
+        show-pagination
+        :items-per-page="10"
+        :row-class="rowClass"
+        @row-click="onRowClick"
+      />
+    </template>
 
     <InfoTable :columns="1" :size="120" popup>
       <InfoField label="주소">{{ selectedAddress?.address }}</InfoField>

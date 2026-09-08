@@ -17,7 +17,7 @@
     </template>
     <template #topRightSection>
       <span class="lp-meta-nowrap">{{ modifiedInfo }}</span>
-      <div class="btn-wrap-group">
+      <div class="group-gap3">
         <Button type="button" variant="tertiary2" size="sm" @click="onPrint">인쇄</Button>
         <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
       </div>

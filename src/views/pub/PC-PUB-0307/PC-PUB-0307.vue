@@ -20,9 +20,11 @@
       <div class="search-area">
         <SelectField v-model="groupTypeFilter" label="단체종류" :options="groupTypeFilterOptions" label-position="left" size="sm" triggerClass="w-32" />
         <SelectField v-model="groupFilter" label="단체명" :options="groupFilterOptions" label-position="left" size="sm" triggerClass="w-40" />
-        <DatePicker v-model="dateFrom" label="기간" size="sm" inputClass="w-40" />
-        <span aria-hidden="true">~</span>
-        <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
+        <div class="group-gap3">
+          <DatePicker v-model="dateFrom" label="기간" size="sm" inputClass="w-40" />
+          <span aria-hidden="true">~</span>
+          <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
+        </div>
       </div>
     </template>
     <template #btns>
@@ -37,16 +39,43 @@
     </Button>
   </div>
 
-  <TabulatorGrid
-    ref="gridRef"
-    class="flex-1"
+  <TableWrapper
     :columns="columns"
-    :data="rows"
-    :row-class="(row) => (row.id === '합계' ? 'row-total' : undefined)"
-    height="100%"
-    min-height="40rem"
-    placeholder="조회된 활동현황이 없습니다"
-  />
+    :items="dataRows"
+    caption="활동현황 목록"
+    :show-pagination="false"
+    empty-title="조회된 활동현황이 없습니다"
+    empty-description="검색 조건을 바꿔 다시 조회해 주세요."
+  >
+    <!--
+      2단 헤더. 앞 4칸은 rowspan 으로 두 줄을 차지하고, '활동실적'·'특별활동실적' 만
+      아래에 하위 칸을 갖는다. columns 한 줄로는 못 그려서 헤더를 직접 그린다.
+    -->
+    <template #header="{ headClass }">
+      <TableRow>
+        <TableHead v-for="column in leadColumns" :key="column.key" :rowspan="2" :class="headClass">
+          {{ column.label }}
+        </TableHead>
+        <TableHead :colspan="activityColumns.length" :class="headClass">활동실적</TableHead>
+        <TableHead :colspan="specialColumns.length" :class="headClass">특별활동실적</TableHead>
+      </TableRow>
+      <TableRow>
+        <TableHead v-for="column in [...activityColumns, ...specialColumns]" :key="column.key" :class="headClass">
+          {{ column.label }}
+        </TableHead>
+      </TableRow>
+    </template>
+
+    <!-- 합계 줄. 앞 4칸(번호·관서·단체종류·활동종류)을 colspan 으로 한 칸으로 합친다 -->
+    <template #summary-row="{ cellClass }">
+      <TableRow class="row-total">
+        <TableCell :colspan="leadColumns.length" :class="cellClass">합계</TableCell>
+        <TableCell v-for="column in sumColumns" :key="column.key" :class="cellClass">
+          {{ totals[column.key] }}
+        </TableCell>
+      </TableRow>
+    </template>
+  </TableWrapper>
 </template>
 
 <script setup lang="ts">
@@ -61,12 +90,14 @@ import type { DepartmentValue } from '@/components/custom/select/DepartmentCasca
 import SelectField from '@/components/custom/select/SelectField.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import { Button } from '@/components/custom/button'
-import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import TableWrapper from '@/components/custom/table/TableWrapper.vue'
+import { TableCell, TableHead, TableRow } from '@/components/ui/table'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { publicSafetyMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { usePublicSafetyStore, groupTypeOptions, activityTypeOptions } from '../composable/publicSafety'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
+
 defineOptions({ name: 'PcPub0307' })
 
 const navItems = [
@@ -101,7 +132,7 @@ function durationHours(from: string, to: string) {
 }
 
 interface ActivityStatusRow {
-  id: number | string
+  id: number
   dept: string
   groupType: string
   activityType: string
@@ -116,6 +147,40 @@ interface ActivityStatusRow {
   etcActivity: number
 }
 
+/** 합계 대상 숫자 컬럼 키 */
+type SumKey = Exclude<keyof ActivityStatusRow, 'id' | 'dept' | 'groupType' | 'activityType'>
+
+/*
+ * 헤더가 2단이라 컬럼을 세 덩어리로 나눠 둔다.
+ * - leadColumns: 두 줄을 차지하는 앞칸(rowspan)
+ * - activityColumns / specialColumns: 그룹 아래 하위 칸
+ * TableWrapper 본문은 이 셋을 이어 붙인 columns 로 그린다.
+ */
+const leadColumns = [
+  { key: 'id', label: '번호', width: '56px' },
+  { key: 'dept', label: '관서', width: '200px' },
+  { key: 'groupType', label: '단체종류' },
+  { key: 'activityType', label: '활동종류' },
+]
+
+const activityColumns: { key: SumKey; label: string }[] = [
+  { key: 'participantCount', label: '인원' },
+  { key: 'count', label: '횟수' },
+  { key: 'totalHours', label: '총활동시간' },
+]
+
+const specialColumns: { key: SumKey; label: string }[] = [
+  { key: 'jointArrest', label: '합동검거' },ㄹ
+  { key: 'crimeReport', label: '범죄신고' },
+  { key: 'drunkProtection', label: '주취자보호' },
+  { key: 'elderlyProtection', label: '노약자보호' },
+  { key: 'safeReturn', label: '안심귀가' },
+  { key: 'etcActivity', label: '기타' },
+]
+
+const sumColumns = [...activityColumns, ...specialColumns]
+const columns = [...leadColumns, ...sumColumns]
+
 const filteredActivities = computed(() => {
   return store.activities.value.filter((a) => {
     if (groupTypeFilter.value !== 'all' && a.groupType !== groupTypeFilter.value) return false
@@ -126,7 +191,8 @@ const filteredActivities = computed(() => {
   })
 })
 
-const rows = computed<ActivityStatusRow[]>(() => {
+/** 합계는 별도 줄(#summary-row)로 그리므로 데이터 행에는 섞지 않는다 */
+const dataRows = computed<ActivityStatusRow[]>(() => {
   const buckets = new Map<string, ActivityStatusRow>()
   for (const a of filteredActivities.value) {
     const key = `${a.dept}__${a.groupType}__${a.activityType}`
@@ -158,56 +224,43 @@ const rows = computed<ActivityStatusRow[]>(() => {
     if (a.safeReturn.trim()) bucket.safeReturn += 1
     if (a.etcActivity.trim()) bucket.etcActivity += 1
   }
-  const dataRows = Array.from(buckets.values())
-  const sum = (key: keyof ActivityStatusRow) => dataRows.reduce((s, r) => s + (r[key] as number), 0)
-  const total: ActivityStatusRow = {
-    id: '합계',
-    dept: '합계',
-    groupType: '',
-    activityType: '',
-    participantCount: sum('participantCount'),
-    count: sum('count'),
-    totalHours: sum('totalHours'),
-    jointArrest: sum('jointArrest'),
-    crimeReport: sum('crimeReport'),
-    drunkProtection: sum('drunkProtection'),
-    elderlyProtection: sum('elderlyProtection'),
-    safeReturn: sum('safeReturn'),
-    etcActivity: sum('etcActivity'),
-  }
-  return [total, ...dataRows]
+  return Array.from(buckets.values())
 })
 
-const columns: TabulatorGridColumn[] = [
-  { title: '번호', field: 'id', width: 70, hozAlign: 'center' },
-  { title: '관서', field: 'dept', hozAlign: 'center' },
-  { title: '단체종류', field: 'groupType', hozAlign: 'center' },
-  { title: '활동종류', field: 'activityType', hozAlign: 'center' },
-  {
-    title: '활동실적',
-    columns: [
-      { title: '인원', field: 'participantCount', hozAlign: 'center' },
-      { title: '횟수', field: 'count', hozAlign: 'center' },
-      { title: '총활동시간', field: 'totalHours', hozAlign: 'center' },
-    ],
-  },
-  {
-    title: '특별활동실적',
-    columns: [
-      { title: '합동검거', field: 'jointArrest', hozAlign: 'center' },
-      { title: '범죄신고', field: 'crimeReport', hozAlign: 'center' },
-      { title: '주취자보호', field: 'drunkProtection', hozAlign: 'center' },
-      { title: '노약자보호', field: 'elderlyProtection', hozAlign: 'center' },
-      { title: '안심귀가', field: 'safeReturn', hozAlign: 'center' },
-      { title: '기타', field: 'etcActivity', hozAlign: 'center' },
-    ],
-  },
-]
+const totals = computed(() => {
+  const result = {} as Record<SumKey, number>
+  for (const column of sumColumns) {
+    result[column.key] = dataRows.value.reduce((sum, row) => sum + row[column.key], 0)
+  }
+  return result
+})
 
-const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
+/**
+ * TableWrapper 는 TabulatorGrid 의 download() 가 없어 CSV 를 직접 만든다.
+ * 엑셀이 UTF-8 을 알아보게 BOM 을 붙인다.
+ */
 function onDownloadExcel() {
+  const header = columns.map((c) => c.label)
+  const totalLine = [
+    '합계',
+    ...Array(leadColumns.length - 1).fill(''),
+    ...sumColumns.map((c) => String(totals.value[c.key])),
+  ]
+  const body = dataRows.value.map((row) =>
+    columns.map((c) => String(row[c.key as keyof ActivityStatusRow] ?? '')),
+  )
+
+  const csv = [header, totalLine, ...body]
+    .map((line) => line.map((cell) => `"${cell.replace(/"/g, '""')}"`).join(','))
+    .join('\r\n')
+
   const today = new Date().toISOString().slice(0, 10)
-  gridRef.value?.download('csv', `활동현황_${today}.csv`)
+  const url = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' }))
+  const link = document.createElement('a')
+  link.href = url
+  link.download = `활동현황_${today}.csv`
+  link.click()
+  URL.revokeObjectURL(url)
 }
 
 useSideMenuSetup({ ...publicSafetyMenu, activeChild: '활동현황', openIndex: 2 })

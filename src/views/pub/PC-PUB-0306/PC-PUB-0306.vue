@@ -20,30 +20,49 @@
       <div class="search-area">
         <SelectField v-model="groupTypeFilter" label="단체종류" :options="groupTypeFilterOptions" label-position="left" size="sm" triggerClass="w-32" />
         <SelectField v-model="groupFilter" label="단체명" :options="groupFilterOptions" label-position="left" size="sm" triggerClass="w-40" />
-        <DatePicker v-model="dateFrom" label="기간" size="sm" inputClass="w-40" />
-        <span aria-hidden="true">~</span>
-        <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
+        <div class="group-gap3">
+          <DatePicker v-model="dateFrom" label="기간" size="sm" inputClass="w-40" />
+          <span aria-hidden="true">~</span>
+          <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
+        </div>
       </div>
     </template>
     <template #btns>
       <Button variant="secondary" size="sm">조회</Button>
     </template>
   </SearchWrapper>
+
   <div class="list-actions">
     <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
       <Download :size="16" aria-hidden="true" />
       엑셀다운로드
     </Button>
   </div>
-  <TabulatorGrid
-    ref="gridRef"
-    class="flex-1"
+
+  <TableWrapper
     :columns="columns"
-    :data="rows"
-    :row-class="(row) => (row.id === '합계' ? 'row-total' : undefined)"
-    height="100%"
-    placeholder="조회된 단체가 없습니다"
-  />
+    :items="dataRows"
+    caption="단체현황 목록"
+    :show-pagination="false"
+    empty-title="조회된 단체가 없습니다"
+    empty-description="검색 조건을 바꿔 다시 조회해 주세요."
+  >
+    <!--
+      합계 줄. 앞 4칸(번호·관서·단체종류·단체명)을 colspan 으로 한 칸으로 합친다 —
+      TabulatorGrid 는 셀 병합이 없어 이 화면은 TableWrapper 를 쓴다.
+    -->
+    <template #summary-row="{ cellClass }">
+      <TableRow class="row-total">
+        <TableCell :colspan="4" :class="cellClass">합계</TableCell>
+        <TableCell :class="cellClass">{{ totals.memberCount }}</TableCell>
+        <TableCell :class="cellClass" />
+        <TableCell :class="cellClass">{{ totals.budgetAmount }}</TableCell>
+        <TableCell :class="cellClass">{{ totals.insuredCount }}</TableCell>
+        <TableCell :class="cellClass">{{ totals.vehicleCount }}</TableCell>
+        <TableCell :class="cellClass" />
+      </TableRow>
+    </template>
+  </TableWrapper>
 </template>
 
 <script setup lang="ts">
@@ -58,7 +77,8 @@ import type { DepartmentValue } from '@/components/custom/select/DepartmentCasca
 import SelectField from '@/components/custom/select/SelectField.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import { Button } from '@/components/custom/button'
-import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import TableWrapper from '@/components/custom/table/TableWrapper.vue'
+import { TableCell, TableRow } from '@/components/ui/table'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { publicSafetyMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
@@ -87,7 +107,7 @@ const groupTypeFilterOptions = [{ label: '전체', value: 'all' }, ...groupTypeO
 const groupFilterOptions = computed(() => [{ label: '전체', value: 'all' }, ...store.groupOptions.value])
 
 interface StatusRow {
-  id: number | string
+  id: number
   dept: string
   groupType: string
   groupName: string
@@ -112,8 +132,9 @@ const filteredGroups = computed(() => {
   })
 })
 
-const rows = computed<StatusRow[]>(() => {
-  const dataRows: StatusRow[] = filteredGroups.value.map((g) => ({
+/** 합계는 별도 줄(#summary-row)로 그리므로 데이터 행에는 섞지 않는다 */
+const dataRows = computed<StatusRow[]>(() =>
+  filteredGroups.value.map((g) => ({
     id: g.id,
     dept: g.dept,
     groupType: groupTypeLabel(g.groupType, g.groupTypeEtc),
@@ -124,39 +145,49 @@ const rows = computed<StatusRow[]>(() => {
     insuredCount: g.insuredCount,
     vehicleCount: g.vehicleCount,
     awardNote: g.awards.length ? `${g.awards.length}건` : '',
-  }))
-  const total: StatusRow = {
-    id: '합계',
-    dept: '합계',
-    groupType: '',
-    groupName: '',
-    memberCount: dataRows.reduce((s, r) => s + r.memberCount, 0),
-    equipmentNote: '',
-    budgetAmount: dataRows.reduce((s, r) => s + r.budgetAmount, 0),
-    insuredCount: dataRows.reduce((s, r) => s + r.insuredCount, 0),
-    vehicleCount: dataRows.reduce((s, r) => s + r.vehicleCount, 0),
-    awardNote: '',
-  }
-  return [total, ...dataRows]
-})
+  })),
+)
 
-const columns: TabulatorGridColumn[] = [
-  { title: '번호', field: 'id', width: 70, hozAlign: 'center' },
-  { title: '관서', field: 'dept', width:200, hozAlign: 'center' },
-  { title: '단체종류', field: 'groupType', hozAlign: 'center' },
-  { title: '단체명', field: 'groupName', hozAlign: 'center' },
-  { title: '인원', field: 'memberCount', hozAlign: 'center' },
-  { title: '장비지원내용', field: 'equipmentNote', hozAlign: 'center' },
-  { title: '지자체 예산지원', field: 'budgetAmount', hozAlign: 'center' },
-  { title: '보험가입', field: 'insuredCount', hozAlign: 'center' },
-  { title: '보유차량', field: 'vehicleCount', hozAlign: 'center' },
-  { title: '포상내용', field: 'awardNote', hozAlign: 'center' },
+const totals = computed(() => ({
+  memberCount: dataRows.value.reduce((s, r) => s + r.memberCount, 0),
+  budgetAmount: dataRows.value.reduce((s, r) => s + r.budgetAmount, 0),
+  insuredCount: dataRows.value.reduce((s, r) => s + r.insuredCount, 0),
+  vehicleCount: dataRows.value.reduce((s, r) => s + r.vehicleCount, 0),
+}))
+
+const columns = [
+  { key: 'id', label: '번호', width: '70px' },
+  { key: 'dept', label: '관서', width: '200px' },
+  { key: 'groupType', label: '단체종류' },
+  { key: 'groupName', label: '단체명' },
+  { key: 'memberCount', label: '인원' },
+  { key: 'equipmentNote', label: '장비지원내용' },
+  { key: 'budgetAmount', label: '지자체 예산지원' },
+  { key: 'insuredCount', label: '보험가입' },
+  { key: 'vehicleCount', label: '보유차량' },
+  { key: 'awardNote', label: '포상내용' },
 ]
 
-const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
+/**
+ * TableWrapper 는 TabulatorGrid 의 download() 가 없어 CSV 를 직접 만든다.
+ * 엑셀이 UTF-8 을 알아보게 BOM 을 붙인다.
+ */
 function onDownloadExcel() {
+  const header = columns.map((c) => c.label)
+  const body = dataRows.value.map((row) => columns.map((c) => String(row[c.key as keyof StatusRow] ?? '')))
+  const totalLine = ['합계', '', '', '', String(totals.value.memberCount), '', String(totals.value.budgetAmount), String(totals.value.insuredCount), String(totals.value.vehicleCount), '']
+
+  const csv = [header, totalLine, ...body]
+    .map((line) => line.map((cell) => `"${cell.replace(/"/g, '""')}"`).join(','))
+    .join('\r\n')
+
   const today = new Date().toISOString().slice(0, 10)
-  gridRef.value?.download('csv', `단체현황_${today}.csv`)
+  const url = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' }))
+  const link = document.createElement('a')
+  link.href = url
+  link.download = `단체현황_${today}.csv`
+  link.click()
+  URL.revokeObjectURL(url)
 }
 
 useSideMenuSetup({ ...publicSafetyMenu, activeChild: '단체현황', openIndex: 2 })

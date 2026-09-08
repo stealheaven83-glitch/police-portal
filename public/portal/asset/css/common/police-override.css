@@ -338,3 +338,70 @@ override
   width: 100%;
   min-width: 0;
 }
+
+/* ══ TableWrapper — 헤더·합계 줄 고정, 본문만 스크롤 ══════════ */
+
+/*
+ * <TableWrapper class="lp-table-sticky"> 로 켠다(TableWrapper 는 루트가 div 하나라
+ * class 가 그대로 흘러간다). 스크롤은 ui/table 이 만드는 컨테이너가 맡고, 그 안에서
+ * thead 와 합계 줄(.row-total)만 sticky 로 남는다.
+ * 합계 줄이 붙는 위치는 헤더 높이라 --lp-thead-h 로 준다 — th 가 h-10(4rem)이므로
+ * 헤더 한 줄이면 4rem, 2단 헤더면 .lp-table-sticky-head2 를 같이 건다.
+ * border-collapse 표는 sticky 칸의 테두리가 스크롤 중 사라져서 box-shadow 로 대신 그린다.
+ */
+.lp-table-sticky {
+  --lp-table-h: 48rem;
+  --lp-thead-h: 4rem;
+}
+.lp-table-sticky-head2 {
+  --lp-thead-h: 8rem;
+}
+.lp-table-sticky [data-slot='table-container'] {
+  max-height: var(--lp-table-h);
+  overflow-y: auto;
+}
+.lp-table-sticky thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--white);
+  box-shadow: inset 0 -0.1rem 0 var(--Border_input01);
+}
+.lp-table-sticky thead tr + tr th {
+  top: 4rem;
+}
+.lp-table-sticky tbody .row-total > td {
+  position: sticky;
+  top: var(--lp-thead-h);
+  z-index: 1;
+  background: var(--white);
+  box-shadow: inset 0 -0.1rem 0 var(--Border_gray03);
+}
+
+/* ══ 대형 검색바(SearchBar) — 검색어 지우기 버튼 ═══════════════ */
+
+/*
+ * 포털 원본 .search-bar 에는 없던 버튼이라 여기서 만든다. 돋보기(.btn-search: 6rem,
+ * 오른쪽 1rem) 왼쪽에 붙인다. .btn 클래스를 주면 원본 규칙이 6rem 원으로 만들어 버리므로
+ * 주지 않는다. 입력 오른쪽 여백은 버튼이 떠 있을 때만 넓힌다 — 늘 넓히면 같은 클래스를 쓰는
+ * 포털 메인(Main.vue)까지 같이 바뀐다.
+ */
+.search-wrap .search-bar .lp-search-clear {
+  position: absolute;
+  top: 50%;
+  right: 8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  transform: translateY(-50%);
+}
+.search-wrap .search-bar .lp-search-clear img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.search-wrap .search-bar.lp-has-clear .input-search {
+  padding-right: 12.2rem;
+}
