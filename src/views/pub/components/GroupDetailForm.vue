@@ -10,7 +10,7 @@ import { Button } from '@/components/custom/button'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
-import AddressSearchDialog from './AddressSearchDialog.vue'
+import { AddressSearchDialog } from '@/components/custom/address'
 import { groupTypeOptions, equipmentColumnLabels, type GroupDetailForm } from '../composable/publicSafety'
 
 /**
@@ -137,24 +137,25 @@ const memberTotal = computed(() => props.form.memberMale + props.form.memberFema
             :options="groupTypeOptions"
             size="sm"
             trigger-class="w-full"
-            class="!space-y-0 flex-1"
+            class="!space-y-0 flex-1 "
             placeholder="선택"
           />
           <InputField2
             v-if="isEtcType"
             v-model="form.groupTypeEtc"
             size="sm"
-             trigger-class="w-full"
+          
             placeholder="단체종류 입력"
-            class="!space-y-0 flex-1 "
+            class="!space-y-0 w-[250px]"
           />
         </div>
       </InfoField>
       <InfoField for="group-name" label="단체명">
         <InputField2 id="group-name" v-model="form.groupName" size="sm" class="!space-y-0 flex-1" />
       </InfoField>
-      <InfoField for="group-founded-date" label="설립일">
-        <DatePicker id="group-founded-date" v-model="form.foundedDate" size="sm" class="!space-y-0 flex-1" />
+      <!-- lp-date-fill: DatePicker 의 class 는 한 겹 안쪽(InputField2)에 붙어서 값 칸을 못 채운다 -->
+      <InfoField for="group-founded-date" label="설립일" class="lp-date-fill">
+        <DatePicker id="group-founded-date" v-model="form.foundedDate" size="sm" class="!space-y-0 flex-1" input-class="w-full" />
       </InfoField>
 
       <InfoField for="group-leader" label="대표자명">
@@ -222,8 +223,8 @@ const memberTotal = computed(() => props.form.memberMale + props.form.memberFema
     <div class="section-bar">
       <h2 id="equipment-heading">장비지원 현황</h2>
       <div class="section-bar-actions">
-        <Button type="button" variant="tertiary2" size="xs" @click="equipmentGridRef?.deleteSelected()">선택삭제</Button>
-        <Button type="button" variant="tertiary2" size="xs" @click="addEquipmentRow">추가</Button>
+        <Button type="button" variant="tertiary2" padding="12" size="xs" @click="equipmentGridRef?.deleteSelected()">선택삭제</Button>
+        <Button type="button" variant="tertiary2" padding="12" size="xs" @click="addEquipmentRow">추가</Button>
       </div>
     </div>
     <TabulatorGrid
@@ -241,8 +242,8 @@ const memberTotal = computed(() => props.form.memberMale + props.form.memberFema
     <div class="section-bar">
       <h2 id="budget-heading">지자체 예산 지원 현황</h2>
       <div class="section-bar-actions">
-        <Button type="button" variant="tertiary2" size="xs" @click="budgetGridRef?.deleteSelected()">선택삭제</Button>
-        <Button type="button" variant="tertiary2" size="xs" @click="addBudgetRow">추가</Button>
+        <Button type="button" variant="tertiary2" size="xs" padding="12" @click="budgetGridRef?.deleteSelected()">선택삭제</Button>
+        <Button type="button" variant="tertiary2" size="xs" padding="12" @click="addBudgetRow">추가</Button>
       </div>
     </div>
     <TabulatorGrid
@@ -260,8 +261,8 @@ const memberTotal = computed(() => props.form.memberMale + props.form.memberFema
     <div class="section-bar">
       <h2 id="award-heading">포상 현황</h2>
       <div class="section-bar-actions">
-        <Button type="button" variant="tertiary2" size="xs" @click="awardGridRef?.deleteSelected()">선택삭제</Button>
-        <Button type="button" variant="tertiary2" size="xs" @click="addAwardRow">추가</Button>
+        <Button type="button" variant="tertiary2" size="xs" padding="12" @click="awardGridRef?.deleteSelected()">선택삭제</Button>
+        <Button type="button" variant="tertiary2" size="xs" padding="12" @click="addAwardRow">추가</Button>
       </div>
     </div>
     <TabulatorGrid

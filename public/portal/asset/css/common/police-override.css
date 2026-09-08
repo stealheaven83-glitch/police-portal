@@ -319,3 +319,22 @@ override
     border-left: 1px solid var(--Border_gray02);
   }
 }
+
+/*
+ * DatePicker 를 InfoField 값 칸 폭에 꽉 채운다. InfoField 에 건다.
+ *
+ * DatePicker 는 `class` 를 VueDatePicker 루트가 아니라 #dp-input 슬롯 안의 InputField2 에
+ * 넘기고(inheritAttrs:false 라 폴스루도 없다), 값 칸(.control)의 직계 자식은 라이브러리가
+ * 만드는 .dp--main 이다(v14 클래스명 — dp__main 이 아니다). 그래서 화면에서 `class="flex-1"` 을
+ * 줘도 한 겹 안쪽에 붙어 헛돈다.
+ * 라이브러리 main.css 가 .dp--main 에 width:100% 를 주지만, .control 이 flex 라 flex:0 1 auto 로
+ * 줄어들 수 있어 그것만으로는 칸을 못 채운다 — flex 를 같이 줘야 한다.
+ *
+ * 라이브러리 내부 클래스를 겨냥하므로 common 이 아니라 이 파일이다.
+ * DatePicker 에 래퍼용 prop 이 생기면 이 클래스는 걷어낸다.
+ */
+.lp-date-fill .dp--main {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+}

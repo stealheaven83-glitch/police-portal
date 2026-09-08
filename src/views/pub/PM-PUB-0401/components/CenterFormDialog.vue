@@ -80,16 +80,18 @@
       <Button type="button" variant="primary" size="md" @click="onSave">저장</Button>
     </template>
   </GenericDialog2>
+
+  <AddressSearchDialog v-model:open="addressSearchOpen" @select="onSelectAddress" />
 </template>
 
 <script setup lang="ts">
-import { inject } from 'vue'
+import { inject, ref } from 'vue'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
-import AddressInput from '@/components/custom/address/AddressInput.vue'
+import { AddressInput, AddressSearchDialog } from '@/components/custom/address'
 import { useDialog } from '@/composable/dialog/dialog'
 import { SunflowerCenterKey, officeOptions } from '../composable/PM-PUB-0401'
 import styles from '@/components/custom/info-table/InfoTable.module.css'
@@ -99,9 +101,15 @@ const { formDialogOpen, formMode, form, validateForm, commitForm } = store
 
 const dialog = useDialog()
 
-/** 주소검색 팝업은 개발팀 연동 대상이라 화면단에서는 안내만 낸다 */
-async function onAddressSearch() {
-  await dialog.alert({ title: '주소검색은 연동 후 제공됩니다.', btnCancel: '확인' })
+/** 주소검색 팝업(공통) — AddressInput 의 @search 를 받아 연다 */
+const addressSearchOpen = ref(false)
+
+function onAddressSearch() {
+  addressSearchOpen.value = true
+}
+
+function onSelectAddress(address: string) {
+  form.value.address = address
 }
 
 async function onSave() {

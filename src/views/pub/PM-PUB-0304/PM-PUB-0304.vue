@@ -197,7 +197,7 @@ import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tab
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { publicSafetyMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
-import AddressSearchDialog from '../components/AddressSearchDialog.vue'
+import { AddressSearchDialog } from '@/components/custom/address'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
 import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
 

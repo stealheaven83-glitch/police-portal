@@ -166,7 +166,10 @@ common
 }
 
 /* ══ 구역 · 표 ════════════════════════════════════════════════ */
-
+.lp-section:first-child{
+  padding-top:2rem;
+  border-top:1px solid #1E2124;
+}
 .lp-section + .lp-section {
   margin-top: 3.2rem;
 }

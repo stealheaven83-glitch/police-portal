@@ -304,3 +304,20 @@
     border-bottom: 1px solid var(--Border_gray03, #e6e8ea);
   }
 }
+
+/*
+ * 라벨 없이 버튼만 들어가는 칸(검색 폼 오른쪽 끝의 초기화·검색 등).
+ * InfoField 는 라벨 칸을 항상 그리므로 그 칸을 접고 값 영역을 오른쪽으로 붙인다.
+ * 라벨이 비어 있을 뿐인 자리(.field 그대로 회색 빈칸)와는 다른 것 — 여긴 라벨 칸 자체가 없다.
+ */
+.info-table-actions {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.info-table-actions > .label {
+  display: none;
+}
+
+.info-table-actions > .control {
+  justify-content: flex-end;
+}
