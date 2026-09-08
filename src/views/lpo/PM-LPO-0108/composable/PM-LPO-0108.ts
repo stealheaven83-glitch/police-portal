@@ -5,30 +5,42 @@ import type { ScheduleDay, ScheduleEvent } from '@/components/custom/calendar/Mo
 export interface DutyItem {
   /** 'YYYY-MM-DD' */
   date: string
-  /** 근무구분 배지 (주간/야간/심야/당직/사고/휴가) */
+  /** 근무구분 배지 */
   kind: DutyKind
   /** 시작 시각 또는 '09:30~15:00' 같은 구간 */
   time: string
   /** 근무명 (예: 상황 근무) — 상세 팝오버에만 나온다 */
   name?: string
-  /** 자원근무 표시 */
+  /** 자원근무 신청 건 — 기획서 3: 이름 뒤에 (자원) 을 붙인다 */
   volunteer?: boolean
   /** 함께 근무하는 사람 */
   members?: string[]
-  /** 사고 사유 (예: 병가) */
+  /** 사고 사유 (예: 병가) — 기획서 2 */
   reason?: string
 }
 
-export type DutyKind = '주간' | '야간' | '심야' | '당직' | '사고' | '휴가'
+/**
+ * 근무형태 8종 (기획서 1: 주-오-야-휴-비-심-당-탄).
+ * 시안에 배지가 있는 7종만 색을 확정했고, '탄력'은 시안이 없어 목업에도 넣지 않았다.
+ */
+export type DutyKind = '주간' | '오후' | '야간' | '심야' | '당직' | '휴가' | '비번' | '사고'
 
-/** 근무구분 → 배지 색 */
+/**
+ * 근무구분 → 공통 Badge 색.
+ * Figma 배지는 공통 컴포넌트 인스턴스라 컴포넌트 이름이 곧 색이다
+ * (`solid/info/small` = 주간·오후, `solid/secondary/small` = 야간·심야,
+ *  휴가·비번은 연회색(#E6E8EA + 진한 글자)이라 grayLighter, `solid/success/small` = 당직,
+ *  `solid/danger/small` = 사고). 새 색을 만들 필요가 없다.
+ */
 const KIND_COLOR: Record<DutyKind, NonNullable<ScheduleEvent['color']>> = {
-  주간: 'primary',
+  주간: 'info',
+  오후: 'info',
   야간: 'secondary',
-  심야: 'tertiary',
+  심야: 'secondary',
   당직: 'success',
-  사고: 'danger',
   휴가: 'grayLighter',
+  비번: 'grayLighter',
+  사고: 'danger',
 }
 
 /** 공휴일 — 실제로는 서버가 내려준다 */
@@ -57,7 +69,8 @@ function createMockDuties(): DutyItem[] {
     { date: '2026-09-22', kind: '주간', time: '09:00', name: '상황 근무' },
     { date: '2026-09-24', kind: '주간', time: '09:00', name: '상황 근무' },
     { date: '2026-09-25', kind: '주간', time: '09:00', name: '상황 근무' },
-    { date: '2026-09-26', kind: '휴가', time: '', name: '연가' },
+    // 시안(13175:96418)의 26일 — 추석 + 비번
+    { date: '2026-09-26', kind: '비번', time: '', name: '비번' },
     { date: '2026-09-27', kind: '주간', time: '09:00', name: '상황 근무' },
     { date: '2026-09-29', kind: '당직', time: '18:00', name: '당직' },
   ]
@@ -92,5 +105,10 @@ export function useDutySchedule() {
     return `${y}년 ${Number(m)}월 ${Number(d)}일`
   }
 
-  return { year, month, duties, days, dutiesOn, formatDay, KIND_COLOR }
+  /** 기획서 3: 자원근무 건은 근무자 뒤에 (자원) 을 붙인다 */
+  function membersText(duty: DutyItem) {
+    return (duty.members ?? []).join(', ')
+  }
+
+  return { year, month, duties, days, dutiesOn, formatDay, membersText, KIND_COLOR }
 }

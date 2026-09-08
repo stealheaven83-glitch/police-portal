@@ -73,6 +73,28 @@ const router = createRouter({
             }
         },
         {
+            // 출동수당 화면군 — PM-LPO-0110(출동사건정보)은 이 화면 안의 팝업이라 같은 파일을
+            // 가리킨다. screenGroup 이 같아야 팝업을 열 때 Layout.vue 의 :key 가 안 바뀐다.
+            path: '/views/lpo/PM-LPO-0109',
+            name: 'PM-LPO-0109',
+            component: () => import('../views/lpo/PM-LPO-0109/PM-LPO-0109.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '출동수당',
+                screenGroup: 'PM-LPO-0109',
+            }
+        },
+        {
+            path: '/views/lpo/PM-LPO-0110',
+            name: 'PM-LPO-0110',
+            component: () => import('../views/lpo/PM-LPO-0109/PM-LPO-0109.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '출동사건정보',
+                screenGroup: 'PM-LPO-0109',
+            }
+        },
+        {
             path: '/views/lpo/PC-LPO-0701',
             name: 'PC-LPO-0701',
             component: () => import('../views/lpo/PC-LPO-0701/PC-LPO-0701.vue'),

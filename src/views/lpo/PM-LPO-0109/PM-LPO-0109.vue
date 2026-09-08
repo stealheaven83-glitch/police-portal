@@ -2,10 +2,13 @@
   <PageHeader>
     <template #left>
       <PageTitle title="출동수당" />
-    </template>
+      </template>
     <template #right>
-      <Breadcrumb :items="navItems" />
-    </template>
+      <span class="group-gap2">
+        <Breadcrumb :items="navItems" />
+        <HelpButton />
+      </span>
+      </template>
   </PageHeader>
 
   <SearchWrapper>
@@ -39,15 +42,18 @@
     show-pagination
     :items-per-page="10"
   />
+
+  <!-- PM-LPO-0110 출동사건정보 — 접수번호를 누르면 열린다 -->
+  <DispatchCaseDialog v-model:open="caseDialogOpen" :info="caseInfo" />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Download } from 'lucide-vue-next'
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import { Button } from '@/components/custom/button'
@@ -55,7 +61,9 @@ import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tab
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
-import { useDispatchAllowanceList } from './composable/PM-LPO-0109'
+import { useAutoTrigger, type ScreenTriggerMap } from '@/composables/useAutoTrigger'
+import DispatchCaseDialog from './components/DispatchCaseDialog.vue'
+import { useDispatchAllowanceList, type DispatchAllowanceRow } from './composable/PM-LPO-0109'
 
 defineOptions({ name: 'PmLpo0109' })
 
@@ -68,13 +76,25 @@ const navItems = [
   { label: '출동수당' },
 ]
 
-const { dateFrom, dateTo, rows } = useDispatchAllowanceList()
+const { dateFrom, dateTo, rows, search, caseDialogOpen, caseInfo, openCase } = useDispatchAllowanceList()
 
 const columns: TabulatorGridColumn[] = [
   { title: '번호', field: 'no', width: 60, hozAlign: 'center' },
   { title: '접수일시', field: 'receivedAt', width: 181, hozAlign: 'center' },
   { title: '범죄명', field: 'crimeName', width: 181, hozAlign: 'center' },
-  { title: '접수번호', field: 'receiptNo', width: 181, hozAlign: 'center' },
+  {
+    title: '접수번호',
+    field: 'receiptNo',
+    width: 181,
+    hozAlign: 'center',
+    // 시안: 밑줄 링크 — 누르면 출동사건정보 팝업(PM-LPO-0110)
+    cellType: 'button',
+    buttonVariant: 'link',
+    buttonSize: 'xxs',
+    buttonClass: 'underline',
+    buttonLabel: (row) => String((row as DispatchAllowanceRow).receiptNo),
+    onButtonClick: (row) => openCase(row as DispatchAllowanceRow),
+  },
   { title: '사건번호', field: 'caseNo', width: 160, hozAlign: 'center' },
   { title: '도착소요시간', field: 'arrivalTime', width: 181, hozAlign: 'center' },
   { title: '종결일시', field: 'closedAt', width: 181, hozAlign: 'center' },
@@ -84,14 +104,27 @@ const columns: TabulatorGridColumn[] = [
 
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 
+/** 기간검색으로 목업 목록을 거른다 (실제 조회는 개발팀) */
 function onSearch() {
-  toast.success('조회되었습니다.')
+  search()
 }
 
 function onDownloadExcel() {
   const today = new Date().toISOString().slice(0, 10)
   gridRef.value?.download('csv', `출동수당_${today}.csv`)
 }
+
+/**
+ * 화면ID ↔ 팝업 상태 동기화 (PM-LPO-0106/0107 과 같은 방식).
+ *   PM-LPO-0109 출동수당 목록 · PM-LPO-0110 출동사건정보 팝업
+ * URL 만으로는 어느 건인지 알 수 없어(useAutoTrigger 의 알려진 한계) 직접 진입 시엔
+ * 목업 기본 건이 열린다.
+ */
+const screenTriggers: ScreenTriggerMap = {
+  'PM-LPO-0109': [[caseDialogOpen, false]],
+  'PM-LPO-0110': [[caseDialogOpen, true]],
+}
+useAutoTrigger(screenTriggers)
 
 useBottomTabSetup({
   value: 'PM-LPO-0109',

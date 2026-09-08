@@ -376,10 +376,6 @@ export function useCpoList() {
     historyRows.value = createHistoryRows(row)
   }
 
-  function search() {
-    // TODO: API 연동. 지금은 더미 목록이라 조회 조건이 결과에 반영되지 않는다.
-    toast.success('조회되었습니다.')
-  }
 
   /** 신규 등록 팝업(PM-PUB-0114) 상태 */
   const newDiagnosisDialogOpen = ref(false)
@@ -618,7 +614,6 @@ export function useCpoList() {
     selectRow,
     /** PC-PUB-0105 팝업 안 목록에서 다른 건을 고르면 상세 폼을 다시 채우는 데 쓴다 */
     loadDiagnosis,
-    search,
     newDiagnosisDialogOpen,
     newHistoryDialogOpen,
     detailDialogOpen,
