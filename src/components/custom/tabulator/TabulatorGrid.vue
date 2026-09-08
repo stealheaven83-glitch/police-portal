@@ -666,6 +666,8 @@ function inputCellFormatter(col: TabulatorGridColumn, columnKey: string) {
             size: 'sm',
             clearable: Boolean(col.cellClearable),
             placeholder: col.cellPlaceholder,
+            // 안 넘기면 undefined 라 제한 없음 — 지금까지 동작 그대로다
+            maxlength: col.cellMaxLength,
             ...(col.cellIcon
               ? {
                   icon: col.cellIcon,
@@ -694,6 +696,8 @@ function inputCellFormatter(col: TabulatorGridColumn, columnKey: string) {
             size: 'sm',
             // 값이 비어 있을 때 안내 문구(시안에서 '부서조회'처럼 회색으로 깔리는 글자)
             placeholder: col.cellPlaceholder,
+            // Input 은 prop 이 아니라 attrs 폴스루로 native input 에 그대로 붙는다
+            maxlength: col.cellMaxLength,
             'onUpdate:modelValue': (val: string | number) => {
               value.value = String(val)
             },

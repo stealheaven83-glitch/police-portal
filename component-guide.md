@@ -506,12 +506,16 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-search-hero` | 큰 검색바 — 위 여백 크게(검색 전) | 0801, 0802 |
 | `.lp-search-center` | 검색한 뒤라 위 여백 없이 붙는 검색바 | IRC-0101 |
 | `.lp-content-panel` / `.lp-content-panel-pad` | 본문 폭 120rem 가운데 / 좌우 여백 | 0801, 0802, IRC-0101 |
+| `.lp-keyword-split` | **override** — `SearchKeywordPanel` 두 칸을 시안 비율(795:356)로 나누고 사이에 세로 구분선. 컴포넌트 기본은 반반(`grid-cols-2`)에 구분선 없음. `lg` 이상에서만 걸어 모바일 1칸 접힘을 살린다 | IRC-0101 |
 | `.lp-result-section` / `.lp-result-item` / `.lp-result-summary` | 카테고리 구역 / 결과 한 건 / 2줄 말줄임 요약 | 0802 |
 | `.lp-result-pagination` | 결과 아래 페이지네이션 여백 | 0802 |
 | `.lp-link-list` / `.lp-path-link` | 메뉴 경로 링크만 나열 / 그 링크(Figma button_link) | 0802 |
 | `.lp-ai-answer` + `-head` `-icon` `-body` | AI 생성 답변 상자 | IRC-0101 |
-| `.lp-answer-block` / `.lp-block-title` / `.lp-bullet-list` / `.lp-answer-note` | 답변 안 소구역 / 그 제목 여백 / 불릿 / 하단 주의문 | IRC-0101 |
-| `.lp-ref-column` / `.lp-ref-card` / `.lp-ref-card-desc` | 우측 참고자료 칸 / 카드 / 2줄 말줄임 설명 | IRC-0101 |
+| `.lp-answer-block` / `.lp-block-title` / `.lp-bullet-list` / `.lp-answer-note` | 답변 안 소구역 / 그 제목 여백 / 불릿 / **칸 맨 아래에 붙는** 주의문(`margin-top:auto` — 세로 flex 부모 안에서만 의도대로 선다) | IRC-0101 |
+| `.lp-answer-main` | AI 답변의 **좌측 본문 칸**. 주의문을 바닥에 붙이려고 세로 flex 다 — 남는 폭만 채우면 되는 자리엔 `.lp-flex-fill` 을 쓴다 | IRC-0101 |
+| `.lp-ref-column` | 우측 참고자료 칸. **왼쪽 세로 구분선을 이 칸이 그린다**(본문 칸 높이만큼 꽉 차야 해서). 폭 29.2rem + 여백 2.4rem + 선 0.1rem = 31.7rem | IRC-0101 |
+| `.lp-ref-list` / `.lp-ref-desc` / `.lp-ref-link` | 참고자료 아코디언 목록(간격 1.2rem) / 펼쳤을 때 설명(1.5rem) / 그 아래 문서 링크(1.3rem 밑줄) | IRC-0101 |
+| `.lp-ref-item` / `.lp-ref-trigger` / `.lp-ref-body` | **override** — `custom/accordion` 의 카드·트리거·본문 기본 모양(높이·글자·아래선·여백)을 참고자료 시안에 맞게 되돌린다. 아코디언을 카드 안에 얹을 때만 쓴다 | IRC-0101 |
 
 #### 메모 목록 카드 · 등록 폼
 
@@ -534,6 +538,9 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-imgpick-grid` `-tile` `-tile-on` `-tile-off` `-thumb` `-pick` | 이미지 선택 팝업의 타일 그리드 | LPO-0122 |
 | `.lp-stepper` `-btn` `-value` | 숫자 증감 입력(`NumberStepper`) 전용 | LPO-0214 |
 | `.lp-duty-table` `-col-date` `-col-side` `-line` `-remove` | 근무현황 표(한 칸에 여러 줄이 들어가 Tabulator 를 못 쓴다) | LPO-0216 |
+| `.lp-roster-toolbar` `.lp-roster-title` `.lp-roster-table` `-col-check` `-col-order` `.lp-roster-empty` | 근무자 목록 표(좁은 패널 안, 칸에 체크박스·입력이 들어가 세로 가운데 정렬). 조회 전용인 `.lp-duty-table` 과 의도가 다르다 | LPO-0202 |
+| `.lp-schedule-scroll` `.lp-schedule-table` `.lp-schedule-cell` `-btn` `.lp-schedule-name` | 근무지정표(甲지) 배정 표 — 시간대 12칸이 가로로 늘어서 가로 스크롤, 칸 안쪽이 배정 팝업을 여는 버튼 | LPO-0202 |
+| `.lp-notes-row` `-label` `-body` | 표 아래 붙는 라벨+입력 한 상자(중요지시사항) | LPO-0202 |
 | `.lp-em-primary` / `.lp-em-danger` | 문장 안 한 낱말만 색으로 강조(굵기는 `<b>` 가) | LPO-0208, 0216, 0217 |
 | `.lp-field-inline` | 라벨 아래 입력+버튼이 한 줄로 붙는 칸(부서명 + 부서 검색) | COM-1003, 1004 |
 | `.lp-field-table` `-center` `-empty` | `FieldTable` 전용 — InfoField 칸 안에 들어가는 정적 표 | LPO-0601 |

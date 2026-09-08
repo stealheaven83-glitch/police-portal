@@ -295,3 +295,27 @@ override
 .lp-ref-body {
   padding: 1.2rem 0 0;
 }
+
+/*
+ * 최근검색어 : 추천검색어 두 칸을 시안 비율로 나누고 사이에 세로 구분선을 넣는다
+ * (Figma 12507:156372 — 795 : 356, 구분선 x=819).
+ * SearchKeywordPanel 은 기본이 반반(grid-cols-2)에 gap 4rem 이고 구분선이 없다.
+ * 그 컴포넌트를 PM-COM-0801(통합검색)과 공유하므로 컴포넌트를 고치지 않고 여기서 덮는다.
+ *
+ * 칸 경계를 819:381 로 잡아 둘째 칸의 border-left 가 곧 시안의 구분선 자리가 되게 하고,
+ * 사이 여백(24)은 각 칸의 안쪽 여백(px-6=24)에 더해 준다 → 내용은 24..771 / 868..1176.
+ * 컴포넌트가 lg 미만에서 한 칸으로 접히므로 같은 분기점 위에서만 건다.
+ */
+@media (min-width: 1024px) {
+  .lp-keyword-split {
+    gap: 0;
+    grid-template-columns: minmax(0, 819fr) minmax(0, 381fr);
+  }
+  .lp-keyword-split > section:first-child {
+    padding-right: 4.8rem;
+  }
+  .lp-keyword-split > section + section {
+    padding-left: 4.8rem;
+    border-left: 1px solid var(--Border_gray02);
+  }
+}

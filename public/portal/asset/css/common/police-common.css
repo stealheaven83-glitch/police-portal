@@ -1694,6 +1694,7 @@ common
   font-weight: inherit;
 }
 
+<<<<<<< HEAD
 /* InfoField 값 칸을 세로 구분선으로 2등분한다 (예: '등급 | 값' — 범죄 특성, 인구 사회학적 특성).
    InfoField .control 의 안쪽 여백(0.4rem 1.2rem)을 음수 마진으로 정확히 상쇄해 구분선이 칸 끝까지
    닿게 하고, 각 칸이 같은 여백을 다시 준다. 두 값이 어긋나면 선이 칸 밖으로 삐져나온다. */
@@ -1748,4 +1749,131 @@ common
 }
 .lp-score-unit {
   padding-left: 0.4rem;
+=======
+/* ── 근무자 목록 표(근무지정표작성 좌측 패널) ───────────────────────────── */
+/* 탭(일반근무자·자원근무자·사고자)이 돌려 쓰는 좁은 목록 표.
+   조회용인 .lp-duty-table 과 달리 체크박스·입력이 칸에 들어가 세로 가운데 정렬이다 */
+.lp-roster-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 1.2rem;
+}
+.lp-roster-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--Text-body_0);
+}
+.lp-roster-table {
+  width: 100%;
+  border-top: 0.1rem solid var(--Border_gray01);
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.lp-roster-col-check {
+  width: 4.4rem;
+}
+.lp-roster-col-order {
+  width: 6.4rem;
+}
+.lp-roster-table th,
+.lp-roster-table td {
+  padding: 0.8rem;
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
+  text-align: center;
+  vertical-align: middle;
+  border-bottom: 0.1rem solid var(--Border_gray02);
+}
+.lp-roster-table thead th {
+  font-weight: 500;
+  color: var(--Text-body_1);
+  background: var(--Background-gray01);
+}
+.lp-roster-empty {
+  color: var(--Text-body_2);
+}
+
+/* ── 근무지정표(甲지) 배정 표 ───────────────────────────────────────────── */
+/* 시간대 12칸이 가로로 늘어서 좁은 화면에서는 가로 스크롤로 본다.
+   칸마다 클릭해 배정 팝업을 열므로 칸 안쪽이 버튼이다 */
+.lp-schedule-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+.lp-schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.lp-schedule-table th,
+.lp-schedule-table td {
+  min-width: 8rem;
+  font-size: 1.4rem;
+  color: var(--Text-body_0);
+  text-align: center;
+  vertical-align: middle;
+  border: 0.1rem solid var(--Border_gray02);
+}
+.lp-schedule-table th {
+  padding: 0.8rem 1rem;
+  font-weight: 600;
+  color: var(--Text-body_1);
+  background: var(--Background-gray01);
+}
+.lp-schedule-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.lp-schedule-table tbody th {
+  white-space: nowrap;
+}
+/* 칸 전체가 클릭 영역이라 padding 은 안쪽 버튼이 갖는다 */
+.lp-schedule-cell {
+  padding: 0;
+}
+.lp-schedule-cell-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  width: 100%;
+  min-height: 4.4rem;
+  padding: 0.8rem 1rem;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.lp-schedule-cell-btn:hover {
+  background: var(--Surface-primary);
+}
+.lp-schedule-name {
+  color: var(--Base-primary);
+}
+
+/* 근무지정표 아래 중요지시사항 — 라벨 칸 + 입력 칸이 한 상자로 보인다 */
+.lp-notes-row {
+  display: flex;
+  align-items: stretch;
+  margin-top: 1.6rem;
+  border: 0.1rem solid var(--Border_gray02);
+}
+.lp-notes-label {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 14rem;
+  font-size: 1.5rem;
+  color: var(--Text-body_1);
+  background: var(--Background-gray01);
+}
+.lp-notes-body {
+  flex: 1;
+  min-width: 0;
+  padding: 0.8rem;
+>>>>>>> b5d1ae0a7273c40bb525cf872640ec5772aed4ec
 }

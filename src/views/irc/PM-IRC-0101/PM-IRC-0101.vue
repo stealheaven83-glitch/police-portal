@@ -20,10 +20,10 @@
       @search="onSearch"
     />
 
-    <!-- 검색 전: 최근검색어 · 추천검색어 -->
+    <!-- 검색 전: 최근검색어 · 추천검색어 (시안은 반반이 아니라 795:356 + 세로 구분선) -->
     <SearchKeywordPanel
       v-if="!searched"
-      class="lp-content-panel"
+      class="lp-content-panel lp-keyword-split"
       :recent="recentKeywords"
       :recommended="recommendedKeywords"
       @select="onSelectKeyword"

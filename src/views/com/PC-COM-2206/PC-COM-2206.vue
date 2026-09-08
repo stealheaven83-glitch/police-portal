@@ -143,16 +143,20 @@ const childGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const selectedParentCount = ref(0)
 const selectedChildCount = ref(0)
 
+/*
+ * cellMaxLength 값은 화면단 입력 제한일 뿐이고 서버/DB 자릿수와 맞춰야 한다 —
+ * 스펙을 못 받아 통상값으로 넣어 뒀으니 개발팀 확인 후 조정한다.
+ */
 const parentColumns: TabulatorGridColumn[] = [
   { title: '상위코드', field: 'name', hozAlign: 'center' },
-  { title: '공통코드', field: 'code', cellType: 'input', hozAlign: 'center' },
+  { title: '공통코드', field: 'code', cellType: 'input', hozAlign: 'center', cellMaxLength: 20 },
 ]
 
 const childColumns: TabulatorGridColumn[] = [
-  { title: '공통코드', field: 'code', cellType: 'input', hozAlign: 'center' },
-  { title: '코드명', field: 'name', cellType: 'input', hozAlign: 'center' },
-  { title: '코드설명', field: 'description', cellType: 'input', hozAlign: 'center' },
-  { title: '순번', field: 'sortOrder', width: 90, cellType: 'input', hozAlign: 'center' },
+  { title: '공통코드', field: 'code', cellType: 'input', hozAlign: 'center', cellMaxLength: 20 },
+  { title: '코드명', field: 'name', cellType: 'input', hozAlign: 'center', cellMaxLength: 50 },
+  { title: '코드설명', field: 'description', cellType: 'input', hozAlign: 'center', cellMaxLength: 5 },
+  { title: '순번', field: 'sortOrder', width: 90, cellType: 'input', hozAlign: 'center', cellMaxLength: 4 },
   { title: '사용', field: 'use', width: 100, cellType: 'switch', hozAlign: 'center' },
 ]
 

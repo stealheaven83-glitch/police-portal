@@ -87,7 +87,7 @@ const columns: TabulatorGridColumn[] = [
     cellType: 'badge',
     badgeColorMap: { 활성화: 'success', 비활성화: 'danger', 대기중: 'warning' },
   },
-  { title: '비고', field: 'memo', minWidth: 80, hozAlign: 'center', cellType: 'input' },
+  { title: '비고', field: 'memo', minWidth: 80, hozAlign: 'center', cellType: 'input', cellMaxLength: 20 },
   {
     title: '관리',
     width: 120,
