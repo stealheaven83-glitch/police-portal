@@ -3,7 +3,7 @@ import type { HTMLAttributes } from 'vue'
 import { computed, ref, watch } from 'vue'
 import { ChevronDown } from 'lucide-vue-next'
 import { cn } from '@/lib/utils'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger } from 'reka-ui'
 import { Checkbox } from '@/components/custom/checkbox'
 import { Button } from '@/components/custom/button'
 
@@ -80,50 +80,63 @@ const sizeClass = computed(() => {
 })
 </script>
 
-<template>
-  <Popover v-model:open="open">
-    <PopoverTrigger as-child :disabled="disabled">
-      <button
-        type="button"
-        :class="cn(
-          'group flex w-full items-center justify-between gap-2 border bg-white font-normal outline-none text-left',
-          'border-[var(--Border_input01)]',
-          !modelValue.length && 'text-[var(--Text-body_disable)]',
-          'focus-visible:border-[var(--Border_primary)] focus-visible:border-2',
-          'data-[state=open]:border-[var(--Border_primary)] data-[state=open]:border-2',
-          'disabled:pointer-events-none disabled:cursor-not-allowed disabled:border-[var(--disabled-input-border)] disabled:bg-[var(--disabled-input-bg)] disabled:text-[var(--disabled-input-text-color)]',
-          sizeClass,
-          triggerClass,
-        )"
-        :disabled="disabled"
-        v-bind="$attrs"
-      >
-        <span class="truncate">{{ previewText }}</span>
-        <ChevronDown class="size-5 shrink-0 text-[var(--icon-gray)] transition-transform duration-200 group-data-[state=open]:rotate-180" />
-      </button>
-    </PopoverTrigger>
 
-    <PopoverContent class="w-64 p-0" align="start">
-      <fieldset class="p-3">
-        <legend class="px-1 pb-2 text-[1.4rem] font-semibold text-[var(--Text-body_0)]">
-          {{ groupLabel }}
-        </legend>
-        <ul class="max-h-60 space-y-0.5 overflow-y-auto">
-          <li v-for="opt in options" :key="opt.value">
-            <Checkbox
-              :model-value="draft.includes(opt.value)"
-              :label="opt.label"
-              class="w-full px-2 py-1.5"
-              @update:model-value="(checked) => toggleDraft(opt.value, !!checked)"
-            />
-          </li>
-        </ul>
-      </fieldset>
-      <div class="flex justify-end border-t p-2">
-        <Button type="button" variant="primary" size="xs" @click="apply">
-          {{ confirmText }}
-        </Button>
-      </div>
-    </PopoverContent>
-  </Popover>
+<template>
+  <PopoverRoot v-model:open="open">
+    <!-- relative: 팝오버(absolute)의 containing block 을 여기로 잡아야 스크롤 컨테이너 overflow 에 잘린다 -->
+    <div class="relative">
+      <PopoverTrigger as-child :disabled="disabled">
+        <button
+          type="button"
+          :class="cn(
+            'group flex w-full items-center justify-between gap-2 border bg-white font-normal outline-none text-left',
+            'border-[var(--Border_input01)]',
+            !modelValue.length && 'text-[var(--Text-body_disable)]',
+            'focus-visible:border-[var(--Border_primary)] focus-visible:border-2',
+            'data-[state=open]:border-[var(--Border_primary)] data-[state=open]:border-2',
+            'disabled:pointer-events-none disabled:cursor-not-allowed disabled:border-[var(--disabled-input-border)] disabled:bg-[var(--disabled-input-bg)] disabled:text-[var(--disabled-input-text-color)]',
+            sizeClass,
+            triggerClass,
+          )"
+          :disabled="disabled"
+          v-bind="$attrs"
+        >
+          <span class="truncate">{{ previewText }}</span>
+          <ChevronDown class="size-5 shrink-0 text-[var(--icon-gray)] transition-transform duration-200 group-data-[state=open]:rotate-180" />
+        </button>
+      </PopoverTrigger>
+
+      <!-- portal disabled + absolute: 트리거 옆에 제자리 렌더 → 스크롤 컨테이너 overflow 에 잘린다 -->
+      <PopoverPortal disabled>
+        <PopoverContent
+          class="z-50 w-64 rounded-md border border-[var(--Border_input01)] bg-white shadow-md outline-none"
+          align="start"
+          :side-offset="4"
+          :avoid-collisions="false"
+          position-strategy="absolute"
+        >
+          <fieldset class="p-3">
+            <legend class="px-1 pb-2 text-[1.4rem] font-semibold text-[var(--Text-body_0)]">
+              {{ groupLabel }}
+            </legend>
+            <ul class="max-h-60 space-y-0.5 overflow-y-auto">
+              <li v-for="opt in options" :key="opt.value">
+                <Checkbox
+                  :model-value="draft.includes(opt.value)"
+                  :label="opt.label"
+                  class="w-full px-2 py-1.5"
+                  @update:model-value="(checked) => toggleDraft(opt.value, !!checked)"
+                />
+              </li>
+            </ul>
+          </fieldset>
+          <div class="flex justify-end border-t p-2">
+            <Button type="button" variant="primary" size="xs" @click="apply">
+              {{ confirmText }}
+            </Button>
+          </div>
+        </PopoverContent>
+      </PopoverPortal>
+    </div>
+  </PopoverRoot>
 </template>
