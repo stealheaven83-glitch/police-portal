@@ -14,7 +14,7 @@
     </div>
     <p :class="styles.resultGuide">* &lt;개별항목&gt; 위험하다고 판단된 세부 내용들입니다.</p>
     <TableWrapper :class="styles.figmaTable" :columns="resultColumns" :items="resultItems" :show-pagination="false" />
-    <InfoTable :columns="1" size="120" :class="styles.mailNoteTable">
+    <InfoTable :columns="1" popup size="120" :class="styles.mailNoteTable">
       <InfoField label="착안사항" full>
         {{ note || '시골 농촌지역으로 파출소 근처에 있어 대체로 위험성이 없는 편임.' }}
       </InfoField>

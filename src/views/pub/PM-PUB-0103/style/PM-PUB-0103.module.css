@@ -4,11 +4,6 @@
   color: var(--Text-body_1);
 }
 
-/* 이 팝업은 블록이 세로로 쌓여서 시안 간격이 16px 다 (InfoTable popup 의 0.7rem 대신 쓴다) */
-.mailNoteTable {
-  margin-top: 1.6rem;
-}
-
 .mailNoteTable > * {
   min-height: 8rem;
 }
