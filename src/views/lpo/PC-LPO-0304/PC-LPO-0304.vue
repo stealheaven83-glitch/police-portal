@@ -10,7 +10,6 @@
       </span>
     </template>
   </PageHeader>
-
   <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
     <template #department>
       <span class="dept-name">부서</span>

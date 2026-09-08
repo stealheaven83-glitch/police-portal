@@ -266,6 +266,9 @@
 .lp-field-flush > :last-child {
   padding: 0;
 }
+.lp-field-flush .no-padding {
+  padding: 0!important;
+}
 
 /*
  * 참고자료 아코디언 — custom/accordion 의 기본 모양을 시안(14400:107345)에 맞춘다.
@@ -457,4 +460,10 @@
   width: 2.4rem;
   height: 2.4rem;
   opacity: 1;
+}
+
+.search-btns{
+  display: flex;
+  align-items: flex-end;
+  gap: 2.4rem;
 }

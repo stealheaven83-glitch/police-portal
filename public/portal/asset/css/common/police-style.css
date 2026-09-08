@@ -1587,6 +1587,16 @@ html.theme-dark .rowgroup.notice .notice-list .noticeSwiper .swiper-nav .slide-a
   align-items: center;
   gap: calc(var(--spacing) * 3);
 }
+.group-gap5{
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 5);
+}
+.group-gap6{
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 6);
+}
 
 /*panel 조회 영역 wrapper*/
 .panel-search{

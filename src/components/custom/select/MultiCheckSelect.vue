@@ -124,7 +124,7 @@ const sizeClass = computed(() => {
                 <Checkbox
                   :model-value="draft.includes(opt.value)"
                   :label="opt.label"
-                  class="w-full px-2 py-1.5"
+                  class="px-2 py-1.5 flex items-center"
                   @update:model-value="(checked) => toggleDraft(opt.value, !!checked)"
                 />
               </li>

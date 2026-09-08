@@ -20,6 +20,7 @@ interface Props {
   rowSpan?: 2
   layout?: 'row' | 'column'
   class?: string
+  colClass?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -55,7 +56,7 @@ function isTextOnly() {
     </span>
 
     <div
-      :class="layout === 'column' ? styles.controlColumn : styles.control"
+      :class="cn(layout === 'column' ? styles.controlColumn : styles.control, props.colClass)"
       v-bind="!props.for ? { role: 'group', 'aria-labelledby': labelId } : {}"
     >
       <span v-if="isTextOnly()" :class="styles['info-table-txt']"><slot /></span>

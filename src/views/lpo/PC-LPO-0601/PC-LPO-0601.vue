@@ -16,10 +16,12 @@
       <DepartmentCascadeSelect v-model="department4Search" size="sm" />
     </template>
     <template #topRightSection>
-      <span class="lp-meta-nowrap">{{ modifiedInfo }}</span>
-      <div class="group-gap3">
-        <Button type="button" variant="tertiary2" size="sm" @click="onPrint">인쇄</Button>
-        <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
+      <div class="search-btns">
+        <span class="lp-meta-nowrap">{{ modifiedInfo }}</span>
+        <div class="group-gap3">
+          <Button type="button" variant="tertiary2" size="sm" @click="onPrint">인쇄</Button>
+          <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
+        </div>
       </div>
     </template>
   </SearchWrapper>
@@ -161,41 +163,45 @@
 
       <InfoTable :columns="2" class="lp-table-gap">
         <InfoField label="유연 파출소 여부">
-          <div class="group-gap1">
-            <Checkbox v-model="department.flexibleUse" aria-label="유연 파출소 여부 사용" />
-            <MultiCheckSelect
-              v-model="department.flexibleOffices"
-              :options="integratedOfficeOptions"
-              :disabled="!department.flexibleUse"
-              placeholder="통합운영 관서"
-              group-label="통합운영 관서"
-              size="sm"
-              trigger-class="w-[16.4rem]"
-              aria-label="통합운영 관서"
-            />
+          <div class="group-gap6">
+            <div class="group-gap3">
+              <Checkbox v-model="department.flexibleUse" aria-label="유연 파출소 여부 사용" />
+              <MultiCheckSelect
+                v-model="department.flexibleOffices"
+                :options="integratedOfficeOptions"
+                :disabled="!department.flexibleUse"
+                placeholder="통합운영 관서"
+                group-label="통합운영 관서"
+                size="sm"
+                trigger-class="w-45"
+                aria-label="통합운영 관서"
+              />
+            </div>
             <span class="readonly-text lp-nowrap">지역파출소1, 지역파출소2</span>
           </div>
         </InfoField>
 
         <InfoField label="중심관서">
-          <div class="group-gap1">
-            <Checkbox v-model="department.centralUse" aria-label="중심관서 사용" />
-            <MultiCheckSelect
-              v-model="department.centralOffices"
-              :options="integratedOfficeOptions"
-              :disabled="!department.centralUse"
-              placeholder="통합운영 관서"
-              group-label="통합운영 관서"
-              size="sm"
-              trigger-class="w-[16.4rem]"
-              aria-label="중심관서 통합운영 관서"
-            />
+          <div class="group-gap6">
+            <div class="group-gap3">
+              <Checkbox v-model="department.centralUse" aria-label="중심관서 사용" />
+              <MultiCheckSelect
+                v-model="department.centralOffices"
+                :options="integratedOfficeOptions"
+                :disabled="!department.centralUse"
+                placeholder="통합운영 관서"
+                group-label="통합운영 관서"
+                size="sm"
+                trigger-class="w-45"
+                aria-label="중심관서 통합운영 관서"
+              />
+            </div>
             <span class="readonly-text lp-nowrap">지역파출소1, 지역파출소2</span>
           </div>
         </InfoField>
 
         <InfoField label="통합관리반">
-          <div class="group-gap1">
+          <div class="group-gap3">
             <Checkbox v-model="department.integratedTeamUse" aria-label="통합관리반 사용" />
             <MultiCheckSelect
               v-model="department.integratedTeamOffices"
@@ -204,7 +210,7 @@
               placeholder="중심관서 선택"
               group-label="중심관서 선택"
               size="sm"
-              trigger-class="w-[16.4rem]"
+              trigger-class="w-45"
               aria-label="통합관리반 중심관서"
             />
           </div>
@@ -229,7 +235,7 @@
         </InfoField>
 
         <InfoField label="인구">
-          <div class="group-gap1">
+          <div class="group-gap5">
             <span class="readonly-text lp-nowrap">총인구 {{ district.totalPopulation }}명</span>
             <InputField2
               v-model="district.male"
@@ -251,7 +257,8 @@
         </InfoField>
 
         <InfoField label="가구" full>
-          <div class="lp-field-row">
+          <!-- <div class="lp-field-row"> -->
+          <div class="lp-field-row group-gap5">
             <span class="readonly-text lp-nowrap">가구수 {{ district.households }}</span>
             <InputField2
               v-model="district.detachedHouse"
@@ -319,7 +326,7 @@
           없애고, 표는 FieldTable(회색 헤더·상단선 없음·hover 없음)로 그린다 — 본문에 단독으로
           놓는 TableWrapper 와 다른 자리다.
         -->
-        <InfoField label="순찰차별 관할구역" full class="lp-field-flush">
+        <InfoField label="순찰차별 관할구역" full class="lp-field-flush" colClass="no-padding">
           <FieldTable
             :columns="patrolColumns"
             :items="patrolVehicles"
@@ -395,10 +402,10 @@
       <div class="section-bar">
         <h2 id="safety-center-heading">치안센터</h2>
         <div class="section-bar-actions">
-          <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSafetyCenters">
+          <Button type="button" variant="tertiary2" size="xs" padding="12" @click="onDeleteSafetyCenters">
             선택삭제
           </Button>
-          <Button type="button" variant="tertiary2" size="sm" @click="onAddSafetyCenter">추가</Button>
+          <Button type="button" variant="tertiary2" size="xs" padding="12" @click="onAddSafetyCenter">추가</Button>
           <button
             type="button"
             class="lp-icon-btn lp-icon-btn-dark lp-icon-btn-32"
@@ -430,10 +437,10 @@
         <h2 id="safety-center-heading">치안센터</h2>
         <div class="section-bar-actions">
           <div class="group-gap3" v-if="safetyCenterOpen[1]">
-            <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSafetyCenters">
+            <Button type="button" variant="tertiary2" size="xs" padding="12" @click="onDeleteSafetyCenters">
               선택삭제
             </Button>
-            <Button type="button" variant="tertiary2" size="sm" @click="onAddSafetyCenter">추가</Button>
+            <Button type="button" variant="tertiary2" size="xs" padding="12" @click="onAddSafetyCenter">추가</Button>
           </div>
           <button
             type="button"
@@ -468,10 +475,10 @@
         <h2 id="history-heading">연혁</h2>
         <div class="section-bar-actions">
           <div class="group-gap3" v-if="historyOpen">
-            <Button type="button" variant="tertiary2" size="sm" @click="onDeleteHistories">
+            <Button type="button" variant="tertiary2" size="xs" padding="12" @click="onDeleteHistories">
               선택삭제
             </Button>
-            <Button type="button" variant="tertiary2" size="sm" @click="onAddHistory">추가</Button>
+            <Button type="button" variant="tertiary2" size="xs" padding="12" @click="onAddHistory">추가</Button>
           </div>
           <button
             type="button"
@@ -637,9 +644,9 @@ const safetyCenterSelected = ref(0)
 
 const safetyCenterColumns: TabulatorGridColumn[] = [
   { title: '번호', field: 'no', width: 60, hozAlign: 'center' },
-  { title: '센터명', field: 'name', cellType: 'input' },
-  { title: '주소', field: 'address', cellType: 'input' },
-  { title: '전화번호', field: 'phone', cellType: 'input' },
+  { title: '센터명', field: 'name', cellType: 'input', width: 147 },
+  { title: '주소', field: 'address', cellType: 'input', width: 147 },
+  { title: '전화번호', field: 'phone', cellType: 'input', width: 147 },
   {
     title: '유형',
     field: 'type',
@@ -654,8 +661,8 @@ const safetyCenterColumns: TabulatorGridColumn[] = [
   { title: '배치인원', field: 'headcount', cellType: 'input', width: 80 },
   { title: '근무시작시간', field: 'startTime', cellType: 'input', width: 100 },
   { title: '근무종료시간', field: 'endTime', cellType: 'input', width: 100 },
-  { title: '개소일자', field: 'openedAt', cellType: 'input' },
-  { title: '폐소일자', field: 'closedAt', cellType: 'input' },
+  { title: '개소일자', field: 'openedAt', cellType: 'input', width: 147 },
+  { title: '폐소일자', field: 'closedAt', cellType: 'input', width: 147 },
 ]
 
 async function onAddSafetyCenter() {
