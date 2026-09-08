@@ -1,16 +1,16 @@
 <template>
   <GenericDialog2 v-model:open="open" title="범죄예방진단결과 (보관용)" :size="800" show-close-button>
     <div class="pop-title-sub"><h2>범죄예방진단 경찰관</h2></div>
-    <InfoTable :columns="2" popup :class="styles.infoTable">
+    <InfoTable :columns="2" popup size="120">
       <InfoField label="부서">부산청 부산서부서 경찰서</InfoField>
       <InfoField label="계급">경사</InfoField>
       <InfoField label="성명">홍길동</InfoField>
       <InfoField label="일시">2026-05-01</InfoField>
     </InfoTable>
     <div class="pop-title-sub mb-2"><h2>결과(건축물에 대한 위험성 총평)</h2></div>
-    <TextareaField v-model="result" :class="styles.detailTextarea" textarea-class="w-full" :height="96" />
+    <TextareaField v-model="result" :class="styles.detailTextarea" textarea-class="w-full" :height="80" />
     <div class="pop-title-sub mb-2"><h2>조치내용</h2></div>
-    <TextareaField v-model="action" :class="styles.detailTextarea" textarea-class="w-full" :height="96" />
+    <TextareaField v-model="action" :class="styles.detailTextarea" textarea-class="w-full" :height="80" />
     <template #footer>
       <Button type="button" variant="tertiary2" size="md" @click="open = false">취소</Button>
       <Button type="button" variant="primary" size="md" @click="save">저장</Button>

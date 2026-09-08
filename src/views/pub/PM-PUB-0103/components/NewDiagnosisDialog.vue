@@ -1,5 +1,5 @@
 <template>
-  <GenericDialog2 v-model:open="open" :title="title" :size="800" show-close-button>
+  <GenericDialog2 v-model:open="open" :title="title" :size="size" show-close-button>
     <!--
       진단 추가(PM-PUB-0106)는 이미 등록된 진단 대상에 회차를 더하는 화면이라, 대상 정보
       (부서·관리번호·유형)는 읽기 전용으로 보여주고 주소/관할은 일반현황으로 내려간다.
@@ -7,10 +7,10 @@
     -->
     <template v-if="mode === 'add'">
       <div class="pop-title-sub"><h2>범죄예방진단 카드</h2></div>
-      <InfoTable :columns="2" popup :class="styles.infoTable">
+      <InfoTable :columns="2" popup size="120">
         <InfoField label="부서">{{ departmentText }}</InfoField>
         <InfoField label="관리번호">
-          <span class="!ml-0 shrink-0" :class="infoTableStyles['info-table-txt']">{{ form.managementNo }}</span>
+          <span :class="styles.cellText">{{ form.managementNo }}</span>
           <Button type="button" variant="secondary" size="sm" @click="onOpenSimpleNoticeData">
             간이진단통보자료
           </Button>
@@ -21,7 +21,7 @@
           값만 있는 표 셀(table_2)이라 disabled 인풋 대신 텍스트로 둔다.
         -->
         <InfoField label="유형">{{ typeText }}</InfoField>
-        <InfoField for="add-diagnosis-date" label="진단일자" :class="styles.inlineActionField">
+        <InfoField for="add-diagnosis-date" label="진단일자" :class="`${styles.fieldInline} ${styles.dateFieldWidth}`">
           <DatePicker
             id="add-diagnosis-date"
             v-model="form.diagnosisDate"
@@ -42,8 +42,8 @@
 
     <template v-else>
       <div class="pop-title-sub"><h2>범죄예방진단 카드</h2></div>
-      <InfoTable :columns="2" popup :class="styles.infoTable">
-        <InfoField label="부서" full :class="styles.inlineActionField">
+      <InfoTable :columns="2" popup size="120">
+        <InfoField label="부서" full :class="styles.fieldInline">
           <DepartmentCascadeSelect
             v-model="form.department"
             size="sm"
@@ -66,7 +66,7 @@
             placeholder="선택"
           />
         </InfoField>
-        <InfoField for="new-diagnosis-date" label="진단일자" :class="styles.inlineActionField">
+        <InfoField for="new-diagnosis-date" label="진단일자" :class="`${styles.fieldInline} ${styles.dateFieldWidth}`">
           <DatePicker
             id="new-diagnosis-date"
             v-model="form.diagnosisDate"
@@ -101,7 +101,7 @@
               search
               @icon-click="onSearchAddress"
             />
-            <div :class="styles.detailAddressRow">
+            <div class="group-gap3" :class="styles.detailAddressRow">
               <InputField2
                 id="new-diagnosis-detail-address"
                 v-model="form.detailAddress"
@@ -143,7 +143,7 @@
     -->
     <template v-if="mode === 'add'">
       <div class="pop-title-sub"><h2>일반현황</h2></div>
-      <InfoTable :columns="2" popup :class="styles.infoTable">
+      <InfoTable :columns="2" popup size="120">
         <InfoField for="add-diagnosis-reason" label="진단사유">
           <SelectField
             id="add-diagnosis-reason"
@@ -157,8 +157,8 @@
         </InfoField>
         <!-- 시안: 기본주소 / 상세주소도 입력박스가 아니라 값 두 줄이다 -->
         <InfoField label="주소" layout="column" :row-span="2" :class="styles.addressReadonlyField">
-          <span class="!ml-0 shrink-0" :class="infoTableStyles['info-table-txt']">{{ form.address }}</span>
-          <span class="!ml-0 shrink-0" :class="infoTableStyles['info-table-txt']">{{ form.detailAddress }}</span>
+          <span :class="styles.cellText">{{ form.address }}</span>
+          <span :class="styles.cellText">{{ form.detailAddress }}</span>
         </InfoField>
 
         <InfoField for="add-diagnosis-biz-name" label="상호명">
@@ -170,7 +170,7 @@
         <InfoField label="관할부서">{{ form.districtOffice }}</InfoField>
       </InfoTable>
 
-      <InfoTable :columns="2" popup :class="styles.infoTable">
+      <InfoTable :columns="2" popup size="120">
         <InfoField for="add-diagnosis-manager" label="관리자">
           <InputField2 id="add-diagnosis-manager" v-model="form.manager" size="sm" class="!space-y-0 flex-1" />
         </InfoField>
@@ -207,9 +207,9 @@
 
     <div class="pop-title-sub"><h2>참고사항 (2023)</h2></div>
       <div class="pop-title-lv2"><h3>1) 범죄 특성</h3></div>
-      <InfoTable :columns="2" popup :class="styles.refTables">
+      <InfoTable :columns="2" popup size="148">
         <InfoField v-for="stat in crimeStats" :key="stat.label" :label="stat.label">
-          <div :class="styles.referenceValueGrid">
+          <div class="lp-field-split">
             <span>{{ mode === 'add' ? stat.grade : '-' }}</span>
             <span>{{ mode === 'add' ? stat.value : '-' }}</span>
           </div>
@@ -217,9 +217,9 @@
       </InfoTable>
 
       <div class="pop-title-lv2"><h3>2) 인구 사회학적 특성</h3></div>
-      <InfoTable :columns="2" popup :class="styles.refTables">
+      <InfoTable :columns="2" popup size="148">
         <InfoField v-for="stat in demographicStats" :key="stat.label" :label="stat.label">
-          <div :class="styles.referenceValueGrid">
+          <div class="lp-field-split">
             <span>{{ mode === 'add' ? stat.grade : '-' }}</span>
             <span>{{ mode === 'add' ? stat.value : '-' }}</span>
           </div>
@@ -227,7 +227,7 @@
       </InfoTable>
     <template v-if="mode !== 'add'">
       <div class="pop-title-sub"><h2>일반현황</h2></div>
-      <InfoTable :columns="2" popup :class="styles.infoTable">
+      <InfoTable :columns="2" popup size="120">
         <InfoField for="new-diagnosis-reason" label="진단사유">
           <SelectField
             id="new-diagnosis-reason"
@@ -287,7 +287,7 @@
 
     <div class="pop-title-sub"><h2>범죄예방진단 항목 및 진단결과</h2></div>
       <div class="pop-title-lv2"><h3>1) 건물특성</h3></div>
-      <InfoTable :columns="1" popup :class="styles.buildingTable">
+      <InfoTable :columns="1" popup size="220">
           <InfoField v-for="row in buildingAssessmentRows" :key="row.key" :label="row.label" full>
             <RadioGroup v-if="row.type === 'radio'" :model-value="assessment[row.key]" :class="infoTableStyles['info-table-radio']" @update:model-value="(v: unknown) => (assessment[row.key] = Number(v))">
               <RadioGroupItem :value="3" label="양호(3)" />
@@ -302,7 +302,7 @@
       </InfoTable>
 
       <div class="pop-title-lv2"><h3>2) 추가 항목</h3></div>
-      <InfoTable :columns="1" popup :class="styles.wideTables">
+      <InfoTable :columns="1" popup size="300">
         <InfoField v-for="row in extraAssessmentRows" :key="row.key" :label="row.label" full>
           <Stepper v-model="assessment[row.key]" :min="0" :class="styles.detailStepper" :label="row.label" />
           <span :class="styles.assessmentUnit">{{ row.unit }}</span>
@@ -310,7 +310,7 @@
       </InfoTable>
 
       <div class="pop-title-lv2"><h3>3) 기타</h3></div>
-      <InfoTable :columns="1" popup :class="styles.wideTables">
+      <InfoTable :columns="1" popup size="300">
         <InfoField for="new-diagnosis-etc-label" full :class="styles.etcLabelField">
           <template #label>
             <Input
@@ -325,13 +325,13 @@
         </InfoField>
       </InfoTable>
 
-      <div :class="styles.totalScoreRow">
-        <span :class="styles.totalScoreLabel">총점</span>
-        <strong :class="styles.totalScoreValue">{{ totalScore }}</strong>
-        <span :class="styles.totalScoreUnit">점</span>
+      <div class="lp-score-row">
+        <span class="lp-score-label">총점</span>
+        <strong class="lp-score-value">{{ totalScore }}</strong>
+        <span class="lp-score-unit">점</span>
       </div>
     <div class="pop-title-sub"><h2>시설개선(예정) 일정</h2></div>
-      <InfoTable :columns="1" popup :class="styles.scheduleTable">
+      <InfoTable :columns="1" popup size="160">
         <InfoField for="new-diagnosis-improvement-date" label="시설개선(예정) 일자" full>
             <DatePicker
               id="new-diagnosis-improvement-date"
@@ -357,7 +357,7 @@
       상세(0107)·CPO확인용(0105)과 같은 마크업(.detailNoteMeta)으로 맞춘다.
     -->
     <div class="pop-title-sub mb-2"><h2>착안사항</h2></div>
-      <TextareaField v-model="form.note" :class="styles.detailTextarea" textarea-class="w-full" :height="80" aria-label="착안사항" />
+      <TextareaField v-model="form.note" :class="styles.detailTextarea" textarea-class="w-full" :height="72" aria-label="착안사항" />
       <div :class="styles.detailNoteMeta">
         <Checkbox v-model="form.emailNotify" label="범죄예방진단 결과 우편 통보" />
         <!-- 진단 추가(PM-PUB-0106)는 시안대로 같은 줄 오른쪽에 담당 진단자를 표기한다(상세 0107 과 같은 마크업) -->
@@ -365,7 +365,7 @@
       </div>
 
     <template #footer>
-      <Button v-if="showPrint" type="button" class="mr-auto" variant="tertiary2" size="md" @click="emit('print')">인쇄</Button>
+      <Button v-if="showPrint" type="button" :class="styles.detailPrintButton" variant="tertiary2" size="md" @click="emit('print')">인쇄</Button>
       <Button type="button" variant="tertiary2" size="md" @click="onCancel">취소</Button>
       <Button type="button" variant="primary" size="md" @click="onSave">{{ saveText }}</Button>
     </template>
@@ -422,6 +422,8 @@ interface Props {
   mode?: 'new' | 'add'
   /** mode='add' 에서 하단에 표기할 담당 진단자 */
   diagnoser?: string
+  /** 팝업 가로 폭(px). 화면마다 시안 폭이 달라 호출부에서 정한다 */
+  size?: number
 }
 
 const {
@@ -431,6 +433,7 @@ const {
   showPrint = false,
   mode = 'new',
   diagnoser = '',
+  size = 800,
 } = defineProps<Props>()
 
 const open = defineModel<boolean>('open', { default: false })

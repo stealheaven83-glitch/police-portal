@@ -34,7 +34,7 @@
           v-model="note"
           :class="styles.detailTextarea"
           textarea-class="w-full"
-          :height="80"
+          :height="72"
           aria-label="범죄예방진단자 조치사항"
         />
       </InfoField>

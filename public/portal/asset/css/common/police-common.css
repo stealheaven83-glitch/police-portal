@@ -1693,3 +1693,59 @@ common
   color: var(--Base--point);
   font-weight: inherit;
 }
+
+/* InfoField 값 칸을 세로 구분선으로 2등분한다 (예: '등급 | 값' — 범죄 특성, 인구 사회학적 특성).
+   InfoField .control 의 안쪽 여백(0.4rem 1.2rem)을 음수 마진으로 정확히 상쇄해 구분선이 칸 끝까지
+   닿게 하고, 각 칸이 같은 여백을 다시 준다. 두 값이 어긋나면 선이 칸 밖으로 삐져나온다. */
+.lp-field-split {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  align-self: stretch;
+  width: calc(100% + 2.4rem);
+  gap: 0;
+  margin: -0.4rem -1.2rem;
+  color: var(--Text-body_0);
+}
+.lp-field-split > span {
+  display: flex;
+  align-items: center;
+  min-height: 100%;
+  padding: 0.4rem 1.2rem;
+}
+.lp-field-split > span + span {
+  border-left: 0.1rem solid var(--Border_gray03);
+}
+
+/* 점수 합계 줄 — 표 아래 오른쪽에 회색 띠로 '총점 NN 점' (범죄예방진단 신규·상세·CPO확인용). */
+.lp-score-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 4.1rem;
+  margin-top: 0.8rem;
+  padding: 1rem 1.6rem;
+  border-radius: var(--Radius-small3);
+  background: var(--Background-gray01);
+  color: var(--Text-body_0);
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+.lp-score-row > span,
+.lp-score-row > strong {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.1rem;
+  line-height: 1.4;
+}
+.lp-score-label {
+  padding-right: 0.8rem;
+}
+.lp-score-value {
+  font-weight: 700;
+  color: var(--Alert-danger-text);
+}
+.lp-score-unit {
+  padding-left: 0.4rem;
+}

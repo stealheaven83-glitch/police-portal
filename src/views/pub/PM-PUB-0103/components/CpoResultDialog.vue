@@ -38,10 +38,10 @@
 
         <!-- 구간 간격은 공통 .pop-title-sub 의 margin-top 16px을 사용한다 -->
         <div class="pop-title-sub"><h2>범죄예방진단 카드</h2></div>
-        <InfoTable :columns="2" popup :class="styles.infoTable">
+        <InfoTable :columns="2" popup size="120">
           <!-- 시안: 간이진단통보자료는 셀 오른쪽 끝이 아니라 부서명 바로 뒤(간격 24px)에 붙는다 -->
-          <InfoField label="부서" full :class="styles.cpoDeptField">
-            <span class="!ml-0 shrink-0" :class="infoTableStyles['info-table-txt']">{{ diagnosis?.dept ?? '부산청 부산중부서 송도지구대' }}</span>
+          <InfoField label="부서" full :class="`${styles.fieldInline} ${styles.cpoDeptGap}`">
+            <span :class="styles.cellText">{{ diagnosis?.dept ?? '부산청 부산중부서 송도지구대' }}</span>
             <Button type="button" variant="secondary" size="sm" @click="emit('open-simple-notice')">간이진단통보자료</Button>
           </InfoField>
 
@@ -67,16 +67,16 @@
         </InfoTable>
         <div class="pop-title-sub"><h2>참고사항 (2023)</h2></div>
         <div class="pop-title-lv2"><h3>1) 범죄 특성</h3></div>
-        <InfoTable :columns="2" popup :class="styles.refTables">
+        <InfoTable :columns="2" popup size="148">
           <InfoField v-for="stat in crimeStats" :key="stat.label" :label="stat.label">
-            <div :class="styles.referenceValueGrid"><span>{{ stat.grade }}</span><span>{{ stat.value }}</span></div>
+            <div class="lp-field-split"><span>{{ stat.grade }}</span><span>{{ stat.value }}</span></div>
           </InfoField>
         </InfoTable>
 
         <div class="pop-title-lv2"><h3>2) 인구 사회학적 특성</h3></div>
-        <InfoTable :columns="2" popup :class="styles.refTables">
+        <InfoTable :columns="2" popup size="148">
           <InfoField v-for="stat in demographicStats" :key="stat.label" :label="stat.label">
-            <div :class="styles.referenceValueGrid"><span>{{ stat.grade }}</span><span>{{ stat.value }}</span></div>
+            <div class="lp-field-split"><span>{{ stat.grade }}</span><span>{{ stat.value }}</span></div>
           </InfoField>
         </InfoTable>
         <!--
@@ -84,12 +84,12 @@
           / 건물·피해. 사이 간격 8px 은 0114 와 같은 .generalSplitTables 로 처리한다.
         -->
         <div class="pop-title-sub"><h2>일반현황</h2></div>
-        <InfoTable :columns="2" popup :class="styles.infoTable">
+        <InfoTable :columns="2" popup size="120">
           <InfoField label="진단사유">{{ reasonText }}</InfoField>
           <InfoField label="상호명">{{ diagnosis?.bizName ?? '가나다라' }}</InfoField>
         </InfoTable>
 
-        <InfoTable :columns="2" popup :class="styles.infoTable">
+        <InfoTable :columns="2" popup size="120">
           <InfoField for="cpo-owner" label="가옥주">
             <InputField2 id="cpo-owner" v-model="form.houseOwner" size="sm" class="!space-y-0 flex-1" />
           </InfoField>
@@ -107,7 +107,7 @@
           </InfoField>
         </InfoTable>
 
-        <InfoTable :columns="2" popup :class="styles.infoTable">
+        <InfoTable :columns="2" popup size="120">
           <InfoField label="직원수"><Stepper v-model="form.employeeCount" :min="0" label="직원수" /></InfoField>
           <InfoField label="업소층수"><Stepper v-model="form.floorCount" :min="0" label="업소층수" /></InfoField>
 
@@ -127,7 +127,7 @@
         </InfoTable>
         <div class="pop-title-sub"><h2>범죄예방진단 항목 및 진단결과</h2></div>
         <div class="pop-title-lv2"><h3>1) 건물특성</h3></div>
-        <InfoTable :columns="1" popup :class="styles.buildingTable">
+        <InfoTable :columns="1" popup size="220">
           <InfoField v-for="row in buildingAssessmentRows" :key="row.key" :label="row.label" full>
             <RadioGroup v-if="row.type === 'radio'" :model-value="assessment[row.key]" :class="infoTableStyles['info-table-radio']" @update:model-value="(value) => (assessment[row.key] = Number(value))">
               <RadioGroupItem :value="3" label="양호(3)" />
@@ -142,7 +142,7 @@
         </InfoTable>
 
         <div class="pop-title-lv2"><h3>2) 추가 항목</h3></div>
-        <InfoTable :columns="1" popup :class="styles.wideTables">
+        <InfoTable :columns="1" popup size="300">
           <InfoField v-for="row in extraAssessmentRows" :key="row.key" :label="row.label" full>
             <Stepper v-model="assessment[row.key]" :min="0" :class="styles.detailStepper" :label="row.label" />
             <span :class="styles.assessmentUnit">{{ row.unit }}</span>
@@ -150,7 +150,7 @@
         </InfoTable>
 
         <div class="pop-title-lv2"><h3>3) 기타</h3></div>
-        <InfoTable :columns="1" popup :class="styles.wideTables">
+        <InfoTable :columns="1" popup size="300">
           <InfoField for="cpo-etc-label" full :class="styles.etcLabelField">
             <template #label>
               <Input id="cpo-etc-label" v-model="form.etcLabel" size="sm" :class="styles.detailEtcInput" aria-label="기타 항목" />
@@ -159,13 +159,13 @@
           </InfoField>
         </InfoTable>
 
-        <div :class="styles.totalScoreRow">
-          <span :class="styles.totalScoreLabel">총점</span>
-          <strong :class="styles.totalScoreValue">{{ totalScore }}</strong>
-          <span :class="styles.totalScoreUnit">점</span>
+        <div class="lp-score-row">
+          <span class="lp-score-label">총점</span>
+          <strong class="lp-score-value">{{ totalScore }}</strong>
+          <span class="lp-score-unit">점</span>
         </div>
         <div class="pop-title-sub"><h2>시설개선(예정) 일정</h2></div>
-        <InfoTable :columns="1" popup :class="styles.scheduleTable">
+        <InfoTable :columns="1" popup size="160">
           <InfoField for="cpo-improvement-date" label="시설개선(예정) 일자" full>
             <DatePicker
               id="cpo-improvement-date"
@@ -192,7 +192,7 @@
             v-model="form.note"
             :class="styles.detailTextarea"
             textarea-class="w-full"
-            :height="80"
+            :height="72"
             aria-label="착안사항"
           />
           <div :class="styles.detailNoteMeta">
