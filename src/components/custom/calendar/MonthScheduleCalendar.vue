@@ -35,18 +35,20 @@
             @click="onSelect(cell.date)"
             @keydown.enter="onSelect(cell.date)"
           >
-            <div class="lp-cal-daterow">
-              <span class="lp-cal-date" :class="dowClass(cell.dow)">{{ cell.day }}</span>
+            <!-- 시안(Block 13312:71179): 날짜는 24×24 로 왼쪽에 고정하고,
+                 공휴일·근무 배지는 그 오른쪽 칸에 세로로 쌓인다 -->
+            <span class="lp-cal-date" :class="{ 'lp-cal-date-holiday': cell.holiday }">{{ cell.day }}</span>
+            <div class="lp-cal-cell-body">
               <span v-if="cell.holiday" class="lp-cal-holiday">{{ cell.holiday }}</span>
+              <ul v-if="cell.events.length" class="lp-cal-events">
+                <li v-for="(ev, i) in cell.events" :key="i" class="lp-cal-event">
+                  <Badge v-if="ev.label" :color="ev.color ?? 'primary'" variant="solid" size="md" shape="sm">
+                    {{ ev.label }}
+                  </Badge>
+                  <span v-if="ev.time" class="lp-cal-event-time">{{ ev.time }}</span>
+                </li>
+              </ul>
             </div>
-            <ul class="lp-cal-events">
-              <li v-for="(ev, i) in cell.events" :key="i" class="lp-cal-event">
-                <Badge v-if="ev.label" :color="ev.color ?? 'primary'" variant="solid" size="sm" shape="sm">
-                  {{ ev.label }}
-                </Badge>
-                <span v-if="ev.time" class="lp-cal-event-time">{{ ev.time }}</span>
-              </li>
-            </ul>
           </div>
         </PopoverTrigger>
         <PopoverContent v-if="$slots['day-detail']" align="start" class="lp-cal-popover">

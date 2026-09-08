@@ -22,11 +22,11 @@
       </div>
     </template>
     <template #btns>
-      <Button type="button" variant="secondary" size="sm" @click="onSearch">조회</Button>
+      <Button type="button" variant="secondary" size="sm">조회</Button>
     </template>
   </SearchWrapper>
 
-  <div class="list-actions">
+  <div class="list-actions space-between">
     <FilterChipGroup v-model="activeFilter" :items="approvalFilters" />
   </div>
 
@@ -42,7 +42,6 @@
 </template>
 
 <script setup lang="ts">
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -88,6 +87,8 @@ const columns: TabulatorGridColumn[] = [
     hozAlign: 'center',
     cellType: 'button',
     buttonVariant: 'tertiary',
+    // 시안: 상태 버튼 높이 36px (Button sm 은 40px 이라 높이만 낮춘다)
+    buttonClass: 'h-9',
     buttonLabel: (row: ApprovalRow) => row.actionLabel || row.status,
     buttonVisible: (row: ApprovalRow) => !!row.actionLabel,
     onButtonClick: (row: ApprovalRow) => onApprove(row),
@@ -96,15 +97,11 @@ const columns: TabulatorGridColumn[] = [
 ]
 
 
-function onSearch() {
-  toast.success('조회되었습니다.')
-}
-
-/** 실제 결재 처리는 개발팀 몫 — 화면에서는 눌린 것만 알린다 */
-function onApprove(row: ApprovalRow) {
-  if (!row.actionLabel) return
-  toast.success(`${row.actionLabel} 처리되었습니다.`)
-}
+/**
+ * 결재 처리는 개발팀 몫이고 기획서에 화면 동작(확인창·안내문구)이 정의돼 있지 않다.
+ * 지정되지 않은 동작은 만들지 않고 비워 둔다(CLAUDE.md 서두 — 인계 대상).
+ */
+function onApprove(_row: ApprovalRow) {}
 
 useBottomTabSetup({
   value: 'PM-LPO-0121',

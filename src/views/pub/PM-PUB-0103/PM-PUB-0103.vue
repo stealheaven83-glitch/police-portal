@@ -80,7 +80,7 @@
       </div>
     </template>
     <template #btns>
-      <Button variant="secondary" size="sm" @click="search">조회</Button>
+      <Button variant="secondary" size="sm">조회</Button>
     </template>
   </SearchWrapper>
 
@@ -289,7 +289,6 @@ const {
   markHistoryGridReady,
   selectRow,
   loadDiagnosis,
-  search,
   newDiagnosisDialogOpen,
   newHistoryDialogOpen,
   detailDialogOpen,

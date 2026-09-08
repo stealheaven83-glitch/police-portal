@@ -28,18 +28,21 @@
 
       <ul v-if="dutiesOn(date).length" class="lp-cal-popover-list">
         <li v-for="(duty, i) in dutiesOn(date)" :key="i" class="lp-cal-popover-row">
-          <Badge :color="KIND_COLOR[duty.kind]" variant="solid" size="sm" shape="sm">{{ duty.kind }}</Badge>
+          <Badge :color="KIND_COLOR[duty.kind]" variant="solid" size="md" shape="sm">{{ duty.kind }}</Badge>
           <span v-if="duty.time" class="lp-nowrap">{{ duty.time }}</span>
-          <span v-if="duty.name">{{ duty.name }}</span>
-          <Badge v-if="duty.volunteer" color="warning" variant="solid-pastel" size="sm" shape="sm">자원</Badge>
-          <span v-if="duty.reason">{{ duty.reason }}</span>
-          <span v-if="duty.members?.length" class="lp-cal-popover-names">{{ duty.members.join(', ') }}</span>
+          <span v-if="duty.name" class="lp-nowrap">{{ duty.name }}</span>
+          <!-- 기획서 2: 사고 건은 시간과 사유를 출력한다 (사유는 point 색) -->
+          <span v-if="duty.reason" class="lp-cal-popover-reason">{{ duty.reason }}</span>
+          <!-- 기획서 3: 자원근무 건은 근무자 뒤에 (자원) 을 붙인다 -->
+          <span v-if="duty.members?.length" class="lp-flex-fill">
+            {{ membersText(duty) }}<em v-if="duty.volunteer" class="lp-cal-popover-volunteer">(자원)</em>
+          </span>
         </li>
       </ul>
       <p v-else class="lp-note-text">등록된 근무가 없습니다.</p>
 
-      <div class="lp-summary-redo">
-        <Button type="button" variant="tertiary2" size="sm" padding="12" @click="close">닫기</Button>
+      <div class="lp-cal-popover-foot">
+        <Button type="button" variant="tertiary2" size="xs" padding="12" @click="close">닫기</Button>
       </div>
     </template>
   </MonthScheduleCalendar>
@@ -73,7 +76,7 @@ const navItems = [
   { label: '근무일정조회' },
 ]
 
-const { year, month, days, dutiesOn, formatDay, KIND_COLOR } = useDutySchedule()
+const { year, month, days, dutiesOn, formatDay, membersText, KIND_COLOR } = useDutySchedule()
 
 useBottomTabSetup({
   value: 'PM-LPO-0108',

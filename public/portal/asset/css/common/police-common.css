@@ -1100,48 +1100,65 @@
   flex: 1;
   min-height: 0;
   flex-direction: column;
-  gap: 1.6rem;
+  gap: 2rem;
 }
 .lp-cal-toolbar {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.6rem;
+  gap: 2rem;
 }
 .lp-cal-grid {
   display: grid;
   flex: 1;
   min-height: 0;
   grid-template-columns: repeat(7, 1fr);
-  grid-auto-rows: 1fr;
-  border-top: 0.1rem solid var(--Border_gray01);
-  border-left: 0.1rem solid var(--Border_gray02);
+  /* 1행은 요일 헤더라 내용 높이(28px)만 차지한다 — 여기에 1fr 이 걸리면 헤더 아래 빈 줄이 생긴다 */
+  grid-template-rows: auto;
+  /* 시안 행 높이는 140px 지만 고정하면 화면(WorkLayout 100vh)을 넘어 스크롤이 생긴다.
+     남은 높이를 주 수로 나눠 갖게 해서 달력이 항상 한 화면에 들어오게 한다 */
+  grid-auto-rows: minmax(0, 1fr);
+  overflow: hidden;
+  border: 0.1rem solid var(--Border_gray03);
+  border-radius: var(--Radius-xlarge2);
+}
+/* 마지막 열·마지막 행은 바깥 테두리와 겹치므로 칸 쪽 선을 지운다 — 안 지우면 모서리가 깨져 보인다 */
+.lp-cal-grid > :nth-child(7n) {
+  border-right: 0;
+}
+.lp-cal-grid > :nth-last-child(-n + 7) {
+  border-bottom: 0;
 }
 .lp-cal-head {
-  padding: 0.8rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.8rem;
   font-size: 1.5rem;
-  color: var(--Text-body_1);
+  color: var(--Text-body_0);
   text-align: center;
   background: var(--Background-gray01);
-  border-right: 0.1rem solid var(--Border_gray02);
-  border-bottom: 0.1rem solid var(--Border_gray02);
+  border-right: 0.1rem solid var(--Border_gray03);
+  border-bottom: 0.1rem solid var(--Border_gray03);
 }
 .lp-cal-cell {
   display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  min-height: 10rem;
-  padding: 1rem;
+  align-items: flex-start;
+  gap: 2rem;
+  min-height: 0;
+  overflow: hidden;
+  padding: 1.2rem;
   background: var(--white);
-  border-right: 0.1rem solid var(--Border_gray02);
-  border-bottom: 0.1rem solid var(--Border_gray02);
+  border-right: 0.1rem solid var(--Border_gray03);
+  border-bottom: 0.1rem solid var(--Border_gray03);
   cursor: pointer;
 }
 .lp-cal-cell:hover {
   background: var(--Surface-secondary);
 }
+/* 이전·다음 달 칸 — 배경은 흰색 그대로 두고 날짜만 흐리게 (시안 13175:96418) */
 .lp-cal-cell-out {
-  background: var(--Background-gray01);
+  background: var(--white);
 }
 .lp-cal-cell-out .lp-cal-date {
   color: var(--Text-body_disable);
@@ -1150,70 +1167,98 @@
   outline: 0.2rem solid var(--Base-primary);
   outline-offset: -0.2rem;
 }
-.lp-cal-daterow {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-}
 .lp-cal-date {
-  font-size: 1.5rem;
-  font-weight: 700;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  font-size: 1.7rem;
+  font-weight: 600;
   color: var(--Text-body_0);
 }
-.lp-cal-sun,
-.lp-cal-holiday {
-  color: var(--danger);
+/* 날짜 오른쪽 칸 — 공휴일 이름과 근무 배지가 세로로 쌓인다 */
+.lp-cal-cell-body {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  gap: 0.8rem;
+  overflow: hidden;
+}
+/* 주말 색은 요일 헤더에만 쓴다 — 시안에서 날짜 숫자는 토·일도 기본색이다 */
+.lp-cal-sun {
+  color: var(--Base--point);
 }
 .lp-cal-sat {
   color: var(--Base-primary);
 }
+/* 공휴일 — 날짜 숫자와 이름 모두 point 색 (시안 24~26일 추석) */
+.lp-cal-date-holiday {
+  color: var(--Base--point);
+}
 .lp-cal-holiday {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--Base--point);
 }
 .lp-cal-events {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.8rem;
 }
 .lp-cal-event {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 1.2rem;
+  min-height: 2.3rem;
 }
 .lp-cal-event-time {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   color: var(--Text-body_0);
 }
+/* 근무일정 상세 팝오버 — 배치만. 폭·여백·테두리는 테일윈드를 덮어야 해서 police-override.css */
 .lp-cal-popover {
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
-  width: 34rem;
 }
 .lp-cal-popover-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.2rem;
-  font-size: 1.6rem;
+  font-size: 1.7rem;
   font-weight: 700;
   color: var(--Text-body_0);
 }
 .lp-cal-popover-list {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
 }
 .lp-cal-popover-row {
   display: flex;
   align-items: flex-start;
-  gap: 0.8rem;
-  font-size: 1.4rem;
+  gap: 1.6rem;
+  padding: 1.2rem 0;
+  font-size: 1.5rem;
   color: var(--Text-body_0);
 }
-.lp-cal-popover-names {
-  flex: 1;
-  min-width: 0;
+/* 자원근무 표시 — 근무자 이름 뒤에 붙는다(기획서 3) */
+.lp-cal-popover-volunteer {
+  color: var(--Base-primary);
+  font-style: normal;
+}
+/* 사고 사유(기획서 2) */
+.lp-cal-popover-reason {
+  color: var(--Base--point);
+  white-space: nowrap;
+}
+.lp-cal-popover-foot {
+  display: flex;
+  justify-content: flex-end;
 }
 
 /* ── 화면설정(메인화면 카드 배치) ────────────────────────────────────────── */
@@ -1414,8 +1459,8 @@
   font-size: 1.4rem;
   color: var(--Text-body_0);
   vertical-align: top;
-  border-right: 0.1rem solid var(--Border_gray02);
-  border-bottom: 0.1rem solid var(--Border_gray02);
+  border-right: 0.1rem solid var(--Border_gray03);
+  border-bottom: 0.1rem solid var(--Border_gray03);
 }
 .lp-duty-table thead th {
   font-weight: 500;
@@ -1901,4 +1946,39 @@
   flex: 1;
   min-width: 0;
   padding: 0.8rem;
+}
+
+/* 여러 줄 값 — 줄바꿈을 그대로 보여준다 (출동사건정보 팝업의 신고내용 등).
+   InfoField 기본은 한 줄 가운데 정렬이라 위쪽 정렬로 되돌린다. */
+.lp-pre-line {
+  white-space: pre-line;
+  line-height: 1.6;
+}
+
+/*
+ * 토글('상세조회') 없이 항상 펼쳐져 있는 조회영역 — 회색 라운드 박스 안에 조회조건과 조회버튼.
+ * SearchWrapper 는 토글이 있는 화면용이라(토글 없이 쓰면 슬롯이 렌더되지 않는다) 그 안쪽 모양만
+ * 여기서 직접 만든다. 조회조건 줄은 안에 .search-area 를 그대로 쓴다.
+ * 시안 기준: 안쪽 여백 20/24, 모서리 12, 아래 간격 20 (Figma 13116:76730).
+ *
+ *   <div class="lp-search-box">
+ *     <div class="search-area">…필드…</div>
+ *     <Button>조회</Button>
+ *   </div>
+ */
+.lp-search-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.6rem;
+  width: 100%;
+  margin-bottom: 2rem;
+  padding: 2rem 2.4rem;
+  border-radius: var(--Radius-xlarge2);
+  background: var(--Background-gray01);
+}
+
+/* 조회버튼은 제 폭을 지키고 조건 줄이 남는 폭을 다 가져간다 */
+.lp-search-box > button {
+  flex: 0 0 auto;
 }

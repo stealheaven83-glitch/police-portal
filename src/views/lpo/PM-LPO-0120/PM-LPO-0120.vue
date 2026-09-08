@@ -22,11 +22,11 @@
       </div>
     </template>
     <template #btns>
-      <Button type="button" variant="secondary" size="sm" @click="onSearch">조회</Button>
+      <Button type="button" variant="secondary" size="sm">조회</Button>
     </template>
   </SearchWrapper>
 
-  <div class="list-actions">
+  <div class="list-actions space-between">
     <FilterChipGroup v-model="activeFilter" :items="approvalFilters" />
   </div>
 
@@ -42,7 +42,6 @@
 </template>
 
 <script setup lang="ts">
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -83,10 +82,6 @@ const columns: TabulatorGridColumn[] = [
   { title: '확인(결재)일시', field: 'confirmedAt', hozAlign: 'center' },
 ]
 
-
-function onSearch() {
-  toast.success('조회되었습니다.')
-}
 
 useBottomTabSetup({
   value: 'PM-LPO-0120',
