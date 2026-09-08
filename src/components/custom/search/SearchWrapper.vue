@@ -18,7 +18,7 @@
       </div>
       <slot name="topRightSection"></slot>
     </div>
-    <div v-if="(!$slots.department && $slots.form) || collapsible" v-show="expanded" :class="cn(defaultClass, props.class)">
+    <div v-if="(!$slots.department && $slots.form)" v-show="(!$slots.department && $slots.form) || expanded" :class="cn(defaultClass, props.class)">
       <div class="flex flex-col justify-center py-5 px-6 ">
         <slot name="form" />
       </div>
