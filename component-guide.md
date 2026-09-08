@@ -506,12 +506,16 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-search-hero` | 큰 검색바 — 위 여백 크게(검색 전) | 0801, 0802 |
 | `.lp-search-center` | 검색한 뒤라 위 여백 없이 붙는 검색바 | IRC-0101 |
 | `.lp-content-panel` / `.lp-content-panel-pad` | 본문 폭 120rem 가운데 / 좌우 여백 | 0801, 0802, IRC-0101 |
+| `.lp-keyword-split` | **override** — `SearchKeywordPanel` 두 칸을 시안 비율(795:356)로 나누고 사이에 세로 구분선. 컴포넌트 기본은 반반(`grid-cols-2`)에 구분선 없음. `lg` 이상에서만 걸어 모바일 1칸 접힘을 살린다 | IRC-0101 |
 | `.lp-result-section` / `.lp-result-item` / `.lp-result-summary` | 카테고리 구역 / 결과 한 건 / 2줄 말줄임 요약 | 0802 |
 | `.lp-result-pagination` | 결과 아래 페이지네이션 여백 | 0802 |
 | `.lp-link-list` / `.lp-path-link` | 메뉴 경로 링크만 나열 / 그 링크(Figma button_link) | 0802 |
 | `.lp-ai-answer` + `-head` `-icon` `-body` | AI 생성 답변 상자 | IRC-0101 |
-| `.lp-answer-block` / `.lp-block-title` / `.lp-bullet-list` / `.lp-answer-note` | 답변 안 소구역 / 그 제목 여백 / 불릿 / 하단 주의문 | IRC-0101 |
-| `.lp-ref-column` / `.lp-ref-card` / `.lp-ref-card-desc` | 우측 참고자료 칸 / 카드 / 2줄 말줄임 설명 | IRC-0101 |
+| `.lp-answer-block` / `.lp-block-title` / `.lp-bullet-list` / `.lp-answer-note` | 답변 안 소구역 / 그 제목 여백 / 불릿 / **칸 맨 아래에 붙는** 주의문(`margin-top:auto` — 세로 flex 부모 안에서만 의도대로 선다) | IRC-0101 |
+| `.lp-answer-main` | AI 답변의 **좌측 본문 칸**. 주의문을 바닥에 붙이려고 세로 flex 다 — 남는 폭만 채우면 되는 자리엔 `.lp-flex-fill` 을 쓴다 | IRC-0101 |
+| `.lp-ref-column` | 우측 참고자료 칸. **왼쪽 세로 구분선을 이 칸이 그린다**(본문 칸 높이만큼 꽉 차야 해서). 폭 29.2rem + 여백 2.4rem + 선 0.1rem = 31.7rem | IRC-0101 |
+| `.lp-ref-list` / `.lp-ref-desc` / `.lp-ref-link` | 참고자료 아코디언 목록(간격 1.2rem) / 펼쳤을 때 설명(1.5rem) / 그 아래 문서 링크(1.3rem 밑줄) | IRC-0101 |
+| `.lp-ref-item` / `.lp-ref-trigger` / `.lp-ref-body` | **override** — `custom/accordion` 의 카드·트리거·본문 기본 모양(높이·글자·아래선·여백)을 참고자료 시안에 맞게 되돌린다. 아코디언을 카드 안에 얹을 때만 쓴다 | IRC-0101 |
 
 #### 메모 목록 카드 · 등록 폼
 

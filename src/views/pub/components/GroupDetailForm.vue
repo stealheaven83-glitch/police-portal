@@ -144,8 +144,9 @@ const memberTotal = computed(() => props.form.memberMale + props.form.memberFema
             v-if="isEtcType"
             v-model="form.groupTypeEtc"
             size="sm"
+             trigger-class="w-full"
             placeholder="단체종류 입력"
-            class="!space-y-0 flex-1"
+            class="!space-y-0 flex-1 "
           />
         </div>
       </InfoField>

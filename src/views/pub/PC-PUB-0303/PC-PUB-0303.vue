@@ -15,7 +15,9 @@
       <Button type="button" variant="tertiary2" size="sm"  @click="goList">목록</Button>
       <Button type="button" variant="primary" size="sm"  @click="onSave">저장</Button>
   </div>
-  <GroupDetailForm :form="form" mode="new" />
+  <ScrollWrapper>
+    <GroupDetailForm :form="form" mode="edit" /> 
+  </ScrollWrapper>
 </template>
 
 <script setup lang="ts">
@@ -33,6 +35,7 @@ import GroupDetailForm from '../components/GroupDetailForm.vue'
 import { usePublicSafetyStore, createEmptyGroupForm } from '../composable/publicSafety'
 import styles from '../style/pageActions.module.css'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
+import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
 
 defineOptions({ name: 'PcPub0303' })
 
