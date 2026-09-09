@@ -197,8 +197,8 @@
 }
 
 /* ══ 구역 · 표 ════════════════════════════════════════════════ */
-.lp-section:first-child{
-  padding-top:2rem;
+
+.lp-section.line{
   border-top:1px solid #1E2124;
 }
 .lp-section + .lp-section {
@@ -957,6 +957,33 @@
 }
 .lp-file-remove:hover {
   color: var(--Base-primary);
+}
+
+/* ── 업로드 결과 (Figma 11213:88495 참고사항 업로드 팝업) ───── */
+
+/* 드롭존 아래에 붙는 결과 구역 — 시안 간격 16px */
+.lp-upload-result {
+  margin-top: 1.6rem;
+}
+/* 위아래 가로선으로 구역을 여는 소제목. 표 머리처럼 쓴다 */
+.lp-rule-title {
+  padding: 0.6rem 0;
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
+  border-top: 0.1rem solid var(--Border_gray02);
+  border-bottom: 0.1rem solid var(--Border_gray02);
+}
+/* 실패 사유처럼 짧은 문장을 나열하는 불릿 목록. 본문용 .lp-bullet-list(1.7rem)보다 작다 */
+.lp-error-list {
+  margin-top: 0.8rem;
+  padding-left: 1.6rem;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--Text-body_1);
+  list-style: disc;
+}
+.lp-error-list li + li {
+  margin-top: 0.8rem;
 }
 
 /* ── 메모(개인수첩) 등록·상세 폼 ─────────────────────────────
@@ -2183,6 +2210,7 @@
   flex: 0 0 auto;
 }
 
+<<<<<<< Updated upstream
 /* ── 표 안 활동내역 셀(여러 줄 본문 + 오른쪽 아래 작성일시) ──────────────── */
 /* 근무일지 표의 '활동내역' 칸. 한 칸에 본문 여러 줄과 작성일시가 함께 들어간다.
    행 높이가 내용만큼 늘어나야 하므로 그리드에는 .lp-grid-multiline 을 같이 건다
@@ -2225,3 +2253,23 @@
   color: var(--Text-body_1);
   text-align: right;
 }
+=======
+/*참고사항 페이지*/
+.info-label{
+ 
+}
+.info-label-group {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:2.4rem;
+  
+}
+.info-label-group + .info-label-group{
+  margin-top:1.2rem;
+}
+
+.info-label-group .info-label-txt{
+  font-size: 1.5rem;
+}
+>>>>>>> Stashed changes

@@ -534,6 +534,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-summary-box` + `-filled` `-loading` `-redo` | AI 요약 영역(빈 상태 점선 / 채워지면 실선) | LPO-0104 |
 | `.lp-dropzone` / `.lp-dropzone-txt` | 첨부파일 드롭존 | LPO-0104 |
 | `.lp-file-list` `-count` `-item` `-name` `-remove` | 첨부파일 목록(구분선 방식) | LPO-0104 |
+| `.lp-upload-result` / `.lp-rule-title` / `.lp-error-list` | 드롭존 아래 결과 구역(위 16px) / 위아래 가로선으로 구역을 여는 소제목 / 실패 사유 불릿 목록(1.5rem — **본문용 `.lp-bullet-list` 는 1.7rem 이라 다른 것**) | PUB-0111 업로드 팝업 |
 | `.lp-file-hint` | 첨부 버튼 옆 용량 안내(좁아지면 줄바꿈) | 2402 |
 | `.lp-summary-box-read` | 읽기 전용 요약 블록(테두리 없이 채워진 면). **입력용은 `-filled`** | LPO-0102 |
 | `.lp-file-boxes` / `.lp-file-box` / `.lp-file-link` | 첨부파일을 테두리 박스로 나열 / 박스 한 줄 / 그 안의 다운로드·삭제 링크. **구분선 방식은 `.lp-file-item`** | LPO-0102, 0104, 0217 |

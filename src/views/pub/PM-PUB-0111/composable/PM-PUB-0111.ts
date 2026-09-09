@@ -72,6 +72,16 @@ export const townOptions = [
   { label: '서울특별시 종로구 사직동', value: 'jongno-sajik' },
 ]
 
+/** 업로드 팝업 첨부 제한 — 시안 문구의 '최대 3개' (Figma 11213:88495) */
+export const UPLOAD_MAX_FILES = 3
+
+/** 업로드 결과 중 실패한 줄 — 목업. 실제 검증 결과는 개발팀이 채운다 */
+export const uploadFailures = [
+  '라인 : 16 - 구분: 서울특별시 종로구 종로1,2,3,4가동 (대학로파출소) / 사유 : 통계값은 숫자만 입력 가능합니다.',
+  '라인 : 16 - 구분: 서울특별시 종로구 종로1,2,3,4가동 (대학로파출소) / 사유 : 통계값은 숫자만 입력 가능합니다.',
+  '라인 : 16 - 구분: 서울특별시 종로구 종로1,2,3,4가동 (대학로파출소) / 사유 : 통계값은 숫자만 입력 가능합니다.',
+]
+
 export function useDiagnosisReference() {
   const department = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
   const advancedSearchOpen = ref(true)

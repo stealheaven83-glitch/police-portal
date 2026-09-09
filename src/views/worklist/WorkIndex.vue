@@ -268,7 +268,7 @@ const worklist = ref([
   { id: 159, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '상세', depth5: '', screenName: '범죄예방진단 상세', screenId: 'PM-PUB-0108', path: '/views/pub/PM-PUB-0108', status: '대기' },
   { id: 160, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '', depth5: '사진자료', screenName: '사진자료', screenId: 'PM-PUB-0109', path: '/views/pub/PM-PUB-0109', status: '대기' },
   { id: 161, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '', depth5: '간이진단통보자료', screenName: '간이진단통보자료', screenId: 'PM-PUB-0110', path: '/views/pub/PM-PUB-0110', status: '대기' },
-  { id: 162, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '', depth5: '이력보기', screenName: '이력보기', screenId: 'PM-PUB-0111', path: '/views/pub/', status: '대기' },
+  { id: 162, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '', depth5: '이력보기', screenName: '이력보기', screenId: 'PM-PUB-0111', path: '/views/pub/PM-PUB-0111', status: '대기' },
   { id: 163, category: '스마트워크', depth1: '', depth2: '', depth3: '참고사항', depth4: '상세', depth5: '', screenName: '참고사항 상세', screenId: 'PM-PUB-0112', path: '/views/pub/', status: '대기' },
   { id: 164, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '업로드', depth5: '', screenName: '참고사항 업로드', screenId: 'PM-PUB-0113', path: '/views/pub/', status: '대기' },
   { id: 165, category: '스마트워크', depth1: '', depth2: '', depth3: '우수시설인증', depth4: '리스트', depth5: '', screenName: '진단인증 리스트', screenId: 'PM-PUB-0114', path: '/views/pub/', status: '대기' },
