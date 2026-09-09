@@ -209,35 +209,30 @@ async function onFileSelected(event: Event) {
   detailForm.file = file
 }
 
+/** 설계서 A01 — 한 버튼에 모달은 하나만 붙인다(빈값 체크·완료 알림은 인계 대상) */
 async function onSave() {
-  const missing = findMissingField()
-  if (missing) {
-    await dialog.alert({ title: `${missing} 항목은 필수입니다.`, btnCancel: '확인' })
-    return
-  }
+  if (findMissingField()) return
 
   const result = await dialog.confirm({
-    title: '저장하시겠습니까?',
+    title: '저장 하시겠습니까?',
     btnOk: '확인',
     btnCancel: '취소',
   })
   if (!result.confirmed) return
 
   // TODO: API 연동
-  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
   closeDetail()
 }
 
 async function onDelete() {
   const result = await dialog.confirm({
-    title: '삭제하시겠습니까?',
+    title: '삭제 하시겠습니까?',
     btnOk: '확인',
     btnCancel: '취소',
   })
   if (!result.confirmed) return
 
   // TODO: API 연동
-  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
   closeDetail()
 }
 </script>

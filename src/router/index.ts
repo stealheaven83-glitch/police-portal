@@ -95,6 +95,39 @@ const router = createRouter({
             }
         },
         {
+            // 근무일지(乙) 등록 화면군 — 아래 세 화면ID는 이 화면 안의 팝업이라 같은 파일을
+            // 가리킨다. screenGroup 이 같아야 팝업을 열고 닫아도 Layout.vue 의 :key 가 안 바뀐다.
+            // (폴더가 없는 화면ID라 plannedRoutes 로는 '준비중'이 뜬다)
+            path: '/views/lpo/PM-LPO-0219',
+            name: 'PM-LPO-0219',
+            component: () => import('../views/lpo/PM-LPO-0217/PM-LPO-0217.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '112누락정보',
+                screenGroup: 'PM-LPO-0217',
+            }
+        },
+        {
+            path: '/views/lpo/PM-LPO-0221',
+            name: 'PM-LPO-0221',
+            component: () => import('../views/lpo/PM-LPO-0217/PM-LPO-0217.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '처리자 관리',
+                screenGroup: 'PM-LPO-0217',
+            }
+        },
+        {
+            path: '/views/lpo/PM-LPO-0222',
+            name: 'PM-LPO-0222',
+            component: () => import('../views/lpo/PM-LPO-0217/PM-LPO-0217.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '파일 업로드',
+                screenGroup: 'PM-LPO-0217',
+            }
+        },
+        {
             path: '/views/lpo/PC-LPO-0701',
             name: 'PC-LPO-0701',
             component: () => import('../views/lpo/PC-LPO-0701/PC-LPO-0701.vue'),

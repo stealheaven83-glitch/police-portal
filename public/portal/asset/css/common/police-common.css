@@ -114,6 +114,46 @@
   min-width: 0;
 }
 
+/* 조회조건 한 줄 — 회색 상자 없이 조건만 늘어놓는 시안(근무일지 등).
+   police-style 의 .search-area 와 배치는 같지만 배경이 없다 */
+.lp-filter-row {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.6rem 3.6rem;
+}
+
+/* 날짜를 좌우 화살표로 옮기는 묶음 (시안 11969:40069 — 화살표·날짜 사이 10) */
+.lp-daynav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+/* 아래 방향 삼각형(arrowDropDown)을 좌/우 화살표로 돌려 쓴다 — 시안이 같은 아이콘을 회전해 쓴다 */
+.lp-icon-prev {
+  transform: rotate(90deg);
+}
+.lp-icon-next {
+  transform: rotate(-90deg);
+}
+
+/* 조회조건 묶음 사이의 세로 구분선 (시안: 1px, 높이 16) */
+.lp-divider-v {
+  flex-shrink: 0;
+  width: 1px;
+  height: 1.6rem;
+  background: var(--Border_gray02);
+}
+
+/* 라디오 여러 개가 한 줄에 16px 간격으로 놓일 때 (group-gap 에는 16px 이 없다) */
+.lp-radio-inline {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
 /* 한 줄에 좌우로 벌려 놓기 */
 .lp-row-between {
   display: flex;
@@ -179,6 +219,10 @@
 .lp-icon-btn svg {
   display: block;
 }
+.lp-icon-btn-20 {
+  width: 2rem;
+  height: 2rem;
+}
 .lp-icon-btn-24 {
   width: 2.4rem;
   height: 2.4rem;
@@ -229,6 +273,11 @@
    행 병합(rowSpan)과 달리 옆 칸 배치를 건드리지 않는다. */
 .lp-info-row-tall {
   min-height: 12rem;
+}
+
+/* 같은 역할의 넓은 간격 — 조회조건·버튼줄·표를 20px 씩 띄우는 시안(근무일지 등) */
+.lp-row-gap {
+  margin-top: 2rem;
 }
 
 /*
@@ -1160,12 +1209,13 @@
   gap: 1rem;
 }
 
-/* 테두리 있는 첨부파일 한 줄 — FileUpload 컴포넌트가 안 맞는 조합(다운로드+삭제)일 때 쓴다 */
+/* 테두리 있는 첨부파일 한 줄 — FileUpload 컴포넌트가 안 맞는 조합(다운로드+삭제)일 때 쓴다.
+   시안(13437:135685)은 높이 56, 안쪽 여백 16, 링크 사이 16 */
 .lp-file-box {
   display: flex;
   align-items: center;
   gap: 1.6rem;
-  height: 4.8rem;
+  height: 5.6rem;
   padding: 0 1.6rem;
   background: var(--white);
   border: 0.1rem solid var(--Border_gray02);
@@ -1207,6 +1257,27 @@
 }
 .lp-em-danger {
   color: var(--danger);
+}
+/* 글자용 초록(#00880B) — 아이콘·배지용 --success(#00AA0E) 보다 어둡다 */
+.lp-em-success {
+  color: var(--Alert-success-text);
+}
+/* 시안의 강조 적색(#B02A30) — --danger(#DE3412) 보다 어둡다 */
+.lp-em-point {
+  color: var(--Base--point);
+}
+/* 문장 앞머리 표식만 굵게 (근무일지 활동내역의 접수코드·[모바일]·[테블릿] — 시안 600) */
+.lp-em-strong {
+  font-weight: 600;
+}
+
+/* 표 셀 본문 아래에 붙는 보조 한 줄(작성일시 등) — 시안은 셀 오른쪽 끝에 붙는다 */
+.lp-cell-note {
+  margin-top: 0.4rem;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  color: var(--Text-body_1);
+  text-align: right;
 }
 
 /* ── 월간 일정 달력(MonthScheduleCalendar) ──────────────────────────────── */
@@ -2277,4 +2348,25 @@
 
 .info-label-group .info-label-txt{
   font-size: 1.5rem;
+}
+
+/* 표 셀 안에 들어가는 여러 줄 입력칸 (근무일지 신규 행의 활동내역 — 시안 12622:71109).
+   그리드에 textarea 셀 종류가 없어 포매터가 직접 만든 요소에 입힌다 */
+.lp-cell-textarea {
+  /* flex 항목이라 min-width:auto 로 두면 textarea 의 기본 폭(cols=20)만큼 셀을 밀어
+     표에 가로 스크롤이 생긴다 */
+  min-width: 0;
+  width: 100%;
+  height: 4.7rem;
+  padding: 0.8rem 1.2rem;
+  border: 1px solid var(--Border_input01);
+  border-radius: var(--Radius-medium1);
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+  resize: none;
+}
+.lp-cell-textarea:focus {
+  border-color: var(--Border_primary);
+  outline: none;
 }

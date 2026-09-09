@@ -296,8 +296,6 @@ function onFormSave(payload: MemoFormPayload) {
 async function onFormDelete() {
   if (currentMemo.value) deleteMemo(currentMemo.value.id)
   backToList()
-  // 사용자 지정: 삭제 완료를 제목 없는 알림 모달로 안내 — §7 기본(toast)과 다르지만 요청대로 따름
-  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
 /**
@@ -315,8 +313,6 @@ async function onDeleteSelected() {
   })
   if (!confirmed) return
   deleteSelected()
-  // 사용자 지정: 삭제 완료를 제목 없는 알림 모달로 안내 — §7 기본(toast)과 다르지만 요청대로 따름
-  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
 useBottomTabSetup({

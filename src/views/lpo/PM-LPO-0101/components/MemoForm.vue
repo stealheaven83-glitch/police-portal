@@ -210,7 +210,7 @@ const contentPlaceholder = isDetail.value
   ? '내용을 입력해주세요.'
   : '※ 주의\n입력하신 개인정보는 타인에게 발송될 경우 개인정보 유출 사고가 발생할 수 있습니다. 다시 한 번 확인하시기 바랍니다.'
 
-// ── 첨부파일: 선택/드롭 → 목업 목록에 추가 (실제 업로드는 개발팀) ──
+// ── 첨부파일: 선택/드롭 → 목업 목록에 추가 (실제 업로드는 인계 대상) ──
 const fileInputRef = ref<HTMLInputElement | null>(null)
 
 function pickFile() {

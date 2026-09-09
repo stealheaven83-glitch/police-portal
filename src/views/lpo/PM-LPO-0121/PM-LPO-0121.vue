@@ -98,7 +98,7 @@ const columns: TabulatorGridColumn[] = [
 
 
 /**
- * 결재 처리는 개발팀 몫이고 기획서에 화면 동작(확인창·안내문구)이 정의돼 있지 않다.
+ * 결재 처리는 화면 밖 일이고 기획서에 화면 동작(확인창·안내문구)이 정의돼 있지 않다.
  * 지정되지 않은 동작은 만들지 않고 비워 둔다(CLAUDE.md 서두 — 인계 대상).
  */
 function onApprove(_row: ApprovalRow) {}

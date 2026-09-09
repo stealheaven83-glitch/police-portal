@@ -73,6 +73,14 @@ export interface TabulatorGridColumn {
   /** 버튼 클릭 핸들러 */
   onButtonClick?: (rowData: any, cell: any) => void;
 
+  /**
+   * cellType: 'input' | 'select' 에서, 이 행에 입력 컨트롤을 보여줄지.
+   * false 면 컨트롤 없이 값만 텍스트로 그린다(버튼의 buttonVisible 과 같은 개념).
+   * 안 주면 지금까지처럼 모든 행에 컨트롤이 보인다.
+   * 쓰는 곳: PM-LPO-0217 — 시안이 신규 입력 행에만 입력칸을 두고 나머지는 값만 보여준다.
+   */
+  cellVisible?: (rowData: any) => boolean
+
   /* cellType: 'input' */
   /**
    * 값이 비어 있을 때 입력 셀에 깔리는 안내 문구.

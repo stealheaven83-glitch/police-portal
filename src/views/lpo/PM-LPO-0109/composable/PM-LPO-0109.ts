@@ -64,7 +64,7 @@ function createMockRows(): DispatchAllowanceRow[] {
   }))
 }
 
-/** 팝업 목업 — 실제 값은 개발팀이 접수번호로 조회한다 */
+/** 팝업 목업 — 실제 값은 접수번호로 조회해 채운다(인계 대상) */
 function createMockCase(receiptNo: string): DispatchCaseInfo {
   return {
     receiptNo,
