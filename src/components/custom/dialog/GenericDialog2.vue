@@ -177,7 +177,7 @@ function handleCancel() {
   <Dialog :open="open" @update:open="handleOpenChange" class="">
     <DialogContent
       :show-close-button="showCloseButton"
-      class="dialog-wrap px-10 py-6 gap-0 flex flex-col max-h-[85dvh]"
+      class="dialog-wrap px-[3.9rem] py-6 gap-0 flex flex-col max-h-[85dvh]"
       :class="sizeClass"
       :style="[sizeStyle, heightStyle]"
       @pointer-down-outside="(e: Event) => persistent && e.preventDefault()"
