@@ -72,6 +72,7 @@ import { Button } from '@/components/custom/button'
 import NoData from '@/components/custom/empty/NoData.vue'
 import CustomPagination from '@/components/custom/pagination/Pagination.vue'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { useDialog } from '@/composable/dialog/dialog'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { resultTabs, useIntegratedSearchResult } from './composable/PM-COM-0802'
 defineOptions({ name: 'PmCom0802' })
@@ -85,6 +86,7 @@ useSideMenuSetup({
 })
 
 const route = useRoute()
+const dialog = useDialog()
 const { keyword, activeTab, currentPage, visibleSections, totalCount } =
   useIntegratedSearchResult()
 
@@ -94,9 +96,10 @@ onMounted(() => {
   if (typeof q === 'string') keyword.value = q
 })
 
-function onSearch(value: string) {
+async function onSearch(value: string) {
   if (!value.trim()) {
-    toast.warning('검색어를 입력해 주세요.')
+    // 사용자 지정: toast 대신 alert — CLAUDE.md §4 기본(toast.warning)과 다르지만 요청대로 따름
+    await dialog.alert({ title: '검색어를 입력해 주세요.', btnCancel: '확인' })
     return
   }
   currentPage.value = 1

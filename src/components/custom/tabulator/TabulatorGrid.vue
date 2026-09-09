@@ -38,6 +38,7 @@ import type {
   TabulatorGridColumn,
   TabulatorGridLayout,
   TabulatorGridResponsiveLayout,
+  TabulatorValidationError,
 } from '.'
 
 /**
@@ -137,6 +138,12 @@ interface Props {
   showPagination?: boolean
   itemsPerPage?: number
   itemsPerPageOptions?: PageSizeOption[]
+  /** 현재 페이지 번호 (외부 제어/서버 사이드 페이징 시 지정, v-model:currentPage 지원) */
+  currentPage?: number
+  /** 전체 데이터 건수 (외부 제어/서버 사이드 페이징 시 지정) */
+  totalElements?: number
+  /** 전체 페이지 수 (외부 제어/서버 사이드 페이징 시 지정) */
+  totalPages?: number
 
   /* ── 행 드래그(정렬 / 그리드 간 이동·복사) ───────────────────────────── */
   /** 행 드래그 활성화. 컬럼에 { rowHandle: true, formatter: 'handle' } 핸들 컬럼을 함께 넣어준다 */
@@ -200,6 +207,9 @@ const props = withDefaults(defineProps<Props>(), {
   showPagination: false,
   itemsPerPage: 10,
   itemsPerPageOptions: undefined,
+  currentPage: undefined,
+  totalElements: undefined,
+  totalPages: undefined,
   movableRows: false,
   connectedTo: undefined,
   receiveMode: 'add',
@@ -212,6 +222,8 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<{
+  (e: 'update:currentPage', page: number): void
+  (e: 'page-change', page: number): void
   (e: 'update:itemsPerPage', size: number): void
   /** 그리드 안에서 데이터가 바뀌었을 때(셀 편집 · 행 추가/삭제 · 다른 그리드에서 받기).
    *  `v-model:data` 로 받으면 부모 배열이 항상 그리드 내용과 같은 상태로 유지된다. */
@@ -231,6 +243,10 @@ const emit = defineEmits<{
    * (표의 row-click 은 Tabulator RowComponent 라 형태가 달라서 이벤트를 나눴다)
    */
   (e: 'card-click', row: any): void
+  /** 단일 셀 유효성 검사 실패 시 발생 */
+  (e: 'validation-failed', error: TabulatorValidationError): void
+  /** 전체 유효성 검사(validate()) 실행 시 실패 목록 반환 */
+  (e: 'validation-errors', errors: { row: any; field: string; message: string }[]): void
 }>()
 
 const attrs = useAttrs()
@@ -320,6 +336,7 @@ function unmountAllRowCells() {
   cellHosts.forEach((byColumn) => byColumn.forEach((container) => render(null, container)))
   cellHosts.clear()
   rowSelectState.clear()
+  cellInvalidRefs.clear()
 }
 
 /** 테이블에서 사라진 행에 붙어 있던 트리를 정리.
@@ -334,6 +351,7 @@ function unmountOrphanRowCells() {
     rowSelectState.delete(rowData)
     dirtyFields.delete(rowData)
     invalidFields.delete(rowData)
+    cellInvalidRefs.delete(rowData)
   })
 }
 
@@ -348,6 +366,8 @@ function unmountOrphanRowCells() {
 const dirtyFields = new Map<any, Set<string>>()
 /** 행 데이터 객체 -> 유효성 실패 필드 집합 */
 const invalidFields = new Map<any, Set<string>>()
+/** 행 데이터 객체 -> (필드명 -> 셀 내부 컴포넌트 invalid 반응형 ref) */
+const cellInvalidRefs = new Map<any, Map<string, Ref<boolean>>>()
 
 function addField(store: Map<any, Set<string>>, rowData: any, field: string) {
   if (!rowData || !field) return
@@ -363,14 +383,91 @@ function removeField(store: Map<any, Set<string>>, rowData: any, field: string) 
   if (!set.size) store.delete(rowData)
 }
 
+/** 컬럼의 validator 규칙을 해석하여 값의 유효성을 검사 (실패 시 에러 메시지 반환, 성공 시 null) */
+function checkCellValidity(col: TabulatorGridColumn, value: any, cell?: any): string | null {
+  const validators = col.validator
+  if (!validators) return null
+
+  const list = Array.isArray(validators) ? validators : [validators]
+  const colTitle = col.title || col.field || '항목'
+
+  for (const item of list) {
+    if (!item) continue
+
+    // 1. 함수형 validator
+    if (typeof item === 'function') {
+      const valid = item(cell ?? null, value)
+      if (!valid) return `${colTitle} 항목의 입력값이 유효하지 않습니다.`
+      continue
+    }
+
+    // 2. 문자열 또는 객체형 validator
+    let type = typeof item === 'string' ? item : item.type
+    let params: any = typeof item === 'object' ? item.parameters : undefined
+
+    if (typeof type === 'string' && type.includes(':')) {
+      const parts = type.split(':')
+      type = parts[0]
+      params = parts[1]
+    }
+
+    if (type === 'required') {
+      const isMissing =
+        value === null ||
+        value === undefined ||
+        (typeof value === 'string' && value.trim() === '') ||
+        (Array.isArray(value) && value.length === 0)
+      if (isMissing) {
+        return `${colTitle} 항목은 필수 입력입니다.`
+      }
+    } else if (type === 'maxLength' || type === 'maxlength') {
+      const max = Number(params)
+      if (!isNaN(max) && value != null && String(value).length > max) {
+        return `${colTitle} 항목은 최대 ${max}자까지 입력할 수 있습니다.`
+      }
+    } else if (type === 'minLength' || type === 'minlength') {
+      const min = Number(params)
+      if (!isNaN(min) && value != null && String(value).length < min) {
+        return `${colTitle} 항목은 최소 ${min}자 이상 입력해야 합니다.`
+      }
+    } else if (type === 'min') {
+      const min = Number(params)
+      if (!isNaN(min) && value != null && value !== '' && Number(value) < min) {
+        return `${colTitle} 항목의 값은 ${min} 이상이어야 합니다.`
+      }
+    } else if (type === 'max') {
+      const max = Number(params)
+      if (!isNaN(max) && value != null && value !== '' && Number(value) > max) {
+        return `${colTitle} 항목의 값은 ${max} 이하이어야 합니다.`
+      }
+    } else if (type === 'numeric' || type === 'integer') {
+      if (value != null && value !== '') {
+        const num = Number(value)
+        if (isNaN(num)) return `${colTitle} 항목은 숫자만 입력 가능합니다.`
+        if (type === 'integer' && !Number.isInteger(num)) return `${colTitle} 항목은 정수만 입력 가능합니다.`
+      }
+    }
+  }
+
+  return null
+}
+
 /** 한 셀의 표시 상태를 맵 기준으로 다시 칠한다 */
 function paintCell(cell: any) {
   const el = cell.getElement?.()
   const field = cell.getField?.()
   const rowData = cell.getRow?.()?.getData?.()
   if (!el || !field || !rowData) return
-  el.classList.toggle('cell-dirty', props.markDirty && !!dirtyFields.get(rowData)?.has(field))
-  el.classList.toggle('tabulator-validation-fail', !!invalidFields.get(rowData)?.has(field))
+  const isDirty = props.markDirty && !!dirtyFields.get(rowData)?.has(field)
+  const isInvalid = !!invalidFields.get(rowData)?.has(field)
+  el.classList.toggle('cell-dirty', isDirty)
+  el.classList.toggle('tabulator-validation-fail', isInvalid)
+
+  // 셀 내부에 InputField2 가 마운트되어 있는 경우, 에러 테두리를 즉시 갱신
+  const cellInvalidRef = cellInvalidRefs.get(rowData)?.get(field)
+  if (cellInvalidRef) {
+    cellInvalidRef.value = isInvalid
+  }
 }
 
 /** 한 행의 모든 셀을 다시 칠한다. rowFormatter(=셀이 재생성되는 지점)에서 호출 */
@@ -384,20 +481,59 @@ function repaintAll() {
 }
 
 /* ------------------------------------------------------------------ *
- * 페이지네이션 상태 (Tabulator 내장 로컬 페이징 + custom/pagination UI)
+ * 페이지네이션 상태
+ *  - 외부 제어(서버 사이드) 모드: totalElements, totalPages, currentPage 가
+ *    전달되면 Tabulator 내장 페이징 대신 외부 상태로 직접 Pagination 을 제어한다.
+ *  - 로컬 모드: 기존처럼 Tabulator 내장 로컬 페이징 + 내부 상태로 동작 (하위 호환).
  * ------------------------------------------------------------------ */
-const currentPage = ref(1)
+const isManualPagination = computed(
+  () =>
+    props.totalElements !== undefined ||
+    props.totalPages !== undefined ||
+    props.currentPage !== undefined,
+)
+
+const internalCurrentPage = ref(1)
 const pageSize = ref(props.itemsPerPage)
-const totalElements = ref(props.data.length)
-const totalPages = computed(() => Math.max(1, Math.ceil(totalElements.value / pageSize.value)))
+const internalTotalElements = ref(props.data.length)
+
+const currentPage = computed({
+  get: () => (props.currentPage !== undefined ? props.currentPage : internalCurrentPage.value),
+  set: (val: number) => {
+    internalCurrentPage.value = val
+    emit('update:currentPage', val)
+    emit('page-change', val)
+  },
+})
+
+const totalElements = computed(() => {
+  if (props.totalElements !== undefined) return props.totalElements
+  if (props.totalPages !== undefined) return props.totalPages * pageSize.value
+  return internalTotalElements.value
+})
+
+const totalPages = computed(() => {
+  if (props.totalPages !== undefined) return props.totalPages
+  return Math.max(1, Math.ceil(totalElements.value / pageSize.value))
+})
 
 function goToPage(page: number) {
-  table?.setPage(page)
+  if (isManualPagination.value) {
+    if (props.currentPage === undefined) {
+      internalCurrentPage.value = page
+    }
+    emit('update:currentPage', page)
+    emit('page-change', page)
+  } else {
+    table?.setPage(page)
+  }
 }
 
 function changePageSize(size: number) {
   pageSize.value = size
-  table?.setPageSize(size)
+  if (!isManualPagination.value) {
+    table?.setPageSize(size)
+  }
   emit('update:itemsPerPage', size)
 }
 
@@ -647,17 +783,57 @@ function dateCellFormatter(columnKey: string) {
  * ------------------------------------------------------------------ */
 function inputCellFormatter(col: TabulatorGridColumn, columnKey: string) {
   return (cell: any) => {
+    const rowData = cell.getRow().getData()
+    const field = col.field || cell.getField?.() || ''
     const value = ref<string>(cell.getValue() ?? '')
+    const isInvalid = ref(!!invalidFields.get(rowData)?.has(field))
+
+    // 행-필드별 invalid 상태 ref 등록
+    let byField = cellInvalidRefs.get(rowData)
+    if (!byField) {
+      byField = new Map()
+      cellInvalidRefs.set(rowData, byField)
+    }
+    byField.set(field, isInvalid)
+
+    // cellMaxLength(대문자 L)는 기존 화면(PC-COM-2206 등)이 쓰던 이름이라 함께 받는다
+  const rawMaxlength = col.cellMaxlength ?? col.maxlength
+    const parsedMaxlength =
+      rawMaxlength != null && rawMaxlength !== '' ? Number(rawMaxlength) : undefined
 
     /*
      * 타이핑 도중이 아니라 편집이 끝났을 때(blur/Enter) 한 번만 커밋한다.
      * 매 키 입력마다 setValue 를 부르면 cellEdited 가 글자 수만큼 발생해
      * dirty 표시가 요동치기 때문. (기존 raw input 의 change 동작과 동일)
      */
-    const commit = () => cell.setValue(value.value)
+    const commit = () => {
+      // validator 검증
+      if (col.validator && field) {
+        const errorMsg = checkCellValidity(col, value.value, cell)
+        if (errorMsg) {
+          addField(invalidFields, rowData, field)
+          isInvalid.value = true
+          paintCell(cell)
+          emit('validation-failed', {
+            row: rowData,
+            field,
+            value: value.value,
+            message: errorMsg,
+            cell,
+          })
+        } else {
+          removeField(invalidFields, rowData, field)
+          isInvalid.value = false
+          paintCell(cell)
+        }
+      }
+      cell.setValue(value.value)
+    }
 
-    // 지우기(X)나 조회 아이콘이 필요한 셀만 InputField2 로 — 그 기능이 이쪽에만 있다
-    const rich = Boolean(col.cellClearable || col.cellIcon)
+    // 지우기(X), 조회 아이콘, maxLength 또는 cellShowCount 가 필요한 셀은 InputField2 로
+    const rich = Boolean(
+      col.cellClearable || col.cellIcon || parsedMaxlength != null || col.cellShowCount,
+    )
 
     return mountCell(cell, columnKey, 'grid-input-cell', () =>
       rich
@@ -666,8 +842,9 @@ function inputCellFormatter(col: TabulatorGridColumn, columnKey: string) {
             size: 'sm',
             clearable: Boolean(col.cellClearable),
             placeholder: col.cellPlaceholder,
-            // 안 넘기면 undefined 라 제한 없음 — 지금까지 동작 그대로다
-            maxlength: col.cellMaxLength,
+            maxlength: parsedMaxlength,
+            showCount: Boolean(col.cellShowCount),
+            borderStyle: isInvalid.value ? 'error' : undefined,
             ...(col.cellIcon
               ? {
                   icon: col.cellIcon,
@@ -683,7 +860,10 @@ function inputCellFormatter(col: TabulatorGridColumn, columnKey: string) {
             class: '!space-y-0',
             inputClass: 'w-full',
             'onUpdate:modelValue': (val: string | number) => {
-              const next = String(val ?? '')
+              let next = String(val ?? '')
+              if (parsedMaxlength != null && !isNaN(parsedMaxlength) && next.length > parsedMaxlength) {
+                next = next.slice(0, parsedMaxlength)
+              }
               // 지우기(X)는 native change 를 안 쏘므로 그 자리에서 바로 커밋한다
               const cleared = next === '' && value.value !== ''
               value.value = next
@@ -696,10 +876,13 @@ function inputCellFormatter(col: TabulatorGridColumn, columnKey: string) {
             size: 'sm',
             // 값이 비어 있을 때 안내 문구(시안에서 '부서조회'처럼 회색으로 깔리는 글자)
             placeholder: col.cellPlaceholder,
-            // Input 은 prop 이 아니라 attrs 폴스루로 native input 에 그대로 붙는다
-            maxlength: col.cellMaxLength,
+            maxlength: parsedMaxlength,
             'onUpdate:modelValue': (val: string | number) => {
-              value.value = String(val)
+              let next = String(val ?? '')
+              if (parsedMaxlength != null && !isNaN(parsedMaxlength) && next.length > parsedMaxlength) {
+                next = next.slice(0, parsedMaxlength)
+              }
+              value.value = next
             },
             onChange: commit,
           }),
@@ -992,7 +1175,7 @@ function buildTable() {
     renderVertical: 'basic',
     columns: buildColumns(),
     ...movableRowsOptions(),
-    ...(props.showPagination
+    ...(props.showPagination && !isManualPagination.value
       ? {
           pagination: true,
           paginationMode: 'local',
@@ -1031,26 +1214,62 @@ function buildTable() {
     const field = cell.getField()
     const rowData = cell.getRow().getData()
     addField(dirtyFields, rowData, field)
-    // 편집이 커밋됐다는 건 유효성을 통과했다는 뜻
-    removeField(invalidFields, rowData, field)
+
+    // 해당 컬럼 정의 찾기 및 validator 재검증
+    const colDef = props.columns.find((c) => c.field === field)
+    let hasValidationError = false
+    if (colDef?.validator) {
+      const errorMsg = checkCellValidity(colDef, cell.getValue(), cell)
+      if (errorMsg) {
+        hasValidationError = true
+        addField(invalidFields, rowData, field)
+        emit('validation-failed', {
+          row: rowData,
+          field,
+          value: cell.getValue(),
+          message: errorMsg,
+          cell,
+        })
+      }
+    }
+
+    if (!hasValidationError) {
+      removeField(invalidFields, rowData, field)
+    }
+
     paintCell(cell)
     emitData()
     emit('cell-edited', cell)
   })
 
   table.on('validationFailed', (cell: any) => {
-    addField(invalidFields, cell.getRow().getData(), cell.getField())
+    const field = cell.getField()
+    const rowData = cell.getRow().getData()
+    addField(invalidFields, rowData, field)
+    const colDef = props.columns.find((c) => c.field === field)
+    const colTitle = colDef?.title || field
+    emit('validation-failed', {
+      row: rowData,
+      field,
+      value: cell.getValue(),
+      message: `${colTitle} 항목의 입력값이 유효하지 않습니다.`,
+      cell,
+    })
   })
 
   table.on('rowClick', (e: Event, row: any) => emit('row-click', e, row))
   table.on('rowDblClick', (e: Event, row: any) => emit('row-dbl-click', e, row))
 
-  // 페이지네이션 동기화
+  // 페이지네이션 동기화 (로컬 모드일 때만 Tabulator 이벤트로 갱신)
   table.on('pageLoaded', (pageno: number) => {
-    currentPage.value = pageno
+    if (!isManualPagination.value) {
+      internalCurrentPage.value = pageno
+    }
   })
   table.on('dataProcessed', () => {
-    totalElements.value = table.getDataCount()
+    if (!isManualPagination.value) {
+      internalTotalElements.value = table.getDataCount()
+    }
   })
 
   // 선택 상태 동기화
@@ -1060,19 +1279,25 @@ function buildTable() {
   })
   table.on('rowAdded', () => {
     syncSelectionCheckboxes()
-    totalElements.value = table.getDataCount()
+    if (!isManualPagination.value) {
+      internalTotalElements.value = table.getDataCount()
+    }
     emitData()
   })
   table.on('rowDeleted', () => {
     unmountOrphanRowCells()
     syncSelectionCheckboxes()
-    totalElements.value = table.getDataCount()
+    if (!isManualPagination.value) {
+      internalTotalElements.value = table.getDataCount()
+    }
     emitData()
   })
 
   // 행 드래그
   table.on('movableRowsReceived', (fromRow: any, toRow: any, fromTable: any) => {
-    totalElements.value = table.getDataCount()
+    if (!isManualPagination.value) {
+      internalTotalElements.value = table.getDataCount()
+    }
     emitData()
     emit('rows-received', fromRow, toRow, fromTable)
   })
@@ -1189,7 +1414,12 @@ watch(
       repaintAll()
     }
 
-    if (dataChanged) applyData(nextData)
+    if (dataChanged) {
+      if (!isManualPagination.value) {
+        internalTotalElements.value = nextData?.length ?? 0
+      }
+      applyData(nextData)
+    }
 
     if (columnsChanged) {
       table.redraw(true)
@@ -1206,7 +1436,9 @@ watch(
   (next) => {
     if (next === pageSize.value) return
     pageSize.value = next
-    table?.setPageSize(next)
+    if (!isManualPagination.value) {
+      table?.setPageSize(next)
+    }
   },
 )
 
@@ -1294,13 +1526,14 @@ defineExpose({
   /**
    * 유효성 검사를 통과하지 못한 셀 목록 (없으면 빈 배열).
    *
-   * Tabulator 의 table.validate() 는 "현재 셀 값" 기준이라, 편집 중 잘못된 값을 입력해
-   * 되돌려진(revert) 셀은 잡아내지 못한다. 그래서 validationFailed 이벤트로 쌓아둔
-   * 실패 이력(invalidFields)도 함께 모아서 돌려준다.
+   * Tabulator 의 table.validate() 와 함께, 페이징/가상화로 인해
+   * 렌더링되지 않은 전체 행 데이터(table.getData())에 대한 컬럼 validator 검증을
+   * 통합 수행하여 누락 없이 실패 목록을 반환합니다.
    */
   validate: () => {
-    const result: { row: any; field: string; message?: string }[] = []
+    const result: { row: any; field: string; message: string }[] = []
 
+    // 1. Tabulator 내장 validate() 호출 결과 수집
     const apiResult = table?.validate()
     if (Array.isArray(apiResult)) {
       apiResult.forEach((cell: any) => {
@@ -1308,23 +1541,61 @@ defineExpose({
         const field = cell.getField?.()
         if (!field) return
         addField(invalidFields, rowData, field)
-        result.push({ row: rowData, field })
+        const colDef = props.columns.find((c) => c.field === field)
+        const colTitle = colDef?.title || field
+        result.push({
+          row: rowData,
+          field,
+          message: `${colTitle} 항목의 입력값이 유효하지 않습니다.`,
+        })
       })
     }
 
+    // 2. 전체 데이터 행에 대해 validator 가 있는 모든 컬럼 전수 검증 (페이징 누락 방지)
+    const allRows = table?.getData() ?? []
+    const validatedColumns = props.columns.filter((col) => col.field && col.validator)
+
+    allRows.forEach((row: any) => {
+      validatedColumns.forEach((col) => {
+        const field = col.field!
+        const value = row[field]
+        const errorMsg = checkCellValidity(col, value)
+        if (errorMsg) {
+          addField(invalidFields, row, field)
+          if (!result.some((r) => r.field === field && r.row === row)) {
+            result.push({ row, field, message: errorMsg })
+          }
+        }
+      })
+    })
+
+    // 3. invalidFields 에 등록된 이전 실패 내역 중 누락된 건 추가
     invalidFields.forEach((fields, rowData) => {
       fields.forEach((field) => {
         if (result.some((r) => r.field === field && r.row === rowData)) return
-        result.push({ row: rowData, field, message: '입력값이 유효하지 않습니다.' })
+        const colDef = props.columns.find((c) => c.field === field)
+        const colTitle = colDef?.title || field
+        result.push({ row: rowData, field, message: `${colTitle} 항목의 입력값이 유효하지 않습니다.` })
       })
     })
 
     repaintAll()
+
+    // 부모 컴포넌트 에러 핸들링을 위한 emit 발생
+    if (result.length) {
+      emit('validation-errors', result)
+    }
+
     return result
   },
   /** 유효성 실패 표시를 걷어낼 때 */
   clearValidation: () => {
     invalidFields.clear()
+    cellInvalidRefs.forEach((byField) => {
+      byField.forEach((r) => {
+        r.value = false
+      })
+    })
     repaintAll()
   },
 
@@ -1405,7 +1676,7 @@ defineExpose({
     <!-- 시안(메모 검색결과없음)에서는 0건일 때 페이지네이션 바가 통째로 사라진다 -->
     <Pagination
       v-if="showPagination && totalElements > 0 && !cardView"
-      class="shrink-0"
+      class="mt-[20px] shrink-0"
       :current-page="currentPage"
       :total-pages="totalPages"
       :items-per-page="pageSize"

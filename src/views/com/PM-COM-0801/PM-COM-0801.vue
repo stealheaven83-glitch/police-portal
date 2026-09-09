@@ -20,10 +20,10 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { toast } from 'vue-sonner'
 import SearchBar from '@/components/custom/search/SearchBar.vue'
 import SearchKeywordPanel from '@/components/custom/search/SearchKeywordPanel.vue'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { useDialog } from '@/composable/dialog/dialog'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useIntegratedSearch } from './composable/PM-COM-0801'
 defineOptions({ name: 'PmCom0801' })
@@ -40,26 +40,29 @@ useSideMenuSetup({
 })
 
 const router = useRouter()
+
+const dialog = useDialog()
 const { keyword, recentKeywords, recommendedKeywords, removeRecent, clearRecent } =
   useIntegratedSearch()
 
 /** 검색 실행 → 결과 화면(PM-COM-0802)으로 이동. 실제 조회는 개발팀이 붙인다 */
-function goToResult(value: string) {
+async function goToResult(value: string) {
   const trimmed = value.trim()
   if (!trimmed) {
-    toast.warning('검색어를 입력해 주세요.')
+    // 사용자 지정: toast 대신 alert — CLAUDE.md §4 기본(toast.warning)과 다르지만 요청대로 따름
+    await dialog.alert({ title: '검색어를 입력해 주세요.', btnCancel: '확인' })
     return
   }
   router.push({ name: 'PM-COM-0802', query: { q: trimmed } })
 }
 
 function onSearch(value: string) {
-  goToResult(value)
+  void goToResult(value)
 }
 
 function onSelectKeyword(value: string) {
   keyword.value = value
-  goToResult(value)
+  void goToResult(value)
 }
 
 useBottomTabSetup({

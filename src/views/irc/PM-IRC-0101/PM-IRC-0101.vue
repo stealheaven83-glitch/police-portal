@@ -80,7 +80,6 @@
 
 <script setup lang="ts">
 import { Sparkles } from 'lucide-vue-next'
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -94,6 +93,7 @@ import {
   AccordionTrigger,
 } from '@/components/custom/accordion'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { useDialog } from '@/composable/dialog/dialog'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useIncidentScenarioSearch } from './composable/PM-IRC-0101'
 defineOptions({ name: 'PmIrc0101' })
@@ -112,6 +112,8 @@ useSideMenuSetup({
 // 브레드크럼: 실제 라우트가 있는 항목만 path 를 준다(/irc 는 라우트가 아니다)
 const navItems = [{ label: '홈', path: '/' }, { label: '사건대응 시나리오' }]
 
+const dialog = useDialog()
+
 const {
   keyword,
   searched,
@@ -125,10 +127,11 @@ const {
 } = useIncidentScenarioSearch()
 
 /** 검색 실행 → 같은 화면이 'AI 생성 답변' 상태로 바뀐다. 실제 질의는 개발팀이 붙인다 */
-function onSearch(value: string) {
+async function onSearch(value: string) {
   const trimmed = value.trim()
   if (!trimmed) {
-    toast.warning('검색어를 입력해 주세요.')
+    // 사용자 지정: toast 대신 alert — CLAUDE.md §4 기본(toast.warning)과 다르지만 요청대로 따름
+    await dialog.alert({ title: '검색어를 입력해 주세요.', btnCancel: '확인' })
     return
   }
   pushRecent(trimmed)
@@ -137,7 +140,7 @@ function onSearch(value: string) {
 
 function onSelectKeyword(value: string) {
   keyword.value = value
-  onSearch(value)
+  void onSearch(value)
 }
 
 useBottomTabSetup({
