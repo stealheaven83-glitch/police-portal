@@ -13,16 +13,19 @@
 
   <div class="lp-page-scroll">
     <div class="lp-setting-bar lp-row-between">
-      <span class="lp-icon-row">
+      <span class="lp-setting-bar-head">
         <span class="lp-heading-md">화면 모드 설정</span>
-        <InfoBox size="slim" type="primary">
+        <!-- 시안(13312:146247)은 InfoBox 같은 상자가 아니라 아이콘 + 한 줄 안내문이다 -->
+        <span class="lp-info-message">
+          <Icon name="systemInfo" :size="16" />
           현재 {{ darkMode ? '다크(어두운)' : '라이트(밝은)' }}모드 입니다.
-        </InfoBox>
+        </span>
       </span>
       <Switch v-model="darkMode" variant="none" label="다크(어두운) 모드 사용" />
     </div>
 
-    <div class="lp-row-between lp-section-head">
+    <!-- 시안(13391:64693)에는 제목 아래 실선이 없다 -->
+    <div class="lp-row-between">
       <span class="lp-heading-md">메인화면 설정</span>
       <span class="group-gap2">
         <Button type="button" variant="tertiary2" size="sm" @click="onReset">기본설정으로</Button>
@@ -31,39 +34,56 @@
     </div>
 
     <div class="lp-mainset-preview">
-      <div class="lp-mainset-col">
-        <div v-for="slot in [1, 2]" :key="slot" class="lp-mainset-slot">
-          <span class="lp-mainset-badge">{{ slot }}</span>
-          <div v-if="previewSlots[slot - 1]" class="lp-mainset-card">
-            <span class="lp-mainset-card-title">{{ previewSlots[slot - 1]?.label }}</span>
-            <span class="lp-mainset-card-img" aria-hidden="true"></span>
+      <!-- 왼쪽: 메인화면을 축소한 미리보기 (시안 13312:146548 — 1020×300) -->
+      <div class="lp-mainset-figure">
+        <div class="lp-mainset-cards">
+          <div class="lp-mainset-col">
+            <div v-for="slot in [1, 2]" :key="slot" class="lp-mainset-slot">
+              <span class="lp-mainset-badge">{{ slot }}</span>
+              <div v-if="previewSlots[slot - 1]" class="lp-mainset-card">
+                <span class="lp-mainset-card-title">{{ previewSlots[slot - 1]?.label }}</span>
+                <img
+                  v-if="previewSlots[slot - 1]?.imageSrc"
+                  class="lp-mainset-card-img"
+                  :src="previewSlots[slot - 1]!.imageSrc"
+                  :alt="previewSlots[slot - 1]!.imageName"
+                >
+                <span v-else class="lp-mainset-card-img" aria-hidden="true"></span>
+              </div>
+              <div v-else class="lp-mainset-empty">미설정</div>
+            </div>
           </div>
-          <div v-else class="lp-mainset-empty">미설정</div>
-        </div>
-      </div>
 
-      <div class="lp-mainset-col">
-        <div class="lp-mainset-empty lp-mainset-empty-tall">수정 불가</div>
-      </div>
-
-      <div class="lp-mainset-col">
-        <div class="lp-mainset-empty">수정 불가</div>
-        <div class="lp-mainset-empty">수정 불가</div>
-      </div>
-
-      <div class="lp-mainset-col">
-        <div v-for="slot in [3, 4]" :key="slot" class="lp-mainset-slot lp-mainset-slot-reverse">
-          <span class="lp-mainset-badge">{{ slot }}</span>
-          <div v-if="previewSlots[slot - 1]" class="lp-mainset-card">
-            <span class="lp-mainset-card-title">{{ previewSlots[slot - 1]?.label }}</span>
-            <span class="lp-mainset-card-img" aria-hidden="true"></span>
+          <div class="lp-mainset-col">
+            <div class="lp-mainset-empty">수정 불가</div>
           </div>
-          <div v-else class="lp-mainset-empty">미설정</div>
+
+          <div class="lp-mainset-col lp-mainset-col-split">
+            <div class="lp-mainset-empty">수정 불가</div>
+            <div class="lp-mainset-empty">수정 불가</div>
+          </div>
+
+          <div class="lp-mainset-col">
+            <div v-for="slot in [3, 4]" :key="slot" class="lp-mainset-slot lp-mainset-slot-reverse">
+              <span class="lp-mainset-badge">{{ slot }}</span>
+              <div v-if="previewSlots[slot - 1]" class="lp-mainset-card">
+                <span class="lp-mainset-card-title">{{ previewSlots[slot - 1]?.label }}</span>
+                <img
+                  v-if="previewSlots[slot - 1]?.imageSrc"
+                  class="lp-mainset-card-img"
+                  :src="previewSlots[slot - 1]!.imageSrc"
+                  :alt="previewSlots[slot - 1]!.imageName"
+                >
+                <span v-else class="lp-mainset-card-img" aria-hidden="true"></span>
+              </div>
+              <div v-else class="lp-mainset-empty">미설정</div>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="lp-mainset-guide">
-        <ul class="lp-bullet-list">
+        <ul class="lp-dot-list">
           <li>
             왼쪽 이미지에서 보이는 4개의 메뉴를 설정하여 메인에 반영할 수 있습니다.
             (모바일의 경우 모바일에서 설정할 수 있습니다.)
@@ -81,27 +101,29 @@
     </div>
 
     <div class="lp-mainset-menus">
-      <div v-for="group in menuGroups" :key="group.title">
+      <div v-for="group in menuGroups" :key="group.title" class="lp-mainset-menu-col">
         <p class="lp-mainset-group-title">{{ group.title }}</p>
         <ul>
           <li v-for="item in group.items" :key="item.key" class="lp-mainset-menu-item">
+            <!-- 기획서 5-1: 4개가 찼어도 막지 않는다. 새로 체크하면 가장 먼저 체크한 게 풀린다 -->
             <Checkbox
               :id="`main-menu-${item.key}`"
               :model-value="!!selectionOf(item.key)"
-              :disabled="!selectionOf(item.key) && isFull"
               :label="item.label"
               @update:model-value="(checked) => toggleMenu(item.key, !!checked)"
             />
             <template v-if="selectionOf(item.key)">
+              <!-- 시안(13312:148981): 번호 셀렉트 72×32, '이미지 선택' 버튼 높이 32.
+                   SelectField 의 sm 은 40px 이라 폭·높이만 triggerClass 로 맞춘다 -->
               <SelectField
                 :model-value="String(selectionOf(item.key)?.slot)"
                 :options="slotOptions"
                 size="sm"
-                triggerClass="w-20"
+                triggerClass="w-18 h-8"
                 :aria-label="`${item.label} 위치 번호`"
                 @update:model-value="(v: string | number) => setSlot(item.key, Number(v))"
               />
-              <Button type="button" variant="tertiary" size="sm" padding="12" @click="openImagePick(item.key)">
+              <Button type="button" variant="tertiary" size="xs" padding="12" @click="openImagePick(item.key)">
                 이미지 선택
               </Button>
             </template>
@@ -115,14 +137,13 @@
     v-model:open="imagePickOpen"
     :images="mainImages"
     :model-value="pickingImageId"
-    :used-ids="pickingMenuKey ? usedImageIds(pickingMenuKey) : []"
+    :used-slots="usedImageSlots()"
     @update:model-value="onPickImage"
   />
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -130,7 +151,7 @@ import HelpButton from '@/components/custom/button/HelpButton.vue'
 import { Button } from '@/components/custom/button'
 import { Checkbox } from '@/components/custom/checkbox'
 import { Switch } from '@/components/custom/switch'
-import { InfoBox } from '@/components/custom/infobox'
+import Icon from '@/components/custom/icon/Icon.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
@@ -154,13 +175,12 @@ const navItems = [
 
 const {
   darkMode,
-  isFull,
   previewSlots,
   selectionOf,
   toggleMenu,
   setSlot,
   setImage,
-  usedImageIds,
+  usedImageSlots,
   resetToDefault,
 } = useScreenSetting()
 
@@ -186,12 +206,13 @@ function onPickImage(imageId: string) {
 
 function onReset() {
   resetToDefault()
-  toast.success('기본설정으로 되돌렸습니다.')
 }
 
-function onSave() {
-  toast.success('저장되었습니다.')
-}
+/**
+ * 기획서에 저장 후 화면 동작(안내문구·확인창)이 정의돼 있지 않다.
+ * 지정되지 않은 동작은 만들지 않고 비워 둔다(CLAUDE.md 서두 — 인계 대상).
+ */
+function onSave() {}
 
 useBottomTabSetup({
   value: 'PM-LPO-0122',

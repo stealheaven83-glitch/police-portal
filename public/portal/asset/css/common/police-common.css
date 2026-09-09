@@ -65,6 +65,28 @@
   color: var(--Text-body_0);
 }
 
+/*
+ * 입력·설정 옆에 붙는 한 줄 안내문 (시안 공통 input_message__atomic).
+ * InfoBox 는 배경·테두리가 있는 상자라 의도가 다르다 — 이쪽은 아이콘 16px + 안내색 글자뿐이다.
+ */
+.lp-info-message {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  color: var(--info);
+}
+/* 아이콘 자리는 16×16, 그 안의 원형 느낌표가 13.3px 이다(시안).
+   systemInfo.svg 는 20 viewBox 안에 글리프가 16.67 이라 16px 로 그리면 글리프가 13.3 이 된다 —
+   그래서 크기는 Icon 의 size 로만 주고 여기서는 건드리지 않는다.
+   원 색은 글자색(#096AB3)보다 한 톤 밝다(시안) — currentColor 라 여기서 따로 준다. */
+.lp-info-message svg {
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+  color: var(--Alert-info-icon);
+}
+
 /* 줄바꿈 금지 — readonly-text 등과 함께 쓴다 */
 .lp-nowrap {
   white-space: nowrap;
@@ -563,6 +585,34 @@
 }
 .lp-bullet-list li + li {
   margin-top: 0.8rem;
+}
+/*
+ * 안내 문구 목록 — 시안 공통 컴포넌트 'sub text'(작은 점 + 문구, Figma 10812:73960).
+ * .lp-bullet-list 와 의도가 다르다: 그쪽은 본문 크기(1.7rem) 목록이고 이쪽은 상자 안
+ * 안내문(1.5rem)이다. list-style: disc 는 마커 크기·색을 잡을 수 없어 점을 직접 그린다
+ * (시안: 3px 원, 점 위 8px / 점과 글 사이 8px).
+ */
+.lp-dot-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.lp-dot-list > li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+}
+.lp-dot-list > li::before {
+  content: "";
+  position: absolute;
+  top: 0.8rem;
+  left: 0;
+  width: 0.3rem;
+  height: 0.3rem;
+  background: var(--icon-gray);
+  border-radius: 50%;
 }
 .lp-answer-note {
   margin-top: auto;
@@ -1262,149 +1312,263 @@
 }
 
 /* ── 화면설정(메인화면 카드 배치) ────────────────────────────────────────── */
+/* 화면 모드 설정 줄 — 시안(13312:146275)은 회색 배경이 아니라 테두리 상자다(안쪽 24px) */
 .lp-setting-bar {
-  padding: 2rem 2.4rem;
-  margin-bottom: 2.4rem;
-  background: var(--Background-gray01);
-  border-radius: var(--Radius-medium2);
+  padding: 2.4rem;
+  margin-bottom: 3.6rem;
+  border: 1px solid var(--Border_gray02);
+  border-radius: var(--Radius-medium3);
 }
+/* 제목 ↔ 현재 모드 안내문 사이 32px */
+.lp-setting-bar-head {
+  display: flex;
+  align-items: center;
+  gap: 3.2rem;
+}
+/* 카드 일러스트 — object-fit 으로 원본 비율을 지킨다 */
+.lp-mainset-card-img {
+  object-fit: contain;
+}
+
+/* 미리보기(축소된 메인화면) + 안내 상자. 시안 비율 1020 : 480, 사이 64px */
 .lp-mainset-preview {
+  display: flex;
+  align-items: center;
+  gap: 6.4rem;
+  margin: 1.6rem 0 3.6rem;
+}
+/* 왼쪽 미리보기 — 시안 크기(1020×300)를 그대로 고정한다.
+   화면 폭이 변해도 카드는 줄거나 늘지 않는다(제목이 길어도 마찬가지). */
+.lp-mainset-figure {
+  flex: 0 0 102rem;
+  height: 30rem;
+}
+/* 카드 4열 — 시안 폭 211.5 / 249.75 / 249.75 / 135, 사이 18px.
+   좌우 60px 는 번호 뱃지와 연결선이 놓이는 자리다 */
+.lp-mainset-cards {
   display: grid;
-  grid-template-columns: repeat(4, 1fr) 1.4fr;
-  gap: 1.6rem;
-  margin: 1.6rem 0 2.4rem;
+  /* 시안 폭 그대로 고정 (합 900 = 21.15 + 24.975 + 24.975 + 13.5 + 간격 1.8×3) */
+  grid-template-columns: 21.15rem 24.975rem 24.975rem 13.5rem;
+  /* 한 줄 높이도 틀에 못박는다 — 카드 글자가 길어져도 세로로 늘지 않게 */
+  grid-template-rows: 100%;
+  gap: 1.8rem;
+  height: 100%;
+  margin: 0 6rem;
 }
 .lp-mainset-col {
   display: flex;
   flex-direction: column;
-  gap: 1.6rem;
+  gap: 1.8rem;
+  min-width: 0;
+  height: 100%;
 }
+/* 셋째 열만 위아래가 111 : 171 로 나뉜다(시안 13312:146434) */
+.lp-mainset-col-split > :first-child {
+  flex: 111;
+}
+.lp-mainset-col-split > :last-child {
+  flex: 171;
+}
+/* 카드 한 칸. 번호 뱃지는 카드 폭을 먹지 않도록 바깥 여백에 띄운다 */
 .lp-mainset-slot {
+  position: relative;
   display: flex;
   flex: 1;
-  align-items: center;
-  gap: 1.2rem;
-}
-.lp-mainset-slot-reverse {
-  flex-direction: row-reverse;
+  min-width: 0;
+  min-height: 0;
 }
 .lp-mainset-badge {
+  position: absolute;
+  top: 50%;
+  right: calc(100% + 2.4rem);
   display: inline-flex;
-  flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 3.2rem;
-  height: 3.2rem;
-  font-size: 1.5rem;
+  width: 3.6rem;
+  height: 3.6rem;
+  transform: translateY(-50%);
+  font-size: 1.7rem;
   font-weight: 700;
   color: var(--white);
   background: var(--Base-primary);
   border-radius: 50%;
 }
+/* 뱃지와 카드를 잇는 20px 선(시안 Line 2~5) */
+.lp-mainset-badge::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  width: 2rem;
+  height: 1px;
+  background: var(--Border_gray01);
+}
+/* 오른쪽 열은 뱃지가 카드 바깥 오른쪽에 붙는다 */
+.lp-mainset-slot-reverse .lp-mainset-badge {
+  right: auto;
+  left: calc(100% + 2.4rem);
+}
+.lp-mainset-slot-reverse .lp-mainset-badge::after {
+  left: auto;
+  right: 100%;
+}
+/*
+ * 카드 한 장. 크기는 미리보기 틀에 고정이라 내용이 길어도 커지지 않는다 —
+ * 제목이 길면 아래 일러스트를 덮고 지나간다(넘치는 부분은 잘린다).
+ * 그래서 일러스트를 흐름에서 빼서 오른쪽 아래에 고정한다.
+ */
 .lp-mainset-card {
-  display: flex;
+  position: relative;
   flex: 1;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 11rem;
-  padding: 1.6rem;
-  background: var(--Background-gray01);
-  border-radius: var(--Radius-medium3);
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  padding: 2.1rem 1.8rem 1.5rem 2.4rem;
+  background: var(--Background-main-card);
+  border-radius: 2.4rem;
 }
 .lp-mainset-card-title {
-  font-size: 1.6rem;
+  position: relative;
+  z-index: 1;
+  display: block;
+  font-size: 1.8rem;
   font-weight: 700;
   color: var(--Text-body_0);
 }
-/* Figma 3D 일러스트가 들어갈 자리 — 이미지 확정 전까지 빈 칸으로 둔다 */
 .lp-mainset-card-img {
-  align-self: flex-end;
-  width: 5.6rem;
-  height: 4rem;
+  position: absolute;
+  right: 1.8rem;
+  bottom: 1.5rem;
+  width: 7.5rem;
+  height: 7.5rem;
 }
 .lp-mainset-empty {
   display: flex;
   flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
   align-items: center;
   justify-content: center;
-  min-height: 11rem;
   font-size: 1.5rem;
   color: var(--Text-body_2);
-  border: 0.1rem dashed var(--Border_gray01);
+  border: 1px dashed var(--Border_gray01);
+  border-radius: 2.4rem;
+}
+/*
+ * 안내 상자 — 문구는 세로 가운데 정렬(시안 13312:146598).
+ * 미리보기가 1020 고정이라 이쪽이 남는 폭을 받는다. 시안 폭(1564)에서는 정확히 480 이 된다.
+ */
+.lp-mainset-guide {
+  display: flex;
+  flex: 1 1 48rem;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  align-self: stretch;
+  padding: 2rem 2.4rem;
+  border: 1px solid var(--Border_gray03);
   border-radius: var(--Radius-medium3);
 }
-.lp-mainset-empty-tall {
-  height: 100%;
-}
-.lp-mainset-guide {
-  padding: 2rem;
-  border: 0.1rem solid var(--Border_gray02);
-  border-radius: var(--Radius-medium2);
-}
+/* 메뉴 목록 상자 — 4열이 붙어 있고 여백은 각 열이 가진다(시안 13312:146977) */
 .lp-mainset-menus {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 2.4rem;
-  padding: 2.4rem;
-  border: 0.1rem solid var(--Border_gray02);
-  border-radius: var(--Radius-medium2);
+  padding: 0 2rem;
+  border: 1px solid var(--Border_gray03);
+  border-radius: var(--Radius-medium3);
+}
+.lp-mainset-menu-col {
+  min-width: 0;
+  padding: 2rem;
 }
 .lp-mainset-group-title {
-  margin-bottom: 1.6rem;
-  font-size: 1.5rem;
-  color: var(--Text-body_1);
+  padding-bottom: 1.2rem;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  color: var(--Text-body_2);
 }
+/* 체크박스 · 번호 셀렉트 · 이미지 선택 버튼이 한 줄에 16px 간격으로 놓인다 */
 .lp-mainset-menu-item {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-  min-height: 4rem;
+  gap: 1.6rem;
+  height: 3.6rem;
+}
+/* 메뉴 이름은 한 줄로 — 체크박스가 눌려 줄바꿈되면 행 높이(36px)가 깨진다.
+   Checkbox 는 루트가 <label> 이라 그걸 짚는다 */
+.lp-mainset-menu-item > label {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 /* ── 이미지 선택 팝업 ────────────────────────────────────────────────────── */
+/* 6열 타일. 시안(13393:29491)은 920 폭에 136 짜리 6칸 — 가로 20.8 / 세로 16 */
 .lp-imgpick-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 1.2rem;
+  grid-template-columns: repeat(6, 13.6rem);
+  justify-content: space-between;
+  row-gap: 1.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
+/* 타일 136×136 — 위는 그림, 아래는 라디오 줄 */
 .lp-imgpick-tile {
   display: flex;
+  height: 13.6rem;
   flex-direction: column;
-  gap: 0.8rem;
-  align-items: center;
-  padding: 1.2rem;
-  background: var(--Background-gray01);
-  border: 0.1rem solid transparent;
-  border-radius: var(--Radius-medium2);
+  overflow: hidden;
+  border: 1px solid var(--Border_gray02);
+  border-radius: var(--Radius-medium3);
   cursor: pointer;
 }
-.lp-imgpick-tile-on {
-  background: var(--Surface-primary);
-  border-color: var(--Base-primary);
+.lp-imgpick-thumb-box {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem 0 1.4rem;
 }
-.lp-imgpick-tile-off {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-/* Figma 3D 일러스트가 들어갈 자리 — 확정 전까지 이름만 보여준다 */
 .lp-imgpick-thumb {
+  width: 8rem;
+  height: 8rem;
+  object-fit: contain;
+}
+.lp-imgpick-pick {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 5.6rem;
-  font-size: 1.3rem;
-  color: var(--Text-body_2);
+  gap: 0.8rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--Border_gray03);
+  font-size: 1.5rem;
+  line-height: 1.5;
+  /* 시안 text/bolder — police-style.css 에 대응 토큰이 없어 Figma 값을 그대로 쓴다
+     (FileUpload 의 파일명도 같은 이유로 #131416 을 직접 쓰고 있다) */
+  color: #131416;
 }
-.lp-imgpick-pick {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 1.4rem;
-  color: var(--Text-body_1);
+/* 고른 타일 — 테두리 2px 파랑 + 그림칸 연파랑 (시안 variant 'hover') */
+.lp-imgpick-tile-on {
+  border-width: 2px;
+  border-color: var(--Border_primary);
+}
+.lp-imgpick-tile-on .lp-imgpick-thumb-box {
+  background: var(--Surface-primary);
+}
+.lp-imgpick-tile-on .lp-imgpick-pick {
+  color: var(--Base-primary);
+}
+/* 다른 번호가 이미 쓰는 이미지 — 그림칸 연파랑 + 'N번 메뉴' (시안 variant 'selected') */
+.lp-imgpick-tile-used .lp-imgpick-thumb-box {
+  background: var(--Surface-primary);
+}
+.lp-imgpick-tile-used .lp-imgpick-pick {
+  font-weight: 700;
+  color: var(--Base-primary);
 }
 
-/* 숫자 증감 입력(NumberStepper) — 마이너스 값 플러스 */
 .lp-stepper {
   display: inline-flex;
   align-items: center;
