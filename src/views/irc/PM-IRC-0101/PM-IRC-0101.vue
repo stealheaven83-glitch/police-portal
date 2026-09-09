@@ -13,8 +13,9 @@
 
   <div class="lp-page-scroll">
     <SearchBar
+      ref="searchBarRef"
       v-model="keyword"
-      class="lp-search-center"
+      class="scenario-search-center"
       label="사건대응 시나리오 검색어"
       status="검색 원활"
       @search="onSearch"
@@ -30,11 +31,12 @@
       @remove="removeRecent"
       @clear="clearRecent"
     />
-
     <!-- 검색 후: AI 생성 답변 -->
     <section v-else class="lp-ai-answer" aria-labelledby="irc-answer-title">
       <h2 id="irc-answer-title" class="lp-ai-answer-head">
-        <Sparkles class="lp-ai-answer-icon" aria-hidden="true" />
+        <span class="lp-ai-answer-icon" aria-hidden="true">
+          <img src="/portal/asset/images/icon/ico_ai_sparkle.svg" alt="" />
+        </span>
         AI 생성 답변
       </h2>
 
@@ -79,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { Sparkles } from 'lucide-vue-next'
+import { ref } from 'vue'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -113,6 +115,7 @@ useSideMenuSetup({
 const navItems = [{ label: '홈', path: '/' }, { label: '사건대응 시나리오' }]
 
 const dialog = useDialog()
+const searchBarRef = ref<InstanceType<typeof SearchBar> | null>(null)
 
 const {
   keyword,
@@ -126,12 +129,21 @@ const {
   pushRecent,
 } = useIncidentScenarioSearch()
 
+/**
+ * 알럿을 닫으면 다이얼로그(reka-ui FocusScope)가 setTimeout(0) 으로 직전 요소(검색 버튼)에
+ * 포커스를 되돌린다. 그 뒤에 실행돼야 커서가 입력창에 남으므로 같은 방식으로 한 틱 미룬다.
+ */
+function focusSearchBar() {
+  setTimeout(() => searchBarRef.value?.focus(), 0)
+}
+
 /** 검색 실행 → 같은 화면이 'AI 생성 답변' 상태로 바뀐다. 실제 질의는 개발팀이 붙인다 */
 async function onSearch(value: string) {
   const trimmed = value.trim()
   if (!trimmed) {
     // 사용자 지정: toast 대신 alert — CLAUDE.md §4 기본(toast.warning)과 다르지만 요청대로 따름
-    await dialog.alert({ title: '검색어를 입력해 주세요.', btnCancel: '확인' })
+    await dialog.alert({ title: '검색 내용이 입력되지 않았습니다.', btnCancel: '확인' })
+    focusSearchBar()
     return
   }
   pushRecent(trimmed)

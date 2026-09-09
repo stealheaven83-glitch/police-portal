@@ -11,7 +11,7 @@ export type { RecommendedKeyword } from "./SearchKeywordPanel.vue"
  *
  * 모양은 SearchBar.vue 가 아니라 police-style.css 의 `.search-wrap .search-bar ...`
  * (693~782행)에 있다 — 포털 원본 마크업을 그대로 쓰기 때문이다. 폭·위치만 호출부에서
- * .lp-search-hero / .lp-search-center 로 준다.
+ * .lp-search-hero / .scenario-search-center 로 준다.
  *
  * 쓰는 화면: PM-COM-0801(통합검색) · PM-COM-0802(통합검색 결과) · PM-IRC-0101(사건대응 시나리오)
  */

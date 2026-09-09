@@ -1841,3 +1841,8 @@ html.theme-dark .rowgroup.notice .notice-list .noticeSwiper .swiper-nav .slide-a
   overflow-y: auto;
 }
 
+.scenario-scroll{
+  margin-top:4rem;
+  overflow-y:auto;
+    flex: 1;
+}
