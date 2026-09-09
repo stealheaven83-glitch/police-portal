@@ -478,3 +478,40 @@
   align-items: flex-end;
   gap: 2.4rem;
 }
+
+/*시간관리 팝업 스타일*/
+.time-meta{
+  display: flex;
+  align-items: center;
+  gap: 2.4rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--Border_gray01);
+}
+.time-meta > span{
+  color: #6D7882;
+  font-size: 1.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+.time-meta em{
+  color: #0054A6;
+}
+.time-tip{
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-top: 1.6rem;
+}
+.time-tip > em{
+  font-weight: 600;
+  color: var(--danger);
+}
+.time-gray-box{
+  border-radius: 0.4rem;
+  padding: 0.4rem 1.2rem;
+  background: #F4F5F6;
+  display: flex;
+  justify-content: space-between;
+  margin: 1.6rem 0;
+}
