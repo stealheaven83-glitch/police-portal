@@ -2,15 +2,15 @@
   <GenericDialog2
     v-model:open="workManageOpen"
     title="근무관리"
-    :size="480"
+    :size="560"
   >
-    <p class="lp-dialog-subtitle lp-note-text">* 추가 근무자를 선택 후 저장하세요.</p>
+    <p class="lp-block-title lp-note-text2">* 추가 근무자를 선택 후 저장하세요.</p>
 
     <TabulatorGrid
       ref="gridRef"
       :columns="columns"
       :data="workKindRows"
-      height="300px"
+      height="400px"
       placeholder="등록된 근무가 없습니다"
       @table-built="onTableBuilt"
     />
@@ -41,10 +41,10 @@ const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const { onTableBuilt } = useDialogGridRedraw(gridRef)
 
 const columns: TabulatorGridColumn[] = [
-  { title: '근무', field: 'work', cellType: 'input', minWidth: 140, widthGrow: 2 },
-  { title: '종별', field: 'kind', cellType: 'select', selectOptions: workKindOptions, minWidth: 120, widthGrow: 2 },
-  { title: '순번', field: 'order', hozAlign: 'center', minWidth: 70, widthGrow: 1 },
-  { title: '사용여부', field: 'used', cellType: 'checkbox', hozAlign: 'center', minWidth: 90, widthGrow: 1 },
+  { title: '근무', field: 'work', cellType: 'input', minWidth: 160, widthGrow: 2 },
+  { title: '종별', field: 'kind', cellType: 'select', selectOptions: workKindOptions, minWidth: 160, widthGrow: 2 },
+  { title: '순번', field: 'order', hozAlign: 'center', minWidth: 80, widthGrow: 1 },
+  { title: '사용여부', field: 'used', cellType: 'checkbox', hozAlign: 'center', minWidth: 80, widthGrow: 1 },
 ]
 
 function onSave() {

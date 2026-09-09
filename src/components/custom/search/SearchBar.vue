@@ -53,6 +53,13 @@ function onClear() {
   emit("update:modelValue", "")
   inputRef.value?.focus()
 }
+
+/** 호출부에서 검증 실패 뒤 커서를 입력창으로 되돌릴 때 쓴다 */
+function focus() {
+  inputRef.value?.focus()
+}
+
+defineExpose({ focus })
 </script>
 
 <template>

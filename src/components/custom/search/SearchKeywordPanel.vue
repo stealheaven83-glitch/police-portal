@@ -81,7 +81,7 @@ const emit = defineEmits<{
           </span>
         </li>
       </ul>
-      <p v-else class="mt-4 text-[1.5rem] text-[var(--Text-body_2)]">최근검색어가 없습니다.</p>
+      <p v-else class="mt-4 text-[1.9rem] text-[var(--Text-body_2)]">최근검색어가 없습니다.</p>
     </section>
 
     <!-- 추천검색어 -->

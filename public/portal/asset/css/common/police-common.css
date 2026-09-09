@@ -153,9 +153,11 @@
 /* 페이지 본문이 넘칠 때 이 영역만 세로 스크롤.
    상세 패널 안쪽 스크롤은 police-style.css 의 .detail-scroll 을 쓴다(의도가 다름). */
 .lp-page-scroll {
+
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  width:calc(100% + 30px);
 }
 
 /* ══ 아이콘 버튼 ══════════════════════════════════════════════ */
@@ -486,10 +488,12 @@
   margin: 8rem auto 0;
 }
 /* 이미 검색한 뒤라 위 여백 없이 붙는 검색바 */
-.lp-search-center {
+.scenario-search-center {
   max-width: 84rem;
   margin: 0 auto;
 }
+
+
 .lp-content-panel {
   max-width: 120rem;
   margin: 4rem auto 0;
@@ -547,9 +551,17 @@
   max-width: 120rem;
   margin: 4rem auto 0;
   padding: 2.4rem 3.2rem;
-  border: 1px solid var(--Base-primary);
   border-radius: var(--Radius-medium3);
-  background-color: var(--white);
+  /*
+   * 그라데이션 테두리 + 둥근 모서리.
+   * border-image 는 border-radius 를 무시해 모서리가 각지므로 쓰지 않는다.
+   * 안쪽 흰 배경을 padding-box 에, 그라데이션을 border-box 에 깔아 2겹으로 그린다.
+   * (테두리 자리에만 아래 레이어가 비쳐 보이는 원리라 transparent 가 필수다.)
+   */
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--white), var(--white)) padding-box,
+    linear-gradient(113.8deg, #94c7ff 0.7%, #024488 100%) border-box;
 }
 .lp-ai-answer-head {
   display: flex;
@@ -560,11 +572,17 @@
   color: var(--Text-body_0);
 }
 .lp-ai-answer-icon {
+  flex: 0 0 auto;
+  display: inline-flex;
   width: 2.8rem;
   height: 2.8rem;
-  color: var(--Base-primary);
+}
+.lp-ai-answer-icon img {
+  width: 100%;
+  height: 100%;
 }
 .lp-ai-answer-body {
+    position:relative;
   display: flex;
   align-items: stretch;
   gap: 2.4rem;
@@ -625,7 +643,8 @@
   border-radius: 50%;
 }
 .lp-answer-note {
-  margin-top: auto;
+  margin-top:auto;
+
   padding-top: 2.4rem;
   font-size: 1.5rem;
   color: var(--Text-body_2);
@@ -636,9 +655,10 @@
  * 구분선을 여기서 그려야 본문 칸 높이만큼 세로로 꽉 찬다(.lp-ai-answer-body 가 stretch).
  */
 .lp-ref-column {
-  flex: 0 0 31.7rem;
+  flex: 1 1 auto;
   padding-left: 2.4rem;
   border-left: 1px solid var(--Border_gray02);
+  max-width:31.7rem;
 }
 .lp-ref-list {
   display: flex;
@@ -658,10 +678,16 @@
   margin-top: 1.2rem;
   font-size: 1.3rem;
   line-height: 1.5;
-  color: var(--info);
+  color: var(  --info);
   text-decoration: underline;
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  width:100%;
 }
-
+.lp-ref-link:hover{
+  color:var(--info);
+}
 /* ══ 상세 폼 델타 (police-style.css 원본 클래스와 함께 쓴다) ══ */
 
 /* .detail-layout 의 gap 2rem 을 2.4rem 으로 */
