@@ -2210,7 +2210,6 @@
   flex: 0 0 auto;
 }
 
-<<<<<<< Updated upstream
 /* ── 표 안 활동내역 셀(여러 줄 본문 + 오른쪽 아래 작성일시) ──────────────── */
 /* 근무일지 표의 '활동내역' 칸. 한 칸에 본문 여러 줄과 작성일시가 함께 들어간다.
    행 높이가 내용만큼 늘어나야 하므로 그리드에는 .lp-grid-multiline 을 같이 건다
@@ -2253,7 +2252,7 @@
   color: var(--Text-body_1);
   text-align: right;
 }
-=======
+
 /*참고사항 페이지*/
 .info-label{
  
@@ -2272,4 +2271,3 @@
 .info-label-group .info-label-txt{
   font-size: 1.5rem;
 }
->>>>>>> Stashed changes
