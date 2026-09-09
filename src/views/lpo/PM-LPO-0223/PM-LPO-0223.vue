@@ -18,11 +18,15 @@
     </template>
     <template #form>
       <div class="search-area">
-        <div class="group-gap2">
-          <DatePicker v-model="dateFrom" label="근무날짜" size="sm" inputClass="w-40" />
-          <span aria-hidden="true">~</span>
-          <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
-        </div>
+        <DateRangePicker
+          v-model:from="dateFrom"
+          v-model:to="dateTo"
+          label="근무날짜"
+          from-label="근무날짜 시작일"
+          to-label="근무날짜 종료일"
+          size="sm"
+          input-class="w-40"
+        />
         <SelectField v-model="kindFilter" label="구분" :options="kindFilterOptions" size="sm" triggerClass="w-37" />
         <InputField2 v-model="keyword" label="활동내역" size="sm" inputClass="w-48" @keyup.enter="onSearch" />
       </div>
@@ -62,7 +66,7 @@ import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
-import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import { DateRangePicker } from '@/components/custom/datepicker'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import Report112Dialog from './components/Report112Dialog.vue'
