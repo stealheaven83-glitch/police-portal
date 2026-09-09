@@ -1,14 +1,11 @@
 <template>
-  <GenericDialog2 v-model:open="bulkPrintOpen" title="甲지 일괄 출력" :size="480">
-    <p class="lp-dialog-subtitle lp-note-text">* 甲지 인쇄는 최대 30일치 가능합니다.</p>
-
-    <div class="search-area lp-table-gap">
+  <GenericDialog2 v-model:open="bulkPrintOpen" title="甲지 일괄 출력" :size="560">
+    <p class="lp-block-title lp-note-text2 ver1 lp-notice-detail-actions2">* 甲지 인쇄는 최대 30일치 가능합니다.</p>
       <div class="group-gap2">
         <DatePicker v-model="bulkPrintFrom" label="근무기간" size="sm" inputClass="w-40" />
         <span aria-hidden="true">~</span>
         <DatePicker v-model="bulkPrintTo" size="sm" inputClass="w-40" />
       </div>
-    </div>
 
     <template #footer>
       <Button type="button" variant="tertiary2" size="md" @click="bulkPrintOpen = false">닫기</Button>

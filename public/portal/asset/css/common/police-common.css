@@ -64,6 +64,9 @@
   font-size: 1.5rem;
   color: var(--Text-body_0);
 }
+.lp-note-text2.ver1 {
+  margin-bottom: 1.6rem;
+}
 
 /*
  * 입력·설정 옆에 붙는 한 줄 안내문 (시안 공통 input_message__atomic).
@@ -1785,6 +1788,10 @@
 .lp-notice-detail-actions {
   padding-top: 1.6rem;
   border-top: 0.1rem solid var(--Border_gray02);
+}
+.lp-notice-detail-actions2 {
+  padding-top: 1.6rem;
+  border-top: 0.1rem solid var(--Border_gray01);
 }
 
 /* ── 댓글 영역 ───────────────────────────────────────────────────────────── */
