@@ -79,6 +79,22 @@
 }
 
 /*
+ * 위 .lp-grid-search-cell 을 "텍스트는 왼쪽, 아이콘은 칸 오른쪽 끝" 으로 쓰는 변형
+ * (시안 11710:112526). 2204 는 아이콘이 라벨 바로 뒤에 붙는다. 둘 다 쓰려면 클래스를 같이 준다.
+ * space-between 이 아니라 아이콘에 margin-left:auto 를 주는 이유 — 텍스트가 빈 행에서는
+ * 항목이 아이콘 하나뿐이라 space-between 이 그걸 왼쪽에 붙여 버린다.
+ * 쓰는 곳: PC-LPO-0202 순찰구역 팝업 '순찰구역상세' 열
+ */
+.lp-grid-search-end > span {
+  display: flex;
+  width: 100%;
+  text-align: left;
+}
+.lp-grid-search-end > span::after {
+  margin-left: auto;
+}
+
+/*
  * 좁은 열(시안 88px)에 들어가는 표 안 버튼.
  * Button 은 베이스 클래스에 min-w-25(100px)가 걸려 있어서 그대로 두면 칸을 넘친다.
  * padding prop 과 같은 효과를 클래스로 낸다(컬럼 정의는 buttonClass 만 받는다).
@@ -480,14 +496,17 @@
 }
 
 /*시간관리 팝업 스타일*/
-.time-meta{
+.meta-wrapper{
   display: flex;
   align-items: center;
   gap: 2.4rem;
   padding-top: 1.6rem;
   border-top: 1px solid var(--Border_gray01);
 }
-.time-meta > span{
+.meta-wrapper.ver1{
+  margin-bottom: 1.6rem;
+}
+.meta-wrapper > span{
   color: #6D7882;
   font-size: 1.9rem;
   font-weight: 600;
@@ -495,7 +514,7 @@
   align-items: center;
   gap: 1.2rem;
 }
-.time-meta em{
+.meta-wrapper em{
   color: #0054A6;
 }
 .time-tip{
