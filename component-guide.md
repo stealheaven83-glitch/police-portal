@@ -98,6 +98,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
   - `cellType:'button'` — `buttonLabel`/`buttonVariant`/`buttonVisible`/`onButtonClick` 으로 행마다 다른 라벨·표시여부의 버튼(`PC-COM-2204` "부서 조회")
 - **페이지네이션 그리드에 맨 아래 추가**(`addRow(data, false)`)는 보고 있는 페이지에 안 나타난다 — 추가 후 `gridRef.value?.setPage('last')` 로 따라간다(`PC-COM-2401`). 맨 위 추가(`addRow(data, true)`)는 항상 1페이지라 불필요하다.
 - **컬럼이 많아 가로 스크롤이 필요하면** `layout="fitDataFill"` + 각 컬럼에 고정 `width`. 기본 `fitColumns` 는 폭을 컨테이너에 맞춰 나눈다.
+- **한 칸에 여러 줄이 들어가 행 높이가 늘어나야 하면** 그리드에 `class="lp-grid-multiline"` + 늘어나는 컬럼에 `variableHeight: true`(`PM-LPO-0223` 활동내역). 그리드 테마(`src/assets/css/tabulator-theme.css`)가 셀 높이를 4.8rem 으로 고정하고 있어서 이 클래스 없이는 `variableHeight` 만으로 안 늘어난다. 클래스가 그 테마 파일에 있는 것은 `police-override.css`(layer screen)로는 테마(레이어 없음)를 `!important` 없이 못 덮기 때문이다.
 - KeepAlive 재활성화 시 그리드가 안 그려지던 버그는 컴포넌트가 `onActivated` → `redraw(true)` 로 처리한다 — 화면에서 신경 쓸 필요 없다.
 - 목록을 갱신할 때는 **배열 재할당**(`CLAUDE.md` §5) — `splice` 는 `:data` watch 가 못 잡는다.
 
@@ -470,6 +471,8 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-section` / `.lp-section-title` | 구역 사이 간격 / 구역 제목 여백(`.lp-heading-lg` 와 함께) | 0601 |
 | `.lp-section-head` | 제목줄 아래 실선(`.lp-row-between` 과 함께) | 0802 |
 | `.lp-table-gap` | 표 위 여백 | 0601 |
+| `.lp-note-gap` | 표 바로 위 안내 문구의 **아래** 여백(2rem). 위는 앞 요소에 붙는다 — `.lp-table-gap` 과 반대라 같이 쓰지 않는다 | LPO-0223 |
+| `.lp-info-row-tall` | **`InfoField` 에 건다** — 값이 짧아도 칸이 높아야 하는 줄(여러 줄 입력 자리, 12rem). 행 병합 `rowSpan` 과 달리 옆 칸 배치를 안 건드린다 | LPO-0223 팝업 |
 | `.lp-info-blank-cell` | `InfoTable` 에서 옆 칸이 두 행을 차지(row-span)해 비는 칸. 표 테두리만 이어 주는 자리라 1열로 접히면 감춘다 | PUB-0302/0303 |
 | `.lp-meta-nowrap` | 조회 화면 위쪽 '최종 수정일' 한 줄 | 0601 |
 | `.lp-placeholder-box` | 채울 것이 아직 정해지지 않은 자리(시안의 회색 상자) | PUB-0113 |
@@ -552,6 +555,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-comment-area` `-write` `-list` `-item` `-head` `-writer` `-date` `-more` `-body` `-actions` `-reply-btn` `-replies` | 댓글·대댓글 영역(CommentThread) | COM-1002 |
 | `.lp-photo-grid` `-item` `-label` `-box` `-img` `-empty` `-empty-icon` `-empty-label` `-meta` `-actions` | 진단 상세의 취약/개선 상황사진 4칸(112사건 표 아래에 붙는 칸). **`police-style.css` 의 `.photo-box`/`.photo-empty` 는 인사관리 증명사진용 12rem 칸이라 서로 다른 것 — 이름이 비슷해도 섞어 쓰지 않는다** | PUB-0101 |
 | `.lp-stat-field` `.lp-stat-grade` `.lp-stat-value` | 라벨-값 표의 한 칸에 [등급][수치] 두 조각이 들어가는 통계 표. 값 영역 여백을 걷어내고 두 조각 사이에 세로선을 넣는다 | PUB-0101 참고사항 |
+| `.lp-log-cell` `.lp-log-activity` `.lp-log-tag`(`-danger`/`-primary`/`-success`) `.lp-log-written-at` | 표 한 칸에 [앞머리 표시][본문 여러 줄] + 오른쪽 아래 작성일시가 함께 들어가는 활동내역 칸. 행 높이가 늘어나야 하므로 그리드에 `.lp-grid-multiline` 을 같이 건다 | LPO-0223 |
 
 > 위 등록 폼·요약·드롭존 스타일은 원래 PM-LPO-0104(메모 등록)를 위해 미리 만들어 둔 것이었고,
 > 그 화면이 생기면서 실제로 쓰이기 시작했다.
@@ -585,6 +589,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-cell-danger` | Tabulator 셀 안의 미완료 값만 빨간 글씨(셀 색은 테마 CSS 가 먼저 먹는다) | LPO-0304 |
 | `.lp-field-flush` | InfoField 값 칸의 안쪽 여백 제거(표를 칸에 딱 붙일 때). `.control` 이 CSS Module 해시 이름이라 마지막 자식으로 짚는다 | LPO-0601 |
 | `.lp-info-nested` | `InfoField` 값 칸에 `InfoTable` 을 한 번 더 넣을 때 `.control` 여백·중복 테두리 제거(라벨 병합처럼 보이게) | PUB-0111 |
+| `.lp-grid-btn-compact` | 좁은 열(시안 88px)에 들어가는 표 안 버튼. `Button` 베이스의 `min-w-25`(100px)를 풀고 좌우 여백만 준다(컬럼 정의는 `buttonClass` 만 받아서 `padding` prop 을 못 쓴다) | LPO-0223 |
 | `.lp-date-fill` | **`InfoField` 에 건다** — 값 칸을 꽉 채우는 `DatePicker`. `DatePicker` 는 `class` 를 VueDatePicker 루트가 아니라 안쪽 `InputField2` 에 넘겨서(`inheritAttrs:false`) 화면에서 `flex-1` 을 줘도 안 먹는다. 늘어나야 하는 건 값 칸의 직계 자식인 `.dp__main` 이다 | PUB-0302/0303 |
 
 ---

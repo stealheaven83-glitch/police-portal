@@ -78,6 +78,17 @@
   background: url("../../images/icon/btn search-circle.svg") no-repeat center / 2.6rem auto;
 }
 
+/*
+ * 좁은 열(시안 88px)에 들어가는 표 안 버튼.
+ * Button 은 베이스 클래스에 min-w-25(100px)가 걸려 있어서 그대로 두면 칸을 넘친다.
+ * padding prop 과 같은 효과를 클래스로 낸다(컬럼 정의는 buttonClass 만 받는다).
+ * 쓰는 곳: PM-LPO-0223 '상세' 열
+ */
+.lp-grid-btn-compact {
+  min-width: 0;
+  padding-inline: 1.2rem;
+}
+
 /* ══ 표(TableWrapper) ═════════════════════════════════════════ */
 
 /* 셀을 좌측 정렬로 되돌린다(TableWrapper 기본은 가운데) */

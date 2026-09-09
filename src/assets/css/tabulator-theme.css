@@ -323,3 +323,33 @@
   height: 3.3rem;
   background: url(/portal/asset/images/icon/ico_nodata.svg) no-repeat center / 3.3rem auto;
 }
+
+/*
+ * 내용에 따라 행 높이가 늘어나는 표(활동내역처럼 한 셀에 여러 줄이 들어가는 경우).
+ * 그리드에 이 클래스를, 늘어나는 컬럼에 variableHeight: true 를 함께 준다.
+ *
+ * 위쪽 .tabulator-cell 규칙이 높이를 4.8rem 으로 고정하고 있어서 그대로 두면 Tabulator 가
+ * 셀 내용을 재도 항상 48px 로 나온다 — 여기서 auto 로 풀어야 행이 내용만큼 커진다.
+ * 행을 flex 로 바꾸는 것은 늘어난 높이만큼 나머지 셀의 세로 구분선도 함께 늘어나게 하려는 것이다
+ * (기본값인 inline-block 이면 짧은 셀의 선이 중간에서 끊긴다).
+ *
+ * 쓰는 곳: PM-LPO-0223
+ */
+.lp-grid-multiline .tabulator-row {
+  display: flex;
+  align-items: stretch;
+}
+
+/* 셀 사이에 끼는 리사이즈 핸들(span)까지 flex 아이템이 되므로, 폭이 줄지 않게 못 박는다
+   (핸들은 width 6px + 좌우 -3px 마진이라 안 줄어들면 자리를 차지하지 않는다) */
+.lp-grid-multiline .tabulator-row > * {
+  flex-shrink: 0;
+}
+
+.lp-grid-multiline .tabulator-row .tabulator-cell {
+  height: auto;
+  min-height: 4.8rem;
+  /* 시안(12711:73814)의 셀 여백. 여러 줄이 위아래로 붙지 않게 기본(0.4rem)보다 넓다 */
+  padding: 1.2rem;
+  white-space: normal;
+}

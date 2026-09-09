@@ -215,6 +215,16 @@
 .lp-table-gap {
   margin-top: 1.2rem;
 }
+/* 표 바로 위 안내 문구 — 위는 앞 요소에 붙고 아래로만 띄운다(.lp-table-gap 의 반대) */
+.lp-note-gap {
+  margin-bottom: 2rem;
+}
+
+/* InfoField 에 건다 — 값이 짧아도 칸이 높아야 하는 줄(여러 줄 입력이 들어갈 자리).
+   행 병합(rowSpan)과 달리 옆 칸 배치를 건드리지 않는다. */
+.lp-info-row-tall {
+  min-height: 12rem;
+}
 
 /*
  * InfoTable 에서 옆 칸이 두 행을 차지(row-span)해 비는 자리를 메우는 빈 칸.
@@ -2145,4 +2155,47 @@
 /* 조회버튼은 제 폭을 지키고 조건 줄이 남는 폭을 다 가져간다 */
 .lp-search-box > button {
   flex: 0 0 auto;
+}
+
+/* ── 표 안 활동내역 셀(여러 줄 본문 + 오른쪽 아래 작성일시) ──────────────── */
+/* 근무일지 표의 '활동내역' 칸. 한 칸에 본문 여러 줄과 작성일시가 함께 들어간다.
+   행 높이가 내용만큼 늘어나야 하므로 그리드에는 .lp-grid-multiline 을 같이 건다
+   (tabulator-theme.css). 쓰는 곳: PM-LPO-0223 */
+.lp-log-cell {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.lp-log-activity {
+  /* 줄바꿈과 앞머리 태그 뒤의 공백을 원문 그대로 살린다 */
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+  text-align: left;
+}
+
+/* 본문 앞머리 표시 — 112신고 사건번호(빨강) · 등록 경로(모바일 파랑 / 태블릿 초록) */
+.lp-log-tag {
+  font-weight: 600;
+}
+.lp-log-tag-danger {
+  color: var(--Base--point);
+}
+.lp-log-tag-primary {
+  color: var(--Base-primary);
+}
+.lp-log-tag-success {
+  color: var(--Alert-success-text);
+}
+
+.lp-log-written-at {
+  font-size: 1.3rem;
+  line-height: 1.5;
+  color: var(--Text-body_1);
+  text-align: right;
 }

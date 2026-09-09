@@ -13,6 +13,8 @@ import AnnotationIcon from '@/assets/images/icons/annotation.svg?component'
 import StarIcon from '@/assets/images/icons/star.svg?component'
 import StarFillIcon from '@/assets/images/icons/starFill.svg?component'
 import AttachIcon from '@/assets/images/icons/attach.svg?component'
+// Figma icon/Check — 표에서 "해당됨"을 뜻하는 체크 표시(근무일지 인수인계 열 등)
+import CheckIcon from '@/assets/images/icons/check.svg?component'
 import ShareIcon from '@/assets/images/icons/share.svg?component'
 // Figma file_upload__atomic__pc 의 '삭제' 옆 아이콘 — 회색 원 + x
 import DeleteCircleIcon from '@/assets/images/icons/deleteCircle.svg?component'
@@ -35,6 +37,7 @@ export const icons = {
   star: StarIcon,
   starFill: StarFillIcon,
   attach: AttachIcon,
+  check: CheckIcon,
   share: ShareIcon,
   deleteCircle: DeleteCircleIcon,
   systemInfo: SystemInfoIcon,
