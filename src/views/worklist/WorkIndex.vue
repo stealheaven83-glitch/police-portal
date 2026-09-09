@@ -335,7 +335,7 @@ const worklist = ref([
   { id: 226, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '목록', depth5: '', screenName: '기타 영상기기 사용 보고서 화면', screenId: 'PM-PUB-0702', path: '', status: '대기' },
   { id: 227, category: '스마트워크', depth1: '탄력순찰', depth2: '', depth3: '', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
   { id: 228, category: '스마트워크', depth1: '', depth2: '요청관리', depth3: '', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
-  { id: 229, category: '스마트워크', depth1: '', depth2: '', depth3: '목록', depth4: '', depth5: '', screenName: '요청관리', screenId: 'PM-FLP-0101', path: '', status: '대기' },
+  { id: 229, category: '스마트워크', depth1: '', depth2: '', depth3: '목록', depth4: '', depth5: '', screenName: '요청관리', screenId: 'PM-FLP-0101', path: '/views/pub/PM-flp-0101', status: '대기' },
   { id: 230, category: '스마트워크', depth1: '', depth2: '범죄 안전 지도', depth3: '탄력순찰상세', depth4: '', depth5: '', screenName: '탄력순찰상세', screenId: 'PM-FLP-0201', path: '', status: '대기' },
   { id: 231, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '종결처리', depth5: '', screenName: '종결처리', screenId: 'PM-FLP-0214', path: '', status: '대기' },
   { id: 232, category: '스마트워크', depth1: '', depth2: '', depth3: '신고현황', depth4: '', depth5: '', screenName: '신고현황 검색', screenId: 'PM-FLP-0202', path: '', status: '대기' },

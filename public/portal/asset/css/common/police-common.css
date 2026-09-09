@@ -1038,6 +1038,73 @@
   margin-top: 0.8rem;
 }
 
+/* ══ 인증기준표 (Figma 11255:129011 주차장(범용)) ════════════ */
+
+/* 좁은 패널(2분할 오른쪽) 안에 720px 표가 들어가므로 표만 가로로 스크롤한다 */
+.lp-cert-scroll {
+  overflow-x: auto;
+}
+.lp-cert-scroll + .lp-cert-scroll {
+  margin-top: 2rem;
+}
+.lp-cert-table {
+  width: 100%;
+  min-width: 68rem;
+  border-collapse: collapse;
+}
+.lp-cert-table th,
+.lp-cert-table td {
+  padding: 1.2rem;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+  text-align: center;
+  vertical-align: middle;
+  background: var(--white);
+  border-right: 0.1rem solid var(--Border_gray03);
+  border-bottom: 0.1rem solid var(--Border_gray03);
+}
+.lp-cert-table th:last-child,
+.lp-cert-table td:last-child {
+  border-right: 0;
+}
+/* 머리글: 위는 본문색 실선, 아래는 시안 border/gray-2(#8a949e — 색이 같은 토큰이 이것뿐이다) */
+.lp-cert-table thead th {
+  font-weight: 700;
+  color: var(--Text-body_1);
+  border-top: 0.1rem solid var(--Text-body_0);
+  border-bottom: 0.1rem solid var(--Border_input01);
+}
+/* 문항 칸만 왼쪽 정렬 — 번호는 ol 이 붙인다 */
+.lp-cert-question {
+  text-align: left;
+}
+.lp-cert-question ol {
+  padding-left: 2.2rem;
+  list-style: decimal;
+}
+/* 비고 칸 — 시안 문구의 줄바꿈을 그대로 살린다 */
+.lp-cert-note {
+  text-align: left;
+  white-space: pre-line;
+}
+.lp-cert-note-strong {
+  font-weight: 600;
+}
+/* 합계 줄 */
+.lp-cert-total > td {
+  font-weight: 600;
+}
+/* 양호·보통·미흡 라디오가 들어가는 칸 */
+.lp-cert-choice {
+  width: 24rem;
+}
+/* 총점 옆 초록 안내문 */
+.lp-cert-pass {
+  font-size: 1.3rem;
+  color: var(--Alert-success-text);
+}
+
 /* ── 메모(개인수첩) 등록·상세 폼 ─────────────────────────────
    Figma file_upload__atomic__pc · PC_지역경찰_01_개인수첩_01_메모_*
    위 .lp-narrow-form / .lp-summary-* / .lp-dropzone* / .lp-file-* 를 그대로 쓰고,

@@ -184,8 +184,148 @@
 
           <section class="lp-section" aria-labelledby="cert-standard-heading">
             <h3 id="cert-standard-heading" class="lp-heading-md lp-section-title">인증기준표</h3>
-            <!-- 시안이 내용 없이 회색 상자로만 잡혀 있다 — 실제 표는 연동 후 채운다 -->
-            <p class="lp-placeholder-box">옆에 참고 →</p>
+
+            <!-- ① 배점 요약 — 시안이 정한 고정 기준이라 입력이 없다 -->
+            <div class="lp-cert-scroll">
+              <table class="lp-cert-table" aria-label="평가분야별 항목수와 배점">
+                <thead>
+                  <tr>
+                    <th colspan="2" scope="col">평가분야</th>
+                    <th scope="col">항목수</th>
+                    <th scope="col">배점</th>
+                    <th scope="col">비고</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template v-for="(group, gi) in certScoreGroups" :key="group.field">
+                    <tr v-for="(item, ii) in group.items" :key="item.label">
+                      <th v-if="ii === 0" :rowspan="group.items.length" scope="rowgroup">{{ group.field }}</th>
+                      <td>{{ item.label }}</td>
+                      <td>{{ item.count }}</td>
+                      <!-- 배점은 기본항목 전체를, 비고는 가점·합계까지 세로로 묶는다 -->
+                      <td v-if="gi === 0 && ii === 0" :rowspan="certBasicRowCount">34점</td>
+                      <td v-if="gi === 0 && ii === 0" :rowspan="certBasicRowCount + 2" class="lp-cert-note">
+                        <p
+                          v-for="(line, li) in certScoreNote"
+                          :key="li"
+                          :class="line.strong ? 'lp-cert-note-strong' : undefined"
+                        >{{ line.text }}</p>
+                      </td>
+                    </tr>
+                  </template>
+                  <tr>
+                    <th colspan="2" scope="row">가점 항목</th>
+                    <td>6</td>
+                    <td>6점</td>
+                  </tr>
+                  <tr class="lp-cert-total">
+                    <th colspan="2" scope="row">합계</th>
+                    <td>23</td>
+                    <td>40점</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- ② 기본 항목 -->
+            <div class="lp-cert-scroll">
+              <table class="lp-cert-table" aria-label="기본 항목 평가">
+                <thead>
+                  <tr>
+                    <th scope="col">분야</th>
+                    <th colspan="2" scope="col">항목</th>
+                    <th scope="col" class="lp-cert-choice">양호-2점, 보통-1점, 미흡-0점</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template v-for="group in certBasicGroups" :key="group.field">
+                    <template v-for="(entry, li) in group.labels" :key="entry.label">
+                      <tr v-for="(question, qi) in entry.questions" :key="question.key">
+                        <th
+                          v-if="li === 0 && qi === 0"
+                          :rowspan="certGroupRows(group)"
+                          scope="rowgroup"
+                        >{{ group.field }}</th>
+                        <th v-if="qi === 0" :rowspan="entry.questions.length" scope="row">{{ entry.label }}</th>
+                        <td class="lp-cert-question">
+                          <ol :start="question.no"><li>{{ question.text }}</li></ol>
+                        </td>
+                        <td>
+                          <RadioGroup
+                            v-model="checklist.basicScores[question.key]"
+                            :disabled="!editing"
+                            :class="infoStyles['info-table-radio']"
+                          >
+                            <RadioGroupItem value="good" label="양호" />
+                            <RadioGroupItem value="fair" label="보통" />
+                            <RadioGroupItem value="poor" label="미흡" />
+                          </RadioGroup>
+                        </td>
+                      </tr>
+                    </template>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- ③ 가점 항목 — 분야가 '가점' 하나뿐이라 항목 라벨 열이 없다 -->
+            <div class="lp-cert-scroll">
+              <table class="lp-cert-table" aria-label="가점 항목 평가">
+                <thead>
+                  <tr>
+                    <th scope="col">분야</th>
+                    <th scope="col">항목</th>
+                    <th scope="col" class="lp-cert-choice">양호-1점, 미흡-0점</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in certBonusItems" :key="item.key">
+                    <th v-if="index === 0" :rowspan="certBonusItems.length" scope="rowgroup">가점</th>
+                    <td class="lp-cert-question">
+                      <ol :start="item.no"><li>{{ item.text }}</li></ol>
+                    </td>
+                    <td>
+                      <RadioGroup
+                        v-model="checklist.bonusScores[item.key]"
+                        :disabled="!editing"
+                        :class="infoStyles['info-table-radio']"
+                      >
+                        <RadioGroupItem value="good" label="양호" />
+                        <RadioGroupItem value="poor" label="미흡" />
+                      </RadioGroup>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- ④ 메모 · 총점 · 인증여부 -->
+            <InfoTable :columns="1" size="120" class="lp-table-gap">
+              <InfoField label="메모" for="cert-memo">
+                <Textarea
+                  id="cert-memo"
+                  v-model="checklist.memo"
+                  :disabled="!editing"
+                  class="w-full"
+                />
+              </InfoField>
+              <InfoField label="총점">
+                <span class="readonly-text">{{ totalScore }}</span>
+                <span v-if="meetsCertStandard" class="lp-cert-pass">＊ 인증기준에 적합합니다.</span>
+              </InfoField>
+              <InfoField label="인증여부" for="cert-result">
+                <SelectField
+                  id="cert-result"
+                  v-model="checklist.certified"
+                  :options="certResultOptions"
+                  placeholder="선택"
+                  size="sm"
+                  :disabled="!editing"
+                  trigger-class="w-44"
+                  class="!space-y-0"
+                />
+              </InfoField>
+            </InfoTable>
           </section>
         </ScrollWrapper>
       </LayoutPanel>
@@ -208,6 +348,7 @@ import Stepper from '@/components/custom/input/Stepper.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import { DateRangePicker } from '@/components/custom/datepicker'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
+import Textarea from '@/components/custom/textarea/Textarea.vue'
 import { Button } from '@/components/custom/button'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
@@ -222,6 +363,11 @@ import {
   useExcellentFacilityCertification,
   certificationTypeOptions,
   checklistTypeOptions,
+  certScoreGroups,
+  certScoreNote,
+  certBasicGroups,
+  certBonusItems,
+  certResultOptions,
   type CertificationRow,
 } from './composable/PM-PUB-0113'
 import infoStyles from '@/components/custom/info-table/InfoTable.module.css'
@@ -249,11 +395,21 @@ const {
   activeRowKey,
   checklist,
   editing,
+  totalScore,
+  meetsCertStandard,
   selectRow,
   createRow,
 } = useExcellentFacilityCertification()
 
 const dialog = useDialog()
+
+/* 배점표의 배점·비고 칸이 세로로 몇 줄을 묶는지 — 세부항목 줄 수의 합이다 */
+const certBasicRowCount = certScoreGroups.reduce((count, group) => count + group.items.length, 0)
+
+/* 기본 항목 표에서 분야 칸이 묶는 줄 수 — 그 분야의 문항 총 개수 */
+function certGroupRows(group: (typeof certBasicGroups)[number]) {
+  return group.labels.reduce((count, entry) => count + entry.questions.length, 0)
+}
 
 const listColumns: TabulatorGridColumn[] = [
   { title: '번호', field: 'no', width: 70, hozAlign: 'center' },

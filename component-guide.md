@@ -463,6 +463,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 |---|---|---|
 | `.lp-flex-fill` | 남는 가로폭을 채우되 내용이 넘치지 않게(flex 1 / min-width 0) | 2204, IRC-0101 |
 | `.lp-row-between` | 한 줄에 좌우로 벌려 놓기 | 2204, 0601, 0802 |
+| `.calendar-area` `-date` `-date-value` `-divider` `-group` `-options` | 근무일 선택 줄. **`.list-actions` 안 왼쪽**에 놓고(`margin-right:auto`) 오른쪽은 그대로 버튼. 구역 사이는 `-divider` 세로선(그룹 간격 36px). `-date-value` 는 날짜+달력아이콘(19px/600), `-options` 는 라디오 묶음(16px — `.lp-icon-row` 2rem 과 값이 다르다). **사용자 지정 이름이라 `lp-` 접두사가 없다** | LPO-0202 |
 | `.lp-unit-row` | 한 값을 여러 칸으로 쪼갠 줄 — 작은 입력 + 단위 글자('시' '분' '세' '~') | PUB-0405 |
 | `.lp-summary-row` | 값 텍스트 + 우측 버튼 (표 셀 안, 자기도 늘어남) | 0601 |
 | `.lp-field-row` | 라벨+입력 여러 쌍이 한 줄에 늘어서고 좁아지면 줄바꿈 | 0601 |
@@ -551,6 +552,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-em-primary` / `.lp-em-danger` | 문장 안 한 낱말만 색으로 강조(굵기는 `<b>` 가) | LPO-0208, 0216, 0217 |
 | `.lp-field-inline` | 라벨 아래 입력+버튼이 한 줄로 붙는 칸(부서명 + 부서 검색) | COM-1003, 1004 |
 | `.lp-field-table` `-center` `-empty` | `FieldTable` 전용 — InfoField 칸 안에 들어가는 정적 표 | LPO-0601 |
+| `.lp-cert-scroll` `.lp-cert-table` `-question` `-note` `-note-strong` `-total` `-choice` `-pass` | 인증기준표(rowspan 이 많고 칸 안에 라디오가 들어가 Tabulator·InfoTable 을 못 쓴다). 좁은 패널 안이라 표만 가로 스크롤 | PUB-0113 |
 | `.lp-notice-form` `-actions` | 게시판 글 등록/수정 폼(본문 폭을 꽉 쓴다). **가운데 1000px 폼은 `.lp-narrow-form`** | COM-1003, 1004 |
 | `.lp-notice-detail` `-badges` `-dept` `-title` `-meta` `-thumb` `-body` `-detail-actions` | 게시판 글 상세 | COM-1002 |
 | `.lp-comment-area` `-write` `-list` `-item` `-head` `-writer` `-date` `-more` `-body` `-actions` `-reply-btn` `-replies` | 댓글·대댓글 영역(CommentThread) | COM-1002 |
