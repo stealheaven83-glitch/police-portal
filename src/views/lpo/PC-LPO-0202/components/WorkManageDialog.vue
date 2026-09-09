@@ -2,7 +2,7 @@
   <GenericDialog2
     v-model:open="workManageOpen"
     title="근무관리"
-    :size="480"
+    :size="560"
   >
     <p class="lp-dialog-subtitle lp-note-text">* 추가 근무자를 선택 후 저장하세요.</p>
 
@@ -10,7 +10,7 @@
       ref="gridRef"
       :columns="columns"
       :data="workKindRows"
-      height="300px"
+      height="400px"
       placeholder="등록된 근무가 없습니다"
       @table-built="onTableBuilt"
     />

@@ -1,5 +1,5 @@
 <template>
-  <GenericDialog2 v-model:open="volunteerAddOpen" title="자원 근무자 추가" :size="720">
+  <GenericDialog2 v-model:open="volunteerAddOpen" title="자원 근무자 추가" :size="800">
     <InfoTable :columns="2" popup :size="110">
       <InfoField label="구분">
         <RadioGroup v-model="volunteerScope" class="lp-icon-row">
@@ -8,13 +8,13 @@
         </RadioGroup>
       </InfoField>
       <InfoField label="자원구분">
-        <SelectField v-model="volunteerType" :options="volunteerTypeOptions" size="sm" />
+        <SelectField v-model="volunteerType" :options="volunteerTypeOptions" size="sm" class="w-full"/>
       </InfoField>
       <InfoField label="시작시간">
-        <SelectField v-model="volunteerStart" :options="hourOptions" placeholder="선택" size="sm" />
+        <SelectField v-model="volunteerStart" :options="hourOptions" placeholder="선택" size="sm" class="w-full"/>
       </InfoField>
       <InfoField label="종료시간">
-        <SelectField v-model="volunteerEnd" :options="hourOptions" placeholder="선택" size="sm" />
+        <SelectField v-model="volunteerEnd" :options="hourOptions" placeholder="선택" size="sm" class="w-full"/>
       </InfoField>
     </InfoTable>
 
@@ -46,8 +46,8 @@
     />
 
     <template #footer>
-      <Button type="button" variant="tertiary2" size="md" @click="volunteerAddOpen = false">취소</Button>
-      <Button type="button" variant="primary" size="md" @click="onConfirm">확인</Button>
+      <Button type="button" variant="tertiary2" size="md" @click="volunteerAddOpen = false">닫기</Button>
+      <Button type="button" variant="primary" size="md" @click="onConfirm">저장</Button>
     </template>
   </GenericDialog2>
 </template>

@@ -2,10 +2,10 @@
   <GenericDialog2 v-model:open="incidentAddOpen" title="사고자 추가" :size="480">
     <InfoTable :columns="1" popup :size="110">
       <InfoField label="이름">
-        <SelectField v-model="incidentName" :options="nameOptions" placeholder="선택" size="sm" />
+        <SelectField v-model="incidentName" :options="nameOptions" placeholder="선택" size="sm" class="w-full"/>
       </InfoField>
       <InfoField label="구분">
-        <SelectField v-model="incidentReason" :options="incidentReasonOptions" placeholder="선택" size="sm" />
+        <SelectField v-model="incidentReason" :options="incidentReasonOptions" placeholder="선택" size="sm" class="w-full"/>
       </InfoField>
       <InfoField label="사고시간">
         <RadioGroup v-model="incidentRange" class="lp-icon-row">
@@ -20,6 +20,7 @@
           placeholder="선택"
           size="sm"
           :disabled="incidentRange === 'all'"
+          class="w-full"
         />
       </InfoField>
       <InfoField label="종료시간">
@@ -29,6 +30,7 @@
           placeholder="선택"
           size="sm"
           :disabled="incidentRange === 'all'"
+          class="w-full"
         />
       </InfoField>
     </InfoTable>

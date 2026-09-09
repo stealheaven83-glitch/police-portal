@@ -2,7 +2,7 @@
   <GenericDialog2
     v-model:open="workerAddDialogOpen"
     title="근무자 추가"
-    :size="480"
+    :size="560"
     :show-close-button="true"
   >
     <p class="lp-dialog-subtitle lp-note-text">* 추가 근무자를 선택 후 저장하세요.</p>
