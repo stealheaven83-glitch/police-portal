@@ -1,22 +1,22 @@
 <template>
-  <GenericDialog2 v-model:open="timeManageOpen" title="시간관리" :size="720">
-    <p class="lp-meta-nowrap">
-      근무일 <b class="lp-em-primary">{{ workDate }}</b>　부서 <b class="lp-em-primary">실습부서</b>
-    </p>
-    <p class="lp-dialog-subtitle lp-note-text">
-      * <b class="lp-em-danger">시작날짜</b>와 <b class="lp-em-danger">종료날짜</b>가 정확하지 않으면
+  <GenericDialog2 v-model:open="timeManageOpen" title="시간관리" :size="800">
+    <div class="time-meta">
+      <span>근무일 <em class="meta-value">{{ workDate }}</em></span>
+      <span>부서 <em class="meta-value">실습부서</em></span>
+    </div>
+    <!-- <p class="lp-dialog-subtitle lp-note-text"> -->
+    <p class="time-tip">
+      * <em>시작날짜</em>와 <em>종료날짜</em>가 정확하지 않으면
       출동수당이 자동으로 등록되지 않습니다. 추가 등록시 주의바랍니다.<br>
       (야간근무나 당일근무시 00:00 부터는 다음날로 날짜가 설정되어야 합니다.)
     </p>
 
-    <div class="search-area lp-table-gap">
+    <div class="time-gray-box">
       <InputField2 v-model="timeShiftNo" label="교대번호" size="sm" inputClass="w-20" />
-      <SelectField v-model="timeStart" label="시작 시간" :options="hourOptions" size="sm" triggerClass="w-28" />
+      <SelectField v-model="timeStart" label="시작 시간" :options="hourOptions" size="sm" triggerClass="w-25" />
       <div class="group-gap2">
         <span class="lp-label-text">간격(분)</span>
-        <Button type="button" variant="tertiary2" size="xs" padding="10" aria-label="간격 줄이기" @click="stepInterval(-10)">－</Button>
-        <span class="lp-nowrap">{{ timeInterval }}</span>
-        <Button type="button" variant="tertiary2" size="xs" padding="10" aria-label="간격 늘리기" @click="stepInterval(10)">＋</Button>
+        <Stepper v-model="timeInterval" :min="10" :step="10" label="간격(분)" class="w-25" />
       </div>
       <InputField2 v-model="countText" label="생성개수" size="sm" inputClass="w-20" />
     </div>
@@ -48,6 +48,7 @@ import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import InputField2 from '@/components/custom/input/InputField2.vue'
+import Stepper from '@/components/custom/input/Stepper.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { WorkScheduleKey } from '../composable/useWorkSchedule'
@@ -79,16 +80,12 @@ const countText = computed({
   },
 })
 
-function stepInterval(delta: number) {
-  timeInterval.value = Math.max(10, timeInterval.value + delta)
-}
-
 const columns: TabulatorGridColumn[] = [
-  { title: '교대번호', field: 'shiftName', hozAlign: 'center', minWidth: 90, widthGrow: 1 },
-  { title: '시작날짜', field: 'startDate', hozAlign: 'center', minWidth: 110, widthGrow: 1 },
-  { title: '시작시간', field: 'startTime', hozAlign: 'center', minWidth: 90, widthGrow: 1 },
-  { title: '종료날짜', field: 'endDate', hozAlign: 'center', minWidth: 110, widthGrow: 1 },
-  { title: '종료시간', field: 'endTime', hozAlign: 'center', minWidth: 90, widthGrow: 1 },
+  { title: '교대번호', field: 'shiftName', hozAlign: 'center', minWidth: 44, widthGrow: 1 },
+  { title: '시작날짜', field: 'startDate', hozAlign: 'center', widthGrow: 1 },
+  { title: '시작시간', field: 'startTime', hozAlign: 'center', widthGrow: 1 },
+  { title: '종료날짜', field: 'endDate', hozAlign: 'center', widthGrow: 1 },
+  { title: '종료시간', field: 'endTime', hozAlign: 'center', widthGrow: 1 },
 ]
 
 const selectedIds = ref<Set<number>>(new Set())
