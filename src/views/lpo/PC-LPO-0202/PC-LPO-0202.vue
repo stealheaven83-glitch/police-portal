@@ -202,7 +202,6 @@ import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
-import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
 import {
   TabulatorGrid,
 } from "@/components/custom/tabulator";
@@ -225,20 +224,20 @@ import KeyNoteDialog from './components/KeyNoteDialog.vue'
 import VolunteerAddDialog from './components/VolunteerAddDialog.vue'
 import IncidentAddDialog from './components/IncidentAddDialog.vue'
 import ScheduleCopyDialog from './components/ScheduleCopyDialog.vue'
-import {
 import { useDialog } from '@/composable/dialog/dialog'
-
-const dialog = useDialog()
+import {
   useWorkSchedule,
   WorkScheduleKey,
   teamOptions,
 } from './composable/useWorkSchedule'
 
+const dialog = useDialog()
+
 defineOptions({
   name: 'PcLpo0202',
 })
 
-// LNB: 근무일지 > 근무일지(甲) (프리셋은 2뎁스까지라 '근무지정표작성'이 아직 없다)
+// LNB: 근무일지 > 근무일지(甲) > 근무지정표작성
 useSideMenuSetup({ ...localPoliceMenu, openIndex: 1, activeChild: '근무지정표작성' })
 
 const navItems = [
@@ -282,9 +281,6 @@ const {
 } = workSchedule
 
 const department4Search = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
-
-/** 검색줄 우측 수정 이력 표시 — 목업 */
-const modifiedInfo = '수정일 : 2024-09-01 [홍길동]'
 
 /** 근무자 패널 탭 — 일반근무자 / 자원근무자(PC-LPO-0205) / 사고자(PC-LPO-0206) */
 const workerTab = ref<'regular' | 'volunteer' | 'incident'>('regular')
