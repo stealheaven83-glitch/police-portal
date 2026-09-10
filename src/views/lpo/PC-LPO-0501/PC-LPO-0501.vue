@@ -33,8 +33,7 @@
             v-model="keyword"
             label="목록검색"
             size="sm"
-            inputClass="w-60"
-            placeholder="검색어를 입력해주세요."
+            inputClass="w-40"
           />
         </div>
       </template>
@@ -175,6 +174,15 @@ const screenTriggers: ScreenTriggerMap = {
 };
 useAutoTrigger(screenTriggers);
 
+// 일시 칸은 날짜와 시간을 두 줄로 끊어 보여준다("2026-08-01 00:49" → 날짜 / 시간)
+function dateTimeFormatter(cell: { getValue: () => unknown }) {
+  const value = String(cell.getValue() ?? "");
+  if (!value) return "";
+  const [date, time] = value.split(" ");
+  if (!time) return `<span class="lp-cell-datetime">${date}</span>`;
+  return `<span class="lp-cell-datetime">${date}<br />${time}</span>`;
+}
+
 const columns: TabulatorGridColumn[] = [
   { title: "번호", field: "no", width: 60, hozAlign: "center" },
   { title: "신청부서", field: "applyDept", hozAlign: "center" },
@@ -213,8 +221,20 @@ const columns: TabulatorGridColumn[] = [
     width: 120,
     hozAlign: "center",
   },
-  { title: "접수일시", field: "receivedAt", width: 150, hozAlign: "center" },
-  { title: "도착일시", field: "arrivedAt", width: 150, hozAlign: "center" },
+  {
+    title: "접수일시",
+    field: "receivedAt",
+    width: 150,
+    hozAlign: "center",
+    formatter: dateTimeFormatter,
+  },
+  {
+    title: "도착일시",
+    field: "arrivedAt",
+    width: 150,
+    hozAlign: "center",
+    formatter: dateTimeFormatter,
+  },
 ];
 
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null);

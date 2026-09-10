@@ -623,6 +623,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-info-nested` | `InfoField` 값 칸에 `InfoTable` 을 한 번 더 넣을 때 `.control` 여백·중복 테두리 제거(라벨 병합처럼 보이게) | PUB-0111 |
 | `.lp-grid-btn-compact` | 좁은 열(시안 88px)에 들어가는 표 안 버튼. `Button` 베이스의 `min-w-25`(100px)를 풀고 좌우 여백만 준다(컬럼 정의는 `buttonClass` 만 받아서 `padding` prop 을 못 쓴다) | LPO-0223 |
 | `.lp-date-fill` | **`InfoField` 에 건다** — 값 칸을 꽉 채우는 `DatePicker`. `DatePicker` 는 `class` 를 VueDatePicker 루트가 아니라 안쪽 `InputField2` 에 넘겨서(`inheritAttrs:false`) 화면에서 `flex-1` 을 줘도 안 먹는다. 늘어나야 하는 건 값 칸의 직계 자식인 `.dp__main` 이다 | PUB-0302/0303 |
+| `.lp-cell-datetime` | Tabulator 셀의 `white-space: nowrap`(라이브러리 기본)을 풀어 일시를 날짜/시간 두 줄로 끊는다. 행 높이 4.8rem 고정에 맞춰 `line-height: 1.3` | LPO-0501 |
 
 ---
 
