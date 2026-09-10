@@ -481,6 +481,22 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-placeholder-box` | 채울 것이 아직 정해지지 않은 자리(시안의 회색 상자) | PUB-0113 |
 | `.lp-map-slot` | 그 회색 상자를 지도 자리 크기(41.8rem)로 키우고 모서리를 각지게 — `.lp-placeholder-box` 와 **함께** 쓴다 | `AddressSearchDialog` |
 | `.lp-form-box` / `.lp-form-box-center` | 라벨 칸 없이 컨트롤만 들어가는 테두리 상자(라디오·체크박스 줄) / 그 안을 가운데로. 라벨-값 표면 `InfoTable` | PUB-0702, PUB-0208 |
+| `.lp-choice-row` | 선택지(라디오·체크박스)가 **32** 간격으로 늘어서는 줄. 한 항목 안에서 고르는 좁은 묶음은 `.lp-radio-inline`(16) | PUB-0702 |
+| `.lp-heading-sm` | 구역 안 하위 항목 제목('1. 촬영 경위' — 15px/700/#1E2124). 구역 제목은 `.lp-heading-md` | PUB-0702 |
+| `.lp-subsection` | 그 하위 항목 묶음 — 구역 제목보다 12 들여 쓰고 묶음끼리 20 띄운다 | PUB-0702 |
+| `.lp-note-dark` | `.form-note` 와 크기는 같고 색만 본문색(#1E2124)인 안내 문구('＊ …합니다') | PUB-0702 |
+| `.lp-approval-cell` / `-person` / `-status` / `-pick` / `-decide` | 결재선 표 한 칸 — [사람 40][상태·조작 32]이 세로로 쌓인다 / 이름·셀렉트 줄 / 상태·버튼 줄(사이 12) / 결재자 셀렉트(좌우 8 더 들여씀) / 반려·결재 두 버튼이 칸을 반씩 채움 | PUB-0702 |
+| `.lp-approval-table` | 그 결재선 **표 자체**의 모양 — 목록 표(위 진한 실선)와 달리 테두리 상자 + 회색 머리줄. `TableWrapper` 에 건다 (override) | PUB-0702 |
+| `.lp-choice-input` | [라디오·체크박스][입력칸]이 한 줄로 붙는 묶음(사이 8). 라벨을 입력칸 높이(40)에 맞춰 가운데로 되돌린다 (정렬 규칙은 override) | PUB-0702 |
+| `.lp-paren-group` / `.lp-paren` | 괄호로 묶인 선택지 줄('실내 ( … ) 실외') — 괄호 양옆 6. 괄호를 라벨 글자에 넣으면 비활성일 때 같이 흐려지므로 따로 그리고 색을 고정한다 | PUB-0702 |
+| `.lp-form-box-wide` | `.lp-form-box` 와 **함께** — 좌우 여백이 넓은 상자(16 20) | PUB-0702 |
+| `.lp-row-bottom` | `.lp-row-between` 과 **함께** — 그 줄의 항목 높이가 다를 때 아래로 맞춘다(제목 글자와 버튼의 밑선) | PUB-0702 |
+| `.lp-text-dark` | 컴포넌트가 회색으로 그리는 라벨·문구를 본문색(#1E2124)으로 되돌린다. `label-class` 로 넘긴다 | PUB-0702 |
+| `.lp-char-count` | 입력 글자수('0/4000') — 지금 글자수만 파랑. `TextareaField` 의 `show-count` 는 한 덩어리라 색을 못 나눠 화면에서 직접 그릴 때 쓴다 | PUB-0702 |
+| `.lp-guide-list` | 안내 상자(`Alert`) 안의 **번호** 목록(작성 요령 1·2·3). 점 목록은 `.lp-dot-list` | PUB-0701 |
+| `.lp-unit-text` | 입력 옆 단위 글자('(발)' '회' '명'). 배치는 `.lp-unit-row` 가 맡고 이건 글자 모양만 | PUB-0701 |
+| `.lp-dot-item` | 상자 안 한 항목을 여는 작은 라벨(앞에 가운뎃점). 라벨-값 표면 `InfoField` | PUB-0701 |
+| `.lp-cell-lines` | 표 한 칸에 여러 줄이 들어가는 묶음(강조 줄 + 설명 줄, 제목 + 점 목록). 셀 기본이 가운데 정렬이라 이 묶음만 왼쪽으로 되돌린다 | PUB-0701 작성 요건 팝업 |
 | `.lp-link-danger` | 아이콘 + 붉은 글자로 주의를 끄는 링크(Figma button_link 경고 톤). 파란 경로 링크는 `.lp-path-link` | PUB-0701 |
 | `.lp-survey-list` / `.lp-survey-item` / `.lp-survey-choice` | 테두리 없는 설문 문항 나열(좌 문항 · 우 선택지). 라벨-값 표는 `InfoTable` | PUB-0201 |
 | `.lp-score-box` | 설문 합계 점수 줄(가운데 정렬 회색 띠) | PUB-0201 |

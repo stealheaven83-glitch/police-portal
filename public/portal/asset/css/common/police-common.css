@@ -46,6 +46,21 @@
   color: var(--Text-body_1);
 }
 
+/* 구역 안 하위 항목 제목 — '1. 촬영 경위' 처럼 번호가 붙는 줄(시안 15px/700/#1E2124) */
+.lp-heading-sm {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+}
+
+/* 그 하위 항목 묶음 — 상위 구역 제목보다 12 들여 쓴다(시안 13859:112638) */
+.lp-subsection {
+  margin-left: 1.2rem;
+}
+.lp-subsection + .lp-subsection {
+  margin-top: 2rem;
+}
+
 /* 시각·작성자 같은 부수 정보 */
 .lp-note-text {
   font-size: 1.5rem;
@@ -149,8 +164,50 @@
 /* 라디오 여러 개가 한 줄에 16px 간격으로 놓일 때 (group-gap 에는 16px 이 없다) */
 .lp-radio-inline {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 1.6rem;
+}
+
+/*
+ * 선택지가 넓은 간격(32)으로 늘어서는 줄 — 시안의 라디오·체크박스 묶음(13724:123614 등).
+ * .lp-radio-inline(16) 은 한 항목 안에서 고르는 좁은 묶음이고, 이건 항목끼리 벌어지는 줄이다.
+ */
+.lp-choice-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.2rem 3.2rem;
+}
+/* 선택지 글자는 줄바꿈하지 않는다 — 폭이 좁아지면 글자가 접히는 대신 항목째로 다음 줄로 내려간다 */
+.lp-choice-row label {
+  white-space: nowrap;
+}
+
+/*
+ * 괄호로 묶인 선택지 줄 — '실내 ( 가정내 · … · 운송수단 내 ) 실외'(시안 13859:112989).
+ * 괄호를 라벨 글자에 넣으면 선택지가 비활성일 때 같이 흐려지므로 따로 그리고,
+ * 괄호 양옆은 6 만 띄운다(선택지끼리는 .lp-radio-inline 의 16).
+ */
+.lp-paren-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+.lp-paren-group > .lp-paren {
+  color: var(--Text-body_0);
+}
+
+/*
+ * [라디오/체크박스][입력칸] 이 한 줄로 붙는 묶음 — '기타 ____', '미표시(미고지) - 사유 ____'.
+ * 라벨을 입력칸(40) 높이에 맞춰 가운데로 되돌리는 규칙은 police-override.css 에 있다
+ * (RadioGroupItem 이 테일윈드 items-start 로 그려서 이 레이어로는 못 덮는다).
+ */
+.lp-choice-input {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
 }
 
 /* 한 줄에 좌우로 벌려 놓기 */
@@ -159,6 +216,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 1.2rem;
+}
+/* 그 줄의 항목 높이가 다를 때 아래로 맞춘다(제목 글자와 버튼의 밑선 맞춤) */
+.lp-row-bottom {
+  align-items: flex-end;
 }
 
 /* 라벨+입력 여러 쌍이 한 줄에 늘어서고 좁아지면 줄바꿈 */
@@ -262,6 +323,84 @@
 .lp-table-gap {
   margin-top: 1.2rem;
 }
+/*
+ * 결재선 표의 한 칸 — [사람][상태·조작]이 세로로 쌓인다(시안 13724:123521: 본문 100 = 40 + 4 + 32 여백).
+ * 표 셀 기본이 가운데 정렬이라 글자는 가운데 그대로 두고 줄만 쌓는다.
+ */
+.lp-approval-cell {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  /* stretch 라야 안쪽 줄이 칸 폭을 다 쓴다(반려·결재 버튼이 칸을 꽉 채우는 자리) — 글자는 각 줄이 가운데로 맞춘다 */
+  align-items: stretch;
+  justify-content: center;
+  gap: 0.4rem;
+}
+/* 사람 줄 — 셀렉트(40)와 같은 높이라 이름이 셀렉트와 세로 가운데로 맞는다 */
+.lp-approval-person {
+  display: flex;
+  width: 100%;
+  min-height: 4rem;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--Text-body_1);
+}
+/* 상태 줄 — '결재대기'·'-' 같은 글자와 버튼(32)이 세로 가운데로 맞고, 사이는 12 */
+.lp-approval-status {
+  display: flex;
+  width: 100%;
+  min-height: 3.2rem;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--Text-body_1);
+}
+/* 결재자를 고르는 칸만 좌우로 8 더 들여 쓴다(시안: 셀 여백 12 + 8) */
+.lp-approval-pick {
+  width: 100%;
+  padding-inline: 0.8rem;
+}
+/* 반려·결재 두 버튼이 칸을 반씩 나눠 채운다(사이 12) */
+.lp-approval-decide {
+  display: flex;
+  width: 100%;
+  gap: 1.2rem;
+}
+
+/*
+ * 제한 안내 문구 — '＊ 사용자는 1명으로 제한합니다.' 처럼 제목 옆에 붙는 줄.
+ * .form-note 와 달리 15px·본문색(#1E2124)이고, 제목과 세로로 맞도록 아래 여백이 없다.
+ */
+.lp-note-dark {
+  margin-bottom: 0;
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
+}
+
+/* 라벨·문구를 본문색(#1E2124)으로 — 컴포넌트 기본색(회색)을 되돌릴 때 label-class 로 넘긴다 */
+.lp-text-dark {
+  color: var(--Text-body_0);
+}
+
+/*
+ * 입력 글자수 — 시안은 '0/4000' 에서 지금 글자수만 파랑이다.
+ * TextareaField 의 show-count 는 한 덩어리로 그려 색을 나눌 수 없어 화면에서 직접 그린다.
+ */
+.lp-char-count {
+  margin-top: 0.8rem;
+  font-size: 1.3rem;
+  color: var(--Text-body_1);
+  text-align: right;
+}
+.lp-char-count > b {
+  font-weight: 400;
+  color: var(--Base-primary);
+}
+
 /* 표 바로 위 안내 문구 — 위는 앞 요소에 붙고 아래로만 띄운다(.lp-table-gap 의 반대) */
 .lp-note-gap {
   margin-bottom: 2rem;
@@ -299,6 +438,10 @@
   border: 1px solid var(--Border_gray02);
   border-radius: var(--Radius-medium2);
   background: #fff;
+}
+/* 좌우 여백이 넓은 상자(시안 13724:123614 — 16 20). .lp-form-box 와 함께 쓴다 */
+.lp-form-box-wide {
+  padding: 1.6rem 2rem;
 }
 
 /* 설문 문항 목록 — 왼쪽에 번호+문항, 오른쪽에 선택지(예/아니오 등).
@@ -355,9 +498,9 @@
 }
 
 /* 결재선처럼 '완료'된 상태만 색으로 구분할 때 */
+/* 시안(13724:123533)은 글자용 초록(#00880B)에 굵기는 본문과 같다 */
 .lp-status-done {
-  color: var(--success);
-  font-weight: 600;
+  color: var(--Alert-success-text);
 }
 
 /* 아직 채울 것(도면·인증기준표 등)이 정해지지 않은 자리. 시안의 회색 상자를 그대로 잡아 둔다 */
@@ -688,6 +831,44 @@
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+}
+
+/*
+ * 안내 상자(Alert) 안의 번호 목록 — '1. 2. 3.' 으로 이어지는 작성 요령.
+ * .lp-dot-list 와 의도가 다르다: 그쪽은 점 목록이고 이쪽은 순서가 뜻을 갖는 번호 목록이다.
+ * 쓰는 곳: PM-PUB-0701 보고서 작성 요령
+ */
+.lp-guide-list {
+  padding-left: 1.8rem;
+  list-style: decimal;
+}
+.lp-guide-list > li {
+  line-height: 1.6;
+}
+
+/*
+ * 입력 옆에 붙는 단위 글자 — '(발)' '회' '명' 처럼 값의 단위만 적는 자리.
+ * .lp-unit-row 안에서 쓴다(그 클래스는 배치만 하고 글자 모양은 정하지 않는다).
+ */
+.lp-unit-text {
+  font-size: 1.5rem;
+  color: var(--Text-body_1);
+}
+
+/*
+ * 상자 안에서 한 항목을 여는 작은 라벨 — 앞에 가운뎃점이 붙는다(시안 13685:118182).
+ * 라벨-값 표가 아니라 상자(.lp-form-box) 안 한 줄짜리 라벨이라 InfoField 를 쓸 수 없다.
+ */
+.lp-dot-item {
+  position: relative;
+  padding-left: 1.2rem;
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
+}
+.lp-dot-item::before {
+  content: "·";
+  position: absolute;
+  left: 0.2rem;
 }
 .lp-dot-list > li {
   position: relative;
@@ -1368,6 +1549,18 @@
 }
 
 /* 표 셀 본문 아래에 붙는 보조 한 줄(작성일시 등) — 시안은 셀 오른쪽 끝에 붙는다 */
+/*
+ * 표 한 칸에 여러 줄이 들어가는 묶음 — 강조 한 줄 + 설명 한 줄, 제목 + 점 목록 등.
+ * 표 셀은 가운데 정렬이 기본이라 이 묶음만 왼쪽으로 되돌린다.
+ * 오른쪽 아래에 보조 한 줄이 붙는 형태는 .lp-log-cell 이다(의도가 다르다).
+ */
+.lp-cell-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  text-align: left;
+}
+
 .lp-cell-note {
   margin-top: 0.4rem;
   font-size: 1.3rem;

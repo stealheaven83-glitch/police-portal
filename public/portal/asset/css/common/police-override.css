@@ -237,7 +237,7 @@
 .prevention-nums,
 .prevention-choices {
   display: flex;
-  
+
 }
 
 .prevention-num {
@@ -619,4 +619,65 @@
   display: block;
   white-space: normal;
   line-height: 1.3;
+}
+
+/*
+ * 결재선 표 (시안 13724:123521) — 일반 목록 표와 모양이 다르다.
+ * TableWrapper 는 위에 진한 실선(#1E2124)을 긋고 머리줄에 배경을 깔지 않는 "목록" 모양인데,
+ * 시안의 결재선은 테두리로 둘러싼 상자에 머리줄만 회색으로 채운 "카드" 모양이다.
+ *   머리줄 33 / 본문 100 / 칸 사이 세로선 / 모서리 6
+ * 컴포넌트가 테일윈드로 먹인 값이라 이 파일(layer screen)에서 덮는다.
+ */
+.lp-approval-table > div {
+  border: 1px solid var(--Border_gray02);
+  border-radius: var(--Radius-medium3);
+}
+/*
+ * 머리줄 — 배경 #F4F5F6. 머리와 본문 사이에는 실선이 없다(시안).
+ * 선은 th 가 아니라 tr 에 걸려 있다(ui/table 의 TableHeader `[&_tr]:border-b`, TableRow `border-b`).
+ */
+.lp-approval-table thead tr {
+  border-bottom: 0;
+}
+.lp-approval-table thead th {
+  height: 3.3rem;
+  padding-block: 0;
+  background: var(--Background-gray01);
+  border-bottom: 0;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--Text-body_1);
+}
+.lp-approval-table thead th + th,
+.lp-approval-table tbody td + td {
+  border-left: 1px solid var(--Border_gray02);
+}
+/* 본문은 한 줄뿐이라 아래 실선이 필요 없다(바깥 테두리가 대신한다) */
+.lp-approval-table tbody td {
+  padding: 1.2rem;
+  border-bottom: 0;
+}
+
+/*
+ * [라디오/체크박스][입력칸] 한 줄 묶음(.lp-choice-input)의 세로 가운데 정렬.
+ * RadioGroupItem 은 라벨을 `inline-flex items-start` 로 그린다 — 여러 줄 라벨·도움말을 위한
+ * 기본값이라 컴포넌트는 두고, 입력칸(40)과 나란히 놓이는 이 묶음에서만 되돌린다.
+ * items-start 가 테일윈드(utilities)라 police 레이어인 police-common.css 로는 못 덮는다.
+ */
+/* 라디오 묶음(div[data-slot="radio-group"])도 입력칸 높이에 맞춰 세로 가운데로 둔다 */
+.lp-choice-input [data-slot="radio-group"] {
+  display: flex;
+  align-items: center;
+  min-height: 4rem;
+}
+.lp-choice-input label {
+  min-height: 4rem;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* 괄호는 선택지가 비활성이어도 본문색(#1E2124)·15px 을 유지한다(시안 13859:112989) */
+.lp-paren-group > .lp-paren {
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
 }

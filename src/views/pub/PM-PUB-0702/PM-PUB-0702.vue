@@ -27,7 +27,7 @@
           size="sm"
           input-class="w-40"
         />
-        <InputField2 v-model="searchUser" label="사용자" size="sm" input-class="w-40" />
+        <InputField2 v-model="searchUser" label="사용자" size="sm" input-class="w-30" />
       </div>
     </template>
     <template #btns>
@@ -35,14 +35,13 @@
     </template>
   </SearchWrapper>
 
-  <LayoutSplit :count="2" :widths="[42, 58]" :min-widths="[32, 40]">
+  <LayoutSplit :count="2" :widths="[48, 52]" :min-widths="[32, 40]">
     <template #layout-1>
       <LayoutPanel title="기타 영상기기 사용 보고서 목록">
         <template #actions>
-          <Button type="button" variant="tertiary" size="sm" @click="onDeleteSelected">선택삭제</Button>
+          <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelected">선택삭제</Button>
         </template>
 
-        <!-- 컬럼이 많아 가로 스크롤이 필요하다 — fitColumns 가 아니라 fitDataFill(CLAUDE.md §6) -->
         <TabulatorGrid
           ref="gridRef"
           :columns="listColumns"
@@ -70,45 +69,61 @@
 
         <ScrollWrapper>
           <section class="lp-section" aria-labelledby="video-approval-heading">
-            <div class="lp-row-between lp-section-title">
+            <div class="lp-row-between lp-row-bottom lp-section-title">
               <h3 id="video-approval-heading" class="lp-heading-md">결재선</h3>
-              <Button type="button" variant="tertiary" size="sm" @click="onSaveApprovalLine">결재선 저장</Button>
+              <Button type="button" variant="secondary" size="xs" @click="onSaveApprovalLine">결재선 저장</Button>
             </div>
 
             <TableWrapper
+              v-for="(line, lineIndex) in approvalLines"
+              :key="lineIndex"
+              class="lp-approval-table"
+              :class="{ 'lp-table-gap': lineIndex > 0 }"
               :columns="approvalColumns"
               :items="approvalItems"
               :selectable="false"
+              :show-pagination="false"
               caption="결재선 — 기안자와 차수별 결재자"
             >
-              <template v-for="step in approvalLine" :key="step.role" #[`cell-${step.role}`]="{ item }">
-                <!-- 첫 줄은 사람, 둘째 줄은 상태·조작 -->
-                <SelectField
-                  v-if="item.kind === 'person' && step.selectable"
-                  v-model="nextApprover"
-                  :label="step.role"
-                  label-class="sr-only"
-                  :options="approverOptions"
-                  size="sm"
-                  trigger-class="w-full"
-                  class="!space-y-0"
-                  placeholder="선택"
-                />
-                <span v-else-if="item.kind === 'person'">{{ step.person }}</span>
+              <template v-for="step in line" :key="step.role" #[`cell-${step.role}`]>
+                <div class="lp-approval-cell">
+                  <div class="lp-approval-person">
+                    <SelectField
+                      v-if="step.selectable"
+                      v-model="nextApprover"
+                      :label="step.role"
+                      label-class="sr-only"
+                      :options="approverOptions"
+                      size="sm"
+                      trigger-class="w-full"
+                      class="!space-y-0 lp-approval-pick"
+                      placeholder="선택"
+                    />
+                    <span v-else>{{ step.person }}</span>
+                  </div>
 
-                <span v-else-if="step.action === 'none'" :class="statusClass(step.status)">
-                  {{ step.status }}
-                </span>
-                <span v-else-if="step.action === 'withdraw'" class="lp-unit-row">
-                  <span :class="statusClass(step.status)">{{ step.status }}</span>
-                  <Button type="button" variant="tertiary" size="xs" padding="8" @click="onWithdraw(step)">
-                    결재회수
-                  </Button>
-                </span>
-                <span v-else class="lp-unit-row">
-                  <Button type="button" variant="tertiary" size="xs" padding="8" @click="onReject(step)">반려</Button>
-                  <Button type="button" variant="tertiary" size="xs" padding="8" @click="onApprove(step)">결재</Button>
-                </span>
+                  <div class="lp-approval-status">
+                    <template v-if="step.action === 'none'">
+                      <span :class="statusClass(step.status)">{{ step.status }}</span>
+                    </template>
+                    <template v-else-if="step.action === 'withdraw'">
+                      <span :class="statusClass(step.status)">{{ step.status }}</span>
+                      <Button type="button" variant="tertiary" size="xs" padding="8" @click="onWithdraw(lineIndex, step)">
+                        결재회수
+                      </Button>
+                    </template>
+                    <template v-else>
+                      <span class="lp-approval-decide">
+                        <Button type="button" variant="tertiary2" size="xs" padding="8" class="flex-1" @click="onReject(lineIndex, step)">
+                          반려
+                        </Button>
+                        <Button type="button" variant="tertiary" size="xs" padding="8" class="flex-1" @click="onApprove(lineIndex, step)">
+                          결재
+                        </Button>
+                      </span>
+                    </template>
+                  </div>
+                </div>
               </template>
             </TableWrapper>
           </section>
@@ -116,13 +131,14 @@
           <section class="lp-section" aria-labelledby="video-user-heading">
             <div class="lp-row-between lp-section-title">
               <h3 id="video-user-heading" class="lp-heading-md">사용자 정보</h3>
-              <p class="form-note">* 사용자는 1명으로 제한합니다.</p>
+              <p class="form-note lp-note-dark">＊ 사용자는 1명으로 제한합니다.</p>
             </div>
 
             <TableWrapper
               :columns="userColumns"
               :items="reportUsers"
               :selectable="false"
+              :show-pagination="false"
               caption="보고서를 작성한 사용자"
             >
               <template #cell-manage>
@@ -133,25 +149,28 @@
 
           <section class="lp-section" aria-labelledby="video-device-heading">
             <h3 id="video-device-heading" class="lp-heading-md lp-section-title">촬영 장비</h3>
-            <div class="lp-form-box">
-              <div class="lp-unit-row">
-                <RadioGroup v-model="detail.device" class="lp-unit-row" aria-label="촬영 장비">
-                  <RadioGroupItem value="work" label="업무용 휴대폰 (PDA, 폴리폰)" />
-                  <RadioGroupItem value="personal" label="개인 휴대폰" />
+            <div class="lp-form-box lp-form-box-wide">
+              <RadioGroup v-model="detail.device" class="lp-choice-row" aria-label="촬영 장비">
+                <RadioGroupItem value="work" label="업무용 휴대폰 (PDA, 폴리폰)" />
+                <RadioGroupItem value="personal" label="개인 휴대폰" />
+              </RadioGroup>
+              <div class="lp-choice-input">
+                <RadioGroup v-model="detail.device" aria-label="촬영 장비 기타">
                   <RadioGroupItem value="etc" label="기타" />
                 </RadioGroup>
                 <InputField2
                   v-model="detail.deviceEtc"
                   size="sm"
-                  aria-label="촬영 장비 기타"
+                  aria-label="촬영 장비 기타 입력"
                   :disabled="detail.device !== 'etc'"
-                  class="!space-y-0 flex-1"
-                  input-class="w-full"
+                  class="!space-y-0"
+                  input-class="w-85"
                 />
               </div>
               <TextareaField
                 v-model="detail.deviceReason"
                 label="사용 사유"
+                label-class="lp-text-dark"
                 class="w-full !space-y-0"
                 textarea-class="w-full"
                 :height="80"
@@ -162,20 +181,24 @@
 
           <section class="lp-section" aria-labelledby="video-notice-heading">
             <h3 id="video-notice-heading" class="lp-heading-md lp-section-title">고지 여부</h3>
-            <div class="lp-form-box">
-              <div class="lp-unit-row">
-                <RadioGroup v-model="detail.notice" class="lp-unit-row" aria-label="고지 여부">
+            <div class="lp-form-box lp-form-box-wide">
+              <div class="lp-choice-row">
+                <RadioGroup v-model="detail.notice" aria-label="고지 여부">
                   <RadioGroupItem value="notified" label="촬영여부 등 표시 (고지)" />
-                  <RadioGroupItem value="not-notified" label="미표시 (미고지) - 사유" />
                 </RadioGroup>
-                <InputField2
-                  v-model="detail.noticeReason"
-                  size="sm"
-                  aria-label="미고지 사유"
-                  :disabled="detail.notice !== 'not-notified'"
-                  class="!space-y-0 flex-1"
-                  input-class="w-full"
-                />
+                <span class="lp-choice-input">
+                  <RadioGroup v-model="detail.notice" aria-label="미고지 사유">
+                    <RadioGroupItem value="not-notified" label="미표시 (미고지) - 사유" />
+                  </RadioGroup>
+                  <InputField2
+                    v-model="detail.noticeReason"
+                    size="sm"
+                    aria-label="미고지 사유 입력"
+                    :disabled="detail.notice !== 'not-notified'"
+                    class="!space-y-0"
+                    input-class="w-85"
+                  />
+                </span>
               </div>
             </div>
           </section>
@@ -183,88 +206,112 @@
           <section class="lp-section" aria-labelledby="video-outline-heading">
             <h3 id="video-outline-heading" class="lp-heading-md lp-section-title">촬영 개요</h3>
 
-            <h4 class="lp-label-text lp-section-title">1. 촬영 경위</h4>
-            <div class="lp-form-box">
-              <div class="lp-unit-row">
-                <RadioGroup v-model="detail.origin" class="lp-unit-row" aria-label="촬영 경위">
-                  <RadioGroupItem value="report112" label="112신고" />
-                  <RadioGroupItem value="patrol" label="순찰 중 자체 인지" />
-                  <RadioGroupItem value="etc" label="기타" />
-                </RadioGroup>
-                <InputField2
-                  v-model="detail.originEtc"
-                  size="sm"
-                  aria-label="촬영 경위 기타"
-                  :disabled="detail.origin !== 'etc'"
-                  class="!space-y-0 flex-1"
-                  input-class="w-full"
-                />
+            <div class="lp-subsection">
+              <h4 class="lp-heading-sm lp-section-title">1. 촬영 경위</h4>
+              <div class="lp-form-box lp-form-box-wide">
+                <div class="lp-choice-row">
+                  <RadioGroup v-model="detail.origin" class="lp-choice-row" aria-label="촬영 경위">
+                    <RadioGroupItem value="report112" label="112신고" />
+                    <RadioGroupItem value="patrol" label="순찰 중 자체 인지" />
+                  </RadioGroup>
+                  <span class="lp-choice-input">
+                    <RadioGroup v-model="detail.origin" aria-label="촬영 경위 기타">
+                      <RadioGroupItem value="etc" label="기타" />
+                    </RadioGroup>
+                    <InputField2
+                      v-model="detail.originEtc"
+                      size="sm"
+                      aria-label="촬영 경위 기타 입력"
+                      :disabled="detail.origin !== 'etc'"
+                      class="!space-y-0"
+                      input-class="w-85"
+                    />
+                  </span>
+                </div>
               </div>
             </div>
 
-            <h4 class="lp-label-text lp-section-title lp-table-gap">2. 촬영 일시</h4>
-            <InfoTable :columns="1" size="90">
-              <InfoField label="시작일시" for="video-start-date">
-                <div class="lp-unit-row">
-                  <DatePicker id="video-start-date" v-model="detail.startDate" size="sm" input-class="w-40" />
+            <div class="lp-subsection">
+              <h4 class="lp-heading-sm lp-section-title">2. 촬영 일시</h4>
+              <div class="lp-form-box lp-form-box-wide">
+                <div class="lp-choice-row">
+                  <DatePicker
+                    v-model="detail.startDate"
+                    label="시작일시"
+                    size="sm"
+                    label-position="left"
+                    class="!space-y-0"
+                    input-class="w-40"
+                  />
                   <InputField2
                     v-model="detail.startTime"
+                    label="시간"
                     size="sm"
-                    label="시작 시간"
+                    label-position="left"
                     placeholder="예) 12:00"
                     class="!space-y-0"
                     input-class="w-30"
                   />
                 </div>
-              </InfoField>
-              <InfoField label="종료일시" for="video-end-date">
-                <div class="lp-unit-row">
-                  <DatePicker id="video-end-date" v-model="detail.endDate" size="sm" input-class="w-40" />
+                <div class="lp-choice-row">
+                  <DatePicker
+                    v-model="detail.endDate"
+                    label="종료일시"
+                    size="sm"
+                    label-position="left"
+                    class="!space-y-0"
+                    input-class="w-40"
+                  />
                   <InputField2
                     v-model="detail.endTime"
+                    label="시간"
                     size="sm"
-                    label="종료 시간"
+                    label-position="left"
                     placeholder="예) 12:00"
                     class="!space-y-0"
                     input-class="w-30"
                   />
                 </div>
-              </InfoField>
-            </InfoTable>
+              </div>
+            </div>
 
-            <h4 class="lp-label-text lp-section-title lp-table-gap">3. 촬영 장소</h4>
-            <div class="lp-form-box">
-              <div class="lp-unit-row">
-                <Checkbox v-model="detail.indoor" label="실내" />
-                <!-- 실내를 켰을 때만 세부 장소를 고를 수 있다 -->
-                <RadioGroup
-                  v-model="detail.indoorType"
-                  :disabled="!detail.indoor"
-                  class="lp-unit-row"
-                  aria-label="실내 세부 장소"
-                >
-                  <RadioGroupItem value="home" label="가정내" />
-                  <RadioGroupItem value="facility" label="식당 · 백화점 · 역사 · 사무실 등" />
-                  <RadioGroupItem value="transport" label="운송수단 내" />
-                </RadioGroup>
-                <Checkbox v-model="detail.outdoor" label="실외" />
+            <div class="lp-subsection">
+              <h4 class="lp-heading-sm lp-section-title">3. 촬영 장소</h4>
+              <div class="lp-form-box lp-form-box-wide">
+                <div class="lp-choice-row">
+                  <span class="lp-paren-group">
+                    <Checkbox v-model="detail.indoor" label="실내" />
+                    <span class="lp-paren" aria-hidden="true">(</span>
+                    <RadioGroup
+                      v-model="detail.indoorType"
+                      :disabled="!detail.indoor"
+                      class="lp-radio-inline"
+                      aria-label="실내 세부 장소"
+                    >
+                      <RadioGroupItem value="home" label="가정내" />
+                      <RadioGroupItem value="facility" label="식당 · 백화점 · 역사 · 사무실 등" />
+                      <RadioGroupItem value="transport" label="운송수단 내" />
+                    </RadioGroup>
+                    <span class="lp-paren" aria-hidden="true">)</span>
+                  </span>
+                  <Checkbox v-model="detail.outdoor" label="실외" />
+                </div>
               </div>
             </div>
           </section>
 
           <section class="lp-section" aria-labelledby="video-note-heading">
             <h3 id="video-note-heading" class="lp-heading-md lp-section-title">참고사항</h3>
-            <!-- 제목이 바로 위 h3 라 라벨을 다시 보여주지 않고 aria-label 로만 준다 -->
             <TextareaField
               v-model="detail.note"
               aria-label="참고사항"
               class="w-full !space-y-0"
               textarea-class="w-full"
-              :height="120"
-              :maxlength="4000"
-              show-count
+              :height="144"
+              :maxlength="NOTE_MAX"
               placeholder="촬영한 영상 등은 '개인영상정보 등록 대장'(양식4)에 등록 등 기재&#10;사건 개요 등은 112신고처리표, 근무일지, 발생보고 참고 등 기재"
             />
+            <p class="lp-char-count"><b>{{ detail.note.length }}</b>/{{ NOTE_MAX }}</p>
           </section>
         </ScrollWrapper>
       </LayoutPanel>
@@ -288,7 +335,6 @@ import { DateRangePicker } from '@/components/custom/datepicker'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
 import { Checkbox } from '@/components/custom/checkbox'
 import { Button } from '@/components/custom/button'
-import { InfoTable, InfoField } from '@/components/custom/info-table'
 import TableWrapper from '@/components/custom/table/TableWrapper.vue'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import LayoutSplit from '@/components/custom/content-layout/layoutSplit.vue'
@@ -331,7 +377,7 @@ const {
   searchUser,
   rows,
   activeRowKey,
-  approvalLine,
+  approvalLines,
   nextApprover,
   reportUsers,
   detail,
@@ -341,6 +387,9 @@ const {
 } = useVideoDeviceReport()
 
 const dialog = useDialog()
+
+/** 참고사항 최대 글자수(기획서 22-5) */
+const NOTE_MAX = 4000
 
 /* ------------------------------------------------------------------ *
  * 좌측 목록
@@ -390,11 +439,11 @@ async function onDeleteSelected() {
  * 결재선 — 역할이 열, 사람/상태가 행인 표라 TabulatorGrid 가 아니라 정적 표다
  * ------------------------------------------------------------------ */
 const approvalColumns = computed(() =>
-  approvalLine.value.map((step) => ({ key: step.role, label: step.role })),
+  (approvalLines.value[0] ?? []).map((step) => ({ key: step.role, label: step.role })),
 )
 
-/** 첫 줄은 사람, 둘째 줄은 상태·조작 — 열마다 슬롯으로 그린다 */
-const approvalItems = [{ kind: 'person' }, { kind: 'status' }]
+/** 본문은 한 줄뿐이고, 그 안에서 사람·상태가 세로로 쌓인다(시안 13724:123521) */
+const approvalItems = [{ kind: 'line' }]
 
 /** 결재완료는 초록, 나머지는 기본색(시안) */
 function statusClass(status: string) {
@@ -409,38 +458,39 @@ async function onSaveApprovalLine() {
 }
 
 /* 결재 처리는 서버 몫이라 화면단에서는 상태만 바꿔 보여준다 */
-function setStep(target: ApprovalStep, status: string, action: ApprovalStep['action']) {
-  approvalLine.value = approvalLine.value.map((step) =>
-    step.role === target.role ? { ...step, status, action } : step,
+function setStep(lineIndex: number, target: ApprovalStep, status: string, action: ApprovalStep['action']) {
+  approvalLines.value = approvalLines.value.map((line, i) =>
+    i !== lineIndex ? line : line.map((step) => (step.role === target.role ? { ...step, status, action } : step)),
   )
 }
-async function onWithdraw(step: ApprovalStep) {
+async function onWithdraw(lineIndex: number, step: ApprovalStep) {
   const result = await dialog.confirm({ title: '결재를 회수하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
   if (!result.confirmed) return
-  setStep(step, '결재대기', 'decide')
+  setStep(lineIndex, step, '결재대기', 'decide')
   await dialog.alert({ title: '회수되었습니다.', btnCancel: '확인' })
 }
-async function onReject(step: ApprovalStep) {
+async function onReject(lineIndex: number, step: ApprovalStep) {
   const result = await dialog.confirm({ title: '반려하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
   if (!result.confirmed) return
-  setStep(step, '반려', 'none')
+  setStep(lineIndex, step, '반려', 'none')
   await dialog.alert({ title: '반려되었습니다.', btnCancel: '확인' })
 }
-async function onApprove(step: ApprovalStep) {
+async function onApprove(lineIndex: number, step: ApprovalStep) {
   const result = await dialog.confirm({ title: '결재하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
   if (!result.confirmed) return
-  setStep(step, '결재완료', 'none')
+  setStep(lineIndex, step, '결재완료', 'none')
   await dialog.alert({ title: '결재되었습니다.', btnCancel: '확인' })
 }
 
 /* ------------------------------------------------------------------ *
  * 사용자 정보
  * ------------------------------------------------------------------ */
+/** 시안(13724:123626) 칸 폭 — 소속은 남는 폭, 계급 100 · 이름 120 · 관리 120 */
 const userColumns = [
-  { key: 'dept', label: '소속' },
+  { key: 'dept', label: '소속', hozAlign: 'left' },
   { key: 'rank', label: '계급', width: '100px' },
   { key: 'name', label: '이름', width: '120px' },
-  { key: 'manage', label: '관리', width: '100px' },
+  { key: 'manage', label: '관리', width: '120px' },
 ]
 
 /** 사용자 검색 팝업은 시안에 없다 — 개발팀 연동 대상이라 안내만 낸다 */
