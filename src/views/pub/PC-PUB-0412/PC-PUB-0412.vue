@@ -76,7 +76,6 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -92,6 +91,9 @@ import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import DrunkCenterDetailForm from '../components/DrunkCenterDetailForm.vue'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
 import {
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
   useDrunkCenterStore,
   createEmptyCenterForm,
   regionFilterOptions,
@@ -147,13 +149,13 @@ const columns: TabulatorGridColumn[] = [
 const form = reactive(createEmptyCenterForm())
 
 /** 기획서 [2] 저장하면 좌측 목록에 바로 반영된다(도메인 싱글턴 스토어를 두 화면이 공유) */
-function onSave() {
+async function onSave() {
   if (!form.region || !form.name.trim()) {
-    toast.warning('필수 항목을 입력해 주세요.')
+    await dialog.alert({ title: '필수 항목을 입력해 주세요.', btnCancel: '확인' })
     return
   }
   store.saveCenter(form)
-  toast.success('저장되었습니다.')
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
   // 연속 등록을 위해 폼을 비운다
   Object.assign(form, createEmptyCenterForm())
 }

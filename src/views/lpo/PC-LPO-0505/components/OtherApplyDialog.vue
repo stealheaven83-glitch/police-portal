@@ -30,7 +30,6 @@
 
 <script setup lang="ts">
 import { inject, ref } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
@@ -39,6 +38,9 @@ import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tab
 import DispatchInfoPanel from './DispatchInfoPanel.vue'
 import { DispatchSummaryDialogKey, type ReceiptRow } from '../composable/dialogs'
 import { useDialogGridRedraw } from '../composable/dialogGridRedraw'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 /** 타직원 출동수당 신청 팝업(PC-LPO-0509) — 왼쪽 접수건을 고르면 오른쪽에 상세가 뜬다 */
 const store = inject(DispatchSummaryDialogKey)!
@@ -58,12 +60,12 @@ function onRowClick(_event: unknown, row: { getData: () => ReceiptRow }) {
   pickedReceiptId.value = row.getData().id
 }
 
-function onApprove() {
+async function onApprove() {
   if (!pickedReceiptId.value) {
-    toast.warning('신청할 접수건을 선택해 주세요.')
+    await dialog.alert({ title: '신청할 접수건을 선택해 주세요.', btnCancel: '확인' })
     return
   }
-  toast.success('타 직원 신청이 승인되었습니다.')
+  await dialog.alert({ title: '타 직원 신청이 승인되었습니다.', btnCancel: '확인' })
   otherApplyOpen.value = false
 }
 </script>

@@ -121,12 +121,14 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { toast } from 'vue-sonner'
 import { CornerDownRight, MessageSquare, MoreHorizontal } from 'lucide-vue-next'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { Button } from '@/components/custom/button'
 import { Pagination } from '@/components/custom/pagination'
 import type { NoticeComment } from '../composable/notice'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 /**
  * 게시글 댓글 영역. 공지사항 상세(PM-COM-1002)에서 쓰고,
@@ -180,18 +182,18 @@ function toggleReply(id: number) {
   replyText.value = ''
 }
 
-function onAdd() {
+async function onAdd() {
   if (!newComment.value.trim()) {
-    toast.warning('댓글 내용을 입력해 주세요.')
+    await dialog.alert({ title: '댓글 내용을 입력해 주세요.', btnCancel: '확인' })
     return
   }
   emit('add', newComment.value.trim(), null)
   newComment.value = ''
 }
 
-function onAddReply(parentId: number) {
+async function onAddReply(parentId: number) {
   if (!replyText.value.trim()) {
-    toast.warning('답글 내용을 입력해 주세요.')
+    await dialog.alert({ title: '답글 내용을 입력해 주세요.', btnCancel: '확인' })
     return
   }
   emit('add', replyText.value.trim(), parentId)
@@ -210,9 +212,9 @@ function cancelEdit() {
   editText.value = ''
 }
 
-function onSaveEdit(id: number) {
+async function onSaveEdit(id: number) {
   if (!editText.value.trim()) {
-    toast.warning('댓글 내용을 입력해 주세요.')
+    await dialog.alert({ title: '댓글 내용을 입력해 주세요.', btnCancel: '확인' })
     return
   }
   emit('update', id, editText.value.trim())

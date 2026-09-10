@@ -66,7 +66,6 @@
 
 <script setup lang="ts">
 import { computed, inject, ref } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
@@ -81,6 +80,9 @@ import {
   type VolunteerCandidate,
 } from '../composable/useWorkScheduleDialogs'
 import { useDialogGridRedraw } from '../composable/dialogGridRedraw'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 /** 자원 근무자 추가 팝업(PC-LPO-0205) */
 const store = inject(WorkScheduleKey)!
@@ -123,13 +125,13 @@ function onSelectionChanged(rows: unknown[]) {
   )
 }
 
-function onSearch() {
-  toast.success('조회되었습니다.')
+async function onSearch() {
+  await dialog.alert({ title: '조회되었습니다.', btnCancel: '확인' })
 }
 
-function onConfirm() {
+async function onConfirm() {
   if (!selected.value.length) {
-    toast.warning('추가할 자원 근무자를 선택해 주세요.')
+    await dialog.alert({ title: '추가할 자원 근무자를 선택해 주세요.', btnCancel: '확인' })
     return
   }
   let nextId = volunteerWorkers.value.length
@@ -146,7 +148,7 @@ function onConfirm() {
       endTime: volunteerEnd.value,
     })),
   ]
-  toast.success('추가되었습니다.')
+  await dialog.alert({ title: '추가되었습니다.', btnCancel: '확인' })
   volunteerAddOpen.value = false
 }
 </script>

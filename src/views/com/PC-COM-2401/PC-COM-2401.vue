@@ -40,7 +40,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -113,13 +112,13 @@ async function onAdd() {
   gridRef.value?.setPage('last')
 }
 
-function onDeleteSelected() {
+async function onDeleteSelected() {
   if (!selectedCount.value) {
-    toast.warning('삭제할 게시판을 선택해 주세요.')
+    await dialog.alert({ title: '삭제할 게시판을 선택해 주세요.', btnCancel: '확인' })
     return
   }
   gridRef.value?.deleteSelected()
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
 async function onSave() {

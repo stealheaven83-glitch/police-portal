@@ -134,7 +134,6 @@
 </template>
 
 <script setup lang="ts">
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -147,6 +146,9 @@ import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import DutyApplyDialog from './components/DutyApplyDialog.vue'
 import { useDutyStatus } from './composable/PC-LPO-0216'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 defineOptions({
   name: 'PcLpo0216',
@@ -176,21 +178,21 @@ const {
   removeIncident,
 } = useDutyStatus()
 
-function onApplySave() {
+async function onApplySave() {
   if (!applyForm.value.name || !applyForm.value.reason) {
-    toast.warning('필수 항목을 입력해 주세요.')
+    await dialog.alert({ title: '필수 항목을 입력해 주세요.', btnCancel: '확인' })
     return
   }
   if (applyForm.value.range === 'part' && (!applyForm.value.startTime || !applyForm.value.endTime)) {
-    toast.warning('시작·종료 시간을 선택해 주세요.')
+    await dialog.alert({ title: '시작·종료 시간을 선택해 주세요.', btnCancel: '확인' })
     return
   }
-  toast.success('신청되었습니다.')
+  await dialog.alert({ title: '신청되었습니다.', btnCancel: '확인' })
   applyOpen.value = false
 }
 
-function onSave() {
-  toast.success('저장되었습니다.')
+async function onSave() {
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
 }
 
 useBottomTabSetup({

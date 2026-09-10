@@ -23,7 +23,6 @@
 
 <script setup lang="ts">
 import { inject } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
@@ -31,17 +30,20 @@ import SelectField from '@/components/custom/select/SelectField.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import { DispatchSummaryDialogKey, teamLeaderOptions } from '../composable/dialogs'
 import UserFindDialog from './UserFindDialog.vue'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 /** 승인관리 팝업(PC-LPO-0506) — 경찰서(과장)는 사용자 찾기(PC-LPO-0507)로 고른다 */
 const store = inject(DispatchSummaryDialogKey)!
 const { approveOpen, approveTeamLeader, approveChief, userFindOpen } = store
 
-function onSave() {
+async function onSave() {
   if (!approveTeamLeader.value) {
-    toast.warning('지구대/파출소 승인자를 선택해 주세요.')
+    await dialog.alert({ title: '지구대/파출소 승인자를 선택해 주세요.', btnCancel: '확인' })
     return
   }
-  toast.success('저장되었습니다.')
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
   approveOpen.value = false
 }
 </script>

@@ -57,7 +57,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -77,6 +76,9 @@ import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useWorkLogView, kindFilterOptions, type WorkLogViewRow } from './composable/PM-LPO-0223'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 defineOptions({
   name: 'PmLpo0223',
@@ -182,8 +184,8 @@ const columns: TabulatorGridColumn[] = [
   },
 ]
 
-function onSearch() {
-  toast.success('조회되었습니다.')
+async function onSearch() {
+  await dialog.alert({ title: '조회되었습니다.', btnCancel: '확인' })
 }
 
 useBottomTabSetup({

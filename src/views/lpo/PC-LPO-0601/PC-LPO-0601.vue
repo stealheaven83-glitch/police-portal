@@ -531,7 +531,6 @@
 import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import { ref } from 'vue'
 import { Minus, Plus } from 'lucide-vue-next'
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -566,6 +565,9 @@ import {
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 // KeepAlive 캐싱 대상 컴포넌트 이름 — useBottomTabSetup 의 componentName 과 일치해야 한다.
 defineOptions({ name: 'PcLpo0601' })
@@ -669,13 +671,13 @@ async function onAddSafetyCenter() {
   await safetyCenterGridRef.value?.addRow(createSafetyCenter(), true)
 }
 
-function onDeleteSafetyCenters() {
+async function onDeleteSafetyCenters() {
   if (!safetyCenterSelected.value) {
-    toast.warning('삭제할 치안센터를 선택해 주세요.')
+    await dialog.alert({ title: '삭제할 치안센터를 선택해 주세요.', btnCancel: '확인' })
     return
   }
   safetyCenterGridRef.value?.deleteSelected()
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
 /* ── 연혁 ────────────────────────────────────────────────────── */
@@ -697,13 +699,13 @@ async function onAddHistory() {
   await historyGridRef.value?.addRow(createHistory(), true)
 }
 
-function onDeleteHistories() {
+async function onDeleteHistories() {
   if (!historySelected.value) {
-    toast.warning('삭제할 연혁을 선택해 주세요.')
+    await dialog.alert({ title: '삭제할 연혁을 선택해 주세요.', btnCancel: '확인' })
     return
   }
   historyGridRef.value?.deleteSelected()
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
 /* ── 상단 액션 ───────────────────────────────────────────────── */
@@ -712,12 +714,12 @@ function onPrint() {
   window.print()
 }
 
-function onSave() {
+async function onSave() {
   if (!department.name.trim()) {
-    toast.warning('필수 항목을 입력해 주세요.')
+    await dialog.alert({ title: '필수 항목을 입력해 주세요.', btnCancel: '확인' })
     return
   }
-  toast.success('저장되었습니다.')
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
 }
 
 useBottomTabSetup({

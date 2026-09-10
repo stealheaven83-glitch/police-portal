@@ -162,11 +162,11 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | **레이어 팝업 (기본)** | **`custom/dialog/GenericDialog2.vue`** (19개 화면) |
 | 폼이 들어간 팝업 | `custom/dialog/FormDialog.vue` |
 | 되돌릴 수 없는 작업 확인 | `custom/dialog/ConfirmDialog2.vue` — **CLAUDE.md §4 조건 확인** |
-| 버튼 하나짜리 강제 확인 | `custom/dialog/AlertDialog2.vue` — 남용 금지, 보통은 toast |
+| 성공/경고 알림, 버튼 하나짜리 확인 | `custom/dialog/AlertDialog2.vue` — `useDialog().alert()` 로 띄운다. **성공·경고 피드백의 기본**(CLAUDE.md §4) |
 | 아직 로직이 없는 팝업 자리 | `custom/dialog/EmptyStubDialog.vue` (6개 화면) |
 | 모바일 하단 시트 | `custom/bottom-sheet/BottomSheet.vue` |
 
-> **일반 저장/삭제에는 `confirm`을 붙이지 않는다.** toast가 기본이다 — CLAUDE.md §4.
+> **일반 저장/삭제에는 `confirm`을 붙이지 않는다.** 알림창(`dialog.alert`)이 기본이다 — CLAUDE.md §4.
 
 ---
 
@@ -174,7 +174,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 
 | 이럴 때 | 이걸 쓴다 |
 |---|---|
-| 저장/삭제 성공, 필수값 누락 경고 | **toast** (CLAUDE.md §4) — 컴포넌트 아님 |
+| 저장/삭제 성공, 필수값 누락 경고 | **알림창 `useDialog().alert()`** (CLAUDE.md §4) — toast 는 쓰지 않는다 |
 | 결과/경고 박스(성공·실패·주의) | `custom/alert/Alert.vue` |
 | 이해를 돕는 설명 박스 | `custom/infobox/InfoBox.vue` |
 | 페이지 상단 긴급 공지 띠 | `custom/alert/CriticalAlert.vue` |

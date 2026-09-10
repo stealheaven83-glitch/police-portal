@@ -45,7 +45,6 @@
 
 <script setup lang="ts">
 import { inject, ref } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
@@ -53,6 +52,9 @@ import LayoutHeader from '@/components/custom/content-layout/layoutHeader.vue'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { WorkScheduleKey } from '../composable/useWorkSchedule'
 import { useDialogGridRedraw } from '../composable/dialogGridRedraw'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 /**
  * 근무 사용자 선택 팝업(PC-LPO-0212).
@@ -84,8 +86,8 @@ const volunteerColumns: TabulatorGridColumn[] = [
   { title: '성명', field: 'name', hozAlign: 'center', minWidth: 70, widthGrow: 2 },
 ]
 
-function onConfirm() {
-  toast.success('선택되었습니다.')
+async function onConfirm() {
+  await dialog.alert({ title: '선택되었습니다.', btnCancel: '확인' })
   workUserPickOpen.value = false
 }
 </script>

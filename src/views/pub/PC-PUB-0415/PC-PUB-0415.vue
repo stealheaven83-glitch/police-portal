@@ -68,7 +68,6 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -84,6 +83,9 @@ import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import MentalCenterDetailForm from '../components/MentalCenterDetailForm.vue'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
 import {
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
   useMentalCenterStore,
   createEmptyCenterForm,
   regionFilterOptions,
@@ -140,18 +142,18 @@ const columns: TabulatorGridColumn[] = [
 const form = reactive(createEmptyCenterForm())
 
 /** 기획서 [2] 저장하면 좌측 목록(2-1)에 바로 반영된다(도메인 싱글턴 스토어를 두 화면이 공유) */
-function onSave() {
+async function onSave() {
   if (!form.region || !form.name.trim()) {
-    toast.warning('필수 항목을 입력해 주세요.')
+    await dialog.alert({ title: '필수 항목을 입력해 주세요.', btnCancel: '확인' })
     return
   }
   // 기획서 "※ 센터명에 언더바를 제외한 특수문자 사용은 불가합니다"
   if (!isValidCenterName(form.name)) {
-    toast.warning('센터명에 언더바(_)를 제외한 특수문자는 사용할 수 없습니다.')
+    await dialog.alert({ title: '센터명에 언더바(_)를 제외한 특수문자는 사용할 수 없습니다.', btnCancel: '확인' })
     return
   }
   store.saveCenter(form)
-  toast.success('저장되었습니다.')
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
   // 연속 등록을 위해 폼을 비운다
   Object.assign(form, createEmptyCenterForm())
 }

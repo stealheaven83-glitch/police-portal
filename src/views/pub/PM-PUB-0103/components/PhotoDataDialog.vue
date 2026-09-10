@@ -49,7 +49,6 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
@@ -94,12 +93,12 @@ function pickPhoto(key: string) {
   fileInputs.value[key]?.click()
 }
 
-function onFileSelected(photo: PhotoSlot, event: Event) {
+async function onFileSelected(photo: PhotoSlot, event: Event) {
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
   if (!file) return
   if (!file.type.startsWith('image/')) {
-    toast.warning('이미지 파일만 등록할 수 있습니다.')
+    await dialog.alert({ title: '이미지 파일만 등록할 수 있습니다.', btnCancel: '확인' })
     input.value = ''
     return
   }

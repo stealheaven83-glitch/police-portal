@@ -48,12 +48,14 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import { patrolVehicleOptions } from '../composable/PC-LPO-0601'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 /**
  * PC-LPO-0602 순찰차별 관할구역 관리 팝업.
@@ -87,19 +89,19 @@ watch(
   },
 )
 
-function onDraw() {
+async function onDraw() {
   // 지도 작도는 개발팀 — 화면에서는 안내만 한다
-  toast.info('지도에서 순찰구역을 그려 주세요.')
+  await dialog.alert({ title: '지도에서 순찰구역을 그려 주세요.', btnCancel: '확인' })
 }
 
-function onReset() {
+async function onReset() {
   memo.value = ''
-  toast.success('초기화되었습니다.')
+  await dialog.alert({ title: '초기화되었습니다.', btnCancel: '확인' })
 }
 
-function onSave() {
+async function onSave() {
   emit('save', { vehicle: selectedVehicle.value, memo: memo.value })
-  toast.success('저장되었습니다.')
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
   emit('update:open', false)
 }
 </script>

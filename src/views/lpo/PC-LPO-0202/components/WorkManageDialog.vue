@@ -26,13 +26,15 @@
 
 <script setup lang="ts">
 import { inject, ref } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { WorkScheduleKey } from '../composable/useWorkSchedule'
 import { workKindOptions } from '../composable/useWorkScheduleDialogs'
 import { useDialogGridRedraw } from '../composable/dialogGridRedraw'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 /** 근무관리 팝업(PC-LPO-0207) — 근무명·종별·순번·사용여부를 셀에서 바로 고친다(§6-1) */
 const store = inject(WorkScheduleKey)!
@@ -54,8 +56,8 @@ function onCellEdited(cell: { getField: () => string; getValue: () => unknown })
   }
 }
 
-function onSave() {
-  toast.success('저장되었습니다.')
+async function onSave() {
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
   workManageOpen.value = false
 }
 </script>

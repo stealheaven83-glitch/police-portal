@@ -41,7 +41,6 @@
 
 <script setup lang="ts">
 import { inject, ref } from 'vue'
-import { toast } from 'vue-sonner'
 import { useDialog } from '@/composable/dialog/dialog'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
@@ -73,8 +72,8 @@ function onPickFile(e: Event) {
   input.value = ''
 }
 
-function onDownload(name: string) {
-  toast.success(`${name} 다운로드를 시작합니다.`)
+async function onDownload(name: string) {
+  await dialog.alert({ title: `${name} 다운로드를 시작합니다.`, btnCancel: '확인' })
 }
 
 /** 설계서 A01 */

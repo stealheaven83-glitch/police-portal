@@ -3,7 +3,9 @@ import { useRouter } from 'vue-router'
 import { z } from 'zod'
 import { AutoForm } from '@/components/ui/auto-form'
 import { Button } from '@/components/ui/button'
-import { toast } from 'vue-sonner'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 // import { useApi } from '@/modules/api'
 
 const router = useRouter()
@@ -41,9 +43,7 @@ const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     //   password: values.password,
     // })
     // console.log(response)
-    toast.success('로그인 성공', {
-      description: '환영합니다!',
-    })
+    await dialog.alert({ title: '로그인 성공', description: '환영합니다!', btnCancel: '확인' })
     router.push('/')
 
   } catch (error: any) {
@@ -52,13 +52,9 @@ const onSubmit = async (values: z.infer<typeof loginSchema>) => {
       console.log(error.response?.data.result)
     }
     if (error.response?.data?.state === '401') {
-      toast.error('로그인 실패', {
-        description: '아이디 또는 비밀번호가 올바르지 않습니다.',
-      })
+      await dialog.alert({ title: '로그인 실패', description: '아이디 또는 비밀번호가 올바르지 않습니다.', btnCancel: '확인' })
     } else {
-      toast.error('오류', {
-        description: '로그인 중 오류가 발생했습니다.',
-      })
+      await dialog.alert({ title: '오류', description: '로그인 중 오류가 발생했습니다.', btnCancel: '확인' })
     }
   }
 }

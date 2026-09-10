@@ -1,5 +1,4 @@
 import { computed, reactive, ref, watch } from 'vue'
-import { toast } from 'vue-sonner'
 import { useDialog } from '@/composable/dialog/dialog'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 
@@ -448,10 +447,10 @@ export function useCpoList() {
     return row
   }
 
-  function openNewHistory() {
+  async function openNewHistory() {
     const row = getActiveDiagnosis()
     if (!row) {
-      toast.warning('진단 건을 먼저 선택해 주세요.')
+      await dialog.alert({ title: '진단 건을 먼저 선택해 주세요.', btnCancel: '확인' })
       return
     }
     loadDiagnosis(row)

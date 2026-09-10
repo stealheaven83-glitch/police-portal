@@ -44,7 +44,6 @@
 
 <script setup lang="ts">
 import { computed, inject, ref } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import InputField2 from '@/components/custom/input/InputField2.vue'
@@ -54,6 +53,9 @@ import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tab
 import { WorkScheduleKey } from '../composable/useWorkSchedule'
 import { hourOptions, type WorkTimeRow } from '../composable/useWorkScheduleDialogs'
 import { useDialogGridRedraw } from '../composable/dialogGridRedraw'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 /** 시간관리 팝업(PC-LPO-0208) — 교대 시간을 간격만큼 끊어서 만들어 넣는다 */
 const store = inject(WorkScheduleKey)!
@@ -102,18 +104,18 @@ function onSelectionChanged(rows: unknown[]) {
   )
 }
 
-function onDelete() {
+async function onDelete() {
   if (!selectedIds.value.size) {
-    toast.warning('삭제할 시간을 선택해 주세요.')
+    await dialog.alert({ title: '삭제할 시간을 선택해 주세요.', btnCancel: '확인' })
     return
   }
   removeWorkTimeRows(selectedIds.value)
   selectedIds.value = new Set()
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
-function onSave() {
-  toast.success('저장되었습니다.')
+async function onSave() {
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
   timeManageOpen.value = false
 }
 </script>

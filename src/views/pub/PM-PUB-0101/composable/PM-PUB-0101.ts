@@ -1,6 +1,6 @@
 import { computed, reactive, ref, type InjectionKey } from 'vue'
-import { toast } from 'vue-sonner'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
+import { useDialog } from '@/composable/dialog/dialog'
 
 export interface SelectOption {
   label: string
@@ -166,6 +166,7 @@ function createRows(total: number): DiagnosisRow[] {
  * 않으므로 선택 행에서 파생시키기만 하고 별도 상태로 들고 있지 않는다.
  */
 export function useDiagnosisList() {
+  const dialog = useDialog()
   /** 시안은 상세조회가 접힌 상태로 열린다 */
   const advancedSearchOpen = ref(false)
 
@@ -208,14 +209,14 @@ export function useDiagnosisList() {
     selectedRow.value = row
   }
 
-  function search() {
+  async function search() {
     // TODO: API 연동. 지금은 더미 목록이라 조회 조건이 결과에 반영되지 않는다.
-    toast.success('조회되었습니다.')
+    await dialog.alert({ title: '조회되었습니다.', btnCancel: '확인' })
   }
 
-  function openNew() {
+  async function openNew() {
     // TODO: 진단신규(등록) 팝업 PM-PUB-0107 연결
-    toast.info('신규 등록 화면은 준비 중입니다.')
+    await dialog.alert({ title: '신규 등록 화면은 준비 중입니다.', btnCancel: '확인' })
   }
 
   return {
