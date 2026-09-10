@@ -1,4 +1,3 @@
-
 @charset "UTF-8";
 
 /*
@@ -196,11 +195,10 @@
 /* 페이지 본문이 넘칠 때 이 영역만 세로 스크롤.
    상세 패널 안쪽 스크롤은 police-style.css 의 .detail-scroll 을 쓴다(의도가 다름). */
 .lp-page-scroll {
-
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  width:calc(100% + 30px);
+  width: calc(100% + 30px);
 }
 
 /* ══ 아이콘 버튼 ══════════════════════════════════════════════ */
@@ -245,8 +243,8 @@
 
 /* ══ 구역 · 표 ════════════════════════════════════════════════ */
 
-.lp-section.line{
-  border-top:1px solid #1E2124;
+.lp-section.line {
+  border-top: 1px solid #1e2124;
 }
 .lp-section + .lp-section {
   margin-top: 3.2rem;
@@ -392,10 +390,10 @@
   overflow: hidden;
   border: 1px solid var(--Border_gray02);
   border-radius: var(--Radius-medium2);
-  gap:0.6rem;
+  gap: 0.6rem;
 }
-.lp-pane-wrap{
-  padding:12px 12px 20px;
+.lp-pane-wrap {
+  padding: 12px 12px 20px;
 }
 .lp-pane {
   display: flex;
@@ -403,8 +401,8 @@
   min-width: 0;
   flex-direction: column;
 }
-.lp-pane + .lp-pane{
-  border-left:1px solid var(--Border_gray0);
+.lp-pane + .lp-pane {
+  border-left: 1px solid var(--Border_gray0);
 }
 /* 좌측처럼 폭을 고정하는 칸 */
 .lp-pane-fixed {
@@ -545,7 +543,6 @@
   margin: 0 auto;
 }
 
-
 .lp-content-panel {
   max-width: 120rem;
   margin: 4rem auto 0;
@@ -634,7 +631,7 @@
   height: 100%;
 }
 .lp-ai-answer-body {
-    position:relative;
+  position: relative;
   display: flex;
   align-items: stretch;
   gap: 2.4rem;
@@ -695,7 +692,7 @@
   border-radius: 50%;
 }
 .lp-answer-note {
-  margin-top:auto;
+  margin-top: auto;
 
   padding-top: 2.4rem;
   font-size: 1.5rem;
@@ -710,7 +707,7 @@
   flex: 1 1 auto;
   padding-left: 2.4rem;
   border-left: 1px solid var(--Border_gray02);
-  max-width:31.7rem;
+  max-width: 31.7rem;
 }
 .lp-ref-list {
   display: flex;
@@ -730,15 +727,15 @@
   margin-top: 1.2rem;
   font-size: 1.3rem;
   line-height: 1.5;
-  color: var(  --info);
+  color: var(--info);
   text-decoration: underline;
-  white-space: nowrap; 
-  overflow: hidden; 
+  white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
-  width:100%;
+  width: 100%;
 }
-.lp-ref-link:hover{
-  color:var(--info);
+.lp-ref-link:hover {
+  color: var(--info);
 }
 /* ══ 상세 폼 델타 (police-style.css 원본 클래스와 함께 쓴다) ══ */
 
@@ -798,7 +795,9 @@
   border-radius: var(--Radius-xlarge2);
   background: var(--white);
   cursor: pointer;
-  transition: background-color 0.15s, border-color 0.15s;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
 }
 .lp-memo-card:hover,
 .lp-memo-card:focus-within {
@@ -812,7 +811,9 @@
 .lp-memo-card-selected {
   border-width: 0.2rem;
   border-color: var(--Base-primary);
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.05), 0 4px 4px rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 0 1px rgba(0, 0, 0, 0.05),
+    0 4px 4px rgba(0, 0, 0, 0.08);
 }
 .lp-memo-card-check {
   display: flex;
@@ -2114,12 +2115,12 @@
   font-size: 1.7rem;
   font-weight: 600;
   line-height: 1.5;
-  height:4.8rem;
+  height: 4.8rem;
   color: var(--Text-body_0);
 }
 
-.lp-grid-title + .tabulator-root{
-  margin-top:1.6rem;
+.lp-grid-title + .tabulator-root {
+  margin-top: 1.6rem;
 }
 
 .lp-grid-title-label {
@@ -2399,21 +2400,19 @@
 }
 
 /*참고사항 페이지*/
-.info-label{
- 
+.info-label {
 }
 .info-label-group {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:2.4rem;
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2.4rem;
 }
-.info-label-group + .info-label-group{
-  margin-top:1.2rem;
+.info-label-group + .info-label-group {
+  margin-top: 1.2rem;
 }
 
-.info-label-group .info-label-txt{
+.info-label-group .info-label-txt {
   font-size: 1.5rem;
 }
 
@@ -2436,4 +2435,51 @@
 .lp-cell-textarea:focus {
   border-color: var(--Border_primary);
   outline: none;
+}
+
+/* 날짜 선택이 있는 액션바의 정렬 및 줄바꿈 */
+.lp-date-actions {
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* 근무일 선택 영역 — calendar-area 이름은 기존 사용자 지정 명칭 유지 */
+.calendar-area {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin-right: auto;
+}
+.calendar-area-date,
+.calendar-area-date-value,
+.calendar-area-group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.calendar-area-date-value {
+  font-size: 1.9rem;
+  font-weight: 600;
+}
+.calendar-area .lp-date-borderless,
+.calendar-area .lp-date-borderless:focus-visible {
+  border: 0;
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: var(--Text-body_0);
+}
+.calendar-area-divider {
+  flex: 0 0 1px;
+  height: 1.6rem;
+  margin: 0 0.6rem;
+  background: var(--Border_gray02);
+}
+.calendar-area-options {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  flex-shrink: 0;
+  white-space: nowrap;
 }

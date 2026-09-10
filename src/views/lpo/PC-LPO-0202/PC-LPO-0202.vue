@@ -26,19 +26,24 @@
   </SearchWrapper>
 
 
-  <div class="list-actions">
+  <div class="list-actions lp-date-actions">
     <div class="calendar-area">
       <span class="lp-label-text">근무일</span>
       <div class="calendar-area-date">
-        <Button type="button" variant="ghost" size="icon-sm" aria-label="이전 근무일" @click="shiftWorkDate(-1)">
-          <Icon name="arrowLeft" :size="18" />
+        <Button type="button" padding="10" variant="ghost" size="icon-sm" aria-label="이전 근무일" @click="shiftWorkDate(-1)">
+          <Icon name="arrowLeft" :size="20" />
         </Button>
-        <span class="calendar-area-date-value">
-          {{ workDate }}
-          <Icon name="calendar" :size="24" aria-hidden="true" />
-        </span>
-        <Button type="button" variant="ghost" size="icon-sm" aria-label="다음 근무일" @click="shiftWorkDate(1)">
-          <Icon name="arrowNext" :size="18" />
+        <DatePicker
+          v-model="workDate"
+          label="근무일 선택"
+          label-class="sr-only"
+          size="sm"
+          format="yyyy.MM.dd."
+          value-format="yyyy.MM.dd."
+          input-class="lp-date-borderless w-40"
+        />
+        <Button type="button" padding="10" variant="ghost" size="icon-sm" aria-label="다음 근무일" @click="shiftWorkDate(1)">
+          <Icon name="arrowNext" :size="20" />
         </Button>
       </div>
       <span class="calendar-area-divider" aria-hidden="true" />
@@ -48,6 +53,8 @@
         <RadioGroupItem value="day" label="주" />
         <RadioGroupItem value="night" label="야" />
       </RadioGroup>
+      <!-- 조회버튼 임시 (디자인x) -->
+       <Button type="button" variant="primary" size="sm" pl="10" class="ml-2">조회</Button>
     </div>
 
     <!-- 오른쪽 버튼은 .list-actions 직속이다 — 래퍼의 gap 이 .list-actions 와 같아 겉포장이 필요 없다 -->
@@ -104,9 +111,11 @@
               class="flex-1"
               :columns="volunteerColumns"
               :data="volunteerWorkers"
+              select-mode="checkbox"
               height="100%"
               min-height="30rem"
               placeholder="등록된 자원근무자가 없습니다."
+              @row-selection-changed="onVolunteerSelectionChanged"
             />
           </TabsContent>
 
@@ -125,9 +134,11 @@
               class="flex-1"
               :columns="incidentColumns"
               :data="incidentWorkers"
+              select-mode="checkbox"
               height="100%"
               min-height="30rem"
               placeholder="등록된 사고자가 없습니다."
+              @row-selection-changed="onIncidentSelectionChanged"
             />
           </TabsContent>
         </Tabs>
@@ -188,6 +199,7 @@ import HelpButton from '@/components/custom/button/HelpButton.vue'
 import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
+import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
@@ -282,19 +294,31 @@ const weekdayLabel = computed(() => {
   return `${['일', '월', '화', '수', '목', '금', '토'][new Date(y, m - 1, d).getDay()]}요일`
 })
 
-const regularSelection = ref<Set<number>>(new Set())
 const volunteerSelection = ref<Set<number>>(new Set())
 const incidentSelection = ref<Set<number>>(new Set())
 
-/** 템플릿에서 ref 를 그대로 넘기면 자동 언랩돼 Set 만 들어오므로 목록 종류로 받는다 */
-function toggleSelection(kind: 'regular' | 'volunteer' | 'incident', id: number, checked: boolean) {
-  const selection =
-    kind === 'regular' ? regularSelection : kind === 'volunteer' ? volunteerSelection : incidentSelection
-  // Set 은 제자리 수정이라 재할당해야 화면이 다시 그려진다
-  const next = new Set(selection.value)
-  if (checked) next.add(id)
-  else next.delete(id)
-  selection.value = next
+/** 체크된 Tabulator 행에서 자원근무자 ID만 꺼내 삭제 대상으로 보관한다 */
+function onVolunteerSelectionChanged(rows: unknown[]) {
+  volunteerSelection.value = new Set(
+    rows.map((row) => {
+      const data = typeof (row as { getData?: () => { id: number } }).getData === 'function'
+        ? (row as { getData: () => { id: number } }).getData()
+        : (row as { id: number })
+      return data.id
+    }),
+  )
+}
+
+/** 체크된 Tabulator 행에서 사고자 ID만 꺼내 삭제 대상으로 보관한다 */
+function onIncidentSelectionChanged(rows: unknown[]) {
+  incidentSelection.value = new Set(
+    rows.map((row) => {
+      const data = typeof (row as { getData?: () => { id: number } }).getData === 'function'
+        ? (row as { getData: () => { id: number } }).getData()
+        : (row as { id: number })
+      return data.id
+    }),
+  )
 }
 
 function onScheduleCellClick() {

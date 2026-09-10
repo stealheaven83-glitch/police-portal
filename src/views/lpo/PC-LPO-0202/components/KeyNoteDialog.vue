@@ -1,11 +1,11 @@
 <template>
-  <GenericDialog2 v-model:open="keyNoteOpen" title="중점사항 입력" :size="480">
+  <GenericDialog2 v-model:open="keyNoteOpen" title="중점사항 입력" :size="560">
     <TextareaField
       id="key-note"
       v-model="keyNoteText"
       aria-label="중점사항"
       placeholder="중점사항을 입력해주세요."
-      :height="80"
+      :height="100"
     />
 
     <template #footer>

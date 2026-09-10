@@ -16,9 +16,20 @@
       <InfoField label="종료시간">
         <SelectField v-model="volunteerEnd" :options="hourOptions" placeholder="선택" size="sm" class="w-full"/>
       </InfoField>
+      <template v-if="volunteerScope === 'etc'">
+        <InfoField label="소속" for="volunteer-etc-dept" full>
+          <InputField2 id="volunteer-etc-dept" v-model="volunteerEtcDept" size="sm" class="w-full" />
+        </InfoField>
+        <InfoField label="계급" for="volunteer-etc-rank" full>
+          <InputField2 id="volunteer-etc-rank" v-model="volunteerEtcRank" size="sm" class="w-full" />
+        </InfoField>
+        <InfoField label="성명" for="volunteer-etc-name" full>
+          <InputField2 id="volunteer-etc-name" v-model="volunteerEtcName" size="sm" class="w-full" />
+        </InfoField>
+      </template>
     </InfoTable>
 
-    <div class="lp-row-between lp-table-gap">
+    <div v-show="volunteerScope === 'police'" class="lp-row-between lp-table-gap">
       <p class="lp-note-text">* 해당 지구대/파출소 직원 : 파란색</p>
       <span class="group-gap2">
         <InputField2
@@ -34,6 +45,7 @@
     </div>
 
     <TabulatorGrid
+      v-show="volunteerScope === 'police'"
       ref="gridRef"
       class="lp-table-gap"
       :columns="columns"
@@ -82,6 +94,10 @@ const {
   volunteerCandidates,
   volunteerWorkers,
 } = store
+
+const volunteerEtcDept = ref('')
+const volunteerEtcRank = ref('')
+const volunteerEtcName = ref('')
 
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const { onTableBuilt } = useDialogGridRedraw(gridRef)

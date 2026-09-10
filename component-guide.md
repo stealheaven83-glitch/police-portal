@@ -463,6 +463,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 |---|---|---|
 | `.lp-flex-fill` | 남는 가로폭을 채우되 내용이 넘치지 않게(flex 1 / min-width 0) | 2204, IRC-0101 |
 | `.lp-row-between` | 한 줄에 좌우로 벌려 놓기 | 2204, 0601, 0802 |
+| `.lp-date-actions` | `police-common.css` — 날짜 선택이 있는 `.list-actions`에 추가하여 세로 가운데 정렬하고 폭이 부족하면 줄바꿈 | LPO-0202 |
 | `.calendar-area` `-date` `-date-value` `-divider` `-group` `-options` | 근무일 선택 줄. **`.list-actions` 안 왼쪽**에 놓고(`margin-right:auto`) 오른쪽은 그대로 버튼. 구역 사이는 `-divider` 세로선(그룹 간격 36px). `-date-value` 는 날짜+달력아이콘(19px/600), `-options` 는 라디오 묶음(16px — `.lp-icon-row` 2rem 과 값이 다르다). **사용자 지정 이름이라 `lp-` 접두사가 없다** | LPO-0202 |
 | `.lp-unit-row` | 한 값을 여러 칸으로 쪼갠 줄 — 작은 입력 + 단위 글자('시' '분' '세' '~') | PUB-0405 |
 | `.lp-summary-row` | 값 텍스트 + 우측 버튼 (표 셀 안, 자기도 늘어남) | 0601 |
