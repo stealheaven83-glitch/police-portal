@@ -237,7 +237,7 @@ defineOptions({
 })
 
 // LNB: 근무일지 > 근무일지(甲) (프리셋은 2뎁스까지라 '근무지정표작성'이 아직 없다)
-useSideMenuSetup({ ...localPoliceMenu, openIndex: 1, activeChild: '근무일지(甲)' })
+useSideMenuSetup({ ...localPoliceMenu, openIndex: 1, activeChild: '근무지정표작성' })
 
 const navItems = [
   { label: '홈', path: '/' },

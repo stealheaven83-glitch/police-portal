@@ -1,4 +1,4 @@
-/** 사이드메뉴(LNB) 한 항목. 1뎁스는 children 을 갖고, 2뎁스는 path 또는 href 를 갖는다. */
+/** 사이드메뉴(LNB) 한 항목. children 을 선택적으로 재사용해 하위 뎁스를 구성한다. */
 export interface SideMenuItem {
   /** 화면에 표시되는 메뉴명. 활성 표시(activeChild)의 키이기도 하다 */
   name: string
@@ -15,7 +15,7 @@ export interface SideMenuConfig {
   title?: string
   /** 기본으로 펼쳐둘 1뎁스 항목 인덱스 */
   openIndex?: number
-  /** 기본 활성 표시할 2뎁스 메뉴명 */
+  /** 기본 활성 표시할 하위 메뉴명 */
   activeChild?: string
   items: SideMenuItem[]
 }

@@ -68,7 +68,9 @@ export const useSideMenuStore = defineStore('useSideMenu', () => {
    */
   function setActiveChild(name: string) {
     activeChild.value = name
-    const depth1Index = items.value.findIndex((item) => item.children?.some((child) => child.name === name))
+    const containsName = (item: SideMenuItem): boolean =>
+      item.name === name || item.children?.some(containsName) === true
+    const depth1Index = items.value.findIndex(containsName)
     if (depth1Index !== -1) openIndex.value = depth1Index
   }
 
