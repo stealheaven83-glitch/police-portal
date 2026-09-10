@@ -407,6 +407,76 @@
   box-shadow: inset 0 -0.1rem 0 var(--Border_gray03);
 }
 
+/*
+ * TableWrapper 의 합계 줄(.row-total) 모양.
+ * 시안(11502:115639)은 굵은 글씨에, 아래로 [1px 선 - 3px 간격 - 1px 선] 두 줄이 그어져
+ * 데이터 영역과 끊긴다. 칸 사이 세로선은 다른 행처럼 있지만 **그 3px 간격에는 내려오지 않는다.**
+ * border-collapse 표라 행 사이에 진짜 간격을 못 만들므로, 아래 선만 셀 테두리로 두고
+ * 위 선과 세로선은 셀 배경으로 그려 길이를 직접 제어한다.
+ * 클래스 이름에 lp 접두사가 없는 것은 .row-total 이 tabulator-theme.css 부터 쓰던
+ * 기존 표시자이기 때문이다 — 같은 뜻의 이름을 새로 만들지 않는다.
+ * 쓰는 곳: PC-PUB-0306 · PC-PUB-0307
+ */
+tbody .row-total > td {
+  font-weight: 700;
+  /* 세로선은 배경으로 직접 그린다(아래 참고) — 칸마다 붙는 border-l 은 끈다 */
+  border-left: 0;
+  /* 아래 선(②) */
+  border-bottom: 0.1rem solid var(--Border_gray03);
+  /*
+   * 배경 두 겹 — ① 위 가로선, ② 칸 사이 세로선.
+   * 배경은 padding-box 기준이라 100% 가 곧 아래 선 바로 위다.
+   *  · 위 가로선: 아래 선에서 3px 띄운 자리(= 두 선 사이 간격 3px)
+   *  · 세로선: 높이를 calc(100% - 0.4rem) 로 끊어 위 가로선에서 멈춘다.
+   *    border-left 로는 셀 바닥까지 내려가 간격을 가로질러 버리기 때문이다(시안은 간격이 비어 있다).
+   */
+  background-image:
+    linear-gradient(var(--Border_gray03), var(--Border_gray03)),
+    linear-gradient(var(--Border_gray03), var(--Border_gray03));
+  background-size: 100% 0.1rem, 0.1rem calc(100% - 0.4rem);
+  background-position: 0 calc(100% - 0.3rem), 0 0;
+  background-repeat: no-repeat;
+}
+
+/* 첫 칸 왼쪽에는 세로선이 없다(표 바깥선이 된다) — 세로선 겹만 크기를 0 으로 */
+tbody .row-total > td:first-child {
+  background-size: 100% 0.1rem, 0 0;
+}
+
+/*
+ * 스크롤 고정(.lp-table-sticky)을 같이 쓰면 위 배경이 지워진다 — 그쪽 규칙이
+ * background 단축 속성으로 흰 배경을 깔면서 background-image 까지 초기화하는데,
+ * 선택자가 더 구체적이라 이긴다. 그 규칙은 고치지 않고 여기서 다시 얹는다.
+ */
+.lp-table-sticky tbody .row-total > td {
+  background-color: var(--white);
+  background-image:
+    linear-gradient(var(--Border_gray03), var(--Border_gray03)),
+    linear-gradient(var(--Border_gray03), var(--Border_gray03));
+  background-size: 100% 0.1rem, 0.1rem calc(100% - 0.4rem);
+  background-position: 0 calc(100% - 0.3rem), 0 0;
+  background-repeat: no-repeat;
+  /*
+   * 그쪽 규칙의 box-shadow 는 셀 바닥 안쪽에 1px 선을 또 그린다 — 위에서 준 border-bottom
+   * 1px 과 위아래로 붙어 2px 로 보인다. 아래 선은 테두리가 그리므로 그림자는 끈다.
+   */
+  box-shadow: none;
+}
+
+.lp-table-sticky tbody .row-total > td:first-child {
+  background-size: 100% 0.1rem, 0 0;
+}
+
+/*
+ * 스크롤 고정 시 헤더 아래 선이 2px 로 두꺼워지는 것 방지.
+ * 위 .lp-table-sticky thead th 규칙이 box-shadow 로 선을 그리는데(스크롤 중 테두리가
+ * 사라지는 것을 대신함), TableWrapper 가 이미 넣어 둔 border-b 1px 과 겹쳐 두 줄이 된다.
+ * 시안은 1px 한 줄이라 테두리 쪽을 끈다 — hidden 이어야 행(tr)의 border-b 까지 눌린다.
+ */
+.lp-table-sticky thead th {
+  border-bottom: hidden;
+}
+
 /* ══ 대형 검색바(SearchBar) — 검색어 지우기 버튼 ═══════════════ */
 
 /*

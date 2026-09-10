@@ -46,11 +46,17 @@
   <TableWrapper
     class="lp-table-sticky"
     :columns="columns"
-    :items="dataRows"
+    :items="pagedRows"
     caption="단체현황 목록"
-    :show-pagination="false"
+    show-pagination
+    :items-per-page="itemsPerPage"
+    :total-elements="dataRows.length"
+    :total-pages="totalPages"
+    :current-page="currentPage"
     empty-title="조회된 단체가 없습니다"
     empty-description="검색 조건을 바꿔 다시 조회해 주세요."
+    @page-change="(page) => (currentPage = page)"
+    @update:items-per-page="onItemsPerPageChange"
   >
     <!--
       합계 줄. 앞 4칸(번호·관서·단체종류·단체명)을 colspan 으로 한 칸으로 합친다 —
@@ -71,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { Download } from 'lucide-vue-next'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
@@ -155,6 +161,7 @@ const dataRows = computed<StatusRow[]>(() =>
   })),
 )
 
+/** 합계는 보고 있는 페이지가 아니라 조회된 전체를 대상으로 한다 */
 const totals = computed(() => ({
   memberCount: dataRows.value.reduce((s, r) => s + r.memberCount, 0),
   budgetAmount: dataRows.value.reduce((s, r) => s + r.budgetAmount, 0),
@@ -162,17 +169,47 @@ const totals = computed(() => ({
   vehicleCount: dataRows.value.reduce((s, r) => s + r.vehicleCount, 0),
 }))
 
+/*
+ * 페이지네이션. TableWrapper 는 목록을 내부에서 자르지 않고 받은 items 를 그대로 그리므로,
+ * 자르는 것과 페이지 상태는 화면이 갖는다(PM-PUB-0409 와 같은 방식).
+ */
+const currentPage = ref(1)
+const itemsPerPage = ref(10)
+
+const totalPages = computed(() => Math.max(1, Math.ceil(dataRows.value.length / itemsPerPage.value)))
+
+const pagedRows = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value
+  return dataRows.value.slice(start, start + itemsPerPage.value)
+})
+
+function onItemsPerPageChange(size: number) {
+  itemsPerPage.value = size
+  currentPage.value = 1
+}
+
+/** 조회 조건이 바뀌어 목록이 줄면 보고 있던 페이지가 범위를 벗어난다 — 1페이지로 되돌린다 */
+watch(dataRows, () => {
+  currentPage.value = 1
+})
+
+/*
+ * 폭은 시안(11502:115639) 실측값이다. 모든 칸에 폭을 주는 이유는 두 가지다.
+ * - table-layout: fixed 라 폭을 안 주면 남는 폭을 나눠 가져 인원 같은 좁은 칸이 넓어진다.
+ * - 폭의 합(1560px)보다 화면이 좁아지면 칸이 쪼그라드는 대신 가로 스크롤이 생긴다
+ *   (그리드의 layout="fitDataFill" 과 같은 동작 — 컨테이너는 ui/table 이 이미 overflow:auto).
+ */
 const columns = [
-  { key: 'id', label: '번호', width: '70px' },
-  { key: 'dept', label: '관서', width: '200px' },
-  { key: 'groupType', label: '단체종류' },
-  { key: 'groupName', label: '단체명' },
-  { key: 'memberCount', label: '인원' },
-  { key: 'equipmentNote', label: '장비지원내용' },
-  { key: 'budgetAmount', label: '지자체 예산지원' },
-  { key: 'insuredCount', label: '보험가입' },
-  { key: 'vehicleCount', label: '보유차량' },
-  { key: 'awardNote', label: '포상내용' },
+  { key: 'id', label: '번호', width: '6rem' },
+  { key: 'dept', label: '관서', width: '20rem' },
+  { key: 'groupType', label: '단체종류', width: '12rem' },
+  { key: 'groupName', label: '단체명', width: '17rem' },
+  { key: 'memberCount', label: '인원', width: '6rem' },
+  { key: 'equipmentNote', label: '장비지원내용', width: '19rem' },
+  { key: 'budgetAmount', label: '지자체 예산지원', width: '19rem' },
+  { key: 'insuredCount', label: '보험가입', width: '19rem' },
+  { key: 'vehicleCount', label: '보유차량', width: '19rem' },
+  { key: 'awardNote', label: '포상내용', width: '19rem' },
 ]
 
 /**
