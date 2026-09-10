@@ -91,141 +91,144 @@
       </div>
 
       <div :class="styles.panelBody">
-        <h4 :class="styles.formSection">주취자</h4>
-        <InfoTable :columns="1">
-          <InfoField label="성명" for="pmpub0409-name">
-            <InputField2
-              id="pmpub0409-name"
-              v-model="detail.name"
-              size="sm"
-              class="!space-y-0 flex-1"
-            />
-            <span v-if="detail.name" :class="styles.maskHint">표시: {{ maskName(detail.name) }}</span>
-          </InfoField>
-
-          <InfoField label="성별">
-            <RadioGroup v-model="detail.gender" :class="infoStyles['info-table-radio']">
-              <RadioGroupItem value="male" label="남" />
-              <RadioGroupItem value="female" label="여" />
-            </RadioGroup>
-          </InfoField>
-
-          <InfoField label="연령대" for="pmpub0409-age">
-            <SelectField
-              id="pmpub0409-age"
-              v-model="detail.ageGroup"
-              :options="ageGroupOptions"
-              size="sm"
-              triggerClass="w-32"
-              class="!space-y-0"
-              placeholder="선택"
-            />
-          </InfoField>
-
-          <InfoField label="증상">
-            <RadioGroup v-model="detail.symptom" :class="infoStyles['info-table-radio']">
-              <RadioGroupItem
-                v-for="opt in symptomOptions"
-                :key="opt.value"
-                :value="opt.value"
-                :label="opt.label"
-              />
-            </RadioGroup>
-          </InfoField>
-
-          <InfoField label="입소일시">
-            <DatePicker v-model="detail.admitDate" size="sm" inputClass="w-40" />
-            <SelectField
-              v-model="detail.admitHour"
-              :options="hourOptions"
-              size="sm"
-              triggerClass="w-20"
-              class="!space-y-0"
-              placeholder="시"
-            />
-            <span :class="styles.unit">시</span>
-            <SelectField
-              v-model="detail.admitMinute"
-              :options="minuteOptions"
-              size="sm"
-              triggerClass="w-20"
-              class="!space-y-0"
-              placeholder="분"
-            />
-            <span :class="styles.unit">분</span>
-          </InfoField>
-
-          <InfoField label="퇴소일시">
-            <DatePicker v-model="detail.leaveDate" size="sm" inputClass="w-40" />
-            <SelectField
-              v-model="detail.leaveHour"
-              :options="hourOptions"
-              size="sm"
-              triggerClass="w-20"
-              class="!space-y-0"
-              placeholder="시"
-            />
-            <span :class="styles.unit">시</span>
-            <SelectField
-              v-model="detail.leaveMinute"
-              :options="minuteOptions"
-              size="sm"
-              triggerClass="w-20"
-              class="!space-y-0"
-              placeholder="분"
-            />
-            <span :class="styles.unit">분</span>
-          </InfoField>
-
-          <InfoField label="접수경로" layout="column">
-            <RadioGroup v-model="detail.receiptRoute" :class="infoStyles['info-table-radio']">
-              <RadioGroupItem
-                v-for="opt in receiptRouteOptions"
-                :key="opt.value"
-                :value="opt.value"
-                :label="opt.label"
-              />
-            </RadioGroup>
-            <div :class="styles.receiptRow">
-              <label :class="styles.receiptLabel" for="pmpub0409-receipt-no">접수번호</label>
+        <section class="lp-section" aria-labelledby="cert-owner-heading">
+          <h4 class="form-title">주취자</h4>
+          <InfoTable :columns="1">
+            <InfoField label="성명" for="pmpub0409-name">
               <InputField2
-                id="pmpub0409-receipt-no"
-                v-model="detail.receiptNo"
-                size="sm"
-                class="!space-y-0"
-                inputClass="w-52"
-                :disabled="receiptNoDisabled"
-              />
-              <Button
-                type="button"
-                variant="tertiary2"
-                size="sm"
-                :disabled="receiptNoDisabled"
-                @click="report112Open = true"
-              >
-                112신고 조회
-              </Button>
-              <InputField2
-                v-model="detail.receiptEtc"
+                id="pmpub0409-name"
+                v-model="detail.name"
                 size="sm"
                 class="!space-y-0 flex-1"
-                placeholder="기타 사유"
-                :disabled="receiptEtcDisabled"
-                aria-label="기타 접수경로 사유"
               />
-            </div>
-          </InfoField>
-        </InfoTable>
+              <span v-if="detail.name" :class="styles.maskHint">표시: {{ maskName(detail.name) }}</span>
+            </InfoField>
 
-        <h4 :class="styles.formSection">병상</h4>
-        <InfoTable :columns="1">
-          <InfoField label="총 병상">{{ detail.totalBeds }} 개</InfoField>
-          <InfoField label="사용가능 병상">{{ displayAvailableBeds }} 개</InfoField>
-          <InfoField label="배정">
-            <Checkbox v-model="detail.assign" />
-            <span :class="infoStyles['info-table-txt']">※ 체크시 병상 배정됩니다.</span>
-          </InfoField>
-        </InfoTable>
+            <InfoField label="성별">
+              <RadioGroup v-model="detail.gender" :class="infoStyles['info-table-radio']">
+                <RadioGroupItem value="male" label="남" />
+                <RadioGroupItem value="female" label="여" />
+              </RadioGroup>
+            </InfoField>
+
+            <InfoField label="연령대" for="pmpub0409-age">
+              <SelectField
+                id="pmpub0409-age"
+                v-model="detail.ageGroup"
+                :options="ageGroupOptions"
+                size="sm"
+                triggerClass="w-32"
+                class="!space-y-0"
+                placeholder="선택"
+              />
+            </InfoField>
+
+            <InfoField label="증상">
+              <RadioGroup v-model="detail.symptom" :class="infoStyles['info-table-radio']">
+                <RadioGroupItem
+                  v-for="opt in symptomOptions"
+                  :key="opt.value"
+                  :value="opt.value"
+                  :label="opt.label"
+                />
+              </RadioGroup>
+            </InfoField>
+
+            <InfoField label="입소일시">
+              <DatePicker v-model="detail.admitDate" size="sm" inputClass="w-40" />
+              <SelectField
+                v-model="detail.admitHour"
+                :options="hourOptions"
+                size="sm"
+                triggerClass="w-20"
+                class="!space-y-0"
+                placeholder="시"
+              />
+              <span :class="styles.unit">시</span>
+              <SelectField
+                v-model="detail.admitMinute"
+                :options="minuteOptions"
+                size="sm"
+                triggerClass="w-20"
+                class="!space-y-0"
+                placeholder="분"
+              />
+              <span :class="styles.unit">분</span>
+            </InfoField>
+
+            <InfoField label="퇴소일시">
+              <DatePicker v-model="detail.leaveDate" size="sm" inputClass="w-40" />
+              <SelectField
+                v-model="detail.leaveHour"
+                :options="hourOptions"
+                size="sm"
+                triggerClass="w-20"
+                class="!space-y-0"
+                placeholder="시"
+              />
+              <span :class="styles.unit">시</span>
+              <SelectField
+                v-model="detail.leaveMinute"
+                :options="minuteOptions"
+                size="sm"
+                triggerClass="w-20"
+                class="!space-y-0"
+                placeholder="분"
+              />
+              <span :class="styles.unit">분</span>
+            </InfoField>
+
+            <InfoField label="접수경로" layout="column">
+              <RadioGroup v-model="detail.receiptRoute" :class="infoStyles['info-table-radio']">
+                <RadioGroupItem
+                  v-for="opt in receiptRouteOptions"
+                  :key="opt.value"
+                  :value="opt.value"
+                  :label="opt.label"
+                />
+              </RadioGroup>
+              <div :class="styles.receiptRow">
+                <label :class="styles.receiptLabel" for="pmpub0409-receipt-no">접수번호</label>
+                <InputField2
+                  id="pmpub0409-receipt-no"
+                  v-model="detail.receiptNo"
+                  size="sm"
+                  class="!space-y-0"
+                  inputClass="w-52"
+                  :disabled="receiptNoDisabled"
+                />
+                <Button
+                  type="button"
+                  variant="tertiary2"
+                  size="sm"
+                  :disabled="receiptNoDisabled"
+                  @click="report112Open = true"
+                >
+                  112신고 조회
+                </Button>
+                <InputField2
+                  v-model="detail.receiptEtc"
+                  size="sm"
+                  class="!space-y-0 flex-1"
+                  placeholder="기타 사유"
+                  :disabled="receiptEtcDisabled"
+                  aria-label="기타 접수경로 사유"
+                />
+              </div>
+            </InfoField>
+          </InfoTable>
+        </section>
+        <section class="lp-section" aria-labelledby="cert-owner-heading">
+          <h4 class="form-title">병상</h4>
+          <InfoTable :columns="1">
+            <InfoField label="총 병상">{{ detail.totalBeds }} 개</InfoField>
+            <InfoField label="사용가능 병상">{{ displayAvailableBeds }} 개</InfoField>
+            <InfoField label="배정">
+              <Checkbox v-model="detail.assign" />
+              <span :class="infoStyles['info-table-txt']">※ 체크시 병상 배정됩니다.</span>
+            </InfoField>
+          </InfoTable>
+        </section>
       </div>
     </section>
   </div>

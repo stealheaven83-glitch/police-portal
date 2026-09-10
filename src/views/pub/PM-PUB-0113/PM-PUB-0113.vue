@@ -60,7 +60,6 @@
           class="flex-1"
           height="100%"
           layout="fitDataFill"
-          :row-class="rowClass"
           placeholder="조회된 인증 내역이 없습니다"
           show-pagination
           :items-per-page="10"
@@ -79,7 +78,7 @@
 
         <ScrollWrapper>
           <section class="lp-section" aria-labelledby="cert-general-heading">
-            <h3 id="cert-general-heading" class="lp-heading-md lp-section-title">일반현황</h3>
+            <h3 id="cert-general-heading" class="form-title">일반현황</h3>
             <InfoTable :columns="2" size="100">
               <!-- 주소는 시안에서 오른쪽 두 칸(시설물명 · 이용/규모)에 걸쳐 있다 -->
               <InfoField label="주소" :row-span="2">
@@ -131,7 +130,7 @@
           </section>
 
           <section class="lp-section" aria-labelledby="cert-owner-heading">
-            <h3 id="cert-owner-heading" class="lp-heading-md lp-section-title">시설주 정보</h3>
+            <h3 id="cert-owner-heading" class="form-title">시설주 정보</h3>
             <InfoTable :columns="2" size="100">
               <InfoField label="성명" for="cert-owner-name">
                 <InputField2
@@ -158,7 +157,7 @@
           </section>
 
           <section class="lp-section" aria-labelledby="cert-crime-heading">
-            <h3 id="cert-crime-heading" class="lp-heading-md lp-section-title">범죄발생 현황</h3>
+            <h3 id="cert-crime-heading" class="form-title">범죄발생 현황</h3>
             <InfoTable :columns="2" size="100">
               <InfoField label="피해여부">
                 <RadioGroup
@@ -183,7 +182,7 @@
           </section>
 
           <section class="lp-section" aria-labelledby="cert-standard-heading">
-            <h3 id="cert-standard-heading" class="lp-heading-md lp-section-title">인증기준표</h3>
+            <h3 id="cert-standard-heading" class="form-title">인증기준표</h3>
 
             <!-- ① 배점 요약 — 시안이 정한 고정 기준이라 입력이 없다 -->
             <div class="lp-cert-scroll">
@@ -392,7 +391,6 @@ const {
   registeredTo,
   certificationType,
   rows,
-  activeRowKey,
   checklist,
   editing,
   totalScore,
@@ -420,11 +418,6 @@ const listColumns: TabulatorGridColumn[] = [
   { title: '인증구분', field: 'certificationType', width: 110, hozAlign: 'center' },
   { title: '인증일자', field: 'certifiedAt', width: 120, hozAlign: 'center' },
 ]
-
-/** 지금 우측 체크리스트에 떠 있는 행만 배경으로 표시한다 */
-function rowClass(row: CertificationRow) {
-  return row.rowKey === activeRowKey.value ? 'lp-grid-active-row' : undefined
-}
 
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 

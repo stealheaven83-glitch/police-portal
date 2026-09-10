@@ -53,11 +53,10 @@
     class="flex-1"
     :columns="columns"
     :data="gridRows"
-    layout="fitDataFill"
     height="100%"
     min-height="40rem"
     placeholder="조회된 출동수당 취합 내역이 없습니다"
-    show-pagination
+
     :items-per-page="10"
   />
 
