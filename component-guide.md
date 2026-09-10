@@ -477,6 +477,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-note-gap` | 표 바로 위 안내 문구의 **아래** 여백(2rem). 위는 앞 요소에 붙는다 — `.lp-table-gap` 과 반대라 같이 쓰지 않는다 | LPO-0223 |
 | `.lp-info-row-tall` | **`InfoField` 에 건다** — 값이 짧아도 칸이 높아야 하는 줄(여러 줄 입력 자리, 12rem). 행 병합 `rowSpan` 과 달리 옆 칸 배치를 안 건드린다 | LPO-0223 팝업 |
 | `.lp-info-blank-cell` | `InfoTable` 에서 옆 칸이 두 행을 차지(row-span)해 비는 칸. 표 테두리만 이어 주는 자리라 1열로 접히면 감춘다 | PUB-0302/0303 |
+| `.lp-info-label-narrow` | **`InfoTable` 루트에 건다** — 2~3글자 라벨뿐인 검색 폼에서 라벨 열을 7rem 으로 좁히고 안쪽 여백도 1rem 으로 줄인다. `:size` 와 같이 주면 인라인이 이겨 안 먹는다 | `AddressSearchDialog` |
 | `.lp-meta-nowrap` | 조회 화면 위쪽 '최종 수정일' 한 줄 | 0601 |
 | `.lp-placeholder-box` | 채울 것이 아직 정해지지 않은 자리(시안의 회색 상자) | PUB-0113 |
 | `.lp-map-slot` | 그 회색 상자를 지도 자리 크기(41.8rem)로 키우고 모서리를 각지게 — `.lp-placeholder-box` 와 **함께** 쓴다 | `AddressSearchDialog` |
