@@ -2732,3 +2732,9 @@
 .board-search-row {
   margin-bottom: 1.6rem;
 }
+
+/* 공지사항 목록의 '중요' 배지 — 고정공지(.board-pin-badge, 파랑)와 달리 빨강이다.
+   Badge 컴포넌트의 color="danger" variant="solid" 과 같은 --danger 를 쓴다 */
+.board-pin-badge-danger {
+  background: var(--danger);
+}

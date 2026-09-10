@@ -11,7 +11,7 @@
     </template>
   </PageHeader>
 
-  <SearchWrapper>
+  <SearchWrapper no-background>
     <template #form>
       <div class="search-area">
         <SelectField

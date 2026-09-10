@@ -1361,7 +1361,6 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   flex-wrap:wrap;
   align-items:center;
   gap:1.6rem 3.6rem;
-  background:var(--Background-gray01);
   width: 100%;
 }
 .layout-wrap{

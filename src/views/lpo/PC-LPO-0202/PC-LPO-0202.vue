@@ -224,6 +224,10 @@ import KeyNoteDialog from './components/KeyNoteDialog.vue'
 import VolunteerAddDialog from './components/VolunteerAddDialog.vue'
 import IncidentAddDialog from './components/IncidentAddDialog.vue'
 import ScheduleCopyDialog from './components/ScheduleCopyDialog.vue'
+<<<<<<< Updated upstream
+=======
+import { useDialog } from '@/composable/dialog/dialog'
+>>>>>>> Stashed changes
 import {
   useWorkSchedule,
   WorkScheduleKey,
@@ -233,6 +237,8 @@ import { useDialog } from '@/composable/dialog/dialog'
 
 const dialog = useDialog()
 
+
+const dialog = useDialog()
 
 defineOptions({
   name: 'PcLpo0202',

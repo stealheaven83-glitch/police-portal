@@ -19,7 +19,8 @@
       <slot name="topRightSection"></slot>
     </div>
     <div v-if="formOnly || collapsible" v-show="formOnly || expanded" :class="cn(defaultClass, (formOnly ? '' : 'mt-[20px]'), props.class)">
-      <div class="flex flex-col justify-center py-5 px-6">
+      <!-- 배경 박스가 없으면 왼쪽 여백도 빼서 폼이 페이지 왼쪽 선에 맞물리게 한다 -->
+      <div :class="cn('flex flex-col justify-center py-5 px-6', props.noBackground && 'pl-0')">
         <slot name="form" />
       </div>
       <div class="flex items-end py-5 px-6">
@@ -42,10 +43,13 @@ interface Props {
   collapsible?: boolean
   /** department 슬롯을 감싸는 div에 적용할 클래스 (기본 'flex items-center gap-4' 를 덮어쓰고 싶을 때) */
   departmentClass?: HTMLAttributes['class']
+  /** true면 form 영역의 회색 배경(--Background-gray01)을 빼고 투명하게 둔다. 모서리·여백은 그대로 */
+  noBackground?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   collapsible: false,
+  noBackground: false,
 })
 
 const slots = useSlots()
@@ -64,7 +68,10 @@ function toggle() {
   expanded.value = !expanded.value
 }
 
-const defaultClass = 'w-full flex justify-between items-stretch bg-[var(--Background-gray01)] rounded-[12px]'
+/** 배경은 noBackground 로 뺄 수 있게 따로 붙인다 */
+const defaultClass = computed(() =>
+  cn('w-full flex justify-between items-stretch rounded-[12px]', !props.noBackground && 'bg-[var(--Background-gray01)]'),
+)
 </script>
 
 
