@@ -1852,3 +1852,11 @@ html.theme-dark .rowgroup.notice .notice-list .noticeSwiper .swiper-nav .slide-a
   overflow-y: auto;
 }
 
+.alert-dialog-footer > button{
+  flex: 1;
+}
+@media (width >= 40rem) {
+  .alert-dialog-footer > button{
+    flex: 0;
+  }
+}

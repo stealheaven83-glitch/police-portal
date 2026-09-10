@@ -69,9 +69,9 @@
       :style="{ width: 'calc(100% - 20px)', maxWidth: '400px' }"
     >
       <AlertDialogHeader class="flex justify-end flex-row">
-        <button type="button" @click="handleCancel">
+        <!-- <button type="button" @click="handleCancel">
           <img :src="closeIcon" alt="닫기 버튼" />
-        </button>
+        </button> -->
       </AlertDialogHeader>
       <div class="min-h-[84px] text-center flex flex-col justify-center">
         <AlertDialogTitle class="text-[2.4rem] font-[700]">{{ title }}</AlertDialogTitle>
