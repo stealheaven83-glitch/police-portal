@@ -137,14 +137,14 @@ import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import {
-import { useDialog } from '@/composable/dialog/dialog'
-
-const dialog = useDialog()
   useMemoWrite,
   MAX_ATTACHMENTS,
   ATTACHMENT_ACCEPT,
   CONTENT_MAX_LENGTH,
 } from './composable/PM-LPO-0104'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 defineOptions({
   name: 'PmLpo0104',

@@ -91,14 +91,14 @@ import InputField2 from '@/components/custom/input/InputField2.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import {
-import { useDialog } from '@/composable/dialog/dialog'
-
-const dialog = useDialog()
   createDongSearchResult,
   sidoOptions,
   sigunguOptions,
   type DongRow,
 } from '../composable/PC-LPO-0601'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 /**
  * PC-LPO-0603 관할행정동 검색 팝업.

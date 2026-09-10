@@ -89,9 +89,6 @@ import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import MentalCenterDetailForm from '../components/MentalCenterDetailForm.vue'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
 import {
-import { useDialog } from '@/composable/dialog/dialog'
-
-const dialog = useDialog()
   useMentalCenterStore,
   createEmptyCenterForm,
   regionFilterOptions,
@@ -100,6 +97,9 @@ const dialog = useDialog()
   isValidCenterName,
   type MentalCenterRow,
 } from '../composable/mentalEmergency'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 // KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!) — useBottomTabSetup 의 componentName 과 일치해야 한다.
 defineOptions({ name: 'PmPub0414' })

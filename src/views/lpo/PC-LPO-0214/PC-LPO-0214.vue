@@ -122,9 +122,6 @@ import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import {
-import { useDialog } from '@/composable/dialog/dialog'
-
-const dialog = useDialog()
   useBasicCycle,
   hourOptions,
   shiftKindOptions,
@@ -132,6 +129,9 @@ const dialog = useDialog()
   type ShiftFormRow,
   type TeamPlanRow,
 } from './composable/PC-LPO-0214'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 defineOptions({
   name: 'PcLpo0214',
