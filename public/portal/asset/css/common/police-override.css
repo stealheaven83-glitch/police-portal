@@ -237,7 +237,7 @@
 .prevention-nums,
 .prevention-choices {
   display: flex;
-  
+
 }
 
 .prevention-num {
@@ -667,33 +667,87 @@ tbody .row-total > td:first-child {
 }
 
 /*
- * 팝업 안 그리드 제목 (시안 Popup Grid Title 10607:49168) — 높이 48, 좌우 20, 17px/600.
- * 화면용 LayoutHeader 는 60px·좌우 24·19px 이라 팝업에서는 이렇게 줄인다.
- * 위쪽 실선은 LayoutSplite 바깥 테두리가 이미 그리므로 여기서 주지 않는다(두 겹이 된다).
+ * 세로 스크롤이 생긴 표의 아래 경계선.
+ *
+ * TabulatorGrid 는 스크롤이 생기면 표에 has-vscroll 클래스를 붙이고,
+ * tabulator-theme.css 는 .tabulator 에 border-bottom: 1px solid transparent 를 깔아 둔다 —
+ * 색만 넣어주면 되는 구조인데 그 규칙이 없어서 마지막 행 아래가 열린 채로 보였다.
+ * 테마는 @layer 밖이라 !important 가 아니면 덮이지 않는다.
  */
-.lp-pop-grid-head {
-  height: 4.8rem;
-  padding-inline: 2rem;
-}
-.lp-pop-grid-head > :first-child {
-  font-size: 1.7rem;
-}
-
-/*
- * 처리자 관리 팝업의 표 영역 (시안 12664:119658/119663) —
- * 제목과 12 띄우고 좌우·아래로 16 씩 들여 놓는다.
- */
-.lp-pop-handler-grid {
-  margin-top: 1.2rem;
-  padding: 0 1.6rem 1.6rem;
+.tabulator.has-vscroll {
+  border-bottom-color: var(--Border-grid-body) !important;
 }
 
 /*
- * 처리자 관리 팝업의 2분할 높이 (시안 12664:119657 — 436).
- * LayoutSplite 는 기본 900px 이라 목록이 짧으면 아래가 크게 빈다.
- * 스코프 스타일이라 height 를 직접 못 덮고, 컴포넌트가 열어둔 변수로 바꾼다.
+ * 그리드 일시 칸 — 날짜와 시간을 두 줄로 끊어 보여준다.
+ *
+ * Tabulator 는 셀에 white-space: nowrap 을 깔아서(라이브러리 기본) 자식까지 상속되므로
+ * 여기서 풀어야 <br> 이 먹는다. 행 높이는 4.8rem 고정(tabulator-theme.css)이라
+ * 두 줄이 넘치지 않게 line-height 를 1.3 으로 조인다(14px × 2 × 1.3 ≈ 36px < 40px).
  */
-.lp-pop-handler-split {
-  --split-height: 43.6rem;
-  --split-height-stacked: 43.6rem;
+.lp-cell-datetime {
+  display: block;
+  white-space: normal;
+  line-height: 1.3;
+}
+
+/*
+ * 결재선 표 (시안 13724:123521) — 일반 목록 표와 모양이 다르다.
+ * TableWrapper 는 위에 진한 실선(#1E2124)을 긋고 머리줄에 배경을 깔지 않는 "목록" 모양인데,
+ * 시안의 결재선은 테두리로 둘러싼 상자에 머리줄만 회색으로 채운 "카드" 모양이다.
+ *   머리줄 33 / 본문 100 / 칸 사이 세로선 / 모서리 6
+ * 컴포넌트가 테일윈드로 먹인 값이라 이 파일(layer screen)에서 덮는다.
+ */
+.lp-approval-table > div {
+  border: 1px solid var(--Border_gray02);
+  border-radius: var(--Radius-medium3);
+}
+/*
+ * 머리줄 — 배경 #F4F5F6. 머리와 본문 사이에는 실선이 없다(시안).
+ * 선은 th 가 아니라 tr 에 걸려 있다(ui/table 의 TableHeader `[&_tr]:border-b`, TableRow `border-b`).
+ */
+.lp-approval-table thead tr {
+  border-bottom: 0;
+}
+.lp-approval-table thead th {
+  height: 3.3rem;
+  padding-block: 0;
+  background: var(--Background-gray01);
+  border-bottom: 0;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--Text-body_1);
+}
+.lp-approval-table thead th + th,
+.lp-approval-table tbody td + td {
+  border-left: 1px solid var(--Border_gray02);
+}
+/* 본문은 한 줄뿐이라 아래 실선이 필요 없다(바깥 테두리가 대신한다) */
+.lp-approval-table tbody td {
+  padding: 1.2rem;
+  border-bottom: 0;
+}
+
+/*
+ * [라디오/체크박스][입력칸] 한 줄 묶음(.lp-choice-input)의 세로 가운데 정렬.
+ * RadioGroupItem 은 라벨을 `inline-flex items-start` 로 그린다 — 여러 줄 라벨·도움말을 위한
+ * 기본값이라 컴포넌트는 두고, 입력칸(40)과 나란히 놓이는 이 묶음에서만 되돌린다.
+ * items-start 가 테일윈드(utilities)라 police 레이어인 police-common.css 로는 못 덮는다.
+ */
+/* 라디오 묶음(div[data-slot="radio-group"])도 입력칸 높이에 맞춰 세로 가운데로 둔다 */
+.lp-choice-input [data-slot="radio-group"] {
+  display: flex;
+  align-items: center;
+  min-height: 4rem;
+}
+.lp-choice-input label {
+  min-height: 4rem;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* 괄호는 선택지가 비활성이어도 본문색(#1E2124)·15px 을 유지한다(시안 13859:112989) */
+.lp-paren-group > .lp-paren {
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
 }

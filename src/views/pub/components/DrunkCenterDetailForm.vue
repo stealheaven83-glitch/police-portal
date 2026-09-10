@@ -35,7 +35,7 @@ function onBedTotalInput(value: string | number) {
         placeholder="선택"
         size="sm"
         trigger-class="w-full"
-        class="!space-y-0 flex-1"
+        class="!space-y-0 w-[200px]"
       />
     </InfoField>
 
@@ -90,7 +90,7 @@ function onBedTotalInput(value: string | number) {
           @update:model-value="onBedTotalInput"
           size="sm"
           inputmode="numeric"
-          class="!space-y-0 flex-1"
+          class="!space-y-0 w-[80px]"
         />
         <span :class="styles.unit">개</span>
       </div>

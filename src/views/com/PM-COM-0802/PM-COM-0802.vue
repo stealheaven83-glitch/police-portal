@@ -65,7 +65,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { toast } from 'vue-sonner'
 import SearchBar from '@/components/custom/search/SearchBar.vue'
 import { Tabs, TabsList, TabsTrigger } from '@/components/custom/tabs'
 import { Button } from '@/components/custom/button'
@@ -106,12 +105,12 @@ async function onSearch(value: string) {
   // 실제 재조회는 개발팀이 붙인다(퍼블 범위 밖)
 }
 
-function onMore(title: string) {
-  toast.info(`${title} 검색결과 더보기는 준비 중입니다.`)
+async function onMore(title: string) {
+  await dialog.alert({ title: `${title} 검색결과 더보기는 준비 중입니다.`, btnCancel: '확인' })
 }
 
-function onMove(path: string) {
-  toast.info(`${path} 이동은 개발 연동 후 동작합니다.`)
+async function onMove(path: string) {
+  await dialog.alert({ title: `${path} 이동은 개발 연동 후 동작합니다.`, btnCancel: '확인' })
 }
 
 useBottomTabSetup({

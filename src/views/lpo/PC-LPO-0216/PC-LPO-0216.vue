@@ -20,7 +20,6 @@
 
   <div class="lp-row-between lp-table-gap">
     <span class="group-gap2">
-      <span class="lp-label-text">근무일</span>
       <Button type="button" variant="ghost" size="icon-sm" aria-label="이전 달" @click="shiftMonth(-1)">
         <Icon name="arrowLeft" :size="18" />
       </Button>
@@ -30,9 +29,12 @@
       </Button>
     </span>
     <span class="group-gap2">
-      <Button type="button" variant="tertiary2" size="sm" @click="openApply('incident')">사고신청</Button>
-      <Button type="button" variant="tertiary2" size="sm" @click="openApply('volunteer')">자원근무신청</Button>
-      <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
+        <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
+        <Download :size="16" aria-hidden="true" />
+        엑셀다운로드
+      </Button>
+      <Button type="button" variant="secondary" size="sm" @click="openApply('incident')">사고신청</Button>
+      <Button type="button" variant="secondary" size="sm" @click="openApply('volunteer')">자원근무신청</Button>
     </span>
   </div>
 
@@ -125,16 +127,21 @@
     </table>
   </div>
 
-  <DutyApplyDialog
+  <IncidentApplyDialog
+    v-if="applyKind === 'incident'"
     v-model:open="applyOpen"
-    :title="applyKind === 'incident' ? '사고신청' : '자원근무신청'"
+    @apply="onIncidentApply"
+  />
+  <DutyApplyDialog
+    v-else
+    v-model:open="applyOpen"
+    title="자원근무신청"
     :form="applyForm"
     @save="onApplySave"
   />
 </template>
 
 <script setup lang="ts">
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -146,7 +153,14 @@ import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import DutyApplyDialog from './components/DutyApplyDialog.vue'
+import IncidentApplyDialog, { type IncidentApplyForm } from './components/IncidentApplyDialog.vue'
 import { useDutyStatus } from './composable/PC-LPO-0216'
+import { useDialog } from '@/composable/dialog/dialog'
+import type { TabulatorGrid } from '@/components/custom/tabulator/index.ts'
+import { Download } from "lucide-vue-next";
+import { ref } from 'vue'
+
+const dialog = useDialog()
 
 defineOptions({
   name: 'PcLpo0216',
@@ -176,22 +190,25 @@ const {
   removeIncident,
 } = useDutyStatus()
 
-function onApplySave() {
+async function onApplySave() {
   if (!applyForm.value.name || !applyForm.value.reason) {
-    toast.warning('필수 항목을 입력해 주세요.')
+    await dialog.alert({ title: '필수 항목을 입력해 주세요.', btnCancel: '확인' })
     return
   }
   if (applyForm.value.range === 'part' && (!applyForm.value.startTime || !applyForm.value.endTime)) {
-    toast.warning('시작·종료 시간을 선택해 주세요.')
+    await dialog.alert({ title: '시작·종료 시간을 선택해 주세요.', btnCancel: '확인' })
     return
   }
-  toast.success('신청되었습니다.')
+  await dialog.alert({ title: '신청되었습니다.', btnCancel: '확인' })
   applyOpen.value = false
 }
 
-function onSave() {
-  toast.success('저장되었습니다.')
+async function onIncidentApply(_form: IncidentApplyForm) {
+  await dialog.alert({ title: '신청하였습니다.', btnCancel: '확인' })
+  applyOpen.value = false
 }
+
+
 
 useBottomTabSetup({
   value: 'PC-LPO-0216',
@@ -200,4 +217,10 @@ useBottomTabSetup({
   componentName: 'PcLpo0216',
   closable: true,
 })
+
+const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
+function onDownloadExcel() {
+  const today = new Date().toISOString().slice(0, 10)
+  gridRef.value?.download('csv', `출동수당취합_월별_${today}.csv`)
+}
 </script>

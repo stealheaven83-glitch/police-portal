@@ -194,6 +194,11 @@ export const mainLayoutConfig: LayoutConfig = {
           icon: TableIcon,
         },
         {
+          path: '/component/search-area',
+          title: 'Search Wrapper',
+          icon: ComponentIcon,
+        },
+        {
           path: '/component/file-upload',
           title: 'File Upload',
           icon: FileTextIcon,

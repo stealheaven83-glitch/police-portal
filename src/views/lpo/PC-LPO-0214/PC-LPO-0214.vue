@@ -11,7 +11,7 @@
     </template>
   </PageHeader>
 
-  <div class="lp-row-between">
+  <div class="lp-row-between lp-section-head">
     <span class="group-gap2">
       <span class="dept-name">부서</span>
       <DepartmentCascadeSelect v-model="department" size="sm" />
@@ -25,13 +25,21 @@
   <div class="lp-page-scroll">
     <p class="lp-heading-md lp-table-gap">기본주기설정</p>
     <div class="lp-row-between lp-table-gap">
-      <span class="search-area">
-        <SelectField v-model="groupCount" :options="groupOptions" size="sm" triggerClass="w-20" aria-label="조 수" />
-        <span class="lp-label-text">조</span>
-        <NumberStepper v-model="shiftCount" :min="1" :max="9" aria-label="교대 수" />
-        <span class="lp-label-text">교대</span>
-        <NumberStepper v-model="dayCycle" :min="1" :max="30" aria-label="일 주기" />
-        <span class="lp-label-text">일 주기</span>
+      <span class="lp-filter-row">
+        <span class="group-gap2">
+          <InputField2 v-model="groupCount" size="sm" input-class="w-20" />
+          <span class="lp-label-text">조</span>
+        </span>
+        <span class="group-gap2">
+          <InputField2 v-model="shiftCount" size="sm" input-class="w-20" />
+          <span class="lp-label-text">교대</span>
+        </span>
+        <span class="group-gap2">
+          <InputField2 v-model="dayCycle" size="sm" input-class="w-20" />
+          <span class="lp-label-text">일 주기</span>
+        </span>
+        <!-- 데이트피커 추가 (디자인 x) -->
+        <DatePicker v-model="effectiveDate" label="적용일" size="sm" input-class="w-40" />
       </span>
       <span class="group-gap2">
         <SelectField
@@ -39,11 +47,11 @@
           :options="basicCycleOptions"
           placeholder="기본 주기 선택"
           size="sm"
-          triggerClass="w-40"
+          triggerClass="w-[20rem]"
           :disabled="noBasicCycle"
           aria-label="기본 주기"
         />
-        <Button type="button" variant="tertiary2" size="sm" :disabled="noBasicCycle" @click="onApplyCycle">
+        <Button type="button" variant="tertiary2" size="sm" @click="onApplyCycle">
           기본 주기 설정 적용
         </Button>
         <Button type="button" variant="tertiary2" size="sm" @click="noBasicCycle = !noBasicCycle">
@@ -51,12 +59,19 @@
         </Button>
       </span>
     </div>
+    <!-- 안내문구 추가 (디자인x) -->
+    <p class="form-note end lp-em-primary p-5">＊ 2026-01-01에 설정한 4조 2교대 4일 주기가 적용되어 있습니다.</p>
 
-    <GridTitle title="교대 형태 설정" class="lp-table-gap">
-      <Button type="button" variant="tertiary2" size="sm" @click="onDeleteShiftRows">선택삭제</Button>
-      <Button type="button" variant="secondary" size="sm" @click="addShiftFormRow">추가</Button>
-    </GridTitle>
+    <div class="section-bar">
+      <h2 id="equipment-heading">교대 형태 설정</h2>
+      <div class="section-bar-actions">
+        <Button type="button" variant="tertiary2" size="xs" padding="12" @click="onDeleteShiftRows">선택삭제</Button>
+        <Button type="button" variant="tertiary2" size="xs" padding="12" @click="addShiftFormRow">추가</Button>
+      </div>
+    </div>
+
     <TabulatorGrid
+      class="grid-wrap"
       :columns="shiftColumns"
       :data="shiftFormRows"
       layout="fitColumns"
@@ -65,15 +80,22 @@
       @row-selection-changed="onShiftSelectionChanged"
     />
 
-    <GridTitle title="팀 일자 별 배치" class="lp-table-gap">
-      <Button type="button" variant="tertiary2" size="sm" @click="onDeleteTeamRows">선택삭제</Button>
-      <Button type="button" variant="secondary" size="sm" @click="addTeamPlanRow">추가</Button>
-    </GridTitle>
-    <div class="search-area lp-table-gap">
-      <span class="lp-label-text">현재(오늘) 배치 일자</span>
-      <NumberStepper v-model="todayPlanDay" :min="1" :max="4" aria-label="현재 배치 일자" />
+    <div class="section-bar lp-table-gap">
+      <h2 id="team-plan-heading">팀 일자 별 배치</h2>
+      <div class="section-bar-actions">
+        <Button type="button" variant="tertiary2" size="xs" padding="12" @click="onDeleteTeamRows">선택삭제</Button>
+        <Button type="button" variant="tertiary2" size="xs" padding="17" @click="addTeamPlanRow">추가</Button>
+      </div>
+    </div>
+
+    <div class="lp-filter-row lp-table-gap">
+      <span class="group-gap2">
+        <span class="lp-label-text">현재(오늘) 배치 일자</span>
+        <InputField2 v-model="todayPlanDay" size="sm" input-class="w-20" />
+      </span>
     </div>
     <TabulatorGrid
+      class="grid-wrap"
       :columns="teamColumns"
       :data="teamPlanRows"
       layout="fitColumns"
@@ -86,16 +108,15 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
-import NumberStepper from '@/components/custom/input/NumberStepper.vue'
+import InputField2 from '@/components/custom/input/InputField2.vue'
+import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import { Button } from '@/components/custom/button'
-import { GridTitle } from '@/components/custom/grid-title'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
@@ -104,18 +125,19 @@ import {
   useBasicCycle,
   hourOptions,
   shiftKindOptions,
-  groupOptions,
   basicCycleOptions,
   type ShiftFormRow,
   type TeamPlanRow,
 } from './composable/PC-LPO-0214'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 defineOptions({
   name: 'PcLpo0214',
 })
 
-// LNB: 근무일지 > 근무일지(甲) (프리셋은 2뎁스까지라 '기본주기설정'이 아직 없다 — §5 ③)
-useSideMenuSetup({ ...localPoliceMenu, openIndex: 1, activeChild: '근무일지(甲)' })
+useSideMenuSetup({ ...localPoliceMenu, openIndex: 1, activeChild: '기본주기설정' })
 
 const navItems = [
   { label: '홈', path: '/' },
@@ -130,6 +152,7 @@ const {
   groupCount,
   shiftCount,
   dayCycle,
+  effectiveDate,
   basicCycle,
   noBasicCycle,
   shiftFormRows,
@@ -184,41 +207,41 @@ function onTeamSelectionChanged(rows: unknown[]) {
   teamSelection.value = toIds<TeamPlanRow>(rows)
 }
 
-function onDeleteShiftRows() {
+async function onDeleteShiftRows() {
   if (!shiftSelection.value.size) {
-    toast.warning('삭제할 교대 형태를 선택해 주세요.')
+    await dialog.alert({ title: '삭제할 교대 형태를 선택해 주세요.', btnCancel: '확인' })
     return
   }
   removeShiftFormRows(shiftSelection.value)
   shiftSelection.value = new Set()
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
-function onDeleteTeamRows() {
+async function onDeleteTeamRows() {
   if (!teamSelection.value.size) {
-    toast.warning('삭제할 배치를 선택해 주세요.')
+    await dialog.alert({ title: '삭제할 배치를 선택해 주세요.', btnCancel: '확인' })
     return
   }
   removeTeamPlanRows(teamSelection.value)
   teamSelection.value = new Set()
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
-function onApplyCycle() {
+async function onApplyCycle() {
   if (!basicCycle.value) {
-    toast.warning('기본 주기를 선택해 주세요.')
+    await dialog.alert({ title: '기본 주기를 선택해 주세요.', btnCancel: '확인' })
     return
   }
-  toast.success('기본 주기 설정을 적용했습니다.')
+  await dialog.alert({ title: '기본 주기 설정을 적용했습니다.', btnCancel: '확인' })
 }
 
-function onNew() {
+async function onNew() {
   resetAll()
-  toast.success('새로 입력할 수 있습니다.')
+  await dialog.alert({ title: '새로 입력할 수 있습니다.', btnCancel: '확인' })
 }
 
-function onSave() {
-  toast.success('저장되었습니다.')
+async function onSave() {
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
 }
 
 useBottomTabSetup({

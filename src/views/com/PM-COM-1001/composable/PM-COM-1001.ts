@@ -1,7 +1,11 @@
 import { computed, ref } from 'vue'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 
+/** 공지사항 목록(PM-COM-1001) 한 줄.
+ *  칸 구성은 화면설계서_게시판_V1.1 8장 표(공지사항: 부서 O, 추천수 O, 공개상태 X, 카테고리 X) */
 export interface NoticeRow {
+  id: number
+  /** 중요 공지는 번호 자리에 '중요' 배지가 들어간다 */
   no: number | '중요'
   dept: string
   title: string
@@ -12,11 +16,14 @@ export interface NoticeRow {
   recommendCount: number
 }
 
+/** 성명 검색 옵션 — 설계서 10장 1-2 (default 전체) */
 export const authorFilterOptions = [
+  { label: '전체', value: 'all' },
   { label: '게시글 작성자', value: 'writer' },
-  { label: '제목', value: 'title' },
+  { label: '댓글 작성자', value: 'commenter' },
 ]
 
+/** 검색어 옵션 — 설계서 10장 1-4 (default 전체) */
 export const searchFieldOptions = [
   { label: '전체', value: 'all' },
   { label: '제목', value: 'title' },
@@ -26,6 +33,7 @@ export const searchFieldOptions = [
 function createMockRows(): NoticeRow[] {
   return [
     {
+      id: 1,
       no: '중요',
       dept: '대구청 지방청',
       title: '입력한 제목이 표시됩니다. 입력한 제목이 표시됩니다.입력한 제목이 표시됩니다. 입력한 제목이 표... +22',
@@ -36,6 +44,7 @@ function createMockRows(): NoticeRow[] {
       recommendCount: 109,
     },
     {
+      id: 2,
       no: '중요',
       dept: '대구청 지방청',
       title: '27.10.10 27.10. 10. 대구청 상황점검회의 양식 등 알림 (수범사례 양식) +22',
@@ -46,6 +55,7 @@ function createMockRows(): NoticeRow[] {
       recommendCount: 110,
     },
     {
+      id: 3,
       no: 13539,
       dept: '대전청 대전둔산서',
       title: '입력한 제목이 표시됩니다. 입력 +22',
@@ -56,8 +66,9 @@ function createMockRows(): NoticeRow[] {
       recommendCount: 109,
     },
     {
+      id: 4,
       no: 13538,
-      dept: '광주청 범죄예방대응',
+      dept: '광주청 범죄예방대응과',
       title: '입력한 제목이 표시됩니다. 입력 +22',
       hasAttachment: true,
       writer: '홍길동',
@@ -66,6 +77,7 @@ function createMockRows(): NoticeRow[] {
       recommendCount: 109,
     },
     {
+      id: 5,
       no: 13537,
       dept: '본청 범죄예방대응 지역...',
       title: '입력한 제목이 표시됩니다. 입력 +22',
@@ -76,6 +88,7 @@ function createMockRows(): NoticeRow[] {
       recommendCount: 109,
     },
     {
+      id: 6,
       no: 13536,
       dept: '대구청 지방청',
       title: '입력한 제목이 표시됩니다. 입력 +22',
@@ -86,6 +99,7 @@ function createMockRows(): NoticeRow[] {
       recommendCount: 109,
     },
     {
+      id: 7,
       no: 13535,
       dept: '대구청 지방청',
       title: '입력한 제목이 표시됩니다. 입력',
@@ -96,6 +110,7 @@ function createMockRows(): NoticeRow[] {
       recommendCount: 109,
     },
     {
+      id: 8,
       no: 13534,
       dept: '대구청 지방청',
       title: '입력한 제목이 표시됩니다. 입력',
@@ -110,9 +125,10 @@ function createMockRows(): NoticeRow[] {
 
 export function useNoticeList() {
   const department = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
+  /** 부서줄 오른쪽 '상세조회' 토글로 열고 닫는다 */
   const advancedSearchOpen = ref(false)
 
-  const authorFilter = ref('writer')
+  const authorFilter = ref('all')
   const authorKeyword = ref('')
   const dateFrom = ref('')
   const dateTo = ref('')

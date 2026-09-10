@@ -39,18 +39,20 @@ export function useLogin() {
       await dialog.alert({
         title:
           '아이디 또는 비밀번호가 올바르지 않습니다.\n로그인 실패 5회 / 5회 입니다.\n로그인 5회 실패로 계정이 잠기게 됩니다.',
+        btnCancel: '확인',
       })
       return
     }
     await dialog.alert({
       title: `아이디 또는 비밀번호가 올바르지 않습니다.\n로그인 실패 ${failCount}회 / 5회 입니다.\n로그인 5회 실패 시 계정이 잠기게 됩니다.`,
+      btnCancel: '확인',
     })
   }
 
   /** 로그인 버튼 클릭. onSuccess 가 실제 API 연동 지점이다. */
   async function submit(onSuccess: () => void) {
     if (!canSubmit.value) {
-      await dialog.alert({ title: '아이디와 비밀번호를 입력해 주세요.' })
+      await dialog.alert({ title: '아이디와 비밀번호를 입력해 주세요.', btnCancel: '확인' })
       return
     }
     persistSavedId()
@@ -82,12 +84,14 @@ export function useCertRegister() {
     if (!canRegister.value) {
       await dialog.alert({
         title: '공인인증서 검증에 실패하였습니다.\n아이디와 비밀번호를 확인하시기 바랍니다.',
+        btnCancel: '확인',
       })
       return
     }
     // TODO(API): 실제 공인인증서 등록 요청으로 교체.
     await dialog.alert({
       title: '공인인증서 등록이 완료되었습니다.',
+      btnCancel: '확인',
     })
     onSuccess()
   }

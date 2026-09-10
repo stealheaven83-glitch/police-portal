@@ -1,7 +1,7 @@
 <template>
-  <GenericDialog2 v-model:open="scheduleCopyOpen" title="근무 지정표 복사" :size="480">
+  <GenericDialog2 v-model:open="scheduleCopyOpen" title="근무 지정표 복사" :size="560">
     <div class="search-area">
-      <DatePicker v-model="scheduleCopyDate" label="복사할 날짜" size="sm" inputClass="w-40" />
+      <DatePicker v-model="scheduleCopyDate" label="복사할 날짜" size="sm" inputClass="w-160" />
     </div>
 
     <template #footer>
@@ -13,11 +13,13 @@
 
 <script setup lang="ts">
 import { inject } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import { WorkScheduleKey } from '../composable/useWorkSchedule'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 /**
  * 근무 지정표 복사 팝업.
@@ -27,12 +29,12 @@ import { WorkScheduleKey } from '../composable/useWorkSchedule'
 const store = inject(WorkScheduleKey)!
 const { scheduleCopyOpen, scheduleCopyDate } = store
 
-function onCopy() {
+async function onCopy() {
   if (!scheduleCopyDate.value) {
-    toast.warning('복사할 날짜를 선택해 주세요.')
+    await dialog.alert({ title: '복사할 날짜를 선택해 주세요.', btnCancel: '확인' })
     return
   }
-  toast.success('근무 지정표를 가져왔습니다.')
+  await dialog.alert({ title: '근무 지정표를 가져왔습니다.', btnCancel: '확인' })
   scheduleCopyOpen.value = false
 }
 </script>

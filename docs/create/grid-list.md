@@ -46,4 +46,4 @@
   `gridRef.value?.setPage('last')` 로 따라간다(2401). 맨 위 추가(`addRow(data, true)`)는 항상 1페이지라
   불필요하다.
 - 선택 건수는 `@row-selection-changed` 로 갱신한다 — 인자는 `RowComponent` 배열이다(`CLAUDE.md` §5).
-- 삭제/저장 피드백은 `CLAUDE.md` §4 의 toast 패턴 그대로.
+- 삭제/저장 피드백은 `CLAUDE.md` §4 의 알림창(`dialog.alert`) 패턴 그대로.

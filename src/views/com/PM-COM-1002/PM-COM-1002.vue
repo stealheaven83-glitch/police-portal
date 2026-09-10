@@ -13,11 +13,9 @@
 
   <div class="lp-page-scroll">
     <article class="lp-notice-detail">
+      <!-- 시안: 중요 배지 + 부서만 온다. 공지사항은 공개상태 칸이 없다(설계서 8장 표) -->
       <p class="lp-notice-badges">
         <Badge v-if="notice.important" color="danger" variant="solid" size="md" shape="sm">중요</Badge>
-        <Badge :color="notice.open ? 'grayLighter' : 'tertiary'" variant="outline" size="md" shape="sm">
-          {{ notice.open ? '공개' : '비공개' }}
-        </Badge>
         <span class="lp-notice-dept">{{ notice.dept }}</span>
       </p>
 
@@ -33,7 +31,7 @@
         </Button>
       </div>
 
-      <!-- 본문 이미지 자리 — Figma 는 회색 박스로만 그려져 있다 -->
+      <!-- 본문 대표 이미지 자리 — Figma 는 회색 박스로만 그려져 있다 -->
       <div class="lp-notice-thumb" aria-hidden="true"></div>
 
       <div class="lp-notice-body">
@@ -72,7 +70,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { toast } from 'vue-sonner'
 import { ThumbsUp } from 'lucide-vue-next'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
@@ -82,16 +79,16 @@ import { Badge } from '@/components/custom/badge'
 import { Button } from '@/components/custom/button'
 import { FileUpload } from '@/components/custom/file-upload'
 import { useDialog } from '@/composable/dialog/dialog'
-import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
-import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import CommentThread from '../components/CommentThread.vue'
 import { useNoticeStore, bulletinMenu } from '../composable/notice'
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 
 defineOptions({
   name: 'PmCom1002',
 })
 
-// LNB: 게시판 > 공지사항 (presets.ts 에 게시판 메뉴가 아직 없어 도메인 composable 에 둔 구성을 쓴다)
+// LNB: 게시판 > 공지사항
 useSideMenuSetup({ ...bulletinMenu, activeChild: '공지사항' })
 
 const navItems = [
@@ -116,12 +113,12 @@ const {
 const contentLines = computed(() => notice.value.content.split('\n'))
 
 /** 실제 다운로드/미리보기는 개발팀 몫 — 화면에서는 눌린 것만 알린다 */
-function onDownload(name: string) {
-  toast.success(`${name} 다운로드를 시작합니다.`)
+async function onDownload(name: string) {
+  await dialog.alert({ title: `${name} 다운로드를 시작합니다.`, btnCancel: '확인' })
 }
 
-function onPreview(name: string) {
-  toast.info(`${name} 을(를) 새 창에서 엽니다.`)
+async function onPreview(name: string) {
+  await dialog.alert({ title: `${name} 을(를) 새 창에서 엽니다.`, btnCancel: '확인' })
 }
 
 function goList() {
@@ -133,7 +130,7 @@ function goEdit() {
   router.push({ name: 'PM-COM-1003' })
 }
 
-/** 삭제는 되돌릴 수 없어 컨펌창을 띄운다(CLAUDE.md §7 예외) */
+/** 삭제는 되돌릴 수 없어 컨펌창을 띄운다(CLAUDE.md §4 예외) */
 async function onDelete() {
   const { confirmed } = await dialog.confirm({
     title: '공지사항 삭제',
@@ -141,7 +138,7 @@ async function onDelete() {
     btnOk: '삭제',
   })
   if (!confirmed) return
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
   goList()
 }
 

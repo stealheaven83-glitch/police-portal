@@ -11,7 +11,7 @@
     </template>
   </PageHeader>
 
-  <SearchWrapper>
+  <SearchWrapper no-background>
     <template #form>
       <div class="search-area">
         <SelectField
@@ -28,12 +28,9 @@
           :options="centerFilterOptions"
           placeholder="선택"
           size="sm"
-          trigger-class="w-70"
+          trigger-class="w-50"
         />
       </div>
-    </template>
-    <template #btns>
-      <Button type="button" variant="secondary" size="sm">조회</Button>
     </template>
   </SearchWrapper>
 
@@ -41,26 +38,39 @@
     <template #layout-1>
       <!-- 기획서 [2-1] 저장 결과가 반영되는 목록 -->
       <LayoutPanel title="정신응급대응팀">
+        <template #actions>
+          <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelected">선택삭제</Button>
+          <Button type="button" variant="primary" size="sm" @click="onNew">신규</Button>
+        </template>
+        <!--
+          체크박스 다중선택(선택삭제)과 행 클릭(우측 상세)이 따로 논다 — PM-PUB-0414 와 같은 형태.
+          지금 상세에 떠 있는 행은 lp-grid-active-row 로 강조한다(체크 여부와 별개).
+        -->
         <TabulatorGrid
+          ref="gridRef"
           class="flex-1"
           :columns="columns"
           :data="rows"
+          select-mode="checkbox"
           height="100%"
           min-height="40rem"
+          :row-class="(row: any) => (row.id === activeId ? 'lp-grid-active-row' : undefined)"
           placeholder="등록된 정신응급대응팀 센터가 없습니다"
           show-pagination
           :items-per-page="10"
+          @row-click="onRowClick"
+          @row-selection-changed="selectedCount = $event.length"
         />
       </LayoutPanel>
     </template>
 
     <template #layout-2>
-      <LayoutPanel title="정신응급대응팀 등록">
+      <LayoutPanel title="상세정보">
+        <template #actions>
+          <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
+        </template>
         <!-- 기획서 [1] 지역 선택범위: 18개 지역 (폼 컴포넌트 안) -->
         <MentalCenterDetailForm :form="form" id-prefix="mental-new" />
-        <div class="form-actions">
-          <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
-        </div>
       </LayoutPanel>
     </template>
   </LayoutSplite>
@@ -68,7 +78,6 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -90,7 +99,11 @@ import {
   regionLabel,
   formatPhone,
   isValidCenterName,
+  type MentalCenterRow,
 } from '../composable/mentalEmergency'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 // KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!) — useBottomTabSetup 의 componentName 과 일치해야 한다.
 defineOptions({ name: 'PcPub0415' })
@@ -128,6 +141,13 @@ const rows = computed(() =>
   }),
 )
 
+/* ── 목록 ─────────────────────────────────────────────────────────────── */
+const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
+/** 체크된 행 수 — 선택삭제 전에 0건이면 막는다 */
+const selectedCount = ref(0)
+/** 지금 우측 상세에 떠 있는 행의 id(없으면 null) */
+const activeId = ref<number | null>(null)
+
 const columns: TabulatorGridColumn[] = [
   { title: 'NO', field: 'id', width: 70, hozAlign: 'center' },
   { title: '지역', field: 'region', width: 100, hozAlign: 'center', formatter: (cell: any) => regionLabel(cell.getValue()) },
@@ -136,24 +156,54 @@ const columns: TabulatorGridColumn[] = [
   { title: '병상수', field: 'bedTotal', width: 90, hozAlign: 'center' },
 ]
 
-/* ── 등록 ─────────────────────────────────────────────────────────────── */
+/* ── 상세 / 등록 ──────────────────────────────────────────────────────── */
 const form = reactive(createEmptyCenterForm())
 
+function fillForm(row: MentalCenterRow | null) {
+  Object.assign(form, row ? { ...row } : createEmptyCenterForm())
+  activeId.value = row?.id ?? null
+}
+
+/** @row-click 은 Tabulator RowComponent 를 넘긴다 — getData() 로 꺼낸다(CLAUDE.md §5) */
+function onRowClick(_e: Event, row: any) {
+  const data = (typeof row?.getData === 'function' ? row.getData() : row) as MentalCenterRow
+  fillForm(data)
+}
+
+/** 신규 — 별도 화면으로 가지 않고 우측 상세정보를 빈 폼으로 비운다(PM-PUB-0414 와 같은 방식) */
+function onNew() {
+  fillForm(null)
+}
+
 /** 기획서 [2] 저장하면 좌측 목록(2-1)에 바로 반영된다(도메인 싱글턴 스토어를 두 화면이 공유) */
-function onSave() {
+async function onSave() {
   if (!form.region || !form.name.trim()) {
-    toast.warning('필수 항목을 입력해 주세요.')
+    await dialog.alert({ title: '필수 항목을 입력해 주세요.', btnCancel: '확인' })
     return
   }
   // 기획서 "※ 센터명에 언더바를 제외한 특수문자 사용은 불가합니다"
   if (!isValidCenterName(form.name)) {
-    toast.warning('센터명에 언더바(_)를 제외한 특수문자는 사용할 수 없습니다.')
+    await dialog.alert({ title: '센터명에 언더바(_)를 제외한 특수문자는 사용할 수 없습니다.', btnCancel: '확인' })
     return
   }
-  store.saveCenter(form)
-  toast.success('저장되었습니다.')
-  // 연속 등록을 위해 폼을 비운다
-  Object.assign(form, createEmptyCenterForm())
+  // id 가 없으면 신규, 있으면 수정. 저장된 건이 그대로 상세에 남는다
+  const id = store.saveCenter(form)
+  form.id = id
+  activeId.value = id
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
+}
+
+/** 선택삭제 — 체크된 행을 스토어에서 지운다. 상세에 떠 있던 행이 지워지면 폼도 비운다 */
+async function onDeleteSelected() {
+  if (!selectedCount.value) {
+    await dialog.alert({ title: '삭제할 센터를 선택해 주세요.', btnCancel: '확인' })
+    return
+  }
+  const selected = (gridRef.value?.getSelectedData() ?? []) as MentalCenterRow[]
+  selected.forEach((row) => store.deleteCenter(row.id))
+  if (activeId.value != null && selected.some((row) => row.id === activeId.value)) fillForm(null)
+  selectedCount.value = 0
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
 // items[4] = '보호조치 대응팀' > '정신 응급 대응팀' (등록은 LNB 항목이 따로 없다)

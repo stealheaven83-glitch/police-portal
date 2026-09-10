@@ -1,4 +1,5 @@
 import { ref, type InjectionKey } from "vue";
+import { addDays, format, isValid, parse } from "date-fns";
 import { useWorkScheduleDialogs } from "./useWorkScheduleDialogs";
 import type { TabulatorGridColumn } from "@/components/custom/tabulator";
 
@@ -95,8 +96,6 @@ const WORKER_POOL: WorkerCandidate[] = [
 export function useWorkSchedule() {
   /** 이 화면에서 열리는 팝업(PC-LPO-0205~0213)들의 상태 — 같은 스토어로 provide 된다 */
   const dialogs = useWorkScheduleDialogs();
-  // 근무 사용자 선택 팝업 열기
-  const { workUserPickOpen } = dialogs;
 
   const workDate = ref("2026.08.11.");
   const shift = ref<"day" | "night">("day");
@@ -413,8 +412,9 @@ export function useWorkSchedule() {
   }
 
   function shiftWorkDate(days: number) {
-    // 표시용 목업이라 실제 날짜 연산 대신 자리표시만 갱신
-    void days;
+    const current = parse(workDate.value, "yyyy.MM.dd.", new Date());
+    if (!isValid(current)) return;
+    workDate.value = format(addDays(current, days), "yyyy.MM.dd.");
   }
 
   /* ------------------------------------------------------------------ *

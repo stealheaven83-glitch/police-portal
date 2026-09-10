@@ -24,7 +24,14 @@ export const localPoliceMenu: SideMenuConfig = {
     {
       name: "근무일지",
       children: [
-        { name: "근무일지(甲)" },
+        {
+          name: "근무일지(甲)",
+          children: [
+            { name: "근무지정표작성", path: "/views/lpo/PC-LPO-0202" },
+            { name: "기본주기설정", path: "/views/lpo/PC-LPO-0214" },
+            { name: "사고자/자원근무자 월별", path: "/views/lpo/PC-LPO-0215" },
+          ],
+        },
         { name: "근무일지(乙)" },
         { name: "월간근무표" },
       ],

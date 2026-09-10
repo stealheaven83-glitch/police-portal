@@ -33,7 +33,17 @@ export function useSideMenuSetup(config: string | SideMenuConfig | false) {
         sideMenuStore.setActiveChild(item.name)
         return
       }
-      const hit = item.children?.find((child) => child.path === route.path)
+      const descendants = item.children ?? []
+      const queue = [...descendants]
+      let hit
+      while (queue.length) {
+        const candidate = queue.shift()!
+        if (candidate.path === route.path) {
+          hit = candidate
+          break
+        }
+        if (candidate.children) queue.push(...candidate.children)
+      }
       if (hit) {
         sideMenuStore.setActiveChild(hit.name)
         // 활성 항목이 접힌 그룹 안에 있으면 보이지 않으므로 그 그룹을 펼친다

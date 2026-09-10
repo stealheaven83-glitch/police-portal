@@ -213,44 +213,60 @@ Figma 에는 동작이 안 그려져 있다. **사용자가 지정하지 않은 
 - **코드 스타일** — 줄 끝 세미콜론 없음 / 화살표 상수가 아닌 `function` 선언 / import 순서
   (vue → 외부 라이브러리 → 공통 컴포넌트 → 화면 composable → menu·tab) / 검색 옵션은 composable 에
   `export const xxxOptions` 로 두고 화면에서 import.
+- **템플릿의 prop 이름은 케밥케이스다** — `input-class` `trigger-class` `label-class` `row-class`
+  `select-mode`. Vue 는 `inputClass` 도 받지만 기준 파일과 대다수 화면이 케밥이라 섞이면 grep 이
+  갈린다(같은 prop 을 두 이름으로 찾게 된다). **`v-model` 뒤나 `:` 바인딩 안의 JS 식은 그대로
+  카멜케이스다** — 케밥은 속성 이름에만 해당한다.
 - `defineOptions({ name: 'XxxYyy' })` 는 `useBottomTabSetup` 의 `componentName` 과 **글자 하나까지
   같아야** KeepAlive 가 걸린다. 어긋나면 조용히 깨져서 발견이 늦다.
 
-## 4. 저장/삭제 피드백 — toast 가 기본, dialog 는 예외
-15개+ 화면(PC-COM-2301/2401, PM-COM-1001, PC-LPO-0501/0801, PC-PUB-0302/0303 등)이 쓰는 사실상 표준:
+> **아직 안 정해진 것 — `useDialog` import 를 어디 두나.** 지금 저장소가 셋으로 갈려 있다:
+> import 맨 마지막 39건 / menu·tab 앞 37건 / 중간 25건. 다수가 없어서 **한쪽으로 고치지 않는다** —
+> 새 화면에서는 아무 쪽이나 쓰되, 기존 파일의 위치를 옮기지는 말 것(101개 파일이 걸린다).
+> 정리하려면 별도 배치로 한 번에 한다.
+
+## 4. 저장/삭제 피드백 — 알림창(`dialog.alert`)이 기본, toast 는 쓰지 않는다
+성공·경고 피드백은 **알림창(AlertDialog2)** 으로 낸다. `useDialog().alert()` 가 그 진입점이고 `vue-sonner`
+`toast` 는 화면에서 import 하지 않는다(2026-09 에 51개 파일 146건을 일괄 전환했다 — 남아 있으면 옛 것).
 ```ts
-function onDeleteSelected() {
+import { useDialog } from '@/composable/dialog/dialog'
+const dialog = useDialog()
+
+async function onDeleteSelected() {
   if (!selectedCount.value) {
-    toast.warning('삭제할 OO을 선택해 주세요.')  // select-mode="checkbox" + @row-selection-changed 로 selectedCount 갱신
+    await dialog.alert({ title: '삭제할 OO을 선택해 주세요.', btnCancel: '확인' })  // select-mode="checkbox" + @row-selection-changed 로 selectedCount 갱신
     return
   }
   gridRef.value?.deleteSelected()
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
-function onSave() {
+async function onSave() {
   if (!form.groupName.trim() || !form.groupType) {
-    toast.warning('필수 항목을 입력해 주세요.')  // 필수값 누락도 toast 로 막고 return. alert 아님
+    await dialog.alert({ title: '필수 항목을 입력해 주세요.', btnCancel: '확인' })  // 필수값 누락도 alert 로 막고 return
     return
   }
   // 저장 로직(목업 배열 갱신)
-  toast.success('저장되었습니다.')
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
 }
 ```
+- **문구는 `title` 에, 버튼은 `btnCancel: '확인'` 하나.** 부연이 필요할 때만 `description` 을 더한다.
+  `alert` 는 Promise 라 감싸는 함수를 `async` 로 하고 `await` 한다 — 안 하면 뒤 코드(닫기·이동)가
+  알림창이 뜨기도 전에 실행된다. 표현식 본문 콜백(`onClick: () => dialog.alert(...)`)은 await 없이 둬도 된다.
 - **위 예시는 "짤 때 이 형태로"이지 "반드시 짜라"가 아니다.** 사용자가 지정하지 않은 동작은 비워 두고
   인계 메모에 적는다(서두).
 - **`dialog.confirm()` 은 되돌릴 수 없거나 연쇄로 다른 데이터까지 지울 때만**(PC-COM-2201 부서삭제
   "하위 부서도 함께 삭제", PC-COM-2402 팝업공지 "되돌릴 수 없음"). 일반 선택행 삭제/저장에는 붙이지
   않는다 — 클릭 한 번 더 강제하는 마찰이다. **"권한/관리자 설정처럼 민감해서"는 예외 사유가 아니다**
   (PC-COM-2201 권한저장 `onSave` 가 confirm 을 쓰는데 이것도 위반, 미수정).
-- **`dialog.alert()`** 는 그냥 지나치면 안 되는 버튼 하나짜리 강제 확인(예: PC-COM-2402
-  `PopupNoticeDialog` 의 필수입력 누락). 단순 성공/경고엔 과하다 — toast 를 쓴다.
 
 ### 사용자가 이 규칙과 다르게 지정하면 — **지정을 따르되 코드와 보고에 표시한다**
 "저장할 때 컨펌창"처럼 명시적으로 요구하면 그대로 만든다. 위 규칙은 지정이 없을 때의 기본값이다.
 ```ts
-// 사용자 지정: 저장 컨펌창 — CLAUDE.md §4 기본(toast)과 다르지만 요청대로 따름
+// 사용자 지정: 저장 컨펌창 — CLAUDE.md §4 기본(alert 만)과 다르지만 요청대로 따름
 const ok = await dialog.confirm({ title: '저장 하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
 ```
+기존 화면 주석 중 "§4(또는 §7) 기본은 toast 지만 사용자 지정으로 알림창" 이라 적힌 것은 이 규칙 이전
+문구다 — 지금은 알림창이 기본이므로 그 주석은 낡은 것이고, 코드는 규칙대로다.
 표시가 없으면 다음 사람이 규칙 위반으로 오해해 되돌린다(실제로 그럴 뻔했다).
 
 ## 5. 자주 겪는 함정

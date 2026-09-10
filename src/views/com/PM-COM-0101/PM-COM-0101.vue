@@ -68,7 +68,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { toast } from 'vue-sonner'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import { Checkbox } from '@/components/custom/checkbox'
 import { Button, ButtonGroup, type ButtonCaseItem } from '@/components/custom/button'
@@ -77,6 +76,9 @@ import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import CertRegisterDialog from './components/CertRegisterDialog.vue'
 import { useLogin } from './composable/PM-COM-0101'
 import styles from './style/PM-COM-0101.module.css'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 // KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!)
 defineOptions({
@@ -88,8 +90,8 @@ const router = useRouter()
 const { userId, password, saveId, locked, submit } = useLogin()
 
 async function onSubmit() {
-  await submit(() => {
-    toast.success('로그인 성공', { description: '환영합니다!' })
+  await submit(async () => {
+    await dialog.alert({ title: '로그인 성공', description: '환영합니다!', btnCancel: '확인' })
     router.push('/')
   })
 }

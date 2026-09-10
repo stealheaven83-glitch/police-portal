@@ -1361,7 +1361,6 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   flex-wrap:wrap;
   align-items:center;
   gap:1.6rem 3.6rem;
-  background:var(--Background-gray01);
   width: 100%;
 }
 .layout-wrap{
@@ -1448,11 +1447,15 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
 }
 .list-actions-txt p{
   color:var(--Base--point);
+  font-size: 1.5rem;
+  font-weight: 400;
 }
 .list-actions-txt p + p {
   margin-top:4px;
 }
-
+.list-actions.items-center{
+  align-items:center;
+}
 /*폼·패널 위 안내 문구 (※ 로 시작하는 주의사항 한 줄)*/
 .form-note{
   margin-bottom: 1.2rem;
@@ -1852,3 +1855,11 @@ html.theme-dark .rowgroup.notice .notice-list .noticeSwiper .swiper-nav .slide-a
   overflow-y: auto;
 }
 
+.alert-dialog-footer > button{
+  flex: 1;
+}
+@media (width >= 40rem) {
+  .alert-dialog-footer > button{
+    flex: 0;
+  }
+}

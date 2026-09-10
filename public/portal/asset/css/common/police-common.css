@@ -1,4 +1,3 @@
-
 @charset "UTF-8";
 
 /*
@@ -45,6 +44,21 @@
   font-size: 1.5rem;
   font-weight: 400;
   color: var(--Text-body_1);
+}
+
+/* 구역 안 하위 항목 제목 — '1. 촬영 경위' 처럼 번호가 붙는 줄(시안 15px/700/#1E2124) */
+.lp-heading-sm {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+}
+
+/* 그 하위 항목 묶음 — 상위 구역 제목보다 12 들여 쓴다(시안 13859:112638) */
+.lp-subsection {
+  margin-left: 1.2rem;
+}
+.lp-subsection + .lp-subsection {
+  margin-top: 2rem;
 }
 
 /* 시각·작성자 같은 부수 정보 */
@@ -150,8 +164,50 @@
 /* 라디오 여러 개가 한 줄에 16px 간격으로 놓일 때 (group-gap 에는 16px 이 없다) */
 .lp-radio-inline {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 1.6rem;
+}
+
+/*
+ * 선택지가 넓은 간격(32)으로 늘어서는 줄 — 시안의 라디오·체크박스 묶음(13724:123614 등).
+ * .lp-radio-inline(16) 은 한 항목 안에서 고르는 좁은 묶음이고, 이건 항목끼리 벌어지는 줄이다.
+ */
+.lp-choice-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.2rem 3.2rem;
+}
+/* 선택지 글자는 줄바꿈하지 않는다 — 폭이 좁아지면 글자가 접히는 대신 항목째로 다음 줄로 내려간다 */
+.lp-choice-row label {
+  white-space: nowrap;
+}
+
+/*
+ * 괄호로 묶인 선택지 줄 — '실내 ( 가정내 · … · 운송수단 내 ) 실외'(시안 13859:112989).
+ * 괄호를 라벨 글자에 넣으면 선택지가 비활성일 때 같이 흐려지므로 따로 그리고,
+ * 괄호 양옆은 6 만 띄운다(선택지끼리는 .lp-radio-inline 의 16).
+ */
+.lp-paren-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+.lp-paren-group > .lp-paren {
+  color: var(--Text-body_0);
+}
+
+/*
+ * [라디오/체크박스][입력칸] 이 한 줄로 붙는 묶음 — '기타 ____', '미표시(미고지) - 사유 ____'.
+ * 라벨을 입력칸(40) 높이에 맞춰 가운데로 되돌리는 규칙은 police-override.css 에 있다
+ * (RadioGroupItem 이 테일윈드 items-start 로 그려서 이 레이어로는 못 덮는다).
+ */
+.lp-choice-input {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
 }
 
 /* 한 줄에 좌우로 벌려 놓기 */
@@ -160,6 +216,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 1.2rem;
+}
+/* 그 줄의 항목 높이가 다를 때 아래로 맞춘다(제목 글자와 버튼의 밑선 맞춤) */
+.lp-row-bottom {
+  align-items: flex-end;
 }
 
 /* 라벨+입력 여러 쌍이 한 줄에 늘어서고 좁아지면 줄바꿈 */
@@ -196,11 +256,10 @@
 /* 페이지 본문이 넘칠 때 이 영역만 세로 스크롤.
    상세 패널 안쪽 스크롤은 police-style.css 의 .detail-scroll 을 쓴다(의도가 다름). */
 .lp-page-scroll {
-
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  width:calc(100% + 30px);
+  width: calc(100% + 30px);
 }
 
 /* ══ 아이콘 버튼 ══════════════════════════════════════════════ */
@@ -245,8 +304,8 @@
 
 /* ══ 구역 · 표 ════════════════════════════════════════════════ */
 
-.lp-section.line{
-  border-top:1px solid #1E2124;
+.lp-section.line {
+  border-top: 1px solid #1e2124;
 }
 .lp-section + .lp-section {
   margin-top: 3.2rem;
@@ -264,6 +323,84 @@
 .lp-table-gap {
   margin-top: 1.2rem;
 }
+/*
+ * 결재선 표의 한 칸 — [사람][상태·조작]이 세로로 쌓인다(시안 13724:123521: 본문 100 = 40 + 4 + 32 여백).
+ * 표 셀 기본이 가운데 정렬이라 글자는 가운데 그대로 두고 줄만 쌓는다.
+ */
+.lp-approval-cell {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  /* stretch 라야 안쪽 줄이 칸 폭을 다 쓴다(반려·결재 버튼이 칸을 꽉 채우는 자리) — 글자는 각 줄이 가운데로 맞춘다 */
+  align-items: stretch;
+  justify-content: center;
+  gap: 0.4rem;
+}
+/* 사람 줄 — 셀렉트(40)와 같은 높이라 이름이 셀렉트와 세로 가운데로 맞는다 */
+.lp-approval-person {
+  display: flex;
+  width: 100%;
+  min-height: 4rem;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--Text-body_1);
+}
+/* 상태 줄 — '결재대기'·'-' 같은 글자와 버튼(32)이 세로 가운데로 맞고, 사이는 12 */
+.lp-approval-status {
+  display: flex;
+  width: 100%;
+  min-height: 3.2rem;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--Text-body_1);
+}
+/* 결재자를 고르는 칸만 좌우로 8 더 들여 쓴다(시안: 셀 여백 12 + 8) */
+.lp-approval-pick {
+  width: 100%;
+  padding-inline: 0.8rem;
+}
+/* 반려·결재 두 버튼이 칸을 반씩 나눠 채운다(사이 12) */
+.lp-approval-decide {
+  display: flex;
+  width: 100%;
+  gap: 1.2rem;
+}
+
+/*
+ * 제한 안내 문구 — '＊ 사용자는 1명으로 제한합니다.' 처럼 제목 옆에 붙는 줄.
+ * .form-note 와 달리 15px·본문색(#1E2124)이고, 제목과 세로로 맞도록 아래 여백이 없다.
+ */
+.lp-note-dark {
+  margin-bottom: 0;
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
+}
+
+/* 라벨·문구를 본문색(#1E2124)으로 — 컴포넌트 기본색(회색)을 되돌릴 때 label-class 로 넘긴다 */
+.lp-text-dark {
+  color: var(--Text-body_0);
+}
+
+/*
+ * 입력 글자수 — 시안은 '0/4000' 에서 지금 글자수만 파랑이다.
+ * TextareaField 의 show-count 는 한 덩어리로 그려 색을 나눌 수 없어 화면에서 직접 그린다.
+ */
+.lp-char-count {
+  margin-top: 0.8rem;
+  font-size: 1.3rem;
+  color: var(--Text-body_1);
+  text-align: right;
+}
+.lp-char-count > b {
+  font-weight: 400;
+  color: var(--Base-primary);
+}
+
 /* 표 바로 위 안내 문구 — 위는 앞 요소에 붙고 아래로만 띄운다(.lp-table-gap 의 반대) */
 .lp-note-gap {
   margin-bottom: 2rem;
@@ -301,6 +438,10 @@
   border: 1px solid var(--Border_gray02);
   border-radius: var(--Radius-medium2);
   background: #fff;
+}
+/* 좌우 여백이 넓은 상자(시안 13724:123614 — 16 20). .lp-form-box 와 함께 쓴다 */
+.lp-form-box-wide {
+  padding: 1.6rem 2rem;
 }
 
 /* 설문 문항 목록 — 왼쪽에 번호+문항, 오른쪽에 선택지(예/아니오 등).
@@ -357,9 +498,9 @@
 }
 
 /* 결재선처럼 '완료'된 상태만 색으로 구분할 때 */
+/* 시안(13724:123533)은 글자용 초록(#00880B)에 굵기는 본문과 같다 */
 .lp-status-done {
-  color: var(--success);
-  font-weight: 600;
+  color: var(--Alert-success-text);
 }
 
 /* 아직 채울 것(도면·인증기준표 등)이 정해지지 않은 자리. 시안의 회색 상자를 그대로 잡아 둔다 */
@@ -392,10 +533,10 @@
   overflow: hidden;
   border: 1px solid var(--Border_gray02);
   border-radius: var(--Radius-medium2);
-  gap:0.6rem;
+  gap: 0.6rem;
 }
-.lp-pane-wrap{
-  padding:12px 12px 20px;
+.lp-pane-wrap {
+  padding: 12px 12px 20px;
 }
 .lp-pane {
   display: flex;
@@ -403,20 +544,35 @@
   min-width: 0;
   flex-direction: column;
 }
-.lp-pane + .lp-pane{
-  border-left:1px solid var(--Border_gray0);
+/*
+ * 칸 사이 6px 틈은 양쪽에 선이 하나씩 붙어 골처럼 보인다(시안·PC-COM-2205).
+ * 오른쪽 선은 뒤 칸의 border-left, 왼쪽 선은 앞 칸의 border-right 다.
+ * (앞 칸 선은 원래 .lp-pane-fixed 에만 있어서, 폭을 안 고정하는 칸에는 안 나왔다)
+ */
+.lp-pane + .lp-pane {
+  border-left: 1px solid var(--Border_gray0);
+}
+.lp-pane:not(:last-child) {
+  border-right: 1px solid var(--Border_gray02);
 }
 /* 좌측처럼 폭을 고정하는 칸 */
 .lp-pane-fixed {
   flex: 0 0 30rem;
   border-right: 1px solid var(--Border_gray02);
 }
+/*
+ * line-height 를 정수로 고정한다 — 기본값(normal)이면 17px 글자가 약 20.4px 이 되어
+ * 제목 바 높이가 42.4px 이 된다. 그러면 아래 표가 반 픽셀 위치에서 시작해 머리줄의
+ * 1px 가로선이 두 픽셀에 걸쳐 흐리게 칠해지고, 스크롤할 때 사라진 것처럼 보인다.
+ * 22(여백) + 22(줄 높이) = 44px.
+ */
 .lp-pane-title {
-  padding: 1.2rem 1.6rem;
+  line-height: 2.2rem;
+  padding: 1.1rem 2rem;
   border-bottom: 1px solid var(--Border_gray02);
   background-color: var(--Background-gray01);
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.7rem;
+  font-weight: 600;
   color: var(--Text-body_0);
 }
 
@@ -545,7 +701,6 @@
   margin: 0 auto;
 }
 
-
 .lp-content-panel {
   max-width: 120rem;
   margin: 4rem auto 0;
@@ -634,7 +789,7 @@
   height: 100%;
 }
 .lp-ai-answer-body {
-    position:relative;
+  position: relative;
   display: flex;
   align-items: stretch;
   gap: 2.4rem;
@@ -677,6 +832,44 @@
   flex-direction: column;
   gap: 1.2rem;
 }
+
+/*
+ * 안내 상자(Alert) 안의 번호 목록 — '1. 2. 3.' 으로 이어지는 작성 요령.
+ * .lp-dot-list 와 의도가 다르다: 그쪽은 점 목록이고 이쪽은 순서가 뜻을 갖는 번호 목록이다.
+ * 쓰는 곳: PM-PUB-0701 보고서 작성 요령
+ */
+.lp-guide-list {
+  padding-left: 1.8rem;
+  list-style: decimal;
+}
+.lp-guide-list > li {
+  line-height: 1.6;
+}
+
+/*
+ * 입력 옆에 붙는 단위 글자 — '(발)' '회' '명' 처럼 값의 단위만 적는 자리.
+ * .lp-unit-row 안에서 쓴다(그 클래스는 배치만 하고 글자 모양은 정하지 않는다).
+ */
+.lp-unit-text {
+  font-size: 1.5rem;
+  color: var(--Text-body_1);
+}
+
+/*
+ * 상자 안에서 한 항목을 여는 작은 라벨 — 앞에 가운뎃점이 붙는다(시안 13685:118182).
+ * 라벨-값 표가 아니라 상자(.lp-form-box) 안 한 줄짜리 라벨이라 InfoField 를 쓸 수 없다.
+ */
+.lp-dot-item {
+  position: relative;
+  padding-left: 1.2rem;
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
+}
+.lp-dot-item::before {
+  content: "·";
+  position: absolute;
+  left: 0.2rem;
+}
 .lp-dot-list > li {
   position: relative;
   padding-left: 1.1rem;
@@ -695,7 +888,7 @@
   border-radius: 50%;
 }
 .lp-answer-note {
-  margin-top:auto;
+  margin-top: auto;
 
   padding-top: 2.4rem;
   font-size: 1.5rem;
@@ -710,7 +903,7 @@
   flex: 1 1 auto;
   padding-left: 2.4rem;
   border-left: 1px solid var(--Border_gray02);
-  max-width:31.7rem;
+  max-width: 31.7rem;
 }
 .lp-ref-list {
   display: flex;
@@ -730,15 +923,15 @@
   margin-top: 1.2rem;
   font-size: 1.3rem;
   line-height: 1.5;
-  color: var(  --info);
+  color: var(--info);
   text-decoration: underline;
-  white-space: nowrap; 
-  overflow: hidden; 
+  white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
-  width:100%;
+  width: 100%;
 }
-.lp-ref-link:hover{
-  color:var(--info);
+.lp-ref-link:hover {
+  color: var(--info);
 }
 /* ══ 상세 폼 델타 (police-style.css 원본 클래스와 함께 쓴다) ══ */
 
@@ -798,7 +991,9 @@
   border-radius: var(--Radius-xlarge2);
   background: var(--white);
   cursor: pointer;
-  transition: background-color 0.15s, border-color 0.15s;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
 }
 .lp-memo-card:hover,
 .lp-memo-card:focus-within {
@@ -812,7 +1007,9 @@
 .lp-memo-card-selected {
   border-width: 0.2rem;
   border-color: var(--Base-primary);
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.05), 0 4px 4px rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 0 1px rgba(0, 0, 0, 0.05),
+    0 4px 4px rgba(0, 0, 0, 0.08);
 }
 .lp-memo-card-check {
   display: flex;
@@ -1061,12 +1258,14 @@
   text-align: center;
   vertical-align: middle;
   background: var(--white);
-  border-right: 0.1rem solid var(--Border_gray03);
   border-bottom: 0.1rem solid var(--Border_gray03);
 }
-.lp-cert-table th:last-child,
-.lp-cert-table td:last-child {
+.lp-cert-table tr:last-child th:last-child,
+.lp-cert-table tr:last-child td:last-child {
   border-right: 0;
+}
+.lp-cert-table .border-right{
+  border-right:0.1rem solid var(--Border_gray03)!important;
 }
 /* 머리글: 위는 본문색 실선, 아래는 시안 border/gray-2(#8a949e — 색이 같은 토큰이 이것뿐이다) */
 .lp-cert-table thead th {
@@ -1074,6 +1273,10 @@
   color: var(--Text-body_1);
   border-top: 0.1rem solid var(--Text-body_0);
   border-bottom: 0.1rem solid var(--Border_input01);
+}
+.lp-cert-table td,
+.lp-cert-table tbody th
+{border-right: 0.1rem solid var(--Border_gray03);
 }
 /* 문항 칸만 왼쪽 정렬 — 번호는 ol 이 붙인다 */
 .lp-cert-question {
@@ -1084,7 +1287,8 @@
   list-style: decimal;
 }
 /* 비고 칸 — 시안 문구의 줄바꿈을 그대로 살린다 */
-.lp-cert-note {
+/* 위 `.lp-cert-table td` 가 text-align:center 를 걸고 있어 특정도를 맞춰야 왼쪽정렬이 먹는다 */
+.lp-cert-table td.lp-cert-note {
   text-align: left;
   white-space: pre-line;
 }
@@ -1100,9 +1304,14 @@
   width: 24rem;
 }
 /* 총점 옆 초록 안내문 */
+/* 총점 옆 인증기준 판정 문구 — 적합/부적합 두 상태가 같은 자리에 뜬다 */
 .lp-cert-pass {
   font-size: 1.3rem;
   color: var(--Alert-success-text);
+}
+.lp-cert-fail {
+  font-size: 1.3rem;
+  color: var(--Alert-danger-text);
 }
 
 /* ── 메모(개인수첩) 등록·상세 폼 ─────────────────────────────
@@ -1294,8 +1503,9 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0;
-  font-size: 1.4rem;
-  color: var(--Text-body_1);
+  /* 시안(13437:135667) — 공용 FileUpload 의 '삭제'와 같은 15px / #1E2124 */
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
   background: none;
   border: 0;
   cursor: pointer;
@@ -1339,6 +1549,18 @@
 }
 
 /* 표 셀 본문 아래에 붙는 보조 한 줄(작성일시 등) — 시안은 셀 오른쪽 끝에 붙는다 */
+/*
+ * 표 한 칸에 여러 줄이 들어가는 묶음 — 강조 한 줄 + 설명 한 줄, 제목 + 점 목록 등.
+ * 표 셀은 가운데 정렬이 기본이라 이 묶음만 왼쪽으로 되돌린다.
+ * 오른쪽 아래에 보조 한 줄이 붙는 형태는 .lp-log-cell 이다(의도가 다르다).
+ */
+.lp-cell-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  text-align: left;
+}
+
 .lp-cell-note {
   margin-top: 0.4rem;
   font-size: 1.3rem;
@@ -2022,6 +2244,98 @@
   margin-top: 1.6rem;
 }
 
+/*
+ * 사진 4칸(간이 범죄예방진단 상세 - 취약/개선 상황사진).
+ * Figma 11125:74691 기준 — 112사건 표 마지막 줄에 붙는 칸이라 표와 같은 여백(1.2rem)·아래선을 쓴다.
+ * 이름에 lp- 를 붙이는 이유: police-style.css 원본이 .photo-box / .photo-empty 를 이미
+ * 다른 뜻(인사관리 증명사진 12rem 칸)으로 쓰고 있어서, 접두사가 없으면 그 화면들이 깨진다.
+ */
+.lp-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2rem;
+  padding: 1.2rem;
+  border-bottom: 1px solid var(--Border_gray03);
+  list-style: none;
+}
+
+@media (max-width: 64rem) {
+  .lp-photo-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 36rem) {
+  .lp-photo-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.lp-photo-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.lp-photo-label {
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+}
+
+.lp-photo-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 10rem;
+  border: 1px solid var(--Border_gray02);
+  background: #fff;
+  overflow: hidden;
+}
+
+.lp-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 사진이 없을 때 시안이 넣는 그래픽 — 아이콘 + 'No Image' 글자가 각각 별도 SVG 다 */
+.lp-photo-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.lp-photo-empty-icon {
+  width: 5.76rem;
+  height: 5.76rem;
+}
+
+.lp-photo-empty-label {
+  width: 6.56rem;
+  height: 1.33rem;
+}
+
+.lp-photo-meta {
+  margin: 0;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  color: var(--Text-body_1);
+}
+
+.lp-photo-actions {
+  display: flex;
+  gap: 0.6rem;
+  padding-top: 0.4rem;
+}
+
+/* 버튼 둘이 칸 폭을 반씩 나눠 갖는다(시안). Button 의 min-width 는 padding prop 이 0 으로 푼다 */
+.lp-photo-actions > * {
+  flex: 1 1 0;
+}
+
 /* ── InfoField 값 칸 안에 들어가는 정적 표(FieldTable) ───────────────────── */
 /* 헤더가 InfoTable 라벨 칸과 같은 회색이라 이어 붙었을 때 한 덩어리로 보인다.
    본문에 단독으로 놓는 표(TableWrapper)와 달리 상단 진한 선·hover 강조가 없다 */
@@ -2114,12 +2428,12 @@
   font-size: 1.7rem;
   font-weight: 600;
   line-height: 1.5;
-  height:4.8rem;
+  height: 4.8rem;
   color: var(--Text-body_0);
 }
 
-.lp-grid-title + .tabulator-root{
-  margin-top:1.6rem;
+.lp-grid-title + .tabulator-root {
+  margin-top: 1.6rem;
 }
 
 .lp-grid-title-label {
@@ -2399,22 +2713,24 @@
 }
 
 /*참고사항 페이지*/
-.info-label{
- 
+.info-label {
 }
 .info-label-group {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:2.4rem;
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2.4rem;
 }
-.info-label-group + .info-label-group{
-  margin-top:1.2rem;
+.info-label-group + .info-label-group {
+  margin-top: 1.2rem;
 }
 
-.info-label-group .info-label-txt{
+.info-label-group .info-label-txt {
   font-size: 1.5rem;
+  /* 라벨 열을 가장 긴 문구(강력(강간, 강제추행) — 1.5rem 에서 약 13.8rem)에 맞춰 고정한다.
+     모든 줄의 라벨 폭이 같아져 오른쪽 Stepper 가 세로로 정렬된다 */
+  flex: 0 0 15rem;
+  white-space: nowrap;
 }
 
 /* 표 셀 안에 들어가는 여러 줄 입력칸 (근무일지 신규 행의 활동내역 — 시안 12622:71109).
@@ -2436,4 +2752,182 @@
 .lp-cell-textarea:focus {
   border-color: var(--Border_primary);
   outline: none;
+}
+
+/* 날짜 선택이 있는 액션바의 정렬 및 줄바꿈 */
+.lp-date-actions {
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* 근무일 선택 영역 — calendar-area 이름은 기존 사용자 지정 명칭 유지 */
+.calendar-area {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin-right: auto;
+}
+.calendar-area-date,
+.calendar-area-date-value,
+.calendar-area-group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.calendar-area-date-value {
+  font-size: 1.9rem;
+  font-weight: 600;
+}
+.calendar-area .lp-date-borderless,
+.calendar-area .lp-date-borderless:focus-visible {
+  border: 0;
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: var(--Text-body_0);
+}
+.calendar-area-divider {
+  flex: 0 0 1px;
+  height: 1.6rem;
+  margin: 0 0.6rem;
+  background: var(--Border_gray02);
+}
+.calendar-area-options {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* 레이아웃 하단 폼 타이틀*/
+.form-title {
+  margin-bottom: 1.2rem;
+  font-size: 1.7rem;
+  line-height: 1.5;
+  font-weight: 700;
+
+}
+/* ══ 게시판(PM-COM-1101~2104) ══════════════════════════════════════════════ */
+/* 사용자 지정: 접두사를 lp- 가 아니라 board- 로 쓴다(CLAUDE.md §2 기본과 다르지만 요청대로).
+   공지사항(PM-COM-1001~1004)이 쓰는 .lp-notice-* 와 모양이 같지만, 그쪽은 먼저 만들어진
+   남의 화면이라 합치지 않고 그대로 둔다(CLAUDE.md §1). */
+
+/* ── 게시판 글 상세 ─────────────────────────────────────────────────────── */
+.board-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-bottom: 3.2rem;
+}
+.board-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem;
+}
+.board-dept {
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
+}
+.board-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--Text-body_0);
+}
+.board-meta {
+  padding-bottom: 1.6rem;
+  border-bottom: 0.1rem solid var(--Border_gray02);
+}
+/* 본문 대표 이미지 자리 — Figma 는 회색 박스로만 그려져 있다 */
+.board-thumb {
+  width: 100%;
+  max-width: 54rem;
+  height: 28rem;
+  margin: 0 auto;
+  background: var(--Background-gray01);
+}
+.board-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.board-detail-actions {
+  padding-top: 1.6rem;
+  border-top: 0.1rem solid var(--Border_gray02);
+}
+
+/* ── 게시판 글 등록/수정 폼 ─────────────────────────────────────────────── */
+/* 본문 폭을 꽉 쓴다(가운데 정렬 폼인 .lp-narrow-form 과 다르다) */
+.board-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-bottom: 3.2rem;
+}
+.board-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  padding-top: 0.4rem;
+}
+/* 한 줄에 두 칸이 나란히 오는 폼 행(중요공지 + 기간, 지방청 + 주차) */
+.board-form-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.6rem;
+}
+.board-form-grow {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* ── 목록 위 카테고리 칩 탭줄 (Q&A) ─────────────────────────────────────── */
+/* 배치는 FilterChipGroup 이 이미 flex 로 한다 — 여기서는 아래 여백만 준다 */
+.board-category-tabs {
+  margin-bottom: 1.6rem;
+}
+
+/* ── 목록 위 도구줄 — 왼쪽 '내가 쓴 글' 토글, 오른쪽 버튼 ───────────────── */
+.board-list-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.6rem;
+  margin-top: 1.2rem;
+}
+.board-mine-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
+}
+
+/* 목록 '번호' 칸에 들어가는 고정공지 배지. Tabulator 포매터가 HTML 문자열로 만들어
+   넣기 때문에 컴포넌트(Badge)를 못 쓴다 — 클래스로 같은 모양을 낸다 */
+.board-pin-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+  padding: 0 0.8rem;
+  border-radius: 0.4rem;
+  background: var(--Base-primary);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* 검색영역이 두 줄일 때 첫 줄 아래 여백. 화면 템플릿에 mb-4 를 직접 쓰지 않으려고 둔다(CLAUDE.md §1) */
+.board-search-row {
+  margin-bottom: 1.6rem;
+}
+
+/* 공지사항 목록의 '중요' 배지 — 고정공지(.board-pin-badge, 파랑)와 달리 빨강이다.
+   Badge 컴포넌트의 color="danger" variant="solid" 과 같은 --danger 를 쓴다 */
+.board-pin-badge-danger {
+  background: var(--danger);
 }

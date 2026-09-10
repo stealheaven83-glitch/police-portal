@@ -41,7 +41,8 @@
     </template>
   </SearchWrapper>
 
-  <LayoutSplit :count="2" :widths="[52, 48]" :min-widths="[35, 32]">
+  <!-- 체크리스트(오른쪽)는 표가 있어 380px 아래로 못 줄인다. 목록은 제한 없음 -->
+  <LayoutSplit :count="2" :widths="[45, 55]" :min-widths-px="['auto', 380]">
     <template #layout-1>
       <LayoutPanel title="인증 목록">
         <template #actions>
@@ -60,7 +61,6 @@
           class="flex-1"
           height="100%"
           layout="fitDataFill"
-          :row-class="rowClass"
           placeholder="조회된 인증 내역이 없습니다"
           show-pagination
           :items-per-page="10"
@@ -73,14 +73,14 @@
       <LayoutPanel title="체크리스트">
         <template #actions>
           <Button type="button" variant="primary" size="sm" @click="onEdit">
-            {{ editing ? '저장' : '수정' }}
+            수정
           </Button>
         </template>
 
         <ScrollWrapper>
           <section class="lp-section" aria-labelledby="cert-general-heading">
-            <h3 id="cert-general-heading" class="lp-heading-md lp-section-title">일반현황</h3>
-            <InfoTable :columns="2" size="100">
+            <h3 id="cert-general-heading" class="form-title">일반현황</h3>
+            <InfoTable :columns="2" size="120">
               <!-- 주소는 시안에서 오른쪽 두 칸(시설물명 · 이용/규모)에 걸쳐 있다 -->
               <InfoField label="주소" :row-span="2">
                 <span class="readonly-text">{{ checklist.address }}</span>
@@ -90,7 +90,6 @@
                   id="cert-facility-name"
                   v-model="checklist.facilityName"
                   size="sm"
-                  :disabled="!editing"
                   class="!space-y-0 flex-1"
                   input-class="w-full"
                 />
@@ -100,7 +99,6 @@
                   id="cert-usage-scale"
                   v-model="checklist.usageScale"
                   size="sm"
-                  :disabled="!editing"
                   class="!space-y-0 flex-1"
                   input-class="w-full"
                 />
@@ -112,7 +110,6 @@
                   v-model="checklist.checklistType"
                   :options="checklistTypeOptions"
                   size="sm"
-                  :disabled="!editing"
                   trigger-class="w-full"
                   class="!space-y-0 flex-1"
                 />
@@ -122,7 +119,6 @@
                   id="cert-approval-date"
                   v-model="checklist.approvalDate"
                   size="sm"
-                  :disabled="!editing"
                   class="flex-1"
                   input-class="w-full"
                 />
@@ -131,14 +127,13 @@
           </section>
 
           <section class="lp-section" aria-labelledby="cert-owner-heading">
-            <h3 id="cert-owner-heading" class="lp-heading-md lp-section-title">시설주 정보</h3>
+            <h3 id="cert-owner-heading" class="form-title">시설주 정보</h3>
             <InfoTable :columns="2" size="100">
               <InfoField label="성명" for="cert-owner-name">
                 <InputField2
                   id="cert-owner-name"
                   v-model="checklist.ownerName"
                   size="sm"
-                  :disabled="!editing"
                   class="!space-y-0 flex-1"
                   input-class="w-full"
                 />
@@ -149,7 +144,6 @@
                   v-model="checklist.ownerPhone"
                   size="sm"
                   type="tel"
-                  :disabled="!editing"
                   class="!space-y-0 flex-1"
                   input-class="w-full"
                 />
@@ -158,36 +152,43 @@
           </section>
 
           <section class="lp-section" aria-labelledby="cert-crime-heading">
-            <h3 id="cert-crime-heading" class="lp-heading-md lp-section-title">범죄발생 현황</h3>
+            <h3 id="cert-crime-heading" class="form-title">범죄발생 현황</h3>
             <InfoTable :columns="2" size="100">
               <InfoField label="피해여부">
                 <RadioGroup
                   v-model="checklist.damaged"
-                  :disabled="!editing"
                   :class="infoStyles['info-table-radio']"
                 >
                   <RadioGroupItem value="yes" label="있음" />
                   <RadioGroupItem value="no" label="없음" />
                 </RadioGroup>
               </InfoField>
-              <!-- Stepper 는 role="group" + aria-label 이라 연결할 id 가 없다 — for 를 주지 않는다 -->
-              <InfoField label="피해횟수">
-                <Stepper
+              <InfoField label="피해횟수" for="cert-damage-count">
+                <InputField2
+                  id="cert-damage-count"
                   v-model="checklist.damageCount"
-                  :min="0"
-                  label="피해횟수"
-                  :disabled="!editing"
+                  size="sm"
+                  type="number"
+                  min="0"
+                  class="!space-y-0 flex-1"
+                  input-class="w-full"
                 />
               </InfoField>
             </InfoTable>
           </section>
 
           <section class="lp-section" aria-labelledby="cert-standard-heading">
-            <h3 id="cert-standard-heading" class="lp-heading-md lp-section-title">인증기준표</h3>
-
+            <h3 id="cert-standard-heading" class="form-title">인증기준표</h3>
             <!-- ① 배점 요약 — 시안이 정한 고정 기준이라 입력이 없다 -->
             <div class="lp-cert-scroll">
               <table class="lp-cert-table" aria-label="평가분야별 항목수와 배점">
+                <colgroup>
+                  <col width="100"/>
+                  <col width="122"/>
+                  <col width="80"/>
+                  <col width="100"/>
+                  <col />
+                </colgroup>
                 <thead>
                   <tr>
                     <th colspan="2" scope="col">평가분야</th>
@@ -221,7 +222,7 @@
                   <tr class="lp-cert-total">
                     <th colspan="2" scope="row">합계</th>
                     <td>23</td>
-                    <td>40점</td>
+                    <td class="border-right">40점</td>
                   </tr>
                 </tbody>
               </table>
@@ -230,6 +231,12 @@
             <!-- ② 기본 항목 -->
             <div class="lp-cert-scroll">
               <table class="lp-cert-table" aria-label="기본 항목 평가">
+                <colgroup>
+                  <col width="160"/>
+                  <col width=""/>
+                  <col width="228"/>
+                  <col />
+                </colgroup>
                 <thead>
                   <tr>
                     <th scope="col">분야</th>
@@ -253,7 +260,6 @@
                         <td>
                           <RadioGroup
                             v-model="checklist.basicScores[question.key]"
-                            :disabled="!editing"
                             :class="infoStyles['info-table-radio']"
                           >
                             <RadioGroupItem value="good" label="양호" />
@@ -271,6 +277,12 @@
             <!-- ③ 가점 항목 — 분야가 '가점' 하나뿐이라 항목 라벨 열이 없다 -->
             <div class="lp-cert-scroll">
               <table class="lp-cert-table" aria-label="가점 항목 평가">
+                <colgroup>
+                  <col width="60"/>
+                  <col width=""/>
+                  <col width="180"/>
+
+                </colgroup>
                 <thead>
                   <tr>
                     <th scope="col">분야</th>
@@ -287,7 +299,6 @@
                     <td>
                       <RadioGroup
                         v-model="checklist.bonusScores[item.key]"
-                        :disabled="!editing"
                         :class="infoStyles['info-table-radio']"
                       >
                         <RadioGroupItem value="good" label="양호" />
@@ -305,13 +316,13 @@
                 <Textarea
                   id="cert-memo"
                   v-model="checklist.memo"
-                  :disabled="!editing"
                   class="w-full"
                 />
               </InfoField>
               <InfoField label="총점">
                 <span class="readonly-text">{{ totalScore }}</span>
                 <span v-if="meetsCertStandard" class="lp-cert-pass">＊ 인증기준에 적합합니다.</span>
+                <span v-else class="lp-cert-fail">＊ 인증기준에 부적합합니다.</span>
               </InfoField>
               <InfoField label="인증여부" for="cert-result">
                 <SelectField
@@ -320,7 +331,6 @@
                   :options="certResultOptions"
                   placeholder="선택"
                   size="sm"
-                  :disabled="!editing"
                   trigger-class="w-44"
                   class="!space-y-0"
                 />
@@ -344,7 +354,6 @@ import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
-import Stepper from '@/components/custom/input/Stepper.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import { DateRangePicker } from '@/components/custom/datepicker'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
@@ -355,7 +364,6 @@ import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tab
 import LayoutSplit from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
 import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
-import { useDialog } from '@/composable/dialog/dialog'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { publicSafetyMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
@@ -392,16 +400,12 @@ const {
   registeredTo,
   certificationType,
   rows,
-  activeRowKey,
   checklist,
-  editing,
   totalScore,
   meetsCertStandard,
   selectRow,
   createRow,
 } = useExcellentFacilityCertification()
-
-const dialog = useDialog()
 
 /* 배점표의 배점·비고 칸이 세로로 몇 줄을 묶는지 — 세부항목 줄 수의 합이다 */
 const certBasicRowCount = certScoreGroups.reduce((count, group) => count + group.items.length, 0)
@@ -421,11 +425,6 @@ const listColumns: TabulatorGridColumn[] = [
   { title: '인증일자', field: 'certifiedAt', width: 120, hozAlign: 'center' },
 ]
 
-/** 지금 우측 체크리스트에 떠 있는 행만 배경으로 표시한다 */
-function rowClass(row: CertificationRow) {
-  return row.rowKey === activeRowKey.value ? 'lp-grid-active-row' : undefined
-}
-
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 
 /** @row-click 은 Tabulator RowComponent 를 넘긴다 — getData() 로 꺼낸다(CLAUDE.md §6) */
@@ -439,18 +438,14 @@ function onDownloadExcel() {
   gridRef.value?.download('csv', `우수시설인증_${today}.csv`)
 }
 
-/** 시안의 '수정' 버튼은 조회 ↔ 편집을 오간다. 편집 상태에서 누르면 저장이다 */
-async function onEdit() {
-  if (!editing.value) {
-    editing.value = true
-    return
-  }
-  // 사용자 지정: 저장 전 컨펌창을 먼저 띄운다 (§7 기본은 컨펌 없이 바로 저장)
-  const result = await dialog.confirm({ title: '저장 하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
-  if (!result.confirmed) return
-  editing.value = false
-  await dialog.alert({ title: '저장 되었습니다.', btnCancel: '확인' })
-}
+/**
+ * 체크리스트는 진입 즉시 입력 가능하다(조회/편집 토글 없음). '수정'은 곧 저장이다.
+ *
+ * 사용자 지정: 컨펌창·완료 알림창을 **둘 다 띄우지 않는다**. toast 도 쓰지 않는다
+ * (CLAUDE.md §4 기본은 toast 지만 요청대로 따름). 실제 저장은 개발팀 연동 대상이라
+ * 지금은 비어 있다 — 빈 핸들러가 버그가 아니다(CLAUDE.md 서두).
+ */
+function onEdit() {}
 
 useBottomTabSetup({
   value: 'PM-PUB-0113',

@@ -1,6 +1,6 @@
 import { computed, reactive, ref, type InjectionKey } from 'vue'
-import { toast } from 'vue-sonner'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
+import { useDialog } from '@/composable/dialog/dialog'
 
 export interface SelectOption {
   label: string
@@ -114,14 +114,20 @@ export const typeOptions: SelectOption[] = [
   ...flattenTypes(diagnosisTypeTree),
 ]
 
+/*
+ * value 는 항목마다 달라야 한다 — 같은 값이 여럿이면 하나를 골랐을 때 그 값을 가진 항목이
+ * 모두 선택 표시되고, 저장값으로도 서로 구분되지 않는다.
+ * ⚠ '취약지역으로' / '판단' 은 한 문장("취약지역으로 판단")이 두 줄로 잘린 것으로 보인다 —
+ *   Figma 대조 후 한 항목으로 합칠지 정해야 한다(지금은 시안 문구 그대로 둔다).
+ */
 export const reasonOptions: SelectOption[] = [
   { label: '전체', value: 'all' },
-  { label: '주민요청', value: 'patrol' },
-  { label: '침입범죄발생', value: 'report' },
-  { label: '취약지역으로', value: 'request' },
-  { label: '판단', value: 'request' },
-  { label: '관서장지시', value: 'request' },
-  { label: '지역안전순찰', value: 'request' },
+  { label: '주민요청', value: 'resident-request' },
+  { label: '침입범죄발생', value: 'burglary' },
+  { label: '취약지역으로', value: 'vulnerable-area' },
+  { label: '판단', value: 'judgment' },
+  { label: '관서장지시', value: 'chief-order' },
+  { label: '지역안전순찰', value: 'safety-patrol' },
 ]
 
 export const notifiedOptions: SelectOption[] = [
@@ -166,6 +172,7 @@ function createRows(total: number): DiagnosisRow[] {
  * 않으므로 선택 행에서 파생시키기만 하고 별도 상태로 들고 있지 않는다.
  */
 export function useDiagnosisList() {
+  const dialog = useDialog()
   /** 시안은 상세조회가 접힌 상태로 열린다 */
   const advancedSearchOpen = ref(false)
 
@@ -208,14 +215,14 @@ export function useDiagnosisList() {
     selectedRow.value = row
   }
 
-  function search() {
+  async function search() {
     // TODO: API 연동. 지금은 더미 목록이라 조회 조건이 결과에 반영되지 않는다.
-    toast.success('조회되었습니다.')
+    await dialog.alert({ title: '조회되었습니다.', btnCancel: '확인' })
   }
 
-  function openNew() {
+  async function openNew() {
     // TODO: 진단신규(등록) 팝업 PM-PUB-0107 연결
-    toast.info('신규 등록 화면은 준비 중입니다.')
+    await dialog.alert({ title: '신규 등록 화면은 준비 중입니다.', btnCancel: '확인' })
   }
 
   return {

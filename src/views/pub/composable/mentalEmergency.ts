@@ -74,20 +74,31 @@ export function isValidCenterName(name: string): boolean {
   return CENTER_NAME_ALLOWED.test(name)
 }
 
+/** 전국 주취자 응급의료센터 — 사용자가 준 표(지역 → 의료기관) 순서 그대로. 센터명 셀렉트가 이 목록에서 파생된다.
+ *  `drunkCenter.ts` 목업과 같은 목록이지만 합치지 않는다(CLAUDE.md §1).
+ *  연락처·병상 수는 표에 없어 목업이다: 지역번호만 실제이고 나머지 자리(000-00NN)는 자리표시자다 */
 function createMockCenters(): MentalCenterRow[] {
   return [
-    { id: 12, region: 'seoul', name: '정신응급대응센터(국립정신건강센터)', phone1: '02', phone2: '2204', phone3: '0114', bedTotal: 3 },
-    { id: 11, region: 'busan', name: '정신응급대응센터(부산의료원)', phone1: '051', phone2: '899', phone3: '5000', bedTotal: 3 },
-    { id: 10, region: 'chungnam', name: '정신응급대응센터(천안의료원)', phone1: '041', phone2: '590', phone3: '2620', bedTotal: 2 },
-    { id: 9, region: 'daegu', name: '정신응급대응센터(대구의료원)', phone1: '053', phone2: '560', phone3: '7575', bedTotal: 4 },
-    { id: 8, region: 'incheon', name: '정신응급대응센터(인천의료원)', phone1: '032', phone2: '580', phone3: '6000', bedTotal: 2 },
-    { id: 7, region: 'gwangju', name: '정신응급대응센터(빛고을전남대병원)', phone1: '062', phone2: '670', phone3: '3000', bedTotal: 3 },
-    { id: 6, region: 'daejeon', name: '정신응급대응센터(대전보훈병원)', phone1: '042', phone2: '939', phone3: '0114', bedTotal: 2 },
-    { id: 5, region: 'ulsan', name: '정신응급대응센터(울산병원)', phone1: '052', phone2: '259', phone3: '5000', bedTotal: 3 },
-    { id: 4, region: 'gyeonggi-south', name: '정신응급대응센터(수원의료원)', phone1: '031', phone2: '888', phone3: '0114', bedTotal: 5 },
-    { id: 3, region: 'gyeonggi-north', name: '정신응급대응센터(의정부의료원)', phone1: '031', phone2: '828', phone3: '5000', bedTotal: 3 },
-    { id: 2, region: 'gangwon', name: '정신응급대응센터(강원대병원)', phone1: '033', phone2: '258', phone3: '2000', bedTotal: 2 },
-    { id: 1, region: 'jeju', name: '정신응급대응센터(제주의료원)', phone1: '064', phone2: '720', phone3: '2222', bedTotal: 2 },
+    { id: 1, region: 'seoul', name: '국립중앙의료원', phone1: '02', phone2: '000', phone3: '0001', bedTotal: 2 },
+    { id: 2, region: 'seoul', name: '서울의료원', phone1: '02', phone2: '000', phone3: '0002', bedTotal: 3 },
+    { id: 3, region: 'seoul', name: '서울특별시 보라매병원', phone1: '02', phone2: '000', phone3: '0003', bedTotal: 4 },
+    { id: 4, region: 'seoul', name: '서울적십자병원', phone1: '02', phone2: '000', phone3: '0004', bedTotal: 2 },
+    { id: 5, region: 'seoul', name: '서울특별시 동부병원', phone1: '02', phone2: '000', phone3: '0005', bedTotal: 3 },
+    { id: 6, region: 'seoul', name: '서울특별시 서남병원', phone1: '02', phone2: '000', phone3: '0006', bedTotal: 2 },
+    { id: 7, region: 'incheon', name: '인천의료원', phone1: '032', phone2: '000', phone3: '0007', bedTotal: 3 },
+    { id: 8, region: 'daegu', name: '대구의료원', phone1: '053', phone2: '000', phone3: '0008', bedTotal: 2 },
+    { id: 9, region: 'ulsan', name: '중앙병원', phone1: '052', phone2: '000', phone3: '0009', bedTotal: 4 },
+    { id: 10, region: 'busan', name: '부산의료원', phone1: '051', phone2: '000', phone3: '0010', bedTotal: 3 },
+    { id: 11, region: 'gyeonggi-south', name: '경기도의료원 수원병원', phone1: '031', phone2: '000', phone3: '0011', bedTotal: 5 },
+    { id: 12, region: 'gyeonggi-south', name: '부천다니엘병원', phone1: '032', phone2: '000', phone3: '0012', bedTotal: 2 },
+    { id: 13, region: 'gyeonggi-north', name: '한양대학교 구리병원', phone1: '031', phone2: '000', phone3: '0013', bedTotal: 3 },
+    { id: 14, region: 'chungbuk', name: '청주의료원', phone1: '043', phone2: '000', phone3: '0014', bedTotal: 2 },
+    { id: 15, region: 'chungnam', name: '서산의료원', phone1: '041', phone2: '000', phone3: '0015', bedTotal: 3 },
+    { id: 16, region: 'jeonbuk', name: '원광대학교병원', phone1: '063', phone2: '000', phone3: '0016', bedTotal: 4 },
+    { id: 17, region: 'gyeongbuk', name: '포항의료원', phone1: '054', phone2: '000', phone3: '0017', bedTotal: 2 },
+    { id: 18, region: 'jeju', name: '제주대학교병원', phone1: '064', phone2: '000', phone3: '0018', bedTotal: 3 },
+    { id: 19, region: 'jeju', name: '제주한라병원', phone1: '064', phone2: '000', phone3: '0019', bedTotal: 2 },
+    { id: 20, region: 'jeju', name: '서귀포의료원', phone1: '064', phone2: '000', phone3: '0020', bedTotal: 2 },
   ]
 }
 

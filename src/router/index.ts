@@ -95,6 +95,19 @@ const router = createRouter({
             }
         },
         {
+            // 근무일지(乙) 등록 화면군의 기준 화면. plannedRoutes 가 자동 등록해 주지만
+            // 거기서는 meta 에 screenGroup 이 안 붙는다 — 그러면 팝업 화면ID(0219·0221·0222)와
+            // Layout.vue 의 :key 가 달라져 팝업을 열고 닫을 때마다 화면이 리마운트된다.
+            path: '/views/lpo/PM-LPO-0217',
+            name: 'PM-LPO-0217',
+            component: () => import('../views/lpo/PM-LPO-0217/PM-LPO-0217.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '근무일지(乙) 등록',
+                screenGroup: 'PM-LPO-0217',
+            }
+        },
+        {
             // 근무일지(乙) 등록 화면군 — 아래 세 화면ID는 이 화면 안의 팝업이라 같은 파일을
             // 가리킨다. screenGroup 이 같아야 팝업을 열고 닫아도 Layout.vue 의 :key 가 안 바뀐다.
             // (폴더가 없는 화면ID라 plannedRoutes 로는 '준비중'이 뜬다)
@@ -514,6 +527,15 @@ const router = createRouter({
               meta: {
                   layout: 'MainLayout',
                   title: 'Grid Title'
+              }
+          },
+          {
+              path: '/component/search-area',
+              name: 'search-area',
+              component: () => import('../views/component-sample/search-area.vue'),
+              meta: {
+                  layout: 'MainLayout',
+                  title: 'Search Wrapper'
               }
           },
           {

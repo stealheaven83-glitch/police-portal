@@ -124,5 +124,12 @@ export function useAutoTrigger(map: ScreenTriggerMap) {
       skipNextForward = true
       router.replace({ name: activeId })
     },
+    /*
+     * flush: 'post' — 상태가 바뀐 뒤 "화면이 실제로 갱신되고 나서" 주소를 바꾼다.
+     * 기본값('pre')이면 팝업을 닫는 렌더보다 router.replace 가 먼저 돌고, 라우트 전환으로
+     * KeepAlive 가 화면을 비활성화하는 사이에 그 렌더가 반영되지 못해 팝업이 열린 채로
+     * 남는다(닫기를 두 번 눌러야 닫히는 증상 — PM-LPO-0217 처리자 관리 팝업에서 확인).
+     */
+    { flush: 'post' },
   )
 }

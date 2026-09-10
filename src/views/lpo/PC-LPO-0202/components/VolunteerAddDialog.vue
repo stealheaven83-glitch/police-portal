@@ -16,9 +16,20 @@
       <InfoField label="종료시간">
         <SelectField v-model="volunteerEnd" :options="hourOptions" placeholder="선택" size="sm" class="w-full"/>
       </InfoField>
+      <template v-if="volunteerScope === 'etc'">
+        <InfoField label="소속" for="volunteer-etc-dept" full>
+          <InputField2 id="volunteer-etc-dept" v-model="volunteerEtcDept" size="sm" class="w-full" />
+        </InfoField>
+        <InfoField label="계급" for="volunteer-etc-rank" full>
+          <InputField2 id="volunteer-etc-rank" v-model="volunteerEtcRank" size="sm" class="w-full" />
+        </InfoField>
+        <InfoField label="성명" for="volunteer-etc-name" full>
+          <InputField2 id="volunteer-etc-name" v-model="volunteerEtcName" size="sm" class="w-full" />
+        </InfoField>
+      </template>
     </InfoTable>
 
-    <div class="lp-row-between lp-table-gap">
+    <div v-show="volunteerScope === 'police'" class="lp-row-between lp-table-gap">
       <p class="lp-note-text">* 해당 지구대/파출소 직원 : 파란색</p>
       <span class="group-gap2">
         <InputField2
@@ -34,6 +45,7 @@
     </div>
 
     <TabulatorGrid
+      v-show="volunteerScope === 'police'"
       ref="gridRef"
       class="lp-table-gap"
       :columns="columns"
@@ -54,7 +66,6 @@
 
 <script setup lang="ts">
 import { computed, inject, ref } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
@@ -69,6 +80,9 @@ import {
   type VolunteerCandidate,
 } from '../composable/useWorkScheduleDialogs'
 import { useDialogGridRedraw } from '../composable/dialogGridRedraw'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 /** 자원 근무자 추가 팝업(PC-LPO-0205) */
 const store = inject(WorkScheduleKey)!
@@ -82,6 +96,10 @@ const {
   volunteerCandidates,
   volunteerWorkers,
 } = store
+
+const volunteerEtcDept = ref('')
+const volunteerEtcRank = ref('')
+const volunteerEtcName = ref('')
 
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const { onTableBuilt } = useDialogGridRedraw(gridRef)
@@ -107,13 +125,13 @@ function onSelectionChanged(rows: unknown[]) {
   )
 }
 
-function onSearch() {
-  toast.success('조회되었습니다.')
+async function onSearch() {
+  await dialog.alert({ title: '조회되었습니다.', btnCancel: '확인' })
 }
 
-function onConfirm() {
+async function onConfirm() {
   if (!selected.value.length) {
-    toast.warning('추가할 자원 근무자를 선택해 주세요.')
+    await dialog.alert({ title: '추가할 자원 근무자를 선택해 주세요.', btnCancel: '확인' })
     return
   }
   let nextId = volunteerWorkers.value.length
@@ -130,7 +148,7 @@ function onConfirm() {
       endTime: volunteerEnd.value,
     })),
   ]
-  toast.success('추가되었습니다.')
+  await dialog.alert({ title: '추가되었습니다.', btnCancel: '확인' })
   volunteerAddOpen.value = false
 }
 </script>

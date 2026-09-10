@@ -33,13 +33,9 @@
     </template>
   </SearchWrapper>
 
-  <div class="list-actions space-between">
-    <p class="form-note end">
-      * 개인정보를 공무수행 목적외 사적으로 조회 또는 유출하여 타인의 비밀을 침해하거나 누설할 경우
-      <span class="notice-strong">5년이하의 징역 또는 5천만원 이하의 벌금</span>에 처해집니다.
-    </p>
+  <PrivacyNoticeBar>
     <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
-  </div>
+  </PrivacyNoticeBar>
 
   <LayoutSplit :count="2" :widths="[50, 50]" :min-widths="[35, 30]">
     <template #layout-1>
@@ -318,6 +314,7 @@ import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
 import { Checkbox } from '@/components/custom/checkbox'
 import { Button } from '@/components/custom/button'
+import { PrivacyNoticeBar } from '@/components/custom/notice'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import LayoutSplit from '@/components/custom/content-layout/layoutSplit.vue'

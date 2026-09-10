@@ -2,7 +2,7 @@
   <PageHeader>
     <template #left>
       <PageTitle title="권한 관리" />
-    </template>      
+    </template>
     <template #right>
       <span class="group-gap2">
         <Breadcrumb :items="navItems" />
@@ -70,7 +70,7 @@
         <TabulatorGrid
           v-model:data="menuPermissions"
           :columns="menuColumns"
-          class="flex-1"
+          class="flex-1 lp-perm-menu-grid"
           height="100%"
           placeholder="메뉴 정보가 없습니다"
         />
@@ -83,7 +83,7 @@
 </template>
 
 <script setup lang="ts">
-import { provide, ref } from 'vue'
+import { provide, ref, watch } from 'vue'
 import { useDialog } from '@/composable/dialog/dialog'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
@@ -134,8 +134,8 @@ const {
 } = store
 
 /*
- * 성공·경고 피드백은 toast 가 아니라 알림창(AlertDialog2)으로 낸다.
- * CLAUDE.md §7 의 기본값은 toast 지만 사용자 지정이고, 같은 시스템관리 메뉴의
+ * 성공·경고 피드백은 알림창(AlertDialog2)으로 낸다(CLAUDE.md §4).
+ * CLAUDE.md §4 대로 알림창(AlertDialog2)으로 낸다. 같은 시스템관리 메뉴의
  * PC-COM-2201·PC-COM-2203·PC-COM-2206 도 같은 문구를 dialog.alert 로 낸다.
  */
 const dialog = useDialog()
@@ -187,6 +187,22 @@ function onPermissionRowClick(_e: Event, row: any) {
   selectPermission(data.rowKey)
 }
 
+/*
+ * 권한 조회는 목업 배열을 걸러내는 화면단 동작이라 퍼블 범위다(CLAUDE.md 범위표).
+ * v-model:data 로 물린 원본 배열을 건드리지 않으려고 그리드의 setFilter 를 쓴다 —
+ * 걸러낸 배열을 :data 로 넘기면 인라인 편집 결과를 원본에 되돌릴 수 없다(PC-COM-2206 과 같다).
+ */
+watch(keyword, (next) => {
+  const grid = permissionGridRef.value
+  if (!grid) return
+  const word = next.trim()
+  if (!word) {
+    grid.clearFilter()
+    return
+  }
+  grid.setFilter((row: PermissionRow) => row.id.includes(word) || row.name.includes(word))
+})
+
 function onAddPermission() {
   permissionGridRef.value?.addRow(createPermissionRow(), false)
 }
@@ -196,7 +212,7 @@ async function onDeleteSelectedPermissions() {
     await dialog.alert({ title: '삭제할 권한을 선택해 주세요.', btnCancel: '확인' })
     return
   }
-  // 사용자 지정: 삭제 전 컨펌창을 먼저 띄운다 (§7 기본은 컨펌 없이 바로 삭제)
+  // 사용자 지정: 삭제 전 컨펌창을 먼저 띄운다 (§4 기본은 컨펌 없이 바로 삭제)
   const result = await dialog.confirm({ title: '삭제하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
   if (!result.confirmed) return
   permissionGridRef.value?.deleteSelected()
@@ -204,7 +220,7 @@ async function onDeleteSelectedPermissions() {
 }
 
 async function onSavePermissions() {
-  // 사용자 지정: 저장 전 컨펌창을 먼저 띄운다 (§7 기본은 컨펌 없이 바로 저장)
+  // 사용자 지정: 저장 전 컨펌창을 먼저 띄운다 (§4 기본은 컨펌 없이 바로 저장)
   const result = await dialog.confirm({ title: '저장하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
   if (!result.confirmed) return
   await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
@@ -247,7 +263,7 @@ const menuColumns: TabulatorGridColumn[] = [
 ]
 
 async function onSaveMenuPermissions() {
-  // 사용자 지정: 저장 전 컨펌창을 먼저 띄운다 (§7 기본은 컨펌 없이 바로 저장)
+  // 사용자 지정: 저장 전 컨펌창을 먼저 띄운다 (§4 기본은 컨펌 없이 바로 저장)
   const result = await dialog.confirm({ title: '저장하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
   if (!result.confirmed) return
   await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })

@@ -122,7 +122,16 @@ function createMockRows(): VideoReportRow[] {
  * 시안에는 결재선 표가 두 개 그려져 있다 — 기안자 시점(3차 결재자 미지정 + 결재회수)과
  * 결재자 시점(내 차례라 반려·결재 버튼). 같은 표의 두 상태라 데이터로 갈라 한 번만 그린다.
  */
-function createApprovalLine(): ApprovalStep[] {
+function createApprovalLine(kind: 'draft' | 'approver' = 'draft'): ApprovalStep[] {
+  // 결재자 시점 — 내 차례(1차)라 반려·결재 버튼이 보이고, 3차까지 사람이 정해져 있다
+  if (kind === 'approver') {
+    return [
+      { kind: 'draft', role: '기안자', person: '경위 홍길동', status: '2026-07-01', action: 'none', selectable: false },
+      { kind: 'approver', role: '1차 결재자', person: '경감 이영수', status: '', action: 'decide', selectable: false },
+      { kind: 'approver', role: '2차 결재자', person: '경감 홍길동', status: '결재대기', action: 'none', selectable: false },
+      { kind: 'approver', role: '3차 결재자', person: '경정 김길동', status: '결재대기', action: 'none', selectable: false },
+    ]
+  }
   return [
     { kind: 'draft', role: '기안자', person: '경위 홍길동', status: '2026-07-01', action: 'none', selectable: false },
     { kind: 'approver', role: '1차 결재자', person: '경감 이영수', status: '결재완료', action: 'none', selectable: false },
@@ -170,7 +179,12 @@ export function useVideoDeviceReport() {
 
   const activeRowKey = ref<string | null>(allRows.value[1]?.rowKey ?? null)
 
-  const approvalLine = ref<ApprovalStep[]>(createApprovalLine())
+  /*
+   * 시안(13724:123521 / 123548)은 같은 결재선을 두 상태로 그려 둔다 —
+   * 기안자 시점(2차 결재대기 + 결재회수)과 결재자 시점(내 차례인 1차에 반려·결재).
+   * 실제로는 로그인한 사람에 따라 하나만 뜨지만, 시안 검수용으로 두 벌 다 보여준다.
+   */
+  const approvalLines = ref<ApprovalStep[][]>([createApprovalLine('draft'), createApprovalLine('approver')])
   /** 3차 결재자처럼 아직 안 정한 칸에서 고른 값 */
   const nextApprover = ref('')
 
@@ -185,13 +199,13 @@ export function useVideoDeviceReport() {
     activeRowKey.value = rowKey
     // 연동 전까지는 고른 행에 맞는 본문이 없어서 폼만 비운다
     detail.value = createEmptyDetail()
-    approvalLine.value = createApprovalLine()
+    approvalLines.value = [createApprovalLine('draft'), createApprovalLine('approver')]
   }
 
   function createReport() {
     activeRowKey.value = null
     detail.value = createEmptyDetail()
-    approvalLine.value = createApprovalLine()
+    approvalLines.value = [createApprovalLine('draft'), createApprovalLine('approver')]
   }
 
   /** 화면단 필수값 확인만 한다 — 서버 검증은 개발팀 몫 */
@@ -213,7 +227,7 @@ export function useVideoDeviceReport() {
     searchUser,
     rows,
     activeRowKey,
-    approvalLine,
+    approvalLines,
     nextApprover,
     reportUsers,
     detail,

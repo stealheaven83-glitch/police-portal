@@ -147,7 +147,7 @@ function close() {
     </template>
 
     <template v-else>
-      <InfoTable :columns="3" :size="80" popup>
+      <InfoTable :columns="3" popup size="70">
         <InfoField for="address-search-sido" label="시도">
           <SelectField
             id="address-search-sido"
@@ -201,8 +201,8 @@ function close() {
         </InfoField>
         <!-- 라벨 없이 버튼만 들어가는 칸 -->
         <InfoField :class="infoStyles['info-table-actions']">
-          <Button type="button" variant="tertiary2" size="sm" padding="12" @click="onReset">초기화</Button>
-          <Button type="button" variant="secondary" size="sm" padding="12" @click="onSearch">검색</Button>
+          <Button type="button" variant="tertiary2" size="sm" padding="20" @click="onReset">초기화</Button>
+          <Button type="button" variant="secondary" size="sm" padding="20" @click="onSearch">검색</Button>
         </InfoField>
       </InfoTable>
 
@@ -213,12 +213,13 @@ function close() {
         placeholder="검색 조건을 입력해 주소를 찾아보세요."
         show-pagination
         :items-per-page="10"
+        class="mt-[16px]"
         :row-class="rowClass"
         @row-click="onRowClick"
       />
     </template>
-
-    <InfoTable :columns="1" :size="120" popup>
+    <div class="mt-[20px]">
+    <InfoTable :columns="1" :size="120" popup >
       <InfoField label="주소">{{ selectedAddress?.address }}</InfoField>
       <InfoField for="address-search-detail" label="상세주소">
         <InputField2
@@ -232,16 +233,15 @@ function close() {
         <Button
           type="button"
           variant="primary"
+          padding="27"
           size="sm"
-          padding="12"
-          :disabled="!canSubmit"
           @click="onSubmit"
         >
           입력
         </Button>
       </InfoField>
     </InfoTable>
-
+    </div>
     <template #footer>
       <Button type="button" variant="tertiary2" size="md" @click="close">닫기</Button>
     </template>

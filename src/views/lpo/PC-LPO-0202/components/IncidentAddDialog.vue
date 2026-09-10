@@ -44,7 +44,6 @@
 
 <script setup lang="ts">
 import { computed, inject } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
@@ -52,6 +51,9 @@ import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import { WorkScheduleKey } from '../composable/useWorkSchedule'
 import { incidentReasonOptions, hourOptions } from '../composable/useWorkScheduleDialogs'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 /** 사고자 추가 팝업(PC-LPO-0206) — '전일'이면 시작·종료 시간은 비활성 */
 const store = inject(WorkScheduleKey)!
@@ -73,13 +75,13 @@ const nameOptions = computed(() =>
     .map((w) => ({ label: `[${w.rank}] ${w.name}`, value: String(w.id) })),
 )
 
-function onSave() {
+async function onSave() {
   if (!incidentName.value || !incidentReason.value) {
-    toast.warning('필수 항목을 입력해 주세요.')
+    await dialog.alert({ title: '필수 항목을 입력해 주세요.', btnCancel: '확인' })
     return
   }
   if (incidentRange.value === 'part' && (!incidentStart.value || !incidentEnd.value)) {
-    toast.warning('사고 시작·종료 시간을 선택해 주세요.')
+    await dialog.alert({ title: '사고 시작·종료 시간을 선택해 주세요.', btnCancel: '확인' })
     return
   }
   const picked = regularWorkers.value.find((w) => String(w.id) === incidentName.value)
@@ -97,7 +99,7 @@ function onSave() {
       endTime: incidentRange.value === 'all' ? '' : incidentEnd.value,
     },
   ]
-  toast.success('저장되었습니다.')
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
   incidentAddOpen.value = false
 }
 </script>

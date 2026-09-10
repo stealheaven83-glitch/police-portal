@@ -141,7 +141,6 @@ function focusSearchBar() {
 async function onSearch(value: string) {
   const trimmed = value.trim()
   if (!trimmed) {
-    // 사용자 지정: toast 대신 alert — CLAUDE.md §4 기본(toast.warning)과 다르지만 요청대로 따름
     await dialog.alert({ title: '검색 내용이 입력되지 않았습니다.', btnCancel: '확인' })
     focusSearchBar()
     return

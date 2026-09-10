@@ -162,11 +162,11 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | **레이어 팝업 (기본)** | **`custom/dialog/GenericDialog2.vue`** (19개 화면) |
 | 폼이 들어간 팝업 | `custom/dialog/FormDialog.vue` |
 | 되돌릴 수 없는 작업 확인 | `custom/dialog/ConfirmDialog2.vue` — **CLAUDE.md §4 조건 확인** |
-| 버튼 하나짜리 강제 확인 | `custom/dialog/AlertDialog2.vue` — 남용 금지, 보통은 toast |
+| 성공/경고 알림, 버튼 하나짜리 확인 | `custom/dialog/AlertDialog2.vue` — `useDialog().alert()` 로 띄운다. **성공·경고 피드백의 기본**(CLAUDE.md §4) |
 | 아직 로직이 없는 팝업 자리 | `custom/dialog/EmptyStubDialog.vue` (6개 화면) |
 | 모바일 하단 시트 | `custom/bottom-sheet/BottomSheet.vue` |
 
-> **일반 저장/삭제에는 `confirm`을 붙이지 않는다.** toast가 기본이다 — CLAUDE.md §4.
+> **일반 저장/삭제에는 `confirm`을 붙이지 않는다.** 알림창(`dialog.alert`)이 기본이다 — CLAUDE.md §4.
 
 ---
 
@@ -174,9 +174,10 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 
 | 이럴 때 | 이걸 쓴다 |
 |---|---|
-| 저장/삭제 성공, 필수값 누락 경고 | **toast** (CLAUDE.md §4) — 컴포넌트 아님 |
+| 저장/삭제 성공, 필수값 누락 경고 | **알림창 `useDialog().alert()`** (CLAUDE.md §4) — toast 는 쓰지 않는다 |
 | 결과/경고 박스(성공·실패·주의) | `custom/alert/Alert.vue` |
 | 이해를 돕는 설명 박스 | `custom/infobox/InfoBox.vue` |
+| 검색영역 아래 개인정보 오남용 경고 한 줄(오른쪽에 저장 버튼 등) | `custom/notice/PrivacyNoticeBar.vue` — 기본 슬롯에 버튼을 넣으면 양끝 정렬 |
 | 페이지 상단 긴급 공지 띠 | `custom/alert/CriticalAlert.vue` |
 | 처리 중 로딩 | `custom/spinner/Spinner.vue` |
 | 진행률 막대 | `custom/progress/ProgressBar.vue` |
@@ -463,6 +464,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 |---|---|---|
 | `.lp-flex-fill` | 남는 가로폭을 채우되 내용이 넘치지 않게(flex 1 / min-width 0) | 2204, IRC-0101 |
 | `.lp-row-between` | 한 줄에 좌우로 벌려 놓기 | 2204, 0601, 0802 |
+| `.lp-date-actions` | `police-common.css` — 날짜 선택이 있는 `.list-actions`에 추가하여 세로 가운데 정렬하고 폭이 부족하면 줄바꿈 | LPO-0202 |
 | `.calendar-area` `-date` `-date-value` `-divider` `-group` `-options` | 근무일 선택 줄. **`.list-actions` 안 왼쪽**에 놓고(`margin-right:auto`) 오른쪽은 그대로 버튼. 구역 사이는 `-divider` 세로선(그룹 간격 36px). `-date-value` 는 날짜+달력아이콘(19px/600), `-options` 는 라디오 묶음(16px — `.lp-icon-row` 2rem 과 값이 다르다). **사용자 지정 이름이라 `lp-` 접두사가 없다** | LPO-0202 |
 | `.lp-unit-row` | 한 값을 여러 칸으로 쪼갠 줄 — 작은 입력 + 단위 글자('시' '분' '세' '~') | PUB-0405 |
 | `.lp-summary-row` | 값 텍스트 + 우측 버튼 (표 셀 안, 자기도 늘어남) | 0601 |
@@ -475,10 +477,27 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-note-gap` | 표 바로 위 안내 문구의 **아래** 여백(2rem). 위는 앞 요소에 붙는다 — `.lp-table-gap` 과 반대라 같이 쓰지 않는다 | LPO-0223 |
 | `.lp-info-row-tall` | **`InfoField` 에 건다** — 값이 짧아도 칸이 높아야 하는 줄(여러 줄 입력 자리, 12rem). 행 병합 `rowSpan` 과 달리 옆 칸 배치를 안 건드린다 | LPO-0223 팝업 |
 | `.lp-info-blank-cell` | `InfoTable` 에서 옆 칸이 두 행을 차지(row-span)해 비는 칸. 표 테두리만 이어 주는 자리라 1열로 접히면 감춘다 | PUB-0302/0303 |
+| `.lp-info-label-narrow` | **`InfoTable` 루트에 건다** — 2~3글자 라벨뿐인 검색 폼에서 라벨 열을 7rem 으로 좁히고 안쪽 여백도 1rem 으로 줄인다. `:size` 와 같이 주면 인라인이 이겨 안 먹는다 | `AddressSearchDialog` |
 | `.lp-meta-nowrap` | 조회 화면 위쪽 '최종 수정일' 한 줄 | 0601 |
 | `.lp-placeholder-box` | 채울 것이 아직 정해지지 않은 자리(시안의 회색 상자) | PUB-0113 |
 | `.lp-map-slot` | 그 회색 상자를 지도 자리 크기(41.8rem)로 키우고 모서리를 각지게 — `.lp-placeholder-box` 와 **함께** 쓴다 | `AddressSearchDialog` |
 | `.lp-form-box` / `.lp-form-box-center` | 라벨 칸 없이 컨트롤만 들어가는 테두리 상자(라디오·체크박스 줄) / 그 안을 가운데로. 라벨-값 표면 `InfoTable` | PUB-0702, PUB-0208 |
+| `.lp-choice-row` | 선택지(라디오·체크박스)가 **32** 간격으로 늘어서는 줄. 한 항목 안에서 고르는 좁은 묶음은 `.lp-radio-inline`(16) | PUB-0702 |
+| `.lp-heading-sm` | 구역 안 하위 항목 제목('1. 촬영 경위' — 15px/700/#1E2124). 구역 제목은 `.lp-heading-md` | PUB-0702 |
+| `.lp-subsection` | 그 하위 항목 묶음 — 구역 제목보다 12 들여 쓰고 묶음끼리 20 띄운다 | PUB-0702 |
+| `.lp-note-dark` | `.form-note` 와 크기는 같고 색만 본문색(#1E2124)인 안내 문구('＊ …합니다') | PUB-0702 |
+| `.lp-approval-cell` / `-person` / `-status` / `-pick` / `-decide` | 결재선 표 한 칸 — [사람 40][상태·조작 32]이 세로로 쌓인다 / 이름·셀렉트 줄 / 상태·버튼 줄(사이 12) / 결재자 셀렉트(좌우 8 더 들여씀) / 반려·결재 두 버튼이 칸을 반씩 채움 | PUB-0702 |
+| `.lp-approval-table` | 그 결재선 **표 자체**의 모양 — 목록 표(위 진한 실선)와 달리 테두리 상자 + 회색 머리줄. `TableWrapper` 에 건다 (override) | PUB-0702 |
+| `.lp-choice-input` | [라디오·체크박스][입력칸]이 한 줄로 붙는 묶음(사이 8). 라벨을 입력칸 높이(40)에 맞춰 가운데로 되돌린다 (정렬 규칙은 override) | PUB-0702 |
+| `.lp-paren-group` / `.lp-paren` | 괄호로 묶인 선택지 줄('실내 ( … ) 실외') — 괄호 양옆 6. 괄호를 라벨 글자에 넣으면 비활성일 때 같이 흐려지므로 따로 그리고 색을 고정한다 | PUB-0702 |
+| `.lp-form-box-wide` | `.lp-form-box` 와 **함께** — 좌우 여백이 넓은 상자(16 20) | PUB-0702 |
+| `.lp-row-bottom` | `.lp-row-between` 과 **함께** — 그 줄의 항목 높이가 다를 때 아래로 맞춘다(제목 글자와 버튼의 밑선) | PUB-0702 |
+| `.lp-text-dark` | 컴포넌트가 회색으로 그리는 라벨·문구를 본문색(#1E2124)으로 되돌린다. `label-class` 로 넘긴다 | PUB-0702 |
+| `.lp-char-count` | 입력 글자수('0/4000') — 지금 글자수만 파랑. `TextareaField` 의 `show-count` 는 한 덩어리라 색을 못 나눠 화면에서 직접 그릴 때 쓴다 | PUB-0702 |
+| `.lp-guide-list` | 안내 상자(`Alert`) 안의 **번호** 목록(작성 요령 1·2·3). 점 목록은 `.lp-dot-list` | PUB-0701 |
+| `.lp-unit-text` | 입력 옆 단위 글자('(발)' '회' '명'). 배치는 `.lp-unit-row` 가 맡고 이건 글자 모양만 | PUB-0701 |
+| `.lp-dot-item` | 상자 안 한 항목을 여는 작은 라벨(앞에 가운뎃점). 라벨-값 표면 `InfoField` | PUB-0701 |
+| `.lp-cell-lines` | 표 한 칸에 여러 줄이 들어가는 묶음(강조 줄 + 설명 줄, 제목 + 점 목록). 셀 기본이 가운데 정렬이라 이 묶음만 왼쪽으로 되돌린다 | PUB-0701 작성 요건 팝업 |
 | `.lp-link-danger` | 아이콘 + 붉은 글자로 주의를 끄는 링크(Figma button_link 경고 톤). 파란 경로 링크는 `.lp-path-link` | PUB-0701 |
 | `.lp-survey-list` / `.lp-survey-item` / `.lp-survey-choice` | 테두리 없는 설문 문항 나열(좌 문항 · 우 선택지). 라벨-값 표는 `InfoTable` | PUB-0201 |
 | `.lp-score-box` | 설문 합계 점수 줄(가운데 정렬 회색 띠) | PUB-0201 |
@@ -552,7 +571,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-em-primary` / `.lp-em-danger` | 문장 안 한 낱말만 색으로 강조(굵기는 `<b>` 가) | LPO-0208, 0216, 0217 |
 | `.lp-field-inline` | 라벨 아래 입력+버튼이 한 줄로 붙는 칸(부서명 + 부서 검색) | COM-1003, 1004 |
 | `.lp-field-table` `-center` `-empty` | `FieldTable` 전용 — InfoField 칸 안에 들어가는 정적 표 | LPO-0601 |
-| `.lp-cert-scroll` `.lp-cert-table` `-question` `-note` `-note-strong` `-total` `-choice` `-pass` | 인증기준표(rowspan 이 많고 칸 안에 라디오가 들어가 Tabulator·InfoTable 을 못 쓴다). 좁은 패널 안이라 표만 가로 스크롤 | PUB-0113 |
+| `.lp-cert-scroll` `.lp-cert-table` `-question` `-note` `-note-strong` `-total` `-choice` `-pass` `-fail` | 인증기준표(rowspan 이 많고 칸 안에 라디오가 들어가 Tabulator·InfoTable 을 못 쓴다). 좁은 패널 안이라 표만 가로 스크롤 | PUB-0113 |
 | `.lp-notice-form` `-actions` | 게시판 글 등록/수정 폼(본문 폭을 꽉 쓴다). **가운데 1000px 폼은 `.lp-narrow-form`** | COM-1003, 1004 |
 | `.lp-notice-detail` `-badges` `-dept` `-title` `-meta` `-thumb` `-body` `-detail-actions` | 게시판 글 상세 | COM-1002 |
 | `.lp-comment-area` `-write` `-list` `-item` `-head` `-writer` `-date` `-more` `-body` `-actions` `-reply-btn` `-replies` | 댓글·대댓글 영역(CommentThread) | COM-1002 |
@@ -569,6 +588,32 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 |---|---|---|
 | `.lp-detail-layout-wide` | `.detail-layout` 의 gap 2rem → 2.4rem | PC-STT-0103 |
 | `.lp-photo-frame-fill` | `.photo-frame` 에 회색 배경을 얹는다 | PC-STT-0103 |
+
+#### 게시판(`.board-*`) — 접두사 예외
+
+⚠ **사용자 지정으로 `lp-` 를 붙이지 않은 유일한 묶음이다**(CLAUDE.md §2 기본과 다름).
+게시판 화면(PM-COM-1101~2104) 전용이며, 공지사항(PM-COM-1001~1004)이 쓰는 `.lp-notice-*` 와
+모양이 같지만 그쪽은 먼저 만들어진 화면이라 합치지 않고 그대로 뒀다(CLAUDE.md §1).
+
+| 클래스 | 의도 | 쓰는 곳 |
+|---|---|---|
+| `.board-detail` | 게시판 글 상세 본문 세로 스택(gap 2rem) | `views/com/components/BoardDetail.vue` |
+| `.board-badges` | 상세 맨 위 배지줄(공지·카테고리·공개·부서) | 〃 |
+| `.board-dept` | 배지줄에 텍스트로 붙는 부서/지방청/주차 | 〃 |
+| `.board-title` | 상세 제목 2.4rem bold | 〃 |
+| `.board-meta` | 작성자·등록일·조회수 줄 + 아래 구분선 | 〃 |
+| `.board-thumb` | 본문 대표 이미지 자리(회색 박스) | 〃 |
+| `.board-body` | 본문 문단 스택 | 〃 |
+| `.board-detail-actions` | 상세 맨 아래 목록/삭제/수정 줄 + 위 구분선 | 〃 |
+| `.board-form` | 등록·수정 폼 세로 스택. **본문 폭을 꽉 쓴다**(가운데 정렬인 `.lp-narrow-form` 과 다름) | `views/com/components/BoardForm.vue` |
+| `.board-form-actions` | 폼 아래 우측 취소/저장 줄 | 〃 |
+| `.board-form-row` | 한 줄에 두 칸이 나란히(지방청+주차) | 〃 |
+| `.board-form-grow` | `.board-form-row` 안에서 남는 폭을 가져가는 칸 | 〃 |
+| `.board-category-tabs` | 목록 위 카테고리 칩줄의 **아래 여백만**(배치는 `FilterChipGroup` 이 한다) | PM-COM-1101 |
+| `.board-list-toolbar` | 목록 위 우측 도구줄('내가 쓴 글' 토글) | PM-COM-1101 · 2101 |
+| `.board-mine-toggle` | 그 토글의 스위치+글자 묶음 | 〃 |
+| `.board-pin-badge` | 목록 '번호' 칸의 고정공지 배지. Tabulator 포매터가 HTML 문자열을 만들어 `Badge` 를 못 써서 클래스로 같은 모양을 낸다 | 고정공지 있는 목록 7개 |
+| `.board-search-row` | 검색영역이 두 줄일 때 첫 줄 아래 여백(템플릿에 `mb-4` 를 안 쓰려고) | 목록 10개 |
 
 ---
 
@@ -596,6 +641,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-info-nested` | `InfoField` 값 칸에 `InfoTable` 을 한 번 더 넣을 때 `.control` 여백·중복 테두리 제거(라벨 병합처럼 보이게) | PUB-0111 |
 | `.lp-grid-btn-compact` | 좁은 열(시안 88px)에 들어가는 표 안 버튼. `Button` 베이스의 `min-w-25`(100px)를 풀고 좌우 여백만 준다(컬럼 정의는 `buttonClass` 만 받아서 `padding` prop 을 못 쓴다) | LPO-0223 |
 | `.lp-date-fill` | **`InfoField` 에 건다** — 값 칸을 꽉 채우는 `DatePicker`. `DatePicker` 는 `class` 를 VueDatePicker 루트가 아니라 안쪽 `InputField2` 에 넘겨서(`inheritAttrs:false`) 화면에서 `flex-1` 을 줘도 안 먹는다. 늘어나야 하는 건 값 칸의 직계 자식인 `.dp__main` 이다 | PUB-0302/0303 |
+| `.lp-cell-datetime` | Tabulator 셀의 `white-space: nowrap`(라이브러리 기본)을 풀어 일시를 날짜/시간 두 줄로 끊는다. 행 높이 4.8rem 고정에 맞춰 `line-height: 1.3` | LPO-0501 |
 
 ---
 

@@ -27,7 +27,6 @@
 
 <script setup lang="ts">
 import { inject } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import { Badge } from '@/components/custom/badge'
@@ -47,7 +46,7 @@ const dialog = useDialog()
 /** 승인취소는 되돌릴 수 없어 컨펌창을 띄운다(CLAUDE.md §7 의 예외 사유에 해당) */
 async function onCancelApprove() {
   if (!cancelReason.value.trim()) {
-    toast.warning('승인취소사유를 입력해 주세요.')
+    await dialog.alert({ title: '승인취소사유를 입력해 주세요.', btnCancel: '확인' })
     return
   }
   const { confirmed } = await dialog.confirm({
@@ -56,7 +55,7 @@ async function onCancelApprove() {
     btnOk: '승인취소',
   })
   if (!confirmed) return
-  toast.success('승인이 취소되었습니다.')
+  await dialog.alert({ title: '승인이 취소되었습니다.', btnCancel: '확인' })
   cancelOpen.value = false
 }
 </script>

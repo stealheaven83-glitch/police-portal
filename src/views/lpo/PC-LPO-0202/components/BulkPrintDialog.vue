@@ -16,19 +16,21 @@
 
 <script setup lang="ts">
 import { inject } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import { WorkScheduleKey } from '../composable/useWorkSchedule'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 /** 甲지 일괄 출력 팝업(PC-LPO-0211) */
 const store = inject(WorkScheduleKey)!
 const { bulkPrintOpen, bulkPrintFrom, bulkPrintTo } = store
 
-function onPrint() {
+async function onPrint() {
   if (!bulkPrintFrom.value || !bulkPrintTo.value) {
-    toast.warning('근무기간을 입력해 주세요.')
+    await dialog.alert({ title: '근무기간을 입력해 주세요.', btnCancel: '확인' })
     return
   }
   // 실제 인쇄는 개발팀 몫 — 화면에서는 브라우저 인쇄만 띄운다

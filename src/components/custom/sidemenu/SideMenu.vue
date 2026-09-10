@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSideMenuStore } from '@/stores/menu/useSideMenu'
 import type { SideMenuItem } from '@/composable/menu/sidemenu/types'
@@ -10,6 +11,26 @@ import type { SideMenuItem } from '@/composable/menu/sidemenu/types'
  */
 const router = useRouter()
 const sideMenuStore = useSideMenuStore()
+const openDepth2 = ref('')
+
+function containsActive(item: SideMenuItem): boolean {
+  return item.name === sideMenuStore.activeChild
+    || item.children?.some(containsActive) === true
+}
+
+watch(
+  () => [sideMenuStore.items, sideMenuStore.activeChild] as const,
+  () => {
+    for (const item of sideMenuStore.items) {
+      const activeBranch = item.children?.find((child) => child.children?.some(containsActive))
+      if (activeBranch) {
+        openDepth2.value = activeBranch.name
+        return
+      }
+    }
+  },
+  { immediate: true, deep: true },
+)
 
 /**
  * 메뉴 항목 클릭.
@@ -23,6 +44,10 @@ function selectChild(event: MouseEvent, child: SideMenuItem) {
 
   event.preventDefault()
   if (child.path) router.push(child.path)
+}
+
+function toggleDepth2(name: string) {
+  openDepth2.value = openDepth2.value === name ? '' : name
 }
 </script>
 
@@ -50,9 +75,23 @@ function selectChild(event: MouseEvent, child: SideMenuItem) {
               v-for="child in item.children"
               :key="child.name"
               class="depth2-item"
-              :class="{ active: sideMenuStore.activeChild === child.name }"
+              :class="{
+                active: sideMenuStore.activeChild === child.name,
+                'has-child': child.children,
+                'is-open': child.children && openDepth2 === child.name,
+              }"
             >
+              <button
+                v-if="child.children"
+                type="button"
+                class="depth2-btn"
+                :aria-expanded="openDepth2 === child.name"
+                @click="toggleDepth2(child.name)"
+              >
+                <span>{{ child.name }}</span>
+              </button>
               <a
+                v-else
                 :href="child.href ?? '#'"
                 :target="child.href ? '_blank' : undefined"
                 :rel="child.href ? 'noopener noreferrer' : undefined"
@@ -62,6 +101,24 @@ function selectChild(event: MouseEvent, child: SideMenuItem) {
                 <span>{{ child.name }}</span>
                 <span v-if="child.href" class="external" aria-label="새 창으로 열림"></span>
               </a>
+              <ul v-if="child.children" class="depth3">
+                <li
+                  v-for="grandchild in child.children"
+                  :key="grandchild.name"
+                  class="depth3-item"
+                  :class="{ active: sideMenuStore.activeChild === grandchild.name }"
+                >
+                  <a
+                    :href="grandchild.href ?? '#'"
+                    :target="grandchild.href ? '_blank' : undefined"
+                    :rel="grandchild.href ? 'noopener noreferrer' : undefined"
+                    :aria-current="sideMenuStore.activeChild === grandchild.name ? 'page' : undefined"
+                    @click="selectChild($event, grandchild)"
+                  >
+                    <span>{{ grandchild.name }}</span>
+                  </a>
+                </li>
+              </ul>
             </li>
           </ul>
         </li>
@@ -173,9 +230,12 @@ function selectChild(event: MouseEvent, child: SideMenuItem) {
 .left-menu .lnb .depth1 .depth2 .depth2-item:last-child {
   margin-bottom: 1.2rem;
 }
-.left-menu .lnb .depth1 .depth2 .depth2-item a {
+.left-menu .lnb .depth1 .depth2 .depth2-item > a,
+.left-menu .lnb .depth1 .depth2 .depth2-btn {
   position: relative;
   display: block;
+  width: 100%;
+  text-align: left;
   padding: 1.2rem 1.6rem;
   font-weight: 600;
 }
@@ -190,6 +250,53 @@ function selectChild(event: MouseEvent, child: SideMenuItem) {
   color: var(--Base-primary);
   font-weight: 700;
   border-radius: 0.8rem;
+}
+.left-menu .lnb .depth1 .depth2 .depth2-item.has-child > .depth2-btn::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 1.6rem;
+  width: 1.2rem;
+  height: 0.2rem;
+  background: currentColor;
+}
+.left-menu .lnb .depth1 .depth3 {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+.left-menu .lnb .depth1 .depth2-item.is-open > .depth3 {
+  max-height: 30rem;
+}
+.left-menu .lnb .depth1 .depth3-item a {
+  position: relative;
+  display: block;
+  padding: 1rem 2.8rem;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+.left-menu .lnb .depth1 .depth3-item a::before {
+  content: "·";
+  margin-right: 0.8rem;
+}
+.left-menu .lnb .depth1 .depth3-item.active a,
+.left-menu .lnb .depth1 .depth3-item a:hover {
+  background: var(--Surface-primary);
+  color: var(--Base-primary);
+  font-weight: 700;
+  border-radius: 0.8rem;
+}
+.left-menu .lnb .depth1 .depth3-item.active a::after,
+.left-menu .lnb .depth1 .depth3-item a:hover::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 2rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-top: 2px solid var(--Border_primary);
+  border-right: 2px solid var(--Border_primary);
+  transform: translateY(-50%) rotate(45deg);
 }
 .left-menu .lnb .depth1 .depth2 .depth2-item a:hover:after,.left-menu .lnb .depth1 .depth2 .depth2-item.active a:after {
   content: "";
@@ -216,11 +323,15 @@ function selectChild(event: MouseEvent, child: SideMenuItem) {
 }
 
 .left-menu .lnb .depth1-item .depth1-btn,
-.left-menu .lnb .depth2-item a {
+.left-menu .lnb .depth2-item a,
+.left-menu .lnb .depth2-btn,
+.left-menu .lnb .depth3-item a {
   outline: none;
 }
 .left-menu .lnb .depth1-item .depth1-btn:focus-visible,
-.left-menu .lnb .depth2-item a:focus-visible {
+.left-menu .lnb .depth2-item a:focus-visible,
+.left-menu .lnb .depth2-btn:focus-visible,
+.left-menu .lnb .depth3-item a:focus-visible {
   outline: 2px solid var(--Border_primary);
   outline-offset: -2px;
 }

@@ -36,10 +36,12 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import { UPLOAD_MAX_FILES, uploadFailures } from '../composable/PM-PUB-0111'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 /** 참고사항 업로드 팝업 (Figma 11213:88495) */
 const open = defineModel<boolean>('open', { default: false })
@@ -65,11 +67,11 @@ function onDrop(e: DragEvent) {
 }
 
 /* 실제 업로드·파싱은 개발팀 연동 대상이라 화면단에서는 개수 제한만 본다 */
-function addFiles(files: File[]) {
+async function addFiles(files: File[]) {
   if (files.length > UPLOAD_MAX_FILES) {
-    toast.warning(`파일은 최대 ${UPLOAD_MAX_FILES}개까지 첨부할 수 있습니다.`)
+    await dialog.alert({ title: `파일은 최대 ${UPLOAD_MAX_FILES}개까지 첨부할 수 있습니다.`, btnCancel: '확인' })
     return
   }
-  toast.success(`${files.length}개 파일을 첨부했습니다.`)
+  await dialog.alert({ title: `${files.length}개 파일을 첨부했습니다.`, btnCancel: '확인' })
 }
 </script>

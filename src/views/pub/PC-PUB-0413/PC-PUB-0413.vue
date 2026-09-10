@@ -11,7 +11,7 @@
     </template>
   </PageHeader>
 
-  <SearchWrapper>
+  <SearchWrapper no-background>
     <template #form>
       <div class="search-area">
         <SelectField
@@ -39,9 +39,6 @@
           trigger-class="w-70"
         />
       </div>
-    </template>
-    <template #btns>
-      <Button type="button" variant="secondary" size="sm">조회</Button>
     </template>
   </SearchWrapper>
 

@@ -77,8 +77,8 @@ const store = inject(PermissionManagementKey)!
 const { activePermission, allUsersOpen, allUsers, selectedUsers } = store
 
 /*
- * 이 화면은 성공·경고를 toast 가 아니라 알림창으로 낸다 — PC-COM-2204 본문에 적힌 사용자 지정을
- * 그대로 따른다(§7 기본은 toast).
+ * 성공·경고는 알림창으로 낸다(CLAUDE.md §4). 삭제 전 컨펌창은 PC-COM-2204 본문에 적힌
+ * 사용자 지정을 그대로 따른다.
  */
 const dialog = useDialog()
 

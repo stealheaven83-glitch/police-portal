@@ -85,7 +85,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import InputField2 from '@/components/custom/input/InputField2.vue'
@@ -97,6 +96,9 @@ import {
   sigunguOptions,
   type DongRow,
 } from '../composable/PC-LPO-0601'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 /**
  * PC-LPO-0603 관할행정동 검색 팝업.
@@ -146,28 +148,28 @@ function onSearch() {
 }
 
 /** 검색결과 더블클릭 → 현재 행정동에 추가 */
-function onResultDblClick(_event: Event, row: any) {
+async function onResultDblClick(_event: Event, row: any) {
   const data: DongRow = typeof row?.getData === 'function' ? row.getData() : row
   const exists = props.dongs.some((dong) => dong.code === data.code && dong.dong === data.dong)
   if (exists) {
-    toast.warning('이미 추가된 행정동입니다.')
+    await dialog.alert({ title: '이미 추가된 행정동입니다.', btnCancel: '확인' })
     return
   }
   const nextNo = props.dongs.reduce((max, dong) => Math.max(max, dong.no), 0) + 1
   emit('update:dongs', [...props.dongs, { ...data, no: nextNo }])
 }
 
-function onDeleteSelected() {
+async function onDeleteSelected() {
   if (!selectedCount.value) {
-    toast.warning('삭제할 행정동을 선택해 주세요.')
+    await dialog.alert({ title: '삭제할 행정동을 선택해 주세요.', btnCancel: '확인' })
     return
   }
   currentGridRef.value?.deleteSelected()
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
-function onSave() {
-  toast.success('저장되었습니다.')
+async function onSave() {
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
   emit('update:open', false)
 }
 </script>

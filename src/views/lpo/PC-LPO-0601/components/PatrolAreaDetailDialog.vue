@@ -58,7 +58,6 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
@@ -66,6 +65,9 @@ import LayoutHeader from '@/components/custom/content-layout/layoutHeader.vue'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 /**
  * 순찰구역 상세 팝업(PC-LPO-0604).
@@ -133,17 +135,17 @@ function onNew() {
   form.addressDetail = ''
 }
 
-function onDelete() {
+async function onDelete() {
   if (!picked.value) return
   const id = picked.value.id
   points.value = points.value.filter((p) => p.id !== id)
   onNew()
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
-function onSave() {
+async function onSave() {
   if (!form.name.trim() || !form.address.trim()) {
-    toast.warning('필수 항목을 입력해 주세요.')
+    await dialog.alert({ title: '필수 항목을 입력해 주세요.', btnCancel: '확인' })
     return
   }
   if (picked.value) {
@@ -166,6 +168,6 @@ function onSave() {
       },
     ]
   }
-  toast.success('저장되었습니다.')
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
 }
 </script>

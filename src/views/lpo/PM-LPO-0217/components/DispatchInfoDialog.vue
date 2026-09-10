@@ -24,23 +24,20 @@
 
     <p class="lp-heading-md lp-table-gap">출동요소목록</p>
     <TabulatorGrid
-      ref="gridRef"
       :columns="columns"
       :data="dispatchUnits"
       height="200px"
       placeholder="출동요소가 없습니다"
-      @table-built="onTableBuilt"
     />
   </GenericDialog2>
 </template>
 
 <script setup lang="ts">
-import { inject, ref } from 'vue'
+import { inject } from 'vue'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { WorkLogKey } from '../composable/PM-LPO-0217'
-import { useDialogGridRedraw } from '../composable/dialogGridRedraw'
 
 /** 출동사건정보 팝업(PM-LPO-0220) — 근무일지 행의 '보기' 버튼에서 연다 */
 const store = inject(WorkLogKey)!
@@ -55,8 +52,6 @@ const reportLines = [
   '….',
 ]
 
-const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
-const { onTableBuilt } = useDialogGridRedraw(gridRef)
 
 const columns: TabulatorGridColumn[] = [
   { title: '출동요소명', field: 'unit', hozAlign: 'center', minWidth: 120, widthGrow: 1 },

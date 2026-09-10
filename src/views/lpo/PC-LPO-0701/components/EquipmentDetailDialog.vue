@@ -114,7 +114,6 @@
 
 <script setup lang="ts">
 import { computed, inject } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
@@ -124,6 +123,9 @@ import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
 import { EquipmentListKey, vehicleTypeLabel, carTypeOptions, locationOptions, info112Options } from '../composable/PC-LPO-0701'
 import styles from '@/components/custom/info-table/InfoTable.module.css'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 
 const store = inject(EquipmentListKey)!
@@ -133,8 +135,8 @@ const { detail, detailDialogOpen, saveDetail, deleteDetail, openVehicle112Dialog
 const isVehicleRestricted = computed(() => detail.vehicleType !== 'patrol')
 const isPlateNumberDisabled = computed(() => isVehicleRestricted.value || detail.isSaved)
 
-function onSave() {
+async function onSave() {
   saveDetail()
-  toast.success('저장되었습니다.')
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
 }
 </script>

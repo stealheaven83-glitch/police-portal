@@ -81,7 +81,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -124,12 +123,12 @@ function openShare() {
 }
 
 /** 실제 다운로드/미리보기는 개발팀 몫 — 화면에서는 눌린 것만 알린다 */
-function onDownload(file: MemoDetailAttachment) {
-  toast.success(`${file.name} 다운로드를 시작합니다.`)
+async function onDownload(file: MemoDetailAttachment) {
+  await dialog.alert({ title: `${file.name} 다운로드를 시작합니다.`, btnCancel: '확인' })
 }
 
-function onPreview(file: MemoDetailAttachment) {
-  toast.info(`${file.name} 을(를) 새 창에서 엽니다.`)
+async function onPreview(file: MemoDetailAttachment) {
+  await dialog.alert({ title: `${file.name} 을(를) 새 창에서 엽니다.`, btnCancel: '확인' })
 }
 
 /** 삭제는 되돌릴 수 없어 컨펌창을 띄운다(PM-LPO-0101 목록의 선택 삭제와 같은 문구) */
@@ -140,7 +139,7 @@ async function onDelete() {
     btnOk: '삭제',
   })
   if (!confirmed) return
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
   router.push('/views/lpo/PM-LPO-0101')
 }
 
