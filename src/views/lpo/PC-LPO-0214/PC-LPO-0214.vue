@@ -108,7 +108,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -123,6 +122,9 @@ import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import {
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
   useBasicCycle,
   hourOptions,
   shiftKindOptions,
@@ -205,41 +207,41 @@ function onTeamSelectionChanged(rows: unknown[]) {
   teamSelection.value = toIds<TeamPlanRow>(rows)
 }
 
-function onDeleteShiftRows() {
+async function onDeleteShiftRows() {
   if (!shiftSelection.value.size) {
-    toast.warning('삭제할 교대 형태를 선택해 주세요.')
+    await dialog.alert({ title: '삭제할 교대 형태를 선택해 주세요.', btnCancel: '확인' })
     return
   }
   removeShiftFormRows(shiftSelection.value)
   shiftSelection.value = new Set()
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
-function onDeleteTeamRows() {
+async function onDeleteTeamRows() {
   if (!teamSelection.value.size) {
-    toast.warning('삭제할 배치를 선택해 주세요.')
+    await dialog.alert({ title: '삭제할 배치를 선택해 주세요.', btnCancel: '확인' })
     return
   }
   removeTeamPlanRows(teamSelection.value)
   teamSelection.value = new Set()
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
-function onApplyCycle() {
+async function onApplyCycle() {
   if (!basicCycle.value) {
-    toast.warning('기본 주기를 선택해 주세요.')
+    await dialog.alert({ title: '기본 주기를 선택해 주세요.', btnCancel: '확인' })
     return
   }
-  toast.success('기본 주기 설정을 적용했습니다.')
+  await dialog.alert({ title: '기본 주기 설정을 적용했습니다.', btnCancel: '확인' })
 }
 
-function onNew() {
+async function onNew() {
   resetAll()
-  toast.success('새로 입력할 수 있습니다.')
+  await dialog.alert({ title: '새로 입력할 수 있습니다.', btnCancel: '확인' })
 }
 
-function onSave() {
-  toast.success('저장되었습니다.')
+async function onSave() {
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
 }
 
 useBottomTabSetup({

@@ -20,7 +20,6 @@
 
 <script setup lang="ts">
 import { inject, ref } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
@@ -28,6 +27,9 @@ import { WorkScheduleKey } from '../composable/useWorkSchedule'
 import type { PatrolAreaRow } from '../composable/useWorkScheduleDialogs'
 import { useDialogGridRedraw } from '../composable/dialogGridRedraw'
 import PatrolAreaDetailDialog from './PatrolAreaDetailDialog.vue'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 /**
  * 순찰구역 팝업(PC-LPO-0209).
@@ -68,12 +70,12 @@ const columns: TabulatorGridColumn[] = [
     buttonSize: 'xs',
     buttonLabel: '위치보기',
     buttonClass: 'lp-grid-btn-compact',
-    onButtonClick: () => toast.info('지도 위치보기는 개발 연동 예정입니다.'),
+    onButtonClick: () => dialog.alert({ title: '지도 위치보기는 개발 연동 예정입니다.', btnCancel: '확인' }),
   },
 ]
 
-function onSave() {
-  toast.success('저장되었습니다.')
+async function onSave() {
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
   patrolAreaOpen.value = false
 }
 </script>

@@ -74,7 +74,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -90,6 +89,9 @@ import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import MentalCenterDetailForm from '../components/MentalCenterDetailForm.vue'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
 import {
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
   useMentalCenterStore,
   createEmptyCenterForm,
   regionFilterOptions,
@@ -173,29 +175,29 @@ function goRegister() {
   router.push({ name: 'PC-PUB-0415' })
 }
 
-function onSave() {
+async function onSave() {
   if (!form.region || !form.name.trim()) {
-    toast.warning('필수 항목을 입력해 주세요.')
+    await dialog.alert({ title: '필수 항목을 입력해 주세요.', btnCancel: '확인' })
     return
   }
   // 기획서 "※ 센터명에 언더바를 제외한 특수문자 사용은 불가합니다"
   if (!isValidCenterName(form.name)) {
-    toast.warning('센터명에 언더바(_)를 제외한 특수문자는 사용할 수 없습니다.')
+    await dialog.alert({ title: '센터명에 언더바(_)를 제외한 특수문자는 사용할 수 없습니다.', btnCancel: '확인' })
     return
   }
   store.saveCenter(form)
-  toast.success('저장되었습니다.')
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
 }
 
 /** 기획서 [5] 클릭 시 선택된 목록 삭제 */
-function onDelete() {
+async function onDelete() {
   if (form.id == null) {
-    toast.warning('삭제할 센터를 선택해 주세요.')
+    await dialog.alert({ title: '삭제할 센터를 선택해 주세요.', btnCancel: '확인' })
     return
   }
   store.deleteCenter(form.id)
   fillForm(null)
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
 /*

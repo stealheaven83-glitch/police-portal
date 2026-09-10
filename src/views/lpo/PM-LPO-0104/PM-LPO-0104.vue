@@ -121,7 +121,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { toast } from 'vue-sonner'
 import { RotateCw } from 'lucide-vue-next'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
@@ -138,6 +137,9 @@ import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import {
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
   useMemoWrite,
   MAX_ATTACHMENTS,
   ATTACHMENT_ACCEPT,
@@ -203,12 +205,12 @@ function onCancel() {
   router.push('/views/lpo/PM-LPO-0101')
 }
 
-function onSave() {
+async function onSave() {
   if (!form.title.trim() || !form.content.trim()) {
-    toast.warning('필수 항목을 입력해 주세요.')
+    await dialog.alert({ title: '필수 항목을 입력해 주세요.', btnCancel: '확인' })
     return
   }
-  toast.success('저장되었습니다.')
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
   router.push('/views/lpo/PM-LPO-0101')
 }
 

@@ -27,13 +27,15 @@
 
 <script setup lang="ts">
 import { inject, ref } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { WorkScheduleKey } from '../composable/useWorkSchedule'
 import type { PatrolPointRow } from '../composable/useWorkScheduleDialogs'
 import { useDialogGridRedraw } from '../composable/dialogGridRedraw'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 /** 순찰구역 상세 팝업(PC-LPO-0210) — 순찰구역 안의 지점(순서·구역명·주소)을 다룬다 */
 const store = inject(WorkScheduleKey)!
@@ -53,7 +55,7 @@ const columns: TabulatorGridColumn[] = [
     cellType: 'input',
     cellIcon: searchIcon,
     cellIconLabel: '주소 조회',
-    onCellIconClick: () => toast.info('주소 검색은 개발 연동 예정입니다.'),
+    onCellIconClick: () => dialog.alert({ title: '주소 검색은 개발 연동 예정입니다.', btnCancel: '확인' }),
   },
   { title: '주소상세', field: 'addressDetail', cellType: 'input', width: 200, },
 ]
@@ -72,18 +74,18 @@ function onSelectionChanged(rows: unknown[]) {
   )
 }
 
-function onDelete() {
+async function onDelete() {
   if (!selectedIds.value.size) {
-    toast.warning('삭제할 지점을 선택해 주세요.')
+    await dialog.alert({ title: '삭제할 지점을 선택해 주세요.', btnCancel: '확인' })
     return
   }
   removePatrolPointRows(selectedIds.value)
   selectedIds.value = new Set()
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
-function onSave() {
-  toast.success('저장되었습니다.')
+async function onSave() {
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
   patrolDetailOpen.value = false
 }
 </script>

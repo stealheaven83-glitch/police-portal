@@ -16,7 +16,6 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -25,6 +24,9 @@ import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import NoticeForm from '../components/NoticeForm.vue'
 import { useNoticeStore, bulletinMenu } from '../composable/notice'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 defineOptions({
   name: 'PmCom1003',
@@ -47,16 +49,16 @@ function goBack() {
   router.push({ name: 'PM-COM-1002' })
 }
 
-function onSave() {
+async function onSave() {
   if (!form.title.trim() || !form.content.trim()) {
-    toast.warning('필수 항목을 입력해 주세요.')
+    await dialog.alert({ title: '필수 항목을 입력해 주세요.', btnCancel: '확인' })
     return
   }
   if (form.important && (!form.importantFrom || !form.importantTo)) {
-    toast.warning('중요공지기간을 입력해 주세요.')
+    await dialog.alert({ title: '중요공지기간을 입력해 주세요.', btnCancel: '확인' })
     return
   }
-  toast.success('저장되었습니다.')
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
   goBack()
 }
 

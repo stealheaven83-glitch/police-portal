@@ -1,6 +1,7 @@
 <template>
   <!-- class="default-theme" 는 splitpanes 기본 테마라 빼면 스플릿 바 형태가 깨집니다 -->
   <splitpanes
+    ref="rootRef"
     class="default-theme splitLayout"
     :class="cn(defaultClass, !props.resizable && 'splitpanes--fixed', props.class)"
     :horizontal="isStacked"
@@ -22,8 +23,8 @@
 </template>
 
 <script setup lang="ts">
-import type { HTMLAttributes } from 'vue'
-import { useMediaQuery } from '@vueuse/core'
+import { ref, type HTMLAttributes } from 'vue'
+import { useMediaQuery, useElementSize } from '@vueuse/core'
 import { cn } from '@/lib/utils'
 import { Splitpanes, Pane } from 'splitpanes'
 // CSS 파일을 반드시 불러와야 스플릿 바 형태가 깨지지 않고 제대로 보입니다!
@@ -38,6 +39,12 @@ interface Props {
   widths?: number[]
   /** 각 pane의 최소 width(%). 값을 주지 않으면 첫 번째 pane만 20%가 적용됩니다 */
   minWidths?: (number | undefined)[]
+  /**
+   * 각 pane의 최소 width(px). splitpanes 는 % 만 받으므로 컨테이너 폭을 재서 % 로 환산합니다(창 크기가 바뀌면 따라감).
+   * 숫자를 준 pane 은 minWidths(%) 보다 우선하고, 'auto' 나 빈 값은 minWidths(%) 로 넘어갑니다.
+   * 예: :min-widths-px="['auto', 380]" → 두 번째 pane 만 380px 제한
+   */
+  minWidthsPx?: (number | 'auto' | undefined)[]
   /** 각 pane의 최대 width(%). minWidths와 같은 값을 주면 해당 pane만 사이즈가 고정됩니다 */
   maxWidths?: (number | undefined)[]
   /** false면 스플리터 드래그/더블클릭 최대화가 막혀 모든 pane 사이즈가 고정됩니다 */
@@ -55,11 +62,19 @@ const isStacked = useMediaQuery('(max-width: 82rem)')
 /** 쌓인 상태에서는 가로 비율이 의미가 없어 pane 을 균등 높이로 나눈다 */
 const paneSize = (i: number) => (isStacked.value ? undefined : props.widths?.[i - 1])
 
-// minWidths를 안 넘긴 기존 사용처는 첫 번째 pane 20% 제한을 그대로 유지합니다.
-const minSizeOf = (i: number) =>
-  isStacked.value
-    ? undefined
-    : props.minWidths?.[i - 1] ?? (props.minWidths ? undefined : (i === 1 ? 20 : undefined))
+/** px 최소폭을 % 로 환산할 기준 — splitpanes 루트 요소의 실제 폭 */
+const rootRef = ref<InstanceType<typeof Splitpanes> | null>(null)
+const { width: rootWidth } = useElementSize(rootRef)
+
+// minWidths/minWidthsPx 를 안 넘긴 기존 사용처는 첫 번째 pane 20% 제한을 그대로 유지합니다.
+const minSizeOf = (i: number) => {
+  if (isStacked.value) return undefined
+  const px = props.minWidthsPx?.[i - 1]
+  // 폭을 아직 못 쟀을 때(0)는 % 로 넘어간다 — 0 으로 나누면 Infinity 가 되어 pane 이 잠긴다
+  if (typeof px === 'number' && rootWidth.value > 0) return (px / rootWidth.value) * 100
+  const hasAnyMin = props.minWidths || props.minWidthsPx
+  return props.minWidths?.[i - 1] ?? (hasAnyMin ? undefined : (i === 1 ? 20 : undefined))
+}
 </script>
 
 <style scoped>

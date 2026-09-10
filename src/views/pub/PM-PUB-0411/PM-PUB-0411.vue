@@ -75,7 +75,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -173,18 +172,18 @@ function goRegister() {
   router.push({ name: 'PC-PUB-0412' })
 }
 
-function onSave() {
+async function onSave() {
   if (!form.region || !form.name.trim()) {
-    toast.warning('필수 항목을 입력해 주세요.')
+    await dialog.alert({ title: '필수 항목을 입력해 주세요.', btnCancel: '확인' })
     return
   }
   store.saveCenter(form)
-  toast.success('저장되었습니다.')
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
 }
 
 async function onDelete() {
   if (form.id == null) {
-    toast.warning('삭제할 센터를 선택해 주세요.')
+    await dialog.alert({ title: '삭제할 센터를 선택해 주세요.', btnCancel: '확인' })
     return
   }
   /*

@@ -1,6 +1,6 @@
 import { computed, reactive, ref } from 'vue'
-import { toast } from 'vue-sonner'
 import { reasonOptions, typeOptions, type DiagnosisHistoryRow, type SelectOption } from './PM-PUB-0101'
+import { useDialog } from '@/composable/dialog/dialog'
 
 /**
  * 간소화 상세(PM-PUB-0102) 팝업 상태.
@@ -176,6 +176,7 @@ function createForm(): DiagnosisDetailForm {
 }
 
 export function useDiagnosisDetail() {
+  const dialog = useDialog()
   const detailOpen = ref(false)
   const detailForm = reactive<DiagnosisDetailForm>(createForm())
   const detailPhotos = ref<DetailPhoto[]>(createPhotos())
@@ -240,14 +241,14 @@ export function useDiagnosisDetail() {
     photo.isObjectUrl = false
   }
 
-  function addIncident() {
+  async function addIncident() {
     // TODO: 112신고 등록 팝업 연결
-    toast.info('112신고 등록 화면은 준비 중입니다.')
+    await dialog.alert({ title: '112신고 등록 화면은 준비 중입니다.', btnCancel: '확인' })
   }
 
-  function saveDetail() {
+  async function saveDetail() {
     // TODO: API 연동
-    toast.success('저장되었습니다.')
+    await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
     closeDetail()
   }
 

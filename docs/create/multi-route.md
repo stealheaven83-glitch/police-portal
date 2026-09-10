@@ -41,7 +41,7 @@ export function useXxxStore() {
 - 목록에서 행을 고르면 스토어의 `selectedId`(이름은 기준 파일대로)에 넣고 `router.push('/views/pub/PC-PUB-0302')`.
 - 상세/등록 화면은 마운트 시 스토어에서 읽는다. **URL 로 바로 진입했는데 선택이 없으면** 목록으로
   돌려보내거나 빈 상태를 보여준다 — 어느 쪽인지 Figma 에 없으면 추론하고 인계 메모 5번에 적는다.
-- 저장/삭제 후 목록 갱신은 **배열 재할당**(`CLAUDE.md` §5), 피드백은 toast(`CLAUDE.md` §4).
+- 저장/삭제 후 목록 갱신은 **배열 재할당**(`CLAUDE.md` §5), 피드백은 알림창 `dialog.alert`(`CLAUDE.md` §4).
 
 ## 4. LNB
 세 화면이 같은 LNB 항목을 켠다. 값은 `docs/create.md` §3 대로 `presets.ts` 를 grep 한다 — 프리셋을

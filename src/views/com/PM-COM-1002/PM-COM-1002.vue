@@ -72,7 +72,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { toast } from 'vue-sonner'
 import { ThumbsUp } from 'lucide-vue-next'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
@@ -116,12 +115,12 @@ const {
 const contentLines = computed(() => notice.value.content.split('\n'))
 
 /** 실제 다운로드/미리보기는 개발팀 몫 — 화면에서는 눌린 것만 알린다 */
-function onDownload(name: string) {
-  toast.success(`${name} 다운로드를 시작합니다.`)
+async function onDownload(name: string) {
+  await dialog.alert({ title: `${name} 다운로드를 시작합니다.`, btnCancel: '확인' })
 }
 
-function onPreview(name: string) {
-  toast.info(`${name} 을(를) 새 창에서 엽니다.`)
+async function onPreview(name: string) {
+  await dialog.alert({ title: `${name} 을(를) 새 창에서 엽니다.`, btnCancel: '확인' })
 }
 
 function goList() {
@@ -141,7 +140,7 @@ async function onDelete() {
     btnOk: '삭제',
   })
   if (!confirmed) return
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
   goList()
 }
 

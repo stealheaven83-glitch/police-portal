@@ -47,7 +47,6 @@
 
 <script setup lang="ts">
 import { inject, ref } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import InputField2 from '@/components/custom/input/InputField2.vue'
@@ -57,6 +56,9 @@ import { TreeView, type TreeNode } from '@/components/custom/tree'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { DispatchSummaryDialogKey, type UserRow } from '../composable/dialogs'
 import { useDialogGridRedraw } from '../composable/dialogGridRedraw'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 /** 사용자 찾기 팝업(PC-LPO-0507) — 부서 트리에서 고르고 오른쪽 목록에서 사람을 고른다 */
 const store = inject(DispatchSummaryDialogKey)!
@@ -80,14 +82,14 @@ function onRowClick(_event: unknown, row: { getData: () => UserRow }) {
   pickedUserNo.value = row.getData().no
 }
 
-function onSearch() {
-  toast.success('조회되었습니다.')
+async function onSearch() {
+  await dialog.alert({ title: '조회되었습니다.', btnCancel: '확인' })
 }
 
-function onSave() {
+async function onSave() {
   const picked = userRows.value.find((u) => u.no === pickedUserNo.value)
   if (!picked) {
-    toast.warning('사용자를 선택해 주세요.')
+    await dialog.alert({ title: '사용자를 선택해 주세요.', btnCancel: '확인' })
     return
   }
   approveChief.value = `${picked.rank} ${picked.name}`

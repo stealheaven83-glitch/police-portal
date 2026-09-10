@@ -64,7 +64,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -76,6 +75,7 @@ import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
+import { useDialog } from '@/composable/dialog/dialog'
 import { useNoticeList, authorFilterOptions, searchFieldOptions } from './composable/PM-COM-1001'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useNoticeStore, bulletinMenu } from '../composable/notice'
@@ -132,14 +132,15 @@ const columns: TabulatorGridColumn[] = [
 
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const selectedCount = ref(0)
+const dialog = useDialog()
 
-function onDeleteSelected() {
+async function onDeleteSelected() {
   if (!selectedCount.value) {
-    toast.warning('삭제할 게시글을 선택해 주세요.')
+    await dialog.alert({ title: '삭제할 게시글을 선택해 주세요.', btnCancel: '확인' })
     return
   }
   gridRef.value?.deleteSelected()
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
 function onRegister() {

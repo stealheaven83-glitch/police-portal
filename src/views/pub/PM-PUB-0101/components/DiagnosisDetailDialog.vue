@@ -280,7 +280,6 @@
 
 <script setup lang="ts">
 import { inject, onBeforeUnmount, ref } from 'vue'
-import { toast } from 'vue-sonner'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
 import { Button } from '@/components/custom/button'
@@ -305,6 +304,9 @@ import {
   incidentColumns,
 } from '../composable/PM-PUB-0102'
 import photoEmptyLabel from '@/assets/images/icons/photoEmptyLabel.svg?url'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 /* 사진 미등록 아이콘 — PM-PUB-0103 사진자료 팝업 등이 쓰는 공통 SVG */
 const photoEmptyIcon = '/portal/asset/images/icon/ico-no-image.svg'
@@ -338,13 +340,13 @@ function pickPhoto(key: string) {
   fileInputs.value[key]?.click()
 }
 
-function onFileSelected(key: string, event: Event) {
+async function onFileSelected(key: string, event: Event) {
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
   if (!file) return
 
   if (!file.type.startsWith('image/')) {
-    toast.warning('이미지 파일만 등록할 수 있습니다.')
+    await dialog.alert({ title: '이미지 파일만 등록할 수 있습니다.', btnCancel: '확인' })
     input.value = ''
     return
   }
@@ -354,9 +356,9 @@ function onFileSelected(key: string, event: Event) {
   input.value = ''
 }
 
-function onAddressSearch() {
+async function onAddressSearch() {
   // TODO: 주소검색 팝업 연결
-  toast.info('주소검색 화면은 준비 중입니다.')
+  await dialog.alert({ title: '주소검색 화면은 준비 중입니다.', btnCancel: '확인' })
 }
 
 function onSurveyChange(questionId: string, value: unknown) {

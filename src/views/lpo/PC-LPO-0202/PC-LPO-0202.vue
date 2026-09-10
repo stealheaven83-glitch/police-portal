@@ -191,7 +191,6 @@
 
 <script setup lang="ts">
 import { computed, provide, ref } from 'vue'
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -227,6 +226,9 @@ import VolunteerAddDialog from './components/VolunteerAddDialog.vue'
 import IncidentAddDialog from './components/IncidentAddDialog.vue'
 import ScheduleCopyDialog from './components/ScheduleCopyDialog.vue'
 import {
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
   useWorkSchedule,
   WorkScheduleKey,
   teamOptions,
@@ -324,47 +326,47 @@ function onIncidentSelectionChanged(rows: unknown[]) {
 function onScheduleCellClick() {
   workUserPickOpen.value = true
 }
-function removeSelectedVolunteers() {
+async function removeSelectedVolunteers() {
   if (!volunteerSelection.value.size) {
-    toast.warning('삭제할 자원근무자를 선택해 주세요.')
+    await dialog.alert({ title: '삭제할 자원근무자를 선택해 주세요.', btnCancel: '확인' })
     return
   }
   removeVolunteerWorkers(volunteerSelection.value)
   volunteerSelection.value = new Set()
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
-function removeSelectedIncidents() {
+async function removeSelectedIncidents() {
   if (!incidentSelection.value.size) {
-    toast.warning('삭제할 사고자를 선택해 주세요.')
+    await dialog.alert({ title: '삭제할 사고자를 선택해 주세요.', btnCancel: '확인' })
     return
   }
   removeIncidentWorkers(incidentSelection.value)
   incidentSelection.value = new Set()
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
-function resetScheduleGrid() {
+async function resetScheduleGrid() {
   scheduleRows.value = scheduleRows.value.map((row) =>
     row.type === 'variable' ? { ...row, cells: row.cells.map((): string[] => []) } : row,
   )
-  toast.success('甲지가 초기화되었습니다.')
+  await dialog.alert({ title: '甲지가 초기화되었습니다.', btnCancel: '확인' })
 }
 
-function onLoadSchedule() {
-  toast.success('근무지정표를 불러왔습니다.')
+async function onLoadSchedule() {
+  await dialog.alert({ title: '근무지정표를 불러왔습니다.', btnCancel: '확인' })
 }
 
-function onLoadWorkType() {
-  toast.success('근무형태를 불러왔습니다.')
+async function onLoadWorkType() {
+  await dialog.alert({ title: '근무형태를 불러왔습니다.', btnCancel: '확인' })
 }
 
 function onPrint() {
   window.print()
 }
 
-function onSave() {
-  toast.success('저장되었습니다.')
+async function onSave() {
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
 }
 
 

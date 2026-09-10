@@ -252,7 +252,6 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { toast } from 'vue-sonner'
 import { BedSingle, Check, X } from 'lucide-vue-next'
 
 import PageHeader from '@/components/custom/title/PageHeader.vue'
@@ -288,6 +287,9 @@ import {
 import styles from './style/PM-PUB-0409.module.css'
 import infoStyles from '@/components/custom/info-table/InfoTable.module.css'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
+import { useDialog } from '@/composable/dialog/dialog'
+
+const dialog = useDialog()
 
 // KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!) — useBottomTabSetup 의 componentName 과 일치해야 한다.
 defineOptions({ name: 'PmPub0409' })
@@ -349,20 +351,20 @@ const centerRegisterOpen = ref(false) // 주취자센터 등록 (PM-PUB-0411)
 const drunkRegisterOpen = ref(false) // 주취자등록 & 병상배정 등록 (PC-PUB-0410)
 const report112Open = ref(false) // 112신고조회 (PM-COM-0501)
 
-function onSave() {
+async function onSave() {
   if (!selectedRow.value) {
-    toast.warning('센터를 선택해 주세요.')
+    await dialog.alert({ title: '센터를 선택해 주세요.', btnCancel: '확인' })
     return
   }
-  toast.success('저장되었습니다.')
+  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
 }
 
-function onDelete() {
+async function onDelete() {
   if (!deleteSelected()) {
-    toast.warning('삭제할 센터를 선택해 주세요.')
+    await dialog.alert({ title: '삭제할 센터를 선택해 주세요.', btnCancel: '확인' })
     return
   }
-  toast.success('삭제되었습니다.')
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
 useBottomTabSetup({
