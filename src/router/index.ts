@@ -530,6 +530,15 @@ const router = createRouter({
               }
           },
           {
+              path: '/component/search-area',
+              name: 'search-area',
+              component: () => import('../views/component-sample/search-area.vue'),
+              meta: {
+                  layout: 'MainLayout',
+                  title: 'Search Wrapper'
+              }
+          },
+          {
               path: '/component/file-upload',
               name: 'file-upload',
               component: () => import('../views/component-sample/FileUpload.vue'),

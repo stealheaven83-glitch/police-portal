@@ -60,8 +60,10 @@
     <Button type="button" variant="tertiary2" size="sm" @click="onPrint">인쇄</Button>
   </div>
 
-  <div class="lp-row-between lp-row-gap">
-    <p class="form-note end lp-em-point">＊ 신규등록 시 근무구분 선택 창이 추가되었습니다. 구분 선택 시에 직접입력을 선택하면 기존과 동일하게 입력 가능합니다.</p>
+  <div class="list-actions space-between items-center">
+    <div class="list-actions-txt">
+    <p>＊ 신규등록 시 근무구분 선택 창이 추가되었습니다. 구분 선택 시에 직접입력을 선택하면 기존과 동일하게 입력 가능합니다.</p>
+    </div>
     <span class="group-gap3">
       <!-- 기획서 6~10: 112누락정보 · 새로고침 · 신규 · 저장 · 삭제 -->
       <Button type="button" variant="tertiary2" size="sm" @click="missingOpen = true">112누락정보</Button>
