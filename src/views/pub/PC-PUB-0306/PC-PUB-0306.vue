@@ -18,17 +18,21 @@
     </template>
     <template #form>
       <div class="search-area">
-        <SelectField v-model="groupTypeFilter" label="단체종류" placeholder="선택" :options="groupTypeFilterOptions" label-position="left" size="sm" triggerClass="w-32" />
-        <SelectField v-model="groupFilter" label="단체명" :options="groupFilterOptions" label-position="left" size="sm" triggerClass="w-40" />
-        <div class="group-gap3">
-          <DatePicker v-model="dateFrom" label="기간" size="sm" inputClass="w-40" />
-          <span aria-hidden="true">~</span>
-          <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
-        </div>
+        <SelectField v-model="groupTypeFilter" label="단체종류" placeholder="선택" :options="groupTypeFilterOptions" size="sm" trigger-class="w-32" />
+        <SelectField v-model="groupFilter" label="단체명" :options="groupFilterOptions" size="sm" trigger-class="w-40" />
+        <DateRangePicker
+          v-model:from="dateFrom"
+          v-model:to="dateTo"
+          label="기간"
+          from-label="기간 시작일"
+          to-label="기간 종료일"
+          size="sm"
+          input-class="w-40"
+        />
       </div>
     </template>
     <template #btns>
-      <Button variant="secondary" size="sm">조회</Button>
+      <Button type="button" variant="secondary" size="sm">조회</Button>
     </template>
   </SearchWrapper>
 
@@ -86,7 +90,7 @@ import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
-import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import { DateRangePicker } from '@/components/custom/datepicker'
 import { Button } from '@/components/custom/button'
 import TableWrapper from '@/components/custom/table/TableWrapper.vue'
 import { TableCell, TableRow } from '@/components/ui/table'
