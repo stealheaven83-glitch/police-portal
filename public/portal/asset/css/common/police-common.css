@@ -1062,12 +1062,14 @@
   text-align: center;
   vertical-align: middle;
   background: var(--white);
-  border-right: 0.1rem solid var(--Border_gray03);
   border-bottom: 0.1rem solid var(--Border_gray03);
 }
-.lp-cert-table th:last-child,
-.lp-cert-table td:last-child {
+.lp-cert-table tr:last-child th:last-child,
+.lp-cert-table tr:last-child td:last-child {
   border-right: 0;
+}
+.lp-cert-table .border-right{
+  border-right:0.1rem solid var(--Border_gray03)!important;
 }
 /* 머리글: 위는 본문색 실선, 아래는 시안 border/gray-2(#8a949e — 색이 같은 토큰이 이것뿐이다) */
 .lp-cert-table thead th {
@@ -1075,6 +1077,10 @@
   color: var(--Text-body_1);
   border-top: 0.1rem solid var(--Text-body_0);
   border-bottom: 0.1rem solid var(--Border_input01);
+}
+.lp-cert-table td,
+.lp-cert-table tbody th
+{border-right: 0.1rem solid var(--Border_gray03);
 }
 /* 문항 칸만 왼쪽 정렬 — 번호는 ol 이 붙인다 */
 .lp-cert-question {
@@ -1085,7 +1091,8 @@
   list-style: decimal;
 }
 /* 비고 칸 — 시안 문구의 줄바꿈을 그대로 살린다 */
-.lp-cert-note {
+/* 위 `.lp-cert-table td` 가 text-align:center 를 걸고 있어 특정도를 맞춰야 왼쪽정렬이 먹는다 */
+.lp-cert-table td.lp-cert-note {
   text-align: left;
   white-space: pre-line;
 }
@@ -1101,9 +1108,14 @@
   width: 24rem;
 }
 /* 총점 옆 초록 안내문 */
+/* 총점 옆 인증기준 판정 문구 — 적합/부적합 두 상태가 같은 자리에 뜬다 */
 .lp-cert-pass {
   font-size: 1.3rem;
   color: var(--Alert-success-text);
+}
+.lp-cert-fail {
+  font-size: 1.3rem;
+  color: var(--Alert-danger-text);
 }
 
 /* ── 메모(개인수첩) 등록·상세 폼 ─────────────────────────────
@@ -2494,4 +2506,124 @@
   font-size: 1.7rem;
   line-height: 1.5;
   font-weight: 700;
+<<<<<<< Updated upstream
+=======
+
+}
+/* ══ 게시판(PM-COM-1101~2104) ══════════════════════════════════════════════ */
+/* 사용자 지정: 접두사를 lp- 가 아니라 board- 로 쓴다(CLAUDE.md §2 기본과 다르지만 요청대로).
+   공지사항(PM-COM-1001~1004)이 쓰는 .lp-notice-* 와 모양이 같지만, 그쪽은 먼저 만들어진
+   남의 화면이라 합치지 않고 그대로 둔다(CLAUDE.md §1). */
+
+/* ── 게시판 글 상세 ─────────────────────────────────────────────────────── */
+.board-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-bottom: 3.2rem;
+}
+.board-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem;
+}
+.board-dept {
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
+}
+.board-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--Text-body_0);
+}
+.board-meta {
+  padding-bottom: 1.6rem;
+  border-bottom: 0.1rem solid var(--Border_gray02);
+}
+/* 본문 대표 이미지 자리 — Figma 는 회색 박스로만 그려져 있다 */
+.board-thumb {
+  width: 100%;
+  max-width: 54rem;
+  height: 28rem;
+  margin: 0 auto;
+  background: var(--Background-gray01);
+}
+.board-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.board-detail-actions {
+  padding-top: 1.6rem;
+  border-top: 0.1rem solid var(--Border_gray02);
+}
+
+/* ── 게시판 글 등록/수정 폼 ─────────────────────────────────────────────── */
+/* 본문 폭을 꽉 쓴다(가운데 정렬 폼인 .lp-narrow-form 과 다르다) */
+.board-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-bottom: 3.2rem;
+}
+.board-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  padding-top: 0.4rem;
+}
+/* 한 줄에 두 칸이 나란히 오는 폼 행(중요공지 + 기간, 지방청 + 주차) */
+.board-form-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.6rem;
+}
+.board-form-grow {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* ── 목록 위 카테고리 칩 탭줄 (Q&A) ─────────────────────────────────────── */
+/* 배치는 FilterChipGroup 이 이미 flex 로 한다 — 여기서는 아래 여백만 준다 */
+.board-category-tabs {
+  margin-bottom: 1.6rem;
+}
+
+/* ── 목록 위 도구줄 — 왼쪽 '내가 쓴 글' 토글, 오른쪽 버튼 ───────────────── */
+.board-list-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.6rem;
+  margin-top: 1.2rem;
+}
+.board-mine-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
+}
+
+/* 목록 '번호' 칸에 들어가는 고정공지 배지. Tabulator 포매터가 HTML 문자열로 만들어
+   넣기 때문에 컴포넌트(Badge)를 못 쓴다 — 클래스로 같은 모양을 낸다 */
+.board-pin-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+  padding: 0 0.8rem;
+  border-radius: 0.4rem;
+  background: var(--Base-primary);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* 검색영역이 두 줄일 때 첫 줄 아래 여백. 화면 템플릿에 mb-4 를 직접 쓰지 않으려고 둔다(CLAUDE.md §1) */
+.board-search-row {
+  margin-bottom: 1.6rem;
+>>>>>>> Stashed changes
 }

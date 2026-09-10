@@ -52,12 +52,14 @@ export const certificationTypeOptions = [
   { label: '재인증', value: 'renew' },
 ]
 
-/** 체크리스트 형태 */
+/** 체크리스트 형태 — sentinel 은 '' 가 아니라 'all'(CLAUDE.md §5) */
 export const checklistTypeOptions = [
   { label: '전체', value: 'all' },
-  { label: '공동주택', value: 'apartment' },
-  { label: '다중이용시설', value: 'public' },
-  { label: '주차장', value: 'parking' },
+  { label: '주차장(범용)', value: 'parking-general' },
+  { label: '주차장(주거용)', value: 'parking-residential' },
+  { label: '주차장(상업용)', value: 'parking-commercial' },
+  { label: '원룸', value: 'studio' },
+  { label: '놀이터', value: 'playground' },
 ]
 
 
@@ -274,9 +276,6 @@ export function useExcellentFacilityCertification() {
     createChecklist(allRows.value.find((r) => r.rowKey === activeRowKey.value)),
   )
 
-  /** 체크리스트는 '수정'을 눌러야 고칠 수 있다(시안의 기본 상태는 조회) */
-  const editing = ref(false)
-
   /** 인증기준표 총점 — 기본(양호2/보통1/미흡0) + 가점(양호1/미흡0) */
   const totalScore = computed(() => {
     const basic = Object.values(checklist.value.basicScores).reduce((sum, v) => sum + (BASIC_SCORE[v] ?? 0), 0)
@@ -292,7 +291,6 @@ export function useExcellentFacilityCertification() {
     if (!row) return
     activeRowKey.value = rowKey
     checklist.value = createChecklist(row)
-    editing.value = false
   }
 
   /** 새 인증 건 — 목록에 먼저 넣고 체크리스트를 비운다 */
@@ -312,7 +310,6 @@ export function useExcellentFacilityCertification() {
     allRows.value = [row, ...allRows.value]
     activeRowKey.value = row.rowKey
     checklist.value = createChecklist()
-    editing.value = true
   }
 
   return {
@@ -324,7 +321,6 @@ export function useExcellentFacilityCertification() {
     rows,
     activeRowKey,
     checklist,
-    editing,
     totalScore,
     meetsCertStandard,
     selectRow,

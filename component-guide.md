@@ -553,7 +553,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-em-primary` / `.lp-em-danger` | 문장 안 한 낱말만 색으로 강조(굵기는 `<b>` 가) | LPO-0208, 0216, 0217 |
 | `.lp-field-inline` | 라벨 아래 입력+버튼이 한 줄로 붙는 칸(부서명 + 부서 검색) | COM-1003, 1004 |
 | `.lp-field-table` `-center` `-empty` | `FieldTable` 전용 — InfoField 칸 안에 들어가는 정적 표 | LPO-0601 |
-| `.lp-cert-scroll` `.lp-cert-table` `-question` `-note` `-note-strong` `-total` `-choice` `-pass` | 인증기준표(rowspan 이 많고 칸 안에 라디오가 들어가 Tabulator·InfoTable 을 못 쓴다). 좁은 패널 안이라 표만 가로 스크롤 | PUB-0113 |
+| `.lp-cert-scroll` `.lp-cert-table` `-question` `-note` `-note-strong` `-total` `-choice` `-pass` `-fail` | 인증기준표(rowspan 이 많고 칸 안에 라디오가 들어가 Tabulator·InfoTable 을 못 쓴다). 좁은 패널 안이라 표만 가로 스크롤 | PUB-0113 |
 | `.lp-notice-form` `-actions` | 게시판 글 등록/수정 폼(본문 폭을 꽉 쓴다). **가운데 1000px 폼은 `.lp-narrow-form`** | COM-1003, 1004 |
 | `.lp-notice-detail` `-badges` `-dept` `-title` `-meta` `-thumb` `-body` `-detail-actions` | 게시판 글 상세 | COM-1002 |
 | `.lp-comment-area` `-write` `-list` `-item` `-head` `-writer` `-date` `-more` `-body` `-actions` `-reply-btn` `-replies` | 댓글·대댓글 영역(CommentThread) | COM-1002 |
@@ -570,6 +570,32 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 |---|---|---|
 | `.lp-detail-layout-wide` | `.detail-layout` 의 gap 2rem → 2.4rem | PC-STT-0103 |
 | `.lp-photo-frame-fill` | `.photo-frame` 에 회색 배경을 얹는다 | PC-STT-0103 |
+
+#### 게시판(`.board-*`) — 접두사 예외
+
+⚠ **사용자 지정으로 `lp-` 를 붙이지 않은 유일한 묶음이다**(CLAUDE.md §2 기본과 다름).
+게시판 화면(PM-COM-1101~2104) 전용이며, 공지사항(PM-COM-1001~1004)이 쓰는 `.lp-notice-*` 와
+모양이 같지만 그쪽은 먼저 만들어진 화면이라 합치지 않고 그대로 뒀다(CLAUDE.md §1).
+
+| 클래스 | 의도 | 쓰는 곳 |
+|---|---|---|
+| `.board-detail` | 게시판 글 상세 본문 세로 스택(gap 2rem) | `views/com/components/BoardDetail.vue` |
+| `.board-badges` | 상세 맨 위 배지줄(공지·카테고리·공개·부서) | 〃 |
+| `.board-dept` | 배지줄에 텍스트로 붙는 부서/지방청/주차 | 〃 |
+| `.board-title` | 상세 제목 2.4rem bold | 〃 |
+| `.board-meta` | 작성자·등록일·조회수 줄 + 아래 구분선 | 〃 |
+| `.board-thumb` | 본문 대표 이미지 자리(회색 박스) | 〃 |
+| `.board-body` | 본문 문단 스택 | 〃 |
+| `.board-detail-actions` | 상세 맨 아래 목록/삭제/수정 줄 + 위 구분선 | 〃 |
+| `.board-form` | 등록·수정 폼 세로 스택. **본문 폭을 꽉 쓴다**(가운데 정렬인 `.lp-narrow-form` 과 다름) | `views/com/components/BoardForm.vue` |
+| `.board-form-actions` | 폼 아래 우측 취소/저장 줄 | 〃 |
+| `.board-form-row` | 한 줄에 두 칸이 나란히(지방청+주차) | 〃 |
+| `.board-form-grow` | `.board-form-row` 안에서 남는 폭을 가져가는 칸 | 〃 |
+| `.board-category-tabs` | 목록 위 카테고리 칩줄의 **아래 여백만**(배치는 `FilterChipGroup` 이 한다) | PM-COM-1101 |
+| `.board-list-toolbar` | 목록 위 우측 도구줄('내가 쓴 글' 토글) | PM-COM-1101 · 2101 |
+| `.board-mine-toggle` | 그 토글의 스위치+글자 묶음 | 〃 |
+| `.board-pin-badge` | 목록 '번호' 칸의 고정공지 배지. Tabulator 포매터가 HTML 문자열을 만들어 `Badge` 를 못 써서 클래스로 같은 모양을 낸다 | 고정공지 있는 목록 7개 |
+| `.board-search-row` | 검색영역이 두 줄일 때 첫 줄 아래 여백(템플릿에 `mb-4` 를 안 쓰려고) | 목록 10개 |
 
 ---
 
