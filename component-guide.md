@@ -177,6 +177,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | 저장/삭제 성공, 필수값 누락 경고 | **알림창 `useDialog().alert()`** (CLAUDE.md §4) — toast 는 쓰지 않는다 |
 | 결과/경고 박스(성공·실패·주의) | `custom/alert/Alert.vue` |
 | 이해를 돕는 설명 박스 | `custom/infobox/InfoBox.vue` |
+| 검색영역 아래 개인정보 오남용 경고 한 줄(오른쪽에 저장 버튼 등) | `custom/notice/PrivacyNoticeBar.vue` — 기본 슬롯에 버튼을 넣으면 양끝 정렬 |
 | 페이지 상단 긴급 공지 띠 | `custom/alert/CriticalAlert.vue` |
 | 처리 중 로딩 | `custom/spinner/Spinner.vue` |
 | 진행률 막대 | `custom/progress/ProgressBar.vue` |

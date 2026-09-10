@@ -1,4 +1,4 @@
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 
 export interface SelectOption {
   label: string
@@ -56,12 +56,6 @@ export const regionOptions: SelectOption[] = [
   ...REGIONS.map((r) => ({ label: r, value: r })),
 ]
 
-export const centerOptions: SelectOption[] = [
-  { label: '전체', value: 'all' },
-  { label: '주취자응급의료센터(서울동부병원)', value: '주취자응급의료센터(서울동부병원)' },
-  { label: '주취해소센터(부산의료원)', value: '주취해소센터(부산의료원)' },
-  { label: '주취자응급의료센터(천안의료원)', value: '주취자응급의료센터(천안의료원)' },
-]
 
 // 기획서: 10대~90대
 export const ageGroupOptions: SelectOption[] = Array.from({ length: 9 }, (_, i) => {
@@ -179,6 +173,25 @@ export function useCenterBedStatus() {
   const searchRegion = ref('all')
   const searchCenter = ref('all')
 
+  /**
+   * 기획서: 선택된 지역의 센터 목록만 노출. 지역이 '전체'면 등록된 센터 전부.
+   * 전용 컴포넌트를 만들지 않고 SelectField 둘 + computed 로 화면에서 직접 잇는다(PM-PUB-0411 과 같은 형태).
+   */
+  const centerOptions = computed<SelectOption[]>(() => {
+    const names = allRows
+      .filter((row) => searchRegion.value === 'all' || row.region === searchRegion.value)
+      .map((row) => row.centerName)
+    return [
+      { label: '전체', value: 'all' },
+      ...Array.from(new Set(names)).map((name) => ({ label: name, value: name })),
+    ]
+  })
+
+  // 지역을 바꾸면 직전에 고른 센터가 목록에 없을 수 있어 '전체'로 되돌린다.
+  watch(searchRegion, () => {
+    searchCenter.value = 'all'
+  })
+
   const detail = reactive<BedDetailForm>(createEmptyDetail())
 
   const itemsPerPage = 10
@@ -237,6 +250,7 @@ export function useCenterBedStatus() {
     selectedRow,
     searchRegion,
     searchCenter,
+    centerOptions,
     detail,
     search,
     selectRow,

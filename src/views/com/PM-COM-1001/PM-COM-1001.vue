@@ -17,32 +17,37 @@
       <DepartmentCascadeSelect v-model="department" size="sm" />
     </template>
     <template #form>
-      <div class="search-area mb-4">
+      <div class="search-area board-search-row">
         <div class="group-gap2">
-          <SelectField v-model="authorFilter" label="성명" labelClass="" :options="authorFilterOptions" size="sm" triggerClass="w-[15.4rem]" />
+          <SelectField v-model="authorFilter" label="성명" :options="authorFilterOptions" size="sm" triggerClass="w-[15.4rem]" />
           <InputField2 v-model="authorKeyword" size="sm" inputClass="w-[37.2rem]" placeholder="이름을 검색해주세요." />
         </div>
       </div>
       <div class="search-area">
         <div class="group-gap2">
-          <DatePicker v-model="dateFrom" label="등록일" size="sm" inputClass="w-[250px]" />
+          <DatePicker v-model="dateFrom" label="등록일" size="sm" inputClass="w-[25rem]" />
           <span aria-hidden="true">~</span>
           <DatePicker v-model="dateTo" size="sm" inputClass="w-[25rem]" />
         </div>
         <div class="group-gap2">
           <SelectField v-model="searchField" label="검색어" :options="searchFieldOptions" size="sm" triggerClass="w-[15.3rem]" />
-          <InputField2 v-model="keyword" size="sm" inputClass="w-[37.2rem]" placeholder="검색어를 입력해주세요." />
+          <InputField2 v-model="keyword" size="sm" inputClass="w-[37.2rem]" placeholder="검색어를 입력하세요." />
         </div>
       </div>
     </template>
     <template #btns>
-      <Button variant="secondary" size="sm">조회</Button>
+      <Button type="button" variant="secondary" size="sm">조회</Button>
     </template>
   </SearchWrapper>
 
+  <div class="list-actions">
+    <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelected">삭제</Button>
+    <Button type="button" variant="primary" size="sm" @click="onCreate">작성</Button>
+  </div>
+
   <TabulatorGrid
     ref="gridRef"
-    class="mt-[1.2rem] flex-1"
+    class="flex-1"
     :columns="columns"
     :data="rows"
     select-mode="checkbox"
@@ -54,11 +59,6 @@
     @row-selection-changed="selectedCount = $event.length"
     @row-click="onRowClick"
   />
-
-  <div class="list-actions">
-    <Button type="button" variant="tertiary2" size="sm" @click="onDeleteSelected">삭제</Button>
-    <Button type="button" variant="primary" size="sm" @click="onRegister">등록</Button>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -67,6 +67,7 @@ import { useRouter } from 'vue-router'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
+import HelpButton from '@/components/custom/button/HelpButton.vue'
 import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
@@ -74,25 +75,28 @@ import InputField2 from '@/components/custom/input/InputField2.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
-import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import { useDialog } from '@/composable/dialog/dialog'
 import { useNoticeList, authorFilterOptions, searchFieldOptions } from './composable/PM-COM-1001'
-import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useNoticeStore, bulletinMenu } from '../composable/notice'
-import HelpButton from '@/components/custom/button/HelpButton.vue'
-defineOptions({ name: 'PmCom1001' })
+import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
+import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
+
+defineOptions({
+  name: 'PmCom1001',
+})
 
 // LNB: 게시판 > 공지사항 (presets.ts 에 게시판 메뉴가 아직 없어 도메인 composable 의 구성을 쓴다)
-useSideMenuSetup(bulletinMenu)
-
-const router = useRouter()
-const { selectNotice } = useNoticeStore()
+useSideMenuSetup({ ...bulletinMenu, activeChild: '공지사항' })
 
 const navItems = [
   { label: '홈', path: '/' },
   { label: '게시판' },
   { label: '공지사항' },
 ]
+
+const router = useRouter()
+const dialog = useDialog()
+const { selectNotice } = useNoticeStore()
 
 const {
   department,
@@ -106,11 +110,12 @@ const {
   rows,
 } = useNoticeList()
 
-/** '중요' 공지는 빨간 배지로, 일반 글은 번호 그대로 표시 */
+/** 중요 공지는 번호 자리에 빨간 '중요' 배지가 들어간다.
+ *  Tabulator 포매터는 HTML 문자열을 돌려주는 자리라 Badge 컴포넌트를 못 쓴다 */
 function noFormatter(cell: any) {
   const value = cell.getValue()
   if (value === '중요') {
-    return '<span style="display:inline-flex;align-items:center;justify-content:center;height:2rem;padding:0 0.8rem;border-radius:0.4rem;background:var(--danger);color:#fff;font-size:1.2rem;font-weight:600;">중요</span>'
+    return '<span class="board-pin-badge board-pin-badge-danger">중요</span>'
   }
   return String(value)
 }
@@ -132,22 +137,22 @@ const columns: TabulatorGridColumn[] = [
 
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const selectedCount = ref(0)
-const dialog = useDialog()
 
 async function onDeleteSelected() {
   if (!selectedCount.value) {
-    await dialog.alert({ title: '삭제할 게시글을 선택해 주세요.', btnCancel: '확인' })
+    await dialog.alert({ title: '삭제할 공지사항을 선택해 주세요.', btnCancel: '확인' })
     return
   }
   gridRef.value?.deleteSelected()
   await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
-function onRegister() {
+/** 시안의 버튼 문구가 '작성'이다(설계서 6번은 '등록'이라 적혀 있다 — 시안을 따랐다) */
+function onCreate() {
   router.push({ name: 'PM-COM-1004' })
 }
 
-/** 제목을 누르면 상세(PM-COM-1002)로 간다 */
+/** 행을 누르면 상세(PM-COM-1002)로 간다 */
 function onRowClick(_event: unknown, row: { getData: () => { id?: number } }) {
   selectNotice(row.getData().id ?? 1)
   router.push({ name: 'PM-COM-1002' })

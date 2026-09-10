@@ -11,7 +11,7 @@
     </template>
   </PageHeader>
 
-  <SearchWrapper>
+  <SearchWrapper no-background>
     <template #form>
       <div class="search-area">
         <SelectField
@@ -31,9 +31,6 @@
           trigger-class="w-70"
         />
       </div>
-    </template>
-    <template #btns>
-      <Button type="button" variant="secondary" size="sm">조회</Button>
     </template>
   </SearchWrapper>
 
@@ -62,11 +59,9 @@
       <LayoutPanel title="주취자센터관리 상세">
         <template #actions>
           <Button type="button" variant="tertiary2" size="sm" @click="onDelete">삭제</Button>
+          <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
         </template>
         <DrunkCenterDetailForm :form="form" id-prefix="center-detail" />
-        <div class="form-actions">
-          <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
-        </div>
       </LayoutPanel>
     </template>
   </LayoutSplite>
@@ -114,7 +109,11 @@ const router = useRouter()
 const dialog = useDialog()
 const store = useDrunkCenterStore()
 
-/* ── 검색 ─────────────────────────────────────────────────────────────── */
+/* ── 검색 ──────────────────────────────────────
+
+
+
+───────────────────────── */
 const regionFilter = ref('all')
 const centerFilter = ref('all')
 
@@ -146,7 +145,7 @@ const columns: TabulatorGridColumn[] = [
   { title: '지역', field: 'region', width: 100, hozAlign: 'center', formatter: (cell: any) => regionLabel(cell.getValue()) },
   { title: '센터명', field: 'name', widthGrow: 2, hozAlign: 'left' },
   { title: '연락처', field: 'phone1', hozAlign: 'center', formatter: (cell: any) => formatPhone(cell.getRow().getData()) },
-  { title: '총 병상 수', field: 'bedTotal', width: 110, hozAlign: 'center' },
+  { title: '총 병상 수', field: 'bedTotal', width: 60, hozAlign: 'center' },
 ]
 
 /* ── 상세 ─────────────────────────────────────────────────────────────── */
