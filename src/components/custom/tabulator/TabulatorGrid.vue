@@ -784,6 +784,14 @@ function dateCellFormatter(columnKey: string) {
 function inputCellFormatter(col: TabulatorGridColumn, columnKey: string) {
   return (cell: any) => {
     const rowData = cell.getRow().getData()
+
+    // cellVisible 이 false 인 행은 입력칸 없이 값만 보여준다(buttonVisible 과 같은 개념)
+    if (col.cellVisible?.(rowData) === false) {
+      const span = document.createElement('span')
+      span.textContent = cell.getValue() ?? ''
+      return span
+    }
+
     const field = col.field || cell.getField?.() || ''
     const value = ref<string>(cell.getValue() ?? '')
     const isInvalid = ref(!!invalidFields.get(rowData)?.has(field))
@@ -938,6 +946,13 @@ function buttonCellFormatter(col: TabulatorGridColumn, columnKey: string) {
  * ------------------------------------------------------------------ */
 function selectCellFormatter(col: TabulatorGridColumn, columnKey: string) {
   return (cell: any) => {
+    // cellVisible 이 false 인 행은 셀렉트 없이 값만 보여준다(buttonVisible 과 같은 개념)
+    if (col.cellVisible?.(cell.getRow().getData()) === false) {
+      const span = document.createElement('span')
+      span.textContent = cell.getValue() ?? ''
+      return span
+    }
+
     const value = ref(cell.getValue())
 
     return mountCell(cell, columnKey, 'grid-select-cell', () =>

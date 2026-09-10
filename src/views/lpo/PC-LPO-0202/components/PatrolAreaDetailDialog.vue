@@ -1,15 +1,15 @@
 <template>
-  <GenericDialog2 v-model:open="patrolDetailOpen" title="순찰구역 상세" :size="920">
-    <p class="lp-meta-nowrap">
-      순찰구역명: <b class="lp-em-primary">{{ patrolDetailName }}</b>
-    </p>
+  <GenericDialog2 v-model:open="patrolDetailOpen" title="순찰구역 상세" :size="1000">
 
+    <div class="meta-wrapper ver1">
+      <span>순찰구역명: <em class="meta-value">{{ patrolDetailName }}</em></span>
+    </div>
     <TabulatorGrid
       ref="gridRef"
       class="lp-table-gap"
       :columns="columns"
       :data="patrolPointRows"
-      height="340px"
+      height="450px"
       select-mode="checkbox"
       placeholder="등록된 지점이 없습니다"
       @row-selection-changed="onSelectionChanged"
@@ -45,19 +45,17 @@ const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const { onTableBuilt } = useDialogGridRedraw(gridRef)
 
 const columns: TabulatorGridColumn[] = [
-  { title: '순서', field: 'order', cellType: 'input', hozAlign: 'center', minWidth: 70, widthGrow: 1 },
-  { title: '구역명', field: 'name', cellType: 'input', minWidth: 140, widthGrow: 2 },
+  { title: '순서', field: 'order', cellType: 'input', hozAlign: 'center', width: 100 },
+  { title: '구역명', field: 'name', cellType: 'input', width: 200 },
   {
     title: '주소',
     field: 'address',
     cellType: 'input',
     cellIcon: searchIcon,
     cellIconLabel: '주소 조회',
-    minWidth: 240,
-    widthGrow: 4,
     onCellIconClick: () => toast.info('주소 검색은 개발 연동 예정입니다.'),
   },
-  { title: '주소상세', field: 'addressDetail', cellType: 'input', minWidth: 140, widthGrow: 2 },
+  { title: '주소상세', field: 'addressDetail', cellType: 'input', width: 200, },
 ]
 
 const selectedIds = ref<Set<number>>(new Set())

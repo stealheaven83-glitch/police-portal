@@ -1,7 +1,7 @@
 import { computed, reactive, ref } from 'vue'
 import type { MemoFormPayload, MemoItem } from './PM-LPO-0101'
 
-/** 첨부파일 1건 (퍼블: 실제 업로드는 개발팀) */
+/** 첨부파일 1건 (퍼블: 실제 업로드는 인계 대상) */
 export interface MemoAttachment {
   id: number
   name: string
@@ -50,7 +50,7 @@ export function useMemoForm(memo?: MemoItem | null) {
 
   let progressTimer: ReturnType<typeof setInterval> | null = null
 
-  /** 퍼블 목업: 실제 AI 요약은 개발팀. 진행률만 흉내내고 고정 문구를 채운다 */
+  /** 퍼블 목업: 실제 AI 요약은 인계 대상. 진행률만 흉내내고 고정 문구를 채운다 */
   function runSummary() {
     if (!canSummarize.value) return
     summaryState.value = 'loading'

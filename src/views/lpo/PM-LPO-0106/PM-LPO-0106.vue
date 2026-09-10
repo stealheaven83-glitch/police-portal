@@ -74,7 +74,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { toast } from 'vue-sonner'
+import { useDialog } from '@/composable/dialog/dialog'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -93,6 +93,7 @@ defineOptions({
 })
 
 const router = useRouter()
+const dialog = useDialog()
 
 const navItems = [
   { label: '홈', path: '/' },
@@ -153,19 +154,18 @@ function cardClass(row: NotificationRow) {
 }
 
 /* 선택 상태는 표/카드 어느 쪽이든 TabulatorGrid 가 들고 있다(getSelectedData) */
-function onDeleteSelected() {
+async function onDeleteSelected() {
   const ids = ((gridRef.value?.getSelectedData() ?? []) as NotificationRow[]).map((row) => row.id)
-  if (!ids.length) {
-    toast.warning('삭제할 알림을 선택해 주세요.')
-    return
-  }
+  if (!ids.length) return
+  const { confirmed } = await dialog.confirm({ title: '삭제 하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
+  if (!confirmed) return
   deleteRows(ids)
-  toast.success('삭제되었습니다.')
 }
 
-function onDeleteOne(id: number) {
+async function onDeleteOne(id: number) {
+  const { confirmed } = await dialog.confirm({ title: '삭제 하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
+  if (!confirmed) return
   deleteRows([id])
-  toast.success('삭제되었습니다.')
 }
 
 /** 모바일 앱 헤더 - 뒤로가기 */

@@ -61,7 +61,6 @@
       <Download :size="16" aria-hidden="true" />
       엑셀다운로드
     </Button>
-    <Button type="button" variant="primary" size="sm" @click="onCreate">신규</Button>
   </div>
 
   <TabulatorGrid
@@ -81,7 +80,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Download } from 'lucide-vue-next'
-import { toast } from 'vue-sonner'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -114,7 +112,6 @@ const {
   dateTo,
   receiptType,
   search,
-  createEmptyRow,
 } = useRequestManage()
 
 /**
@@ -150,13 +147,6 @@ function onSearch() {
 function onDownloadExcel() {
   const today = new Date().toISOString().slice(0, 10)
   gridRef.value?.download('csv', `요청관리_${today}.csv`)
-}
-
-/** 신규는 별도 등록 화면 없이 목록 맨 위에 빈 행을 붙인다(맨 위라 1페이지에 그대로 보인다) */
-async function onCreate() {
-  await gridRef.value?.addRow(createEmptyRow(), true)
-  gridRef.value?.setPage(1)
-  toast.success('신규 요청이 등록되었습니다.')
 }
 
 useSideMenuSetup('flexiblePatrol')

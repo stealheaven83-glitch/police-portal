@@ -1,5 +1,5 @@
 <template>
-  <GenericDialog2 v-model:open="patrolAreaOpen" title="순찰구역" :size="920">
+  <GenericDialog2 v-model:open="patrolAreaOpen" title="순찰구역" :size="1000">
     <TabulatorGrid
       ref="gridRef"
       :columns="columns"
@@ -36,34 +36,38 @@ import PatrolAreaDetailDialog from './PatrolAreaDetailDialog.vue'
 const store = inject(WorkScheduleKey)!
 const { patrolAreaOpen, patrolAreaRows, openPatrolDetail } = store
 
-const searchIcon = '/portal/asset/images/icon/ico_seach_black_20.svg'
-
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const { onTableBuilt } = useDialogGridRedraw(gridRef)
 
 const columns: TabulatorGridColumn[] = [
-  { title: '번호', field: 'no', hozAlign: 'center', minWidth: 60, widthGrow: 1 },
-  { title: '순찰구역명', field: 'name', cellType: 'input', minWidth: 140, widthGrow: 2 },
+  { title: '번호', field: 'no', hozAlign: 'center', width: 60 },
+  { title: '순찰구역명', field: 'name', cellType: 'input', width: 180 },
   {
     title: '순찰구역상세',
     field: 'detail',
-    cellType: 'input',
-    cellIcon: searchIcon,
-    cellIconLabel: '순찰구역 상세 조회',
+    hozAlign: 'left',
     minWidth: 260,
-    widthGrow: 4,
-    onCellIconClick: (row: PatrolAreaRow) => openPatrolDetail(row),
+    // 시안은 입력창이 아니라 평문 + 칸 오른쪽 끝 원형 돋보기다.
+    // 공용 button 셀은 buttonVisible 이 false 인 행을 라벨 <span> 텍스트로만 그리므로
+    // (버튼 테두리 없음, 클릭은 살아있음) 아이콘은 .lp-grid-search-cell 이 가상요소로
+    // 얹는다 — PC-COM-2204 '비고' 열과 같은 방식이다.
+    cellType: 'button',
+    cssClass: 'lp-grid-search-cell lp-grid-search-end',
+    buttonVisible: () => false,
+    buttonLabel: (row: PatrolAreaRow) => row.detail,
+    onButtonClick: (row: PatrolAreaRow) => openPatrolDetail(row),
   },
-  { title: '순찰차', field: 'car', hozAlign: 'center', minWidth: 90, widthGrow: 1 },
+  { title: '순찰차', field: 'car', hozAlign: 'center', width: 140 },
   {
     title: '지도',
     field: 'map',
     hozAlign: 'center',
-    minWidth: 100,
-    widthGrow: 1,
+    width: 140,
     cellType: 'button',
     buttonVariant: 'tertiary',
+    buttonSize: 'xs',
     buttonLabel: '위치보기',
+    buttonClass: 'lp-grid-btn-compact',
     onButtonClick: () => toast.info('지도 위치보기는 개발 연동 예정입니다.'),
   },
 ]

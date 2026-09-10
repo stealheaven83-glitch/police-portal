@@ -19,6 +19,9 @@ import ShareIcon from '@/assets/images/icons/share.svg?component'
 // Figma file_upload__atomic__pc 의 '삭제' 옆 아이콘 — 회색 원 + x
 import DeleteCircleIcon from '@/assets/images/icons/deleteCircle.svg?component'
 
+// Figma icon/arrow-drop-down — 속이 찬 삼각형. 좌우 화살표는 이걸 90도 돌려 쓴다
+import ArrowDropDownIcon from '@/assets/images/icons/arrowDropDown.svg?component'
+
 // Figma icon/system-info — 채워진 원 안의 i. currentColor 라 글자색을 따라간다
 import SystemInfoIcon from '@/assets/images/icons/systemInfo.svg?component'
 
@@ -28,6 +31,7 @@ export const icons = {
   calendar: CalendarIcon,
   closePop: ClosePopIcon,
   arrowDown: ArrowDownIcon,
+  arrowDropDown: ArrowDropDownIcon,
   arrowRight: ArrowRightIcon,
   arrowNext: ArrowNextIcon,
   arrowLeft: ArrowLeftIcon,

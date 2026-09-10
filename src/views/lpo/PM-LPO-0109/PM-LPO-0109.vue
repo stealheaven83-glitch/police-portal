@@ -104,7 +104,7 @@ const columns: TabulatorGridColumn[] = [
 
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 
-/** 기간검색으로 목업 목록을 거른다 (실제 조회는 개발팀) */
+/** 기간검색으로 목업 목록을 거른다 (실제 조회는 인계 대상) */
 function onSearch() {
   search()
 }

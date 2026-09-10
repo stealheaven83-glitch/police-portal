@@ -122,7 +122,7 @@ async function removePhoto(photo: PhotoSlot) {
   photo.preview = ''
   photo.fileName = ''
 
-  await dialog.alert({ title: '삭제되었습니다.' })
+
 }
 
 async function save() {

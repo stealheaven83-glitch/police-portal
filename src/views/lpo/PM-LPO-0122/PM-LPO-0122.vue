@@ -153,6 +153,7 @@ import { Checkbox } from '@/components/custom/checkbox'
 import { Switch } from '@/components/custom/switch'
 import Icon from '@/components/custom/icon/Icon.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
+import { useDialog } from '@/composable/dialog/dialog'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
@@ -165,6 +166,8 @@ defineOptions({
 
 // LNB: 개인수첩 > 화면설정 (프리셋 미등록 — Figma LNB 라벨을 그대로 넣었다, CLAUDE.md §5 ③)
 useSideMenuSetup({ ...localPoliceMenu, openIndex: 0, activeChild: '화면설정' })
+
+const dialog = useDialog()
 
 const navItems = [
   { label: '홈', path: '/' },
@@ -208,11 +211,15 @@ function onReset() {
   resetToDefault()
 }
 
-/**
- * 기획서에 저장 후 화면 동작(안내문구·확인창)이 정의돼 있지 않다.
- * 지정되지 않은 동작은 만들지 않고 비워 둔다(CLAUDE.md 서두 — 인계 대상).
- */
-function onSave() {}
+/** 설계서 A01 — 한 버튼에 모달은 하나만 붙인다(완료 알림은 인계 대상) */
+async function onSave() {
+  const { confirmed } = await dialog.confirm({
+    title: '저장 하시겠습니까?',
+    btnOk: '확인',
+    btnCancel: '취소',
+  })
+  if (!confirmed) return
+}
 
 useBottomTabSetup({
   value: 'PM-LPO-0122',

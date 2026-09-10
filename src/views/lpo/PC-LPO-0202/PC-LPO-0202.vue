@@ -10,45 +10,53 @@
       </span>
     </template>
   </PageHeader>
-
-  <div class="lp-row-between">
-    <span class="group-gap2">
+  <SearchWrapper>
+    <template #department>
       <span class="dept-name">부서</span>
-      <DepartmentCascadeSelect v-model="department" size="sm" />
-    </span>
-    <span class="group-gap2">
-      <Button type="button" variant="tertiary2" size="sm" @click="bulkPrintOpen = true">甲지 일괄 출력</Button>
-      <Button type="button" variant="tertiary2" size="sm" @click="onPrint">인쇄</Button>
-    </span>
-  </div>
+      <DepartmentCascadeSelect v-model="department4Search" size="sm" />
+    </template>
+    <template #topRightSection>
+      <div class="search-btns">
+        <div class="group-gap2">
+          <Button type="button" variant="tertiary2" size="sm" @click="bulkPrintOpen = true">甲지 일괄 출력</Button>
+          <Button type="button" variant="tertiary2" size="sm" @click="onPrint">인쇄</Button>
+        </div>
+      </div>
+    </template>
+  </SearchWrapper>
 
-  <div class="lp-row-between lp-table-gap">
-    <span class="lp-field-row">
-      <span class="group-gap2">
-        <span class="lp-label-text">근무일</span>
+
+  <div class="list-actions">
+    <div class="calendar-area">
+      <span class="lp-label-text">근무일</span>
+      <div class="calendar-area-date">
         <Button type="button" variant="ghost" size="icon-sm" aria-label="이전 근무일" @click="shiftWorkDate(-1)">
           <Icon name="arrowLeft" :size="18" />
         </Button>
-        <span class="lp-heading-md">{{ workDate }}</span>
+        <span class="calendar-area-date-value">
+          {{ workDate }}
+          <Icon name="calendar" :size="24" aria-hidden="true" />
+        </span>
         <Button type="button" variant="ghost" size="icon-sm" aria-label="다음 근무일" @click="shiftWorkDate(1)">
           <Icon name="arrowNext" :size="18" />
         </Button>
-      </span>
+      </div>
+      <span class="calendar-area-divider" aria-hidden="true" />
       <span class="lp-heading-md">{{ weekdayLabel }}</span>
-      <RadioGroup v-model="shift" class="lp-icon-row">
+      <span class="calendar-area-divider" aria-hidden="true" />
+      <RadioGroup v-model="shift" class="calendar-area-options">
         <RadioGroupItem value="day" label="주" />
         <RadioGroupItem value="night" label="야" />
       </RadioGroup>
-    </span>
+    </div>
 
-    <span class="group-gap2">
-      <Button type="button" variant="tertiary2" size="sm" @click="resetScheduleGrid">甲지 초기화</Button>
-      <Button type="button" variant="tertiary2" size="sm" @click="patrolAreaOpen = true">순찰구역</Button>
-      <Button type="button" variant="tertiary2" size="sm" @click="scheduleCopyOpen = true">교대복구</Button>
-      <Button type="button" variant="tertiary2" size="sm" @click="timeManageOpen = true">시간관리</Button>
-      <Button type="button" variant="secondary" size="sm" @click="workManageOpen = true">근무관리</Button>
-      <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
-    </span>
+    <!-- 오른쪽 버튼은 .list-actions 직속이다 — 래퍼의 gap 이 .list-actions 와 같아 겉포장이 필요 없다 -->
+    <Button type="button" variant="tertiary2" size="sm" @click="resetScheduleGrid">甲지 초기화</Button>
+    <Button type="button" variant="tertiary2" size="sm" @click="patrolAreaOpen = true">순찰구역</Button>
+    <Button type="button" variant="tertiary2" size="sm" @click="scheduleCopyOpen = true">교대복구</Button>
+    <Button type="button" variant="tertiary2" size="sm" @click="timeManageOpen = true">시간관리</Button>
+    <Button type="button" variant="secondary" size="sm" @click="workManageOpen = true">근무관리</Button>
+    <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
   </div>
 
   <LayoutSplite class="lp-table-gap" :count="2" :widths="[30, 70]" :min-widths="[22, 40]">
@@ -177,11 +185,13 @@ import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
+import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
+import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
 import {
   TabulatorGrid,
 } from "@/components/custom/tabulator";
@@ -257,7 +267,10 @@ const {
   scheduleCopyOpen,
 } = workSchedule
 
-const department = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
+const department4Search = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
+
+/** 검색줄 우측 수정 이력 표시 — 목업 */
+const modifiedInfo = '수정일 : 2024-09-01 [홍길동]'
 
 /** 근무자 패널 탭 — 일반근무자 / 자원근무자(PC-LPO-0205) / 사고자(PC-LPO-0206) */
 const workerTab = ref<'regular' | 'volunteer' | 'incident'>('regular')
