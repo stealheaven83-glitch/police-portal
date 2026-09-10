@@ -40,9 +40,6 @@
         />
       </div>
     </template>
-    <template #btns>
-      <Button type="button" variant="secondary" size="sm">조회</Button>
-    </template>
   </SearchWrapper>
 
   <TabulatorGrid

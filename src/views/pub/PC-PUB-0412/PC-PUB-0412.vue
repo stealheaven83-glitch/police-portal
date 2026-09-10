@@ -89,10 +89,8 @@ import { publicSafetyMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import DrunkCenterDetailForm from '../components/DrunkCenterDetailForm.vue'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
-<<<<<<< Updated upstream
-=======
-import { useDialog } from '@/composable/dialog/dialog'
->>>>>>> Stashed changes
+
+
 import {
   useDrunkCenterStore,
   createEmptyCenterForm,
@@ -105,7 +103,6 @@ import { useDialog } from '@/composable/dialog/dialog'
 
 const dialog = useDialog()
 
-const dialog = useDialog()
 
 // KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!) — useBottomTabSetup 의 componentName 과 일치해야 한다.
 defineOptions({ name: 'PcPub0412' })

@@ -2,12 +2,12 @@
   <nav aria-label="Breadcrumb">
     <ol class="breadcrumb">
       <li 
-        v-for="(item, index) in items" 
+        v-for="(item, index) in visibleItems" 
         :key="index" 
         class="breadcrumb__item"
       >
         <router-link 
-          v-if="item.path && index !== items.length - 1" 
+          v-if="item.path" 
           :to="item.path"
           class="breadcrumb__link"
         >
@@ -21,7 +21,6 @@
         </router-link>
         <span 
           v-else 
-          :aria-current="index === items.length - 1 ? 'page' : undefined"
           class="breadcrumb__link"
         >
           <span v-if="index === 0" class="icon-home" aria-hidden="true"> <img
@@ -38,10 +37,13 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import homeIcon from '/portal/asset/images/icon/ico_home.svg'
-defineProps({
+const props = defineProps({
   items: { type: Array, required: true }
-});
+})
+// 마지막 항목(현재 페이지명)은 표시하지 않는다 — 화면은 navItems 를 그대로 넘기면 된다
+const visibleItems = computed(() => props.items.slice(0, -1))
 </script>
 
 <style scoped>

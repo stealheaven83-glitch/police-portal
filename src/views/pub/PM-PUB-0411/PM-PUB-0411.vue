@@ -38,9 +38,10 @@
     <template #layout-1>
       <LayoutPanel title="주취자센터관리">
         <template #actions>
-          <Button type="button" variant="primary" size="sm" @click="goRegister">등록</Button>
+          <Button type="button" variant="primary" size="sm" @click="goRegister">신규</Button>
         </template>
         <TabulatorGrid
+          ref="gridRef"
           class="flex-1"
           :columns="columns"
           :data="rows"
@@ -56,9 +57,10 @@
     </template>
 
     <template #layout-2>
-      <LayoutPanel title="주취자센터관리 상세">
+      <!-- '등록'을 누르면 같은 패널이 등록 폼으로 바뀐다(화면 이동 없음). 등록 중엔 삭제 버튼이 없다 -->
+      <LayoutPanel :title="registering ? '주취자센터관리 등록' : '주취자센터관리 상세'">
         <template #actions>
-          <Button type="button" variant="tertiary2" size="sm" @click="onDelete">삭제</Button>
+          <Button v-if="!registering" type="button" variant="tertiary2" size="sm" @click="onDelete">삭제</Button>
           <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
         </template>
         <DrunkCenterDetailForm :form="form" id-prefix="center-detail" />
@@ -69,7 +71,6 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
@@ -105,7 +106,6 @@ const navItems = [
   { label: '주취자센터관리' },
 ]
 
-const router = useRouter()
 const dialog = useDialog()
 const store = useDrunkCenterStore()
 
@@ -148,8 +148,11 @@ const columns: TabulatorGridColumn[] = [
   { title: '총 병상 수', field: 'bedTotal', width: 60, hozAlign: 'center' },
 ]
 
-/* ── 상세 ─────────────────────────────────────────────────────────────── */
+/* ── 상세 / 등록 ──────────────────────────────────────────────────────── */
+const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const form = reactive(createEmptyCenterForm())
+/** '등록'을 눌러 우측 패널이 등록 폼으로 바뀐 상태. 행을 고르거나 저장하면 다시 상세로 돌아간다 */
+const registering = ref(false)
 
 function fillForm(row: DrunkCenterRow | null) {
   Object.assign(form, row ? { ...row } : createEmptyCenterForm())
@@ -164,19 +167,27 @@ function onRowSelectionChanged(selected: any[]) {
   const first = selected[0]
   const row: DrunkCenterRow | undefined =
     first && typeof first.getData === 'function' ? first.getData() : first
+  // 등록 중에 행을 고르면 등록을 접고 그 행의 상세로 간다(선택 해제만 된 경우는 등록 상태 유지)
+  if (row) registering.value = false
   fillForm(row ?? null)
 }
 
+/** 기획서 [5] 등록 — 별도 화면(PC-PUB-0412)으로 가지 않고 우측 패널을 빈 등록 폼으로 바꾼다 */
 function goRegister() {
-  router.push({ name: 'PC-PUB-0412' })
+  gridRef.value?.deselectAll()
+  fillForm(null)
+  registering.value = true
 }
 
+/** 저장 — 등록 중이면 신규로 들어가고(id 없음), 저장된 건이 그대로 상세로 남는다 */
 async function onSave() {
   if (!form.region || !form.name.trim()) {
     await dialog.alert({ title: '필수 항목을 입력해 주세요.', btnCancel: '확인' })
     return
   }
-  store.saveCenter(form)
+  const id = store.saveCenter(form)
+  form.id = id
+  registering.value = false
   await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
 }
 
@@ -188,10 +199,11 @@ async function onDelete() {
   /*
    * 기획서 [4-1]/[4-2] 확인 알림창 — §7 기본(toast)과 다르지만 기획서에 명시된 지정을 따른다.
    * 병상 사용중이면 삭제를 막고, 아니면 삭제한 뒤 알린다.
+   * [4-1] 은 title(굵은 제목) + description(회색 박스 본문) 두 단으로 — AlertDialog2 가 그 디자인이다.
    */
   if (store.hasBedInUse(form.id)) {
     await dialog.alert({
-      title: '사용 중인 병상이 있을 경우 삭제 할 수 없습니다.',
+      title: '사용 중인 병상이 있을 경우 삭제 할 수 없습니다',
       description: '사용이 종료된 후 다시 시도해 주세요.',
       btnCancel: '확인',
     })
