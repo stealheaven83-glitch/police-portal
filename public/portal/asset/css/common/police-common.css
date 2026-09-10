@@ -2414,6 +2414,10 @@
 
 .info-label-group .info-label-txt {
   font-size: 1.5rem;
+  /* 라벨 열을 가장 긴 문구(강력(강간, 강제추행) — 1.5rem 에서 약 13.8rem)에 맞춰 고정한다.
+     모든 줄의 라벨 폭이 같아져 오른쪽 Stepper 가 세로로 정렬된다 */
+  flex: 0 0 15rem;
+  white-space: nowrap;
 }
 
 /* 표 셀 안에 들어가는 여러 줄 입력칸 (근무일지 신규 행의 활동내역 — 시안 12622:71109).
@@ -2482,4 +2486,12 @@
   gap: 1.6rem;
   flex-shrink: 0;
   white-space: nowrap;
+}
+
+/* 레이아웃 하단 폼 타이틀*/
+.form-title {
+  margin-bottom: 1.2rem;
+  font-size: 1.7rem;
+  line-height: 1.5;
+  font-weight: 700;
 }
