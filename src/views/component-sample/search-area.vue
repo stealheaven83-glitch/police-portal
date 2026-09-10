@@ -111,6 +111,45 @@
 &lt;/SearchWrapper&gt;</pre>
         </section>
 
+        <!-- 4. form + btns (department 없음) -->
+        <section class="space-y-4">
+          <h2 class="text-xl font-semibold border-b pb-2">4. #form + #btns — 부서 없이 검색 폼만 (항상 펼침)</h2>
+          <p class="text-sm text-muted-foreground">
+            부서 슬롯이 없으면 접기 없이 항상 펼쳐진다. 지역 → 센터명처럼 앞 값에 따라 뒤 목록이 바뀌는 건
+            전용 컴포넌트 없이 <code>SelectField</code> 둘 + <code>computed</code> 로 화면에서 직접 잇는다. PM-PUB-0411 · PC-PUB-0412 · PM-PUB-0409.
+          </p>
+          <SearchWrapper>
+            <template #form>
+              <div class="search-area">
+                <!-- 기획서 [3] 선택범위: 18개 지역 -->
+                <SelectField
+                  v-model="regionFilter"
+                  label="지역"
+                  :options="regionOptions"
+                  placeholder="선택"
+                  size="sm"
+                  trigger-class="w-40"
+                />
+                <SelectField
+                  v-model="centerFilter"
+                  label="센터명"
+                  :options="centerFilterOptions"
+                  placeholder="선택"
+                  size="sm"
+                  trigger-class="w-70"
+                />
+              </div>
+            </template>
+            <template #btns>
+              <Button type="button" variant="secondary" size="sm">조회</Button>
+            </template>
+          </SearchWrapper>
+          <pre class="text-xs bg-muted p-3 rounded">&lt;SearchWrapper&gt;
+  &lt;template #form&gt;…&lt;/template&gt;
+  &lt;template #btns&gt;…&lt;/template&gt;
+&lt;/SearchWrapper&gt;</pre>
+        </section>
+
         <!-- 주의 -->
         <section class="space-y-4">
           <h2 class="text-xl font-semibold border-b pb-2">주의 — 되지 않는 조합</h2>
@@ -191,7 +230,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { Download } from 'lucide-vue-next'
 import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
@@ -214,4 +253,23 @@ const department = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: '
 
 const expanded1 = ref(false)
 const expanded3 = ref(false)
+
+/* 4번 — 지역 → 센터명 연동. 전용 컴포넌트 없이 computed 로 거르고 watch 로 되돌린다 */
+const mockCenters = [
+  { region: 'seoul', name: '주취자응급의료센터(서울동부병원)' },
+  { region: 'seoul', name: '주취해소센터(서울의료원)' },
+  { region: 'busan', name: '주취해소센터(부산의료원)' },
+  { region: 'daegu', name: '주취해소센터(대구의료원)' },
+]
+const regionFilter = ref('all')
+const centerFilter = ref('all')
+const centerFilterOptions = computed(() => [
+  { label: '전체', value: 'all' },
+  ...mockCenters
+    .filter((center) => regionFilter.value === 'all' || center.region === regionFilter.value)
+    .map((center) => ({ label: center.name, value: center.name })),
+])
+watch(regionFilter, () => {
+  centerFilter.value = 'all'
+})
 </script>
