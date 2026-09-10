@@ -118,32 +118,28 @@
             부서 슬롯이 없으면 접기 없이 항상 펼쳐진다. 지역 → 센터명처럼 앞 값에 따라 뒤 목록이 바뀌는 건
             전용 컴포넌트 없이 <code>SelectField</code> 둘 + <code>computed</code> 로 화면에서 직접 잇는다. PM-PUB-0411 · PC-PUB-0412 · PM-PUB-0409.
           </p>
-          <SearchWrapper>
-            <template #form>
-              <div class="search-area">
-                <!-- 기획서 [3] 선택범위: 18개 지역 -->
-                <SelectField
-                  v-model="regionFilter"
-                  label="지역"
-                  :options="regionOptions"
-                  placeholder="선택"
-                  size="sm"
-                  trigger-class="w-40"
-                />
-                <SelectField
-                  v-model="centerFilter"
-                  label="센터명"
-                  :options="centerFilterOptions"
-                  placeholder="선택"
-                  size="sm"
-                  trigger-class="w-70"
-                />
-              </div>
-            </template>
-            <template #btns>
-              <Button type="button" variant="secondary" size="sm">조회</Button>
-            </template>
-          </SearchWrapper>
+  <SearchWrapper no-background>
+    <template #form>
+      <div class="search-area">
+        <SelectField
+          v-model="regionFilter"
+          label="지역"
+
+          placeholder="선택"
+          size="sm"
+          trigger-class="w-40"
+        />
+        <SelectField
+          v-model="centerFilter"
+          label="센터명"
+          :options="centerFilterOptions"
+          placeholder="선택"
+          size="sm"
+          trigger-class="w-70"
+        />
+      </div>
+    </template>
+  </SearchWrapper>
           <pre class="text-xs bg-muted p-3 rounded">&lt;SearchWrapper&gt;
   &lt;template #form&gt;…&lt;/template&gt;
   &lt;template #btns&gt;…&lt;/template&gt;
