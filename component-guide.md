@@ -583,7 +583,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-grid-depth-cell` | 2depth 메뉴 칸 회색 배경 | 2204 |
 | `.lp-grid-search-cell` | button 셀 라벨 뒤에 돋보기 아이콘을 가상요소로 얹기 | 2204 |
 | `.lp-table-left` | `TableWrapper` 의 가운데 정렬을 좌측으로 되돌림 | 0601 |
-| `.lp-table-sticky` (+ `.lp-table-sticky-head2`) | `TableWrapper` 헤더와 합계 줄(`.row-total`)을 고정하고 본문만 스크롤. 높이는 `--lp-table-h`, 합계 줄 위치는 `--lp-thead-h`(2단 헤더면 `-head2` 를 같이) | PUB-0307 |
+| `.lp-table-sticky` (+ `.lp-table-sticky-head2`) | `TableWrapper` 헤더와 합계 줄(`.row-total`)을 고정하고 본문만 스크롤. 높이는 `--lp-table-h`, 합계 줄 위치는 `--lp-thead-h`(2단 헤더면 `-head2` 를 같이) | PUB-0306 |
 | `.lp-segmented-tabs` | 탭 컴포넌트의 간격·모서리를 세그먼트 형태로 | 0802 |
 | `.lp-dialog-body .form-note` | 팝업 안에서 공통 `.form-note` 의 아래 여백 해제 | 0601 |
 | `.lp-dropzone-sub` | `.lp-dropzone-txt p` 의 크기·색 되돌리기 | LPO-0104 |

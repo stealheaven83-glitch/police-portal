@@ -18,7 +18,7 @@
     </template>
     <template #form>
       <div class="search-area">
-        <SelectField v-model="groupTypeFilter" label="단체종류" :options="groupTypeFilterOptions" label-position="left" size="sm" triggerClass="w-32" />
+        <SelectField v-model="groupTypeFilter" label="단체종류" placeholder="선택" :options="groupTypeFilterOptions" label-position="left" size="sm" triggerClass="w-32" />
         <SelectField v-model="groupFilter" label="단체명" :options="groupFilterOptions" label-position="left" size="sm" triggerClass="w-40" />
         <div class="group-gap3">
           <DatePicker v-model="dateFrom" label="기간" size="sm" inputClass="w-40" />
@@ -39,7 +39,12 @@
     </Button>
   </div>
 
+  <!--
+    본문만 세로로 스크롤시키고 헤더와 합계 줄은 고정한다(lp-table-sticky, police-override.css).
+    헤더가 1단이라 --lp-thead-h 기본값(4rem)이 그대로 맞다 — 2단이면 lp-table-sticky-head2 를 같이 건다.
+  -->
   <TableWrapper
+    class="lp-table-sticky"
     :columns="columns"
     :items="dataRows"
     caption="단체현황 목록"
@@ -97,10 +102,11 @@ const navItems = [
 const store = usePublicSafetyStore()
 
 const department = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
-const groupTypeFilter = ref('all')
+// 시안(11502:115639)의 단체종류는 아직 아무것도 안 고른 상태('선택' placeholder)다
+const groupTypeFilter = ref('')
 const groupFilter = ref('all')
-const dateFrom = ref('')
-const dateTo = ref('')
+const dateFrom = ref('2026-07-16')
+const dateTo = ref('2026-07-16')
 const advancedSearchOpen = ref(false)
 
 const groupTypeFilterOptions = [{ label: '전체', value: 'all' }, ...groupTypeOptions]
@@ -126,7 +132,8 @@ function groupTypeLabel(groupType: string, etc: string) {
 
 const filteredGroups = computed(() => {
   return store.groups.value.filter((g) => {
-    if (groupTypeFilter.value !== 'all' && g.groupType !== groupTypeFilter.value) return false
+    // 안 고른 상태('')와 '전체'는 거르지 않는다
+    if (groupTypeFilter.value && groupTypeFilter.value !== 'all' && g.groupType !== groupTypeFilter.value) return false
     if (groupFilter.value !== 'all' && String(g.id) !== groupFilter.value) return false
     return true
   })
