@@ -224,14 +224,15 @@ import KeyNoteDialog from './components/KeyNoteDialog.vue'
 import VolunteerAddDialog from './components/VolunteerAddDialog.vue'
 import IncidentAddDialog from './components/IncidentAddDialog.vue'
 import ScheduleCopyDialog from './components/ScheduleCopyDialog.vue'
-import { useDialog } from '@/composable/dialog/dialog'
 import {
   useWorkSchedule,
   WorkScheduleKey,
   teamOptions,
 } from './composable/useWorkSchedule'
+import { useDialog } from '@/composable/dialog/dialog'
 
 const dialog = useDialog()
+
 
 defineOptions({
   name: 'PcLpo0202',
