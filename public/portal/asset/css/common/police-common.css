@@ -401,20 +401,35 @@
   min-width: 0;
   flex-direction: column;
 }
+/*
+ * 칸 사이 6px 틈은 양쪽에 선이 하나씩 붙어 골처럼 보인다(시안·PC-COM-2205).
+ * 오른쪽 선은 뒤 칸의 border-left, 왼쪽 선은 앞 칸의 border-right 다.
+ * (앞 칸 선은 원래 .lp-pane-fixed 에만 있어서, 폭을 안 고정하는 칸에는 안 나왔다)
+ */
 .lp-pane + .lp-pane {
   border-left: 1px solid var(--Border_gray0);
+}
+.lp-pane:not(:last-child) {
+  border-right: 1px solid var(--Border_gray02);
 }
 /* 좌측처럼 폭을 고정하는 칸 */
 .lp-pane-fixed {
   flex: 0 0 30rem;
   border-right: 1px solid var(--Border_gray02);
 }
+/*
+ * line-height 를 정수로 고정한다 — 기본값(normal)이면 17px 글자가 약 20.4px 이 되어
+ * 제목 바 높이가 42.4px 이 된다. 그러면 아래 표가 반 픽셀 위치에서 시작해 머리줄의
+ * 1px 가로선이 두 픽셀에 걸쳐 흐리게 칠해지고, 스크롤할 때 사라진 것처럼 보인다.
+ * 22(여백) + 22(줄 높이) = 44px.
+ */
 .lp-pane-title {
-  padding: 1.2rem 1.6rem;
+  line-height: 2.2rem;
+  padding: 1.1rem 2rem;
   border-bottom: 1px solid var(--Border_gray02);
   background-color: var(--Background-gray01);
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.7rem;
+  font-weight: 600;
   color: var(--Text-body_0);
 }
 
@@ -1307,8 +1322,9 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0;
-  font-size: 1.4rem;
-  color: var(--Text-body_1);
+  /* 시안(13437:135667) — 공용 FileUpload 의 '삭제'와 같은 15px / #1E2124 */
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
   background: none;
   border: 0;
   cursor: pointer;

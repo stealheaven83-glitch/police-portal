@@ -271,6 +271,8 @@ const rowHeightPx = computed(() => `${props.rowHeight}px`)
  * ------------------------------------------------------------------ */
 const hostEl = ref<HTMLElement | null>(null)
 let table: any = null
+/** Tabulator 의 build 가 끝났는지 — 끝나기 전에 redraw 를 걸면 내부 요소가 없어 오류가 난다 */
+let tableBuilt = false
 
 /** 그리드가 원본 배열을 직접 건드리지 않도록 복제해서 넘긴다 */
 const clone = (rows: any[]) => JSON.parse(JSON.stringify(rows))
@@ -1220,6 +1222,7 @@ function buildTable() {
   })
 
   table.on('tableBuilt', () => {
+    tableBuilt = true
     watchVScrollBorder()
     watchContainerWidth()
     emit('table-built', table)
@@ -1329,6 +1332,7 @@ function destroyTable() {
 
   table?.destroy()
   table = null
+  tableBuilt = false
   scrollBorderObserver?.disconnect()
   scrollBorderObserver = null
   widthObserver?.disconnect()
@@ -1358,8 +1362,14 @@ watch(cardView, async (isCard) => {
  * :data 가 바뀌었어도(예: 다른 화면에서 저장하고 목록으로 돌아옴) Tabulator 가 컨테이너
  * 크기를 0으로 측정한 채라 행을 그리지 못하고 있을 수 있다. 다시 보이게 된 시점에
  * redraw(true) 로 강제로 다시 그린다.
+ *
+ * 단, 화면에서 떨어진 표(닫히는 팝업 안의 표 등)에는 걸지 않는다 — Tabulator 의 redraw 는
+ * 요소 크기를 재느라 elVisible() 에서 offsetWidth 를 읽는데, DOM 에서 빠진 뒤라면
+ * "Cannot read properties of null (reading 'offsetWidth')" 가 발생한다. 그 예외가 활성화
+ * 처리 도중에 나면 그 뒤 상태 반영이 멈춰 팝업이 안 닫히는 것처럼 보인다.
  */
 onActivated(() => {
+  if (!tableBuilt || !hostEl.value?.isConnected) return
   table?.redraw(true)
 })
 

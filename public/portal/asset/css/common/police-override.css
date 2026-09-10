@@ -597,33 +597,13 @@
 }
 
 /*
- * 팝업 안 그리드 제목 (시안 Popup Grid Title 10607:49168) — 높이 48, 좌우 20, 17px/600.
- * 화면용 LayoutHeader 는 60px·좌우 24·19px 이라 팝업에서는 이렇게 줄인다.
- * 위쪽 실선은 LayoutSplite 바깥 테두리가 이미 그리므로 여기서 주지 않는다(두 겹이 된다).
+ * 세로 스크롤이 생긴 표의 아래 경계선.
+ *
+ * TabulatorGrid 는 스크롤이 생기면 표에 has-vscroll 클래스를 붙이고,
+ * tabulator-theme.css 는 .tabulator 에 border-bottom: 1px solid transparent 를 깔아 둔다 —
+ * 색만 넣어주면 되는 구조인데 그 규칙이 없어서 마지막 행 아래가 열린 채로 보였다.
+ * 테마는 @layer 밖이라 !important 가 아니면 덮이지 않는다.
  */
-.lp-pop-grid-head {
-  height: 4.8rem;
-  padding-inline: 2rem;
-}
-.lp-pop-grid-head > :first-child {
-  font-size: 1.7rem;
-}
-
-/*
- * 처리자 관리 팝업의 표 영역 (시안 12664:119658/119663) —
- * 제목과 12 띄우고 좌우·아래로 16 씩 들여 놓는다.
- */
-.lp-pop-handler-grid {
-  margin-top: 1.2rem;
-  padding: 0 1.6rem 1.6rem;
-}
-
-/*
- * 처리자 관리 팝업의 2분할 높이 (시안 12664:119657 — 436).
- * LayoutSplite 는 기본 900px 이라 목록이 짧으면 아래가 크게 빈다.
- * 스코프 스타일이라 height 를 직접 못 덮고, 컴포넌트가 열어둔 변수로 바꾼다.
- */
-.lp-pop-handler-split {
-  --split-height: 43.6rem;
-  --split-height-stacked: 43.6rem;
+.tabulator.has-vscroll {
+  border-bottom-color: var(--Border-grid-body) !important;
 }

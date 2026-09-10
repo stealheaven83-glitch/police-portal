@@ -78,6 +78,11 @@ export interface HandlerRow {
 export interface WorkLogFile {
   id: number
   name: string
+  /**
+   * 다운로드가 가능한 파일인지(시안 13437:135667 — 두 번째 줄만 '다운로드'가 있다).
+   * 이미 올라가 있는 파일만 받을 수 있고, 방금 고른 파일은 아직 받을 게 없다.
+   */
+  downloadable?: boolean
 }
 
 function createMockRows(): WorkLogRow[] {
@@ -221,8 +226,9 @@ export function useWorkLogWrite() {
   const fileOpen = ref(false)
   const fileTargetId = ref<number | null>(null)
   const files = ref<WorkLogFile[]>([
-    { id: 1, name: '현장사진_01.jpg [1.2MB]' },
-    { id: 2, name: '현장사진_02.jpg [980KB]' },
+    // 시안 13437:135667 — 첫 줄은 삭제만, 둘째 줄은 다운로드까지 있다
+    { id: 1, name: '사진 4459 [jpg, 1.2MB]' },
+    { id: 2, name: '단체정보리스트 [xlsx, 17KB]', downloadable: true },
   ])
 
   function openHandler(row: WorkLogRow) {
