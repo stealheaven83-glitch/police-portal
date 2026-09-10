@@ -1,15 +1,7 @@
 /* 간이 범죄예방진단 페이지 전용 레이아웃. 1rem = 10px 기준 (전역 리셋). */
 
-/*
- * SearchWrapper 루트에 flex-1 이 걸려 있어 WorkLayout 의 세로 flex 컬럼에 그대로 놓으면
- * 검색영역이 남는 높이를 다 먹는다. 블록 래퍼로 한 겹 감싸 높이를 auto 로 묶어둔다.
- */
-.searchArea {
-  display: block;
-}
-
 /* 그리드가 패널 본문의 남는 높이를 채운다 */
-.panelGrid {
+.panel-grid {
   flex: 1;
   min-width: 0;
 }
@@ -20,68 +12,6 @@
  * 컴포넌트가 열어둔 CSS 변수로 값을 넘기는 게 유일하게 먹히는 방법이다.
  */
 
-/*
- * 상세조회 한 줄. 전역 .search-area 가 flex-wrap 이라 항목 8개를 그냥 늘어놓으면
- * 화면 폭에 따라 줄이 제멋대로 끊긴다. 시안의 2줄 구성(관리번호~현금다액업소 /
- * 진단일자~진단자)을 유지하려고 줄 단위로 묶는다.
- * 한 줄 안에서는 다시 wrap 되므로 좁은 화면에서도 넘치지 않는다.
- */
-.searchRow {
-  display: flex;
-  flex: 0 0 100%;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1.6rem 3.6rem;
-}
-
-/* 시작일 ~ 종료일은 한 덩어리로 붙어 다녀야 해서 따로 묶는다 */
-.dateRange {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-}
-
-.dateSeparator {
+.date-separator {
   color: var(--Text-body_1);
-}
-
-/* ────────────────────────────────── 간소화 상세 팝업 (PM-PUB-0102) */
-
-
-/*
- * 예방자료 표. 문항이 길어 InfoTable 기본 라벨 폭(14rem)으로는 글자가 뭉치므로 넓힌다.
- * (InfoTable 이 --info-label-w 로 라벨 열 폭을 열어둔다)
- */
-.surveyTable {
-  --info-label-w: 26rem;
-}
-
-/* 라디오 10개가 줄바꿈되면 척도를 읽을 수 없어 이 표만 가로 스크롤시킨다 */
-.scaleScroll {
-  overflow-x: auto;
-}
-
-.scaleGroup {
-  display: flex;
-  align-items: flex-end;
-  gap: 1.2rem;
-}
-
-/*
- * RadioGroupItem 은 [동그라미][라벨] 가로 배치가 기본인데 시안은 숫자가 위에 온다.
- * column-reverse 로 뒤집으면 라벨(숫자)이 올라간다.
- * CSS 모듈은 레이어가 없어 Tailwind utilities 레이어보다 우선하므로 gap 도 여기서 덮인다.
- */
-.scaleItem > label {
-  flex-direction: column-reverse;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-
-.incidentHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.2rem;
 }

@@ -213,8 +213,17 @@ Figma 에는 동작이 안 그려져 있다. **사용자가 지정하지 않은 
 - **코드 스타일** — 줄 끝 세미콜론 없음 / 화살표 상수가 아닌 `function` 선언 / import 순서
   (vue → 외부 라이브러리 → 공통 컴포넌트 → 화면 composable → menu·tab) / 검색 옵션은 composable 에
   `export const xxxOptions` 로 두고 화면에서 import.
+- **템플릿의 prop 이름은 케밥케이스다** — `input-class` `trigger-class` `label-class` `row-class`
+  `select-mode`. Vue 는 `inputClass` 도 받지만 기준 파일과 대다수 화면이 케밥이라 섞이면 grep 이
+  갈린다(같은 prop 을 두 이름으로 찾게 된다). **`v-model` 뒤나 `:` 바인딩 안의 JS 식은 그대로
+  카멜케이스다** — 케밥은 속성 이름에만 해당한다.
 - `defineOptions({ name: 'XxxYyy' })` 는 `useBottomTabSetup` 의 `componentName` 과 **글자 하나까지
   같아야** KeepAlive 가 걸린다. 어긋나면 조용히 깨져서 발견이 늦다.
+
+> **아직 안 정해진 것 — `useDialog` import 를 어디 두나.** 지금 저장소가 셋으로 갈려 있다:
+> import 맨 마지막 39건 / menu·tab 앞 37건 / 중간 25건. 다수가 없어서 **한쪽으로 고치지 않는다** —
+> 새 화면에서는 아무 쪽이나 쓰되, 기존 파일의 위치를 옮기지는 말 것(101개 파일이 걸린다).
+> 정리하려면 별도 배치로 한 번에 한다.
 
 ## 4. 저장/삭제 피드백 — 알림창(`dialog.alert`)이 기본, toast 는 쓰지 않는다
 성공·경고 피드백은 **알림창(AlertDialog2)** 으로 낸다. `useDialog().alert()` 가 그 진입점이고 `vue-sonner`

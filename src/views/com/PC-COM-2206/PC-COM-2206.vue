@@ -17,7 +17,6 @@
       label="코드조회"
       size="sm"
       input-class="w-60"
-      class=""
       :icon="searchIcon"
       icon-class="size-5"
       icon-label="검색"
@@ -42,6 +41,7 @@
           :table-options="selectByCheckboxOnly"
           class="flex-1"
           height="100%"
+          :row-class="(row: any) => (row.rowKey === activeParentKey ? 'lp-grid-active-row' : undefined)"
           placeholder="등록된 상위코드가 없습니다"
           @row-click="onParentRowClick"
           @row-selection-changed="selectedParentCount = $event.length"
@@ -115,8 +115,8 @@ const {
 } = useCodeManagement()
 
 /*
- * 성공·경고 피드백을 toast 가 아니라 알림창(AlertDialog2)으로 낸다.
- * CLAUDE.md §7 의 기본값은 toast 지만 사용자 지정이고, 같은 시스템관리 메뉴의
+ * 성공·경고 피드백은 알림창(AlertDialog2)으로 낸다(CLAUDE.md §4).
+ * CLAUDE.md §4 대로 알림창(AlertDialog2)으로 낸다. 같은 시스템관리 메뉴의
  * PC-COM-2201·PC-COM-2203 도 같은 문구를 dialog.alert 로 내고 있어 결이 맞는다.
  */
 const dialog = useDialog()
@@ -185,7 +185,7 @@ async function onDeleteSelectedParents() {
     await dialog.alert({ title: '삭제할 코드를 선택해 주세요.', btnCancel: '확인' })
     return
   }
-  // 사용자 지정: 삭제 전 컨펌창을 먼저 띄운다 (§7 기본은 컨펌 없이 바로 삭제)
+  // 사용자 지정: 삭제 전 컨펌창을 먼저 띄운다 (§4 기본은 컨펌 없이 바로 삭제)
   const result = await dialog.confirm({ title: '삭제하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
   if (!result.confirmed) return
   parentGridRef.value?.deleteSelected()
@@ -205,7 +205,7 @@ async function onDeleteSelectedChildren() {
     await dialog.alert({ title: '삭제할 코드를 선택해 주세요.', btnCancel: '확인' })
     return
   }
-  // 사용자 지정: 삭제 전 컨펌창을 먼저 띄운다 (§7 기본은 컨펌 없이 바로 삭제)
+  // 사용자 지정: 삭제 전 컨펌창을 먼저 띄운다 (§4 기본은 컨펌 없이 바로 삭제)
   const result = await dialog.confirm({ title: '삭제하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
   if (!result.confirmed) return
   childGridRef.value?.deleteSelected()
@@ -213,7 +213,7 @@ async function onDeleteSelectedChildren() {
 }
 
 async function onSave() {
-  // 사용자 지정: 저장 전 컨펌창을 먼저 띄운다 (§7 기본은 컨펌 없이 바로 저장)
+  // 사용자 지정: 저장 전 컨펌창을 먼저 띄운다 (§4 기본은 컨펌 없이 바로 저장)
   const result = await dialog.confirm({ title: '저장하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
   if (!result.confirmed) return
   await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })

@@ -11,10 +11,6 @@
     </template>
   </PageHeader>
 
-  <!--
-    SearchWrapper 루트에 flex-1 이 걸려 있어 WorkLayout 의 세로 flex 컬럼에 그대로 놓으면
-    검색영역이 남는 높이를 다 먹는다. 블록 래퍼로 한 겹 감싸 높이를 auto 로 묶어둔다.
-  -->
     <SearchWrapper collapsible v-model:expanded="advancedSearchOpen">
       <template #department>
         <span class="dept-name">부서</span>
@@ -23,28 +19,28 @@
       <template #form>
         <!-- 시안 1행: 관리번호 · 상호명 · 유형 · 통보유무 · 현금다액업소 -->
         <div class="search-area">
-          <InputField2 v-model="searchForm.managementNo" label="관리번호" size="sm" inputClass="w-40" />
-          <InputField2 v-model="searchForm.bizName" label="상호명" size="sm" inputClass="w-40" />
+          <InputField2 v-model="searchForm.managementNo" label="관리번호" size="sm" input-class="w-40" />
+          <InputField2 v-model="searchForm.bizName" label="상호명" size="sm" input-class="w-40" />
           <SelectField
             v-model="searchForm.type"
             label="유형"
             :options="typeOptions"
             size="sm"
-            triggerClass="w-40"
+            trigger-class="w-40"
           />
           <SelectField
             v-model="searchForm.notified"
             label="통보유무"
             :options="notifiedOptions"
             size="sm"
-            triggerClass="w-40"
+            trigger-class="w-40"
           />
           <SelectField
             v-model="searchForm.cashIntensive"
             label="현금다액업소"
             :options="cashIntensiveOptions"
             size="sm"
-            triggerClass="w-40"
+            trigger-class="w-40"
           />
 
         <div class="group-gap2">
@@ -52,17 +48,17 @@
             v-model="searchForm.diagnosedFrom"
             label="진단일자"
             size="sm"
-            inputClass="w-40"
+            input-class="w-40"
             placeholder="YYYY-MM-DD"
           />
-          <span :class="styles.dateSeparator" aria-hidden="true">~</span>
+          <span :class="styles['date-separator']" aria-hidden="true">~</span>
           <DatePicker
             v-model="searchForm.diagnosedTo"
             size="sm"
-            inputClass="w-40"
+            input-class="w-40"
             placeholder="YYYY-MM-DD"
             label="진단일자 종료일"
-            labelClass="sr-only"
+            label-class="sr-only"
           />
         </div>
         <SelectField
@@ -70,9 +66,9 @@
           label="진단사유"
           :options="reasonOptions"
           size="sm"
-          triggerClass="w-40"
+          trigger-class="w-40"
         />
-        <InputField2 v-model="searchForm.diagnoser" label="진단자" size="sm" inputClass="w-40" />
+        <InputField2 v-model="searchForm.diagnoser" label="진단자" size="sm" input-class="w-40" />
         </div>
       </template>
       <template #btns>
@@ -92,12 +88,12 @@
     좌측에서 고른 한 건이 우측 이력의 조회 조건이라, 두 그리드를 나란히 두고 폭만 조절하게 한다.
     좁은 화면에서는 LayoutSplite 가 알아서 위아래로 쌓는다.
   -->
-  <LayoutSplite :count="2" :widths="[55, 45]" :class="styles.tightSplit" >
+  <LayoutSplite :count="2" :widths="[55, 45]" >
     <template #layout-1>
       <LayoutPanel title="간이 범죄예방진단 현황">
         <TabulatorGrid
           ref="gridRef"
-          :class="styles.panelGrid"
+          :class="styles['panel-grid']"
           :columns="listColumns"
           :data="rows"
           select-mode="single"
@@ -113,7 +109,7 @@
     <template #layout-2>
       <LayoutPanel title="간이 범죄예방진단 이력">
         <TabulatorGrid
-          :class="styles.panelGrid"
+          :class="styles['panel-grid']"
           :columns="historyColumns"
           :data="historyRows"
           select-mode="single"
@@ -222,9 +218,18 @@ const historyColumns: TabulatorGridColumn[] = [
   { title: '진단자', field: 'diagnoser', hozAlign: 'center' },
 ]
 
-/** select-mode="single" 이라 선택 행은 0건 아니면 1건이다 */
-function onRowSelectionChanged(selected: DiagnosisRow[]) {
-  selectRow(selected[0] ?? null)
+/**
+ * select-mode="single" 이라 선택 행은 0건 아니면 1건이다.
+ * @row-selection-changed 는 데이터가 아니라 Tabulator RowComponent 를 넘긴다 —
+ * getData() 로 꺼내지 않으면 우측 이력이 전부 undefined 가 된다(CLAUDE.md §5).
+ */
+function onRowSelectionChanged(rows: any[]) {
+  const row = rows[0]
+  if (!row) {
+    selectRow(null)
+    return
+  }
+  selectRow((typeof row.getData === 'function' ? row.getData() : row) as DiagnosisRow)
 }
 
 function onDownloadExcel() {

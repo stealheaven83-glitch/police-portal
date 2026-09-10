@@ -114,14 +114,20 @@ export const typeOptions: SelectOption[] = [
   ...flattenTypes(diagnosisTypeTree),
 ]
 
+/*
+ * value 는 항목마다 달라야 한다 — 같은 값이 여럿이면 하나를 골랐을 때 그 값을 가진 항목이
+ * 모두 선택 표시되고, 저장값으로도 서로 구분되지 않는다.
+ * ⚠ '취약지역으로' / '판단' 은 한 문장("취약지역으로 판단")이 두 줄로 잘린 것으로 보인다 —
+ *   Figma 대조 후 한 항목으로 합칠지 정해야 한다(지금은 시안 문구 그대로 둔다).
+ */
 export const reasonOptions: SelectOption[] = [
   { label: '전체', value: 'all' },
-  { label: '주민요청', value: 'patrol' },
-  { label: '침입범죄발생', value: 'report' },
-  { label: '취약지역으로', value: 'request' },
-  { label: '판단', value: 'request' },
-  { label: '관서장지시', value: 'request' },
-  { label: '지역안전순찰', value: 'request' },
+  { label: '주민요청', value: 'resident-request' },
+  { label: '침입범죄발생', value: 'burglary' },
+  { label: '취약지역으로', value: 'vulnerable-area' },
+  { label: '판단', value: 'judgment' },
+  { label: '관서장지시', value: 'chief-order' },
+  { label: '지역안전순찰', value: 'safety-patrol' },
 ]
 
 export const notifiedOptions: SelectOption[] = [

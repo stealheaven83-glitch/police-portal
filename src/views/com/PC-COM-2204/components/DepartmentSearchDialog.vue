@@ -48,6 +48,7 @@
         <h3 id="dept-info-heading" class="lp-pane-title">부서 정보</h3>
         <div class="lp-pane-wrap">
           <TabulatorGrid
+            ref="deptGridRef"
             v-model:data="deptRows"
             :columns="deptColumns"
             height="32rem"
@@ -84,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, ref } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import { Button } from '@/components/custom/button'
@@ -111,6 +112,24 @@ const {
 
 const keyword = ref('')
 const searchIcon = '/portal/asset/images/icon/ico_seach_black_20.svg'
+
+const deptGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
+
+/*
+ * 머리줄 부서조회 입력 — 소속관서·소속부서로 거른다(전체 사용자 팝업과 같은 뜻).
+ * v-model:data 로 물린 원본 배열을 건드리지 않으려고 그리드의 setFilter 를 쓴다
+ * (PC-COM-2204·2206 과 같은 방식).
+ */
+watch(keyword, (next) => {
+  const grid = deptGridRef.value
+  if (!grid) return
+  const word = next.trim()
+  if (!word) {
+    grid.clearFilter()
+    return
+  }
+  grid.setFilter((row: DeptNode) => row.station.includes(word) || row.dept.includes(word))
+})
 
 /* ------------------------------------------------------------------ *
  * 부서 정보 (좌)

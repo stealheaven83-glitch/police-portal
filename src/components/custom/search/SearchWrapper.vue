@@ -57,8 +57,6 @@ const hasForm = computed(() => !!slots.form)
 /** department 없이 form 만 있는 화면 — 접기 없이 항상 펼쳐 둔다 */
 const formOnly = computed(() => !hasDepartment.value && hasForm.value)
 
-console.log(1111, formOnly)
-
 /** form 슬롯(상세조회 영역) 펼침 상태. v-model:expanded 로 상위에서 제어 가능 */
 const expanded = defineModel<boolean>('expanded', { default: false })
 
