@@ -1,5 +1,3 @@
-
-
 @charset "UTF-8";
 
 /*
@@ -75,7 +73,8 @@
   flex-shrink: 0;
   width: 2.6rem;
   height: 2.6rem;
-  background: url("../../images/icon/btn search-circle.svg") no-repeat center / 2.6rem auto;
+  background: url("../../images/icon/btn search-circle.svg") no-repeat center /
+    2.6rem auto;
 }
 
 /*
@@ -152,16 +151,19 @@
 /* InfoField 값 칸에 InfoTable 을 한 번 더 넣어 라벨 병합처럼 보이게 할 때
    (PM-PUB-0111 범죄 통계 — '범죄' 한 칸이 하위 3줄을 묶는다).
    .control 의 안쪽 여백과 중복 테두리를 지워 셀에 딱 맞춘다. */
-.lp-info-nested > [class*='control'] {
+.lp-info-nested > [class*="control"] {
   padding: 0;
   gap: 0;
 }
-.lp-info-nested > [class*='control'] > [class*='grid'] {
+.lp-info-nested > [class*="control"] > [class*="grid"] {
   width: 100%;
   border-top: 0;
   border-left: 0;
 }
-.lp-info-nested > [class*='control'] > [class*='grid'] > [class*='field']:last-child {
+.lp-info-nested
+  > [class*="control"]
+  > [class*="grid"]
+  > [class*="field"]:last-child {
   border-bottom: 0;
 }
 
@@ -181,10 +183,9 @@
   font-weight: 700;
   color: var(--Text-body_0);
 }
-.sub-title-between span{
+.sub-title-between span {
   font-size: 1.7rem;
 }
-
 
 /* 척도 10칸이 줄바꿈되면 읽을 수 없어 이 표만 가로로 스크롤시킨다 */
 .prevention-scroll {
@@ -237,7 +238,6 @@
 .prevention-nums,
 .prevention-choices {
   display: flex;
-
 }
 
 .prevention-num {
@@ -274,10 +274,9 @@
   justify-content: center;
   border-bottom: 0.1rem solid var(--Border_gray03);
   background: var(--white);
-
 }
-.prevention-choice label{
-  gap:0;
+.prevention-choice label {
+  gap: 0;
 }
 /*
  * RadioGroupItem 은 라벨이 있으면 [동그라미][간격][라벨] 로 벌어진다.
@@ -294,7 +293,7 @@
   padding: 0;
 }
 .lp-field-flush .no-padding {
-  padding: 0!important;
+  padding: 0 !important;
 }
 
 /*
@@ -312,7 +311,7 @@
 
 /* 펼쳐도 제목 색이 변하지 않는다(컴포넌트 기본은 open 일 때 secondary 로 바뀐다) */
 .lp-ref-trigger,
-.lp-ref-trigger[data-state='open'] {
+.lp-ref-trigger[data-state="open"] {
   height: auto;
   padding: 0;
   border-bottom: 0;
@@ -368,6 +367,15 @@
   min-width: 0;
 }
 
+/* PC-LPO-0202 근무일 입력 — Input 컴포넌트의 기본 border/text 유틸리티를 덮는다 */
+.calendar-area-date input.lp-heading-lg,
+.calendar-area-date input.lp-heading-lg:focus-visible {
+  border: 0;
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+}
+
 /* ══ TableWrapper — 헤더·합계 줄 고정, 본문만 스크롤 ══════════ */
 
 /*
@@ -385,7 +393,7 @@
 .lp-table-sticky-head2 {
   --lp-thead-h: 8rem;
 }
-.lp-table-sticky [data-slot='table-container'] {
+.lp-table-sticky [data-slot="table-container"] {
   max-height: var(--lp-table-h);
   overflow-y: auto;
 }
@@ -433,14 +441,20 @@ tbody .row-total > td {
   background-image:
     linear-gradient(var(--Border_gray03), var(--Border_gray03)),
     linear-gradient(var(--Border_gray03), var(--Border_gray03));
-  background-size: 100% 0.1rem, 0.1rem calc(100% - 0.4rem);
-  background-position: 0 calc(100% - 0.3rem), 0 0;
+  background-size:
+    100% 0.1rem,
+    0.1rem calc(100% - 0.4rem);
+  background-position:
+    0 calc(100% - 0.3rem),
+    0 0;
   background-repeat: no-repeat;
 }
 
 /* 첫 칸 왼쪽에는 세로선이 없다(표 바깥선이 된다) — 세로선 겹만 크기를 0 으로 */
 tbody .row-total > td:first-child {
-  background-size: 100% 0.1rem, 0 0;
+  background-size:
+    100% 0.1rem,
+    0 0;
 }
 
 /*
@@ -453,8 +467,12 @@ tbody .row-total > td:first-child {
   background-image:
     linear-gradient(var(--Border_gray03), var(--Border_gray03)),
     linear-gradient(var(--Border_gray03), var(--Border_gray03));
-  background-size: 100% 0.1rem, 0.1rem calc(100% - 0.4rem);
-  background-position: 0 calc(100% - 0.3rem), 0 0;
+  background-size:
+    100% 0.1rem,
+    0.1rem calc(100% - 0.4rem);
+  background-position:
+    0 calc(100% - 0.3rem),
+    0 0;
   background-repeat: no-repeat;
   /*
    * 그쪽 규칙의 box-shadow 는 셀 바닥 안쪽에 1px 선을 또 그린다 — 위에서 준 border-bottom
@@ -464,7 +482,9 @@ tbody .row-total > td:first-child {
 }
 
 .lp-table-sticky tbody .row-total > td:first-child {
-  background-size: 100% 0.1rem, 0 0;
+  background-size:
+    100% 0.1rem,
+    0 0;
 }
 
 /*
@@ -559,47 +579,47 @@ tbody .row-total > td:first-child {
   opacity: 1;
 }
 
-.search-btns{
+.search-btns {
   display: flex;
   align-items: flex-end;
   gap: 2.4rem;
 }
 
 /*시간관리 팝업 스타일*/
-.meta-wrapper{
+.meta-wrapper {
   display: flex;
   align-items: center;
   gap: 2.4rem;
   padding-top: 1.6rem;
   border-top: 1px solid var(--Border_gray01);
 }
-.meta-wrapper.ver1{
+.meta-wrapper.ver1 {
   margin-bottom: 1.6rem;
 }
-.meta-wrapper > span{
-  color: #6D7882;
+.meta-wrapper > span {
+  color: #6d7882;
   font-size: 1.9rem;
   font-weight: 600;
   display: flex;
   align-items: center;
   gap: 1.2rem;
 }
-.meta-wrapper em{
-  color: #0054A6;
+.meta-wrapper em {
+  color: #0054a6;
 }
-.time-tip{
+.time-tip {
   font-size: 1.5rem;
   font-weight: 400;
   margin-top: 1.6rem;
 }
-.time-tip > em{
+.time-tip > em {
   font-weight: 600;
   color: var(--danger);
 }
-.time-gray-box{
+.time-gray-box {
   border-radius: 0.4rem;
   padding: 0.4rem 1.2rem;
-  background: #F4F5F6;
+  background: #f4f5f6;
   display: flex;
   justify-content: space-between;
   margin: 1.6rem 0;
@@ -622,7 +642,8 @@ tbody .row-total > td:first-child {
   content: "";
   width: 2rem;
   height: 2rem;
-  background: url("../../images/icon/ico_attach_24.svg") no-repeat center / 2rem auto;
+  background: url("../../images/icon/ico_attach_24.svg") no-repeat center / 2rem
+    auto;
 }
 
 /*

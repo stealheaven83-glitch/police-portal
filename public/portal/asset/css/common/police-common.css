@@ -1264,8 +1264,8 @@
 .lp-cert-table tr:last-child td:last-child {
   border-right: 0;
 }
-.lp-cert-table .border-right{
-  border-right:0.1rem solid var(--Border_gray03)!important;
+.lp-cert-table .border-right {
+  border-right: 0.1rem solid var(--Border_gray03) !important;
 }
 /* 머리글: 위는 본문색 실선, 아래는 시안 border/gray-2(#8a949e — 색이 같은 토큰이 이것뿐이다) */
 .lp-cert-table thead th {
@@ -1275,8 +1275,8 @@
   border-bottom: 0.1rem solid var(--Border_input01);
 }
 .lp-cert-table td,
-.lp-cert-table tbody th
-{border-right: 0.1rem solid var(--Border_gray03);
+.lp-cert-table tbody th {
+  border-right: 0.1rem solid var(--Border_gray03);
 }
 /* 문항 칸만 왼쪽 정렬 — 번호는 ol 이 붙인다 */
 .lp-cert-question {
@@ -2807,7 +2807,6 @@
   font-size: 1.7rem;
   line-height: 1.5;
   font-weight: 700;
-
 }
 /* ══ 게시판(PM-COM-1101~2104) ══════════════════════════════════════════════ */
 /* 사용자 지정: 접두사를 lp- 가 아니라 board- 로 쓴다(CLAUDE.md §2 기본과 다르지만 요청대로).

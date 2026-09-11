@@ -29,10 +29,10 @@
   <div class="list-actions lp-date-actions">
     <div class="calendar-area">
       <span class="lp-label-text">근무일</span>
-      <div class="calendar-area-date">
-        <Button type="button" padding="10" variant="ghost" size="icon-sm" aria-label="이전 근무일" @click="shiftWorkDate(-1)">
-          <Icon name="arrowLeft" :size="20" />
-        </Button>
+      <div class="calendar-area-date lp-daynav">
+        <button type="button" class="lp-icon-btn lp-icon-btn-20" aria-label="이전 근무일" @click="shiftWorkDate(-1)">
+          <Icon name="arrowDropDown" :size="20" class="lp-icon-prev" />
+        </button>
         <DatePicker
           v-model="workDate"
           label="근무일 선택"
@@ -40,11 +40,11 @@
           size="sm"
           format="yyyy.MM.dd."
           value-format="yyyy.MM.dd."
-          input-class="lp-date-borderless w-40"
+          input-class="lp-date-borderless lp-heading-lg w-40"
         />
-        <Button type="button" padding="10" variant="ghost" size="icon-sm" aria-label="다음 근무일" @click="shiftWorkDate(1)">
-          <Icon name="arrowNext" :size="20" />
-        </Button>
+        <button type="button" class="lp-icon-btn lp-icon-btn-20" aria-label="다음 근무일" @click="shiftWorkDate(1)">
+          <Icon name="arrowDropDown" :size="20" class="lp-icon-next" />
+        </button>
       </div>
       <span class="calendar-area-divider" aria-hidden="true" />
       <span class="lp-heading-md">{{ weekdayLabel }}</span>
@@ -224,18 +224,13 @@ import KeyNoteDialog from './components/KeyNoteDialog.vue'
 import VolunteerAddDialog from './components/VolunteerAddDialog.vue'
 import IncidentAddDialog from './components/IncidentAddDialog.vue'
 import ScheduleCopyDialog from './components/ScheduleCopyDialog.vue'
-<<<<<<< Updated upstream
-=======
 import { useDialog } from '@/composable/dialog/dialog'
->>>>>>> Stashed changes
 import {
   useWorkSchedule,
   WorkScheduleKey,
   teamOptions,
 } from './composable/useWorkSchedule'
-import { useDialog } from '@/composable/dialog/dialog'
 
-const dialog = useDialog()
 
 
 const dialog = useDialog()
