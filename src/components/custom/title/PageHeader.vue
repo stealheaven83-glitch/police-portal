@@ -29,19 +29,21 @@ const isMobile = useBreakpoint('<=');
   <div
     :class="cn(
       'flex items-center justify-between gap-5 py-5 px-0',
-      isMobile ? 'py-[1.5rem]' : '',
+      isMobile ? 'py-[1.5rem] mb-5' : '',
       props.class
     )"
   >
   <div :class="cn(
     isMobile ? 'flex items-center gap-2' : '',
     props.leftClass)">
-      <Icon name="arrowLeft" :size="24" v-if="isMobile" />
+      <Button variant="icon" aria-label="뒤로가기" v-if="isMobile">
+        <Icon name="arrowLeft" :size="24" />
+      </Button>
       <slot name="left" />
     </div>
     <!-- 2026-09-11 컴포넌트로 교체: button.lp-icon-btn -> Button variant="icon" -->
-    <Button variant="icon" aria-label="메뉴" @click="emit('share')">
-      <Icon name="menu" :size="24" />
+    <Button variant="icon" aria-label="메뉴" v-if="isMobile">
+      <Icon name="menu" :size="20" />
     </Button>
     <div :class="cn(props.rightClass)" v-if="!isMobile">
       <slot name="right" />
