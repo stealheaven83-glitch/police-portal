@@ -306,6 +306,18 @@ const router = createRouter({
             }
         },
         {
+            // 전체메뉴(사이트맵). 화면ID 화면이 아니라 포털 레벨 페이지라
+            // plannedRoutes 규약(/views/{domain}/{화면ID})을 벗어난다 → 여기 직접 등록한다
+            // (docs/create.md §3 의 예외 2). 자체 헤더를 가지므로 DefaultLayout 을 쓴다.
+            path: '/menu',
+            name: 'sitemap',
+            component: () => import('../views/menu/Menu.vue'),
+            meta: {
+                layout: 'DefaultLayout',
+                title: '전체메뉴'
+            }
+        },
+        {
             path: '/lpo/notebook',
             name: 'lpo-notebook',
             component: () => import('../views/lpo/notebook/NotebookMain.vue'),

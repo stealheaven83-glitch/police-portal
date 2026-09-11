@@ -25,6 +25,12 @@ import ArrowDropDownIcon from '@/assets/images/icons/arrowDropDown.svg?component
 // Figma icon/system-info — 채워진 원 안의 i. currentColor 라 글자색을 따라간다
 import SystemInfoIcon from '@/assets/images/icons/systemInfo.svg?component'
 
+// Figma icon/Minus · icon/Plus — 사이트맵(Menu)의 하위메뉴 접기/펼치기 토글
+import MinusIcon from '@/assets/images/icons/minus.svg?component'
+import PlusIcon from '@/assets/images/icons/plus.svg?component'
+// Figma icon/open-new-window — 외부 사이트로 나가는 링크 표시(새 창)
+import OpenNewWindowIcon from '@/assets/images/icons/openNewWindow.svg?component'
+
 
 export const icons = {
   search: SearchIcon,
@@ -45,6 +51,9 @@ export const icons = {
   share: ShareIcon,
   deleteCircle: DeleteCircleIcon,
   systemInfo: SystemInfoIcon,
+  minus: MinusIcon,
+  plus: PlusIcon,
+  openNewWindow: OpenNewWindowIcon,
 }
 
 export type IconName = keyof typeof icons
