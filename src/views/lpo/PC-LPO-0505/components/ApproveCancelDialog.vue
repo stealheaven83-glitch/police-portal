@@ -1,20 +1,20 @@
 <template>
-  <GenericDialog2 v-model:open="cancelOpen" title="승인취소관리" :size="440">
-    <InfoTable :columns="1" popup :size="130">
+  <GenericDialog2 v-model:open="cancelOpen" title="승인취소관리" :size="560">
+    <InfoTable :columns="1" popup>
       <InfoField label="지구대/파출소&#10;(팀장/계장)">
-        <span class="group-gap2">
-          <SelectField v-model="cancelTeamLeader" :options="teamLeaderOptions" placeholder="선택" size="sm" />
-          <span class="lp-em-primary">승인완료</span>
+        <span class="group-gap3">
+          <SelectField v-model="cancelTeamLeader" :options="teamLeaderOptions" placeholder="선택" size="sm" class="w-57" />
+          <Badge color="primary" variant="solid-pastel" size="lg" shape="sm" class="lp-badge-xl">승인완료</Badge>
         </span>
       </InfoField>
       <InfoField label="경찰서(과장)">
-        <span class="group-gap2">
-          <InputField2 v-model="cancelChief" size="sm" inputClass="w-40" aria-label="경찰서(과장)" />
-          <Badge color="danger" variant="solid-pastel" size="md" shape="sm">미승인</Badge>
+        <span class="group-gap3">
+          <InputField2 v-model="cancelChief" size="sm" inputClass="w-57" aria-label="경찰서(과장)" />
+          <Badge color="danger" variant="solid-pastel" size="lg" shape="sm" class="lp-badge-xl">미승인</Badge>
         </span>
       </InfoField>
       <InfoField label="승인취소사유">
-        <TextareaField v-model="cancelReason" aria-label="승인취소사유" :height="80" />
+        <TextareaField v-model="cancelReason" aria-label="승인취소사유" :height="88" class="w-full" />
       </InfoField>
     </InfoTable>
 

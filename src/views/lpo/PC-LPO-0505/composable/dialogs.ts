@@ -26,6 +26,8 @@ export interface UserRow {
 export interface ReceiptRow {
   id: number
   receiptNo: string
+  /** 신고내용 — 여러 줄이다(PC-LPO-0510 좌측 목록) */
+  content: string
   reportNo: string
   workDate: string
   applicant: string
@@ -86,10 +88,20 @@ export function useDispatchSummaryDialogs() {
 
   /* 타직원 출동수당 신청(PC-LPO-0509) */
   const otherApplyOpen = ref(false)
+  const receiptContent = [
+    '[소방 공동대응 요청접수]',
+    '[신고정보]',
+    '1. 신고내용 : 기타 경찰의 인적 물적……',
+    '2. 신고자전화번호 : 02000000',
+    '3. 발생주소 : 서울특별시 중구',
+    '….',
+  ].join('\n')
+
   const receiptRows = ref<ReceiptRow[]>(
     Array.from({ length: 4 }, (_, i) => ({
       id: i + 1,
       receiptNo: '08202660913456',
+      content: receiptContent,
       reportNo: '751',
       workDate: '2026-01-01',
       applicant: '[경위] 홍길동',

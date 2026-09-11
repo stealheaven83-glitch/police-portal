@@ -1,12 +1,18 @@
 <template>
-  <GenericDialog2 v-model:open="approveOpen" title="승인관리" :size="440">
-    <InfoTable :columns="1" popup :size="130">
+  <GenericDialog2 v-model:open="approveOpen" title="승인관리" :size="560">
+    <InfoTable :columns="1" popup>
       <InfoField label="지구대/파출소&#10;(팀장/계장)">
-        <SelectField v-model="approveTeamLeader" :options="teamLeaderOptions" placeholder="선택" size="sm" />
+        <SelectField
+          v-model="approveTeamLeader"
+          :options="teamLeaderOptions"
+          placeholder="선택"
+          size="sm"
+          class="w-full"
+        />
       </InfoField>
       <InfoField label="경찰서(과장)">
-        <span class="group-gap2">
-          <InputField2 v-model="approveChief" size="sm" inputClass="w-40" aria-label="경찰서(과장)" />
+        <span class="group-gap3">
+          <InputField2 v-model="approveChief" size="sm" aria-label="경찰서(과장)" />
           <Button type="button" variant="secondary" size="sm" @click="userFindOpen = true">조회</Button>
         </span>
       </InfoField>

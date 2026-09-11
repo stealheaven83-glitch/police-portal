@@ -1,25 +1,28 @@
 <template>
-  <GenericDialog2 v-model:open="otherApplyOpen" title="타직원 출동수당 신청" :size="940">
-    <LayoutSplite :count="2">
-      <template #layout-1>
-        <LayoutHeader title="접수내용" />
-        <TabulatorGrid
-          ref="gridRef"
-          :columns="columns"
-          :data="receiptRows"
-          height="400px"
-          selectable
-          placeholder="접수내용이 없습니다"
-          @row-click="onRowClick"
-          @table-built="onTableBuilt"
-        />
-      </template>
-      <template #layout-2>
-        <div class="lp-pane-box">
+  <GenericDialog2 v-model:open="otherApplyOpen" title="타직원 출동수당 신청" :size="1320">
+    <div class="lp-pane-box">
+      <section class="lp-pane" aria-labelledby="apply-receipt-heading">
+        <h3 id="apply-receipt-heading" class="lp-pane-title">접수내용</h3>
+        <div class="lp-pane-wrap">
+          <TabulatorGrid
+            ref="gridRef"
+            :columns="columns"
+            :data="receiptRows"
+            height="400px"
+            placeholder="접수내용이 없습니다"
+            @row-click="onRowClick"
+            @table-built="onTableBuilt"
+          />
+        </div>
+      </section>
+
+      <section class="lp-pane" aria-labelledby="apply-code-heading">
+        <h3 id="apply-code-heading" class="lp-pane-title">접수코드 : C1</h3>
+        <div class="lp-pane-wrap">
           <DispatchInfoPanel :units="dispatchUnits" />
         </div>
-      </template>
-    </LayoutSplite>
+      </section>
+    </div>
 
     <template #footer>
       <Button type="button" variant="tertiary2" size="md" @click="otherApplyOpen = false">닫기</Button>
@@ -32,8 +35,6 @@
 import { inject, ref } from 'vue'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
-import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
-import LayoutHeader from '@/components/custom/content-layout/layoutHeader.vue'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import DispatchInfoPanel from './DispatchInfoPanel.vue'
 import { DispatchSummaryDialogKey, type ReceiptRow } from '../composable/dialogs'

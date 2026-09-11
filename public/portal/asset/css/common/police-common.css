@@ -2815,3 +2815,12 @@
 .lp-th-group-start {
   border-left: 0.1rem solid var(--Border_gray03);
 }
+
+/* 두 칸 상자 높이 고정 — 오른쪽 상세가 길어도 팝업이 안 늘어나고 칸 안에서 스크롤된다 */
+.lp-pane-box-tall {
+  height: 62.8rem;
+}
+/* 목록 칸 폭 고정 — 옆 칸이 남는 폭을 가져간다. .lp-pane 과 함께 쓴다 */
+.lp-pane-list {
+  flex: 0 0 60rem;
+}

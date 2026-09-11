@@ -86,6 +86,7 @@ import ApproveManageDialog from './components/ApproveManageDialog.vue'
 import ApproveCancelDialog from './components/ApproveCancelDialog.vue'
 import OtherApplyDialog from './components/OtherApplyDialog.vue'
 import DispatchInfoDialog from './components/DispatchInfoDialog.vue'
+import { useAutoTrigger, type ScreenTriggerMap } from '@/composables/useAutoTrigger'
 import { useDispatchSummaryDialogs, DispatchSummaryDialogKey } from './composable/dialogs'
 defineOptions({ name: 'PcLpo0505' })
 
@@ -102,6 +103,7 @@ const navItems = [
 const dialogs = useDispatchSummaryDialogs()
 provide(DispatchSummaryDialogKey, dialogs)
 const { approveOpen, cancelOpen, otherApplyOpen, dispatchInfoOpen } = dialogs
+
 
 const yearOptions = [
   { label: '2026', value: '2026' },
@@ -169,6 +171,15 @@ function onDownloadExcel() {
   const today = new Date().toISOString().slice(0, 10)
   gridRef.value?.download('csv', `출동수당취합_월별_${today}.csv`)
 }
+
+const screenTriggers: ScreenTriggerMap = {
+  'PC-LPO-0505': [],
+  'PC-LPO-0506': [[approveOpen, true]],
+  'PC-LPO-0508': [[cancelOpen, true]],
+  'PC-LPO-0509': [[otherApplyOpen, true]],
+  'PC-LPO-0510': [[dispatchInfoOpen, true]],
+}
+useAutoTrigger(screenTriggers);
 
 useBottomTabSetup({
   value: 'PC-LPO-0505',

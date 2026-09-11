@@ -1,6 +1,5 @@
 <template>
-  <p class="lp-heading-md">접수코드 : C1</p>
-  <InfoTable :columns="2" popup :size="100">
+  <InfoTable :columns="2" popup :size="120">
     <InfoField label="접수번호">08202660913456</InfoField>
     <InfoField label="사건번호">101</InfoField>
     <InfoField label="접수일시">2026-07-06 00:57</InfoField>
@@ -14,7 +13,7 @@
     <InfoField label="증빙구분" full>[기타] 112신고사건 내역서 등</InfoField>
   </InfoTable>
 
-  <p class="lp-heading-md lp-table-gap">출동요소목록</p>
+  <div class="pop-title-sub mb-2"><h4>출동요소목록</h4></div>
   <TabulatorGrid
     ref="gridRef"
     :columns="columns"

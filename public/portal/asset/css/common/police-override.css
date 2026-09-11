@@ -768,7 +768,6 @@ tbody .row-total > td:first-child {
   white-space: nowrap;
 }
 
-/* 괄호는 선택지가 비활성이어도 본문색(#1E2124)·15px 을 유지한다(시안 13859:112989) */
 .lp-paren-group > .lp-paren {
   font-size: 1.5rem;
   color: var(--Text-body_0);
@@ -785,4 +784,22 @@ tbody .row-total > td:first-child {
   justify-content: space-between;
   max-width: 1200px;
   margin: 0 auto;
+}
+.lp-badge-xl {
+  padding: 0 0.8rem;
+  font-size: 1.7rem;
+  font-weight: 400;
+}
+.lp-badge-xl[data-color="danger"] {
+  color: var(--Alert-danger-text);
+}
+/*
+ * 칸(.lp-pane-wrap) 맨 앞에 제목 없이 바로 오는 팝업 표의 위 여백 해제.
+ * InfoTable 의 popup 은 팝업 제목 바로 아래 놓일 때를 위한 7px 인데,
+ * 칸 안에서 맨 앞에 오면 옆 칸 그리드보다 그만큼 내려가 첫 줄이 어긋난다.
+ * 모듈 클래스라 이름이 해시되므로 부분 일치로 짚는다(.lp-info-nested 와 같은 방식).
+ * !important 는 InfoTable.module.css 가 레이어 밖이라 layer(screen) 이 그냥은 지기 때문(CLAUDE.md §2).
+ */
+.lp-pane-wrap > [class*="popTable"]:first-child {
+  margin-top: 0 !important;
 }
