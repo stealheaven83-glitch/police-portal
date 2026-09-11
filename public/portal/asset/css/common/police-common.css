@@ -662,6 +662,7 @@
 }
 /* 지도가 들어갈 자리 — 시안 크기로 키우고 모서리는 각지게. `.lp-placeholder-box` 와 함께 쓴다 */
 .lp-map-slot {
+  margin-top: 1.6rem;
   min-height: 41.8rem;
   border-radius: 0;
 }
@@ -958,6 +959,15 @@
   }
 }
 
+@media (max-width:102.4rem){
+.lp-ai-answer-body{
+  flex-direction:column;
+}
+.lp-page-scroll{
+  overflow:inherit;
+  width: 100%;
+}
+}
 /* ══ 메모 목록 카드 ═══════════════════════════════════════════ */
 
 /* 목록 위 컨트롤 바의 좌/우 그룹 내부 간격(Figma 실측 24 / 32px).

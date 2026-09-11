@@ -17,7 +17,6 @@
     </template>
     <template #topRightSection>
       <div class="search-btns">
-        <span class="lp-meta-nowrap">{{ modifiedInfo }}</span>
         <div class="group-gap3">
           <Button type="button" variant="tertiary2" size="sm" @click="onPrint">인쇄</Button>
           <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
@@ -70,7 +69,7 @@
             v-model="department.address"
             v-model:detail="department.addressDetail"
             size="sm"
-            @search="addressStubOpen = true"
+            @search="addressSearchOpen = true"
           />
         </InfoField>
 
@@ -485,6 +484,7 @@
     v-model:dongs="currentDongs"
   />
 
+  <AddressSearchDialog v-model:open="addressSearchOpen" @select="onSelectAddress" />
   <EmptyStubDialog v-model:open="addressStubOpen" title="주소 검색" />
   <PatrolAreaDetailDialog
     v-model:open="patrolDetailStubOpen"
@@ -509,7 +509,7 @@ import SelectField from '@/components/custom/select/SelectField.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import MultiCheckSelect from '@/components/custom/select/MultiCheckSelect.vue'
-import AddressInput from '@/components/custom/address/AddressInput.vue'
+import { AddressInput, AddressSearchDialog } from '@/components/custom/address'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
@@ -601,7 +601,17 @@ function openPatrolDetail(vehicle: string) {
 
 const dongDialogOpen = ref(false)
 
-/** 주소검색 팝업은 저장소에 아직 없다 — 스텁으로 자리만 잡는다 */
+/* ── 주소검색 팝업(공용 AddressSearchDialog) — 소재지 주소 칸에서 연다 ── */
+
+const addressSearchOpen = ref(false)
+
+/** 팝업에서 고른 (도로명주소, 상세주소)를 소재지 주소 칸에 채운다 */
+function onSelectAddress(address: string, addressDetail: string) {
+  department.address = address
+  department.addressDetail = addressDetail
+}
+
+/** 순찰구역 상세 팝업의 주소검색은 아직 스텁 — 그 팝업 안 어느 칸에 넣을지 정해지면 위 팝업으로 바꾼다 */
 const addressStubOpen = ref(false)
 
 /* ── 치안센터 ────────────────────────────────────────────────── */

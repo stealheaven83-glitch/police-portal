@@ -339,6 +339,10 @@
     padding-left: 4.8rem;
     border-left: 1px solid var(--Border_gray02);
   }
+  .lp-ai-answer{
+    flex-direction:coulumn;
+    
+  }
 }
 
 /*
