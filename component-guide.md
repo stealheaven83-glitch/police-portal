@@ -557,7 +557,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-upload-result` / `.lp-rule-title` / `.lp-error-list` | 드롭존 아래 결과 구역(위 16px) / 위아래 가로선으로 구역을 여는 소제목 / 실패 사유 불릿 목록(1.5rem — **본문용 `.lp-bullet-list` 는 1.7rem 이라 다른 것**) | PUB-0111 업로드 팝업 |
 | `.lp-file-hint` | 첨부 버튼 옆 용량 안내(좁아지면 줄바꿈) | 2402 |
 | `.lp-summary-box-read` | 읽기 전용 요약 블록(테두리 없이 채워진 면). **입력용은 `-filled`** | LPO-0102 |
-| `.lp-file-boxes` / `.lp-file-box` / `.lp-file-link` | 첨부파일을 테두리 박스로 나열 / 박스 한 줄 / 그 안의 다운로드·삭제 링크. **구분선 방식은 `.lp-file-item`** | LPO-0102, 0104, 0217 |
+| `.lp-file-boxes` / `.lp-file-box` / `.lp-file-link` | 첨부파일을 테두리 박스로 나열 / 박스 한 줄 / 그 안의 다운로드·삭제 링크 | LPO-0102, 0104, 0217 |
 | `.lp-hidden-input` | 버튼/드롭존이 대신 여는 숨은 file input | LPO-0104, 0217 |
 | `.lp-cal` `-toolbar` `-grid` `-head` `-cell` `-cell-out` `-cell-open` `-daterow` `-date` `-sun` `-sat` `-holiday` `-events` `-event` `-event-time` `-popover` `-popover-head` `-popover-list` `-popover-row` `-popover-names` | 월간 일정 달력(`MonthScheduleCalendar`) 전용. FullCalendar 기반 `calendar.vue` 와 별개 | LPO-0108 |
 | `.lp-setting-bar` | 화면 위쪽 설정 한 줄(회색 면) | LPO-0122 |
@@ -565,8 +565,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-imgpick-grid` `-tile` `-tile-on` `-tile-off` `-thumb` `-pick` | 이미지 선택 팝업의 타일 그리드 | LPO-0122 |
 | `.lp-stepper` `-btn` `-value` | 숫자 증감 입력(`NumberStepper`) 전용 | LPO-0214 |
 | `.lp-duty-table` `-col-date` `-col-side` `-line` `-remove` | 근무현황 표(한 칸에 여러 줄이 들어가 Tabulator 를 못 쓴다) | LPO-0216 |
-| `.lp-roster-toolbar` `.lp-roster-title` `.lp-roster-table` `-col-check` `-col-order` `.lp-roster-empty` | 근무자 목록 표(좁은 패널 안, 칸에 체크박스·입력이 들어가 세로 가운데 정렬). 조회 전용인 `.lp-duty-table` 과 의도가 다르다 | LPO-0202 |
-| `.lp-schedule-scroll` `.lp-schedule-table` `.lp-schedule-cell` `-btn` `.lp-schedule-name` | 근무지정표(甲지) 배정 표 — 시간대 12칸이 가로로 늘어서 가로 스크롤, 칸 안쪽이 배정 팝업을 여는 버튼 | LPO-0202 |
+| `.lp-roster-toolbar` `.lp-roster-title` | 근무자 목록 표(좁은 패널) 위의 제목 + 우측 버튼 줄. 표 자체는 `TabulatorGrid` 로 바뀌었다 | LPO-0202 |
 | `.lp-notes-row` `-label` `-body` | 표 아래 붙는 라벨+입력 한 상자(중요지시사항) | LPO-0202 |
 | `.lp-em-primary` / `.lp-em-danger` | 문장 안 한 낱말만 색으로 강조(굵기는 `<b>` 가) | LPO-0208, 0216, 0217 |
 | `.lp-field-inline` | 라벨 아래 입력+버튼이 한 줄로 붙는 칸(부서명 + 부서 검색) | COM-1003, 1004 |

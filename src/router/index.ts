@@ -228,6 +228,16 @@ const router = createRouter({
             }
         },
         {
+            path: '/views/lpo/PC-LPO-0504',
+            name: 'PC-LPO-0504',
+            component: () => import('../views/lpo/PC-LPO-0501/PC-LPO-0501.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '출동사건상세',
+                screenGroup: 'PC-LPO-0501',
+            }
+        },
+        {
             path: '/views/lpo/PC-LPO-0505',
             name: 'PC-LPO-0505',
             component: () => import('../views/lpo/PC-LPO-0505/PC-LPO-0505.vue'),

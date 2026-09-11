@@ -22,52 +22,54 @@ export interface DispatchAllowanceDetail extends Pick<
   arrivedAt: string;
   closedAt: string;
   dispatcher: string;
-  closer: string;
+  /** 사건종별 — 시안(12762:69918)의 출동자 오른쪽 칸 */
+  caseType: string;
   reporter: string;
   contact: string;
   reportLocation: string;
   processingResult: string;
 }
 
+/** 시안 12762:69918 — 값 형태를 그대로 따르고 행마다 번호만 다르게 둔다 */
 const dispatchAllowanceDetails: Record<number, DispatchAllowanceDetail> = {
   3: {
-    receiptNo: "00001[CODE C2]",
-    caseNo: "00001[CODE C2]",
-    receivedAt: "2026-08-01 00:49",
-    arrivedAt: "2026-08-01 00:56",
-    closedAt: "2026-08-01 01:32",
-    dispatcher: "홍길동 경사",
-    closer: "김경찰 경위",
-    reporter: "김민수",
-    contact: "010-1234-5678",
-    reportLocation: "서울특별시 중구 장충동 빠리바게트 앞",
-    processingResult: "현장 출동 후 주변 수색 및 보호자 연락 조치",
+    receiptNo: "00000[CODE C2]",
+    caseNo: "00000[폭력]",
+    receivedAt: "2026-08-08 14:00",
+    arrivedAt: "2026-08-08 14:00",
+    closedAt: "2026-08-08 14:00",
+    dispatcher: "홍길동, 이기소",
+    caseType: "보호조치",
+    reporter: "",
+    contact: "01000000000",
+    reportLocation: "서대문구112",
+    processingResult: "폭력 발생보고",
   },
   2: {
-    receiptNo: "00002[CODE C2]",
-    caseNo: "00002[CODE C2]",
-    receivedAt: "2026-08-01 01:18",
-    arrivedAt: "2026-08-01 01:25",
-    closedAt: "2026-08-01 01:51",
-    dispatcher: "이순신 경장",
-    closer: "박경찰 경위",
-    reporter: "이영희",
-    contact: "010-2345-6789",
-    reportLocation: "서울특별시 중구 신당동 주택가",
-    processingResult: "분리 조치 후 피해자 안전 확인 및 사건 인계",
+    receiptNo: "00001[CODE C2]",
+    caseNo: "00001[폭력]",
+    receivedAt: "2026-08-08 14:20",
+    arrivedAt: "2026-08-08 14:26",
+    closedAt: "2026-08-08 15:02",
+    dispatcher: "이순신, 김순경",
+    caseType: "보호조치",
+    reporter: "",
+    contact: "01000000000",
+    reportLocation: "서대문구112",
+    processingResult: "폭력 발생보고",
   },
   1: {
-    receiptNo: "00003[CODE C2]",
-    caseNo: "00003[CODE C2]",
-    receivedAt: "2026-08-01 02:10",
-    arrivedAt: "2026-08-01 02:17",
-    closedAt: "2026-08-01 02:38",
-    dispatcher: "강감찬 경사",
-    closer: "최경찰 경위",
-    reporter: "박철수",
-    contact: "010-3456-7890",
-    reportLocation: "서울특별시 중구 을지로 입구",
-    processingResult: "귀가 안내 후 보호자에게 인계",
+    receiptNo: "00002[CODE C2]",
+    caseNo: "00002[폭력]",
+    receivedAt: "2026-08-08 15:10",
+    arrivedAt: "2026-08-08 15:17",
+    closedAt: "2026-08-08 15:38",
+    dispatcher: "강감찬, 최두회",
+    caseType: "보호조치",
+    reporter: "",
+    contact: "01000000000",
+    reportLocation: "서대문구112",
+    processingResult: "폭력 발생보고",
   },
 };
 
@@ -241,7 +243,7 @@ export function useDispatchAllowanceList() {
       arrivedAt: row.arrivedAt,
       closedAt: row.arrivedAt,
       dispatcher: "-",
-      closer: "-",
+      caseType: "-",
       reporter: "-",
       contact: "-",
       reportLocation: "-",
