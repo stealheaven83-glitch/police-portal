@@ -108,30 +108,42 @@ const sizeClass = computed(() => {
 
       <!-- portal disabled + absolute: 트리거 옆에 제자리 렌더 → 스크롤 컨테이너 overflow 에 잘린다 -->
       <PopoverPortal disabled>
+        <!--
+          패널 모양은 Figma 10724:83254(open) — 흰 배경 · #CDD1D5 1px · radius 8 · 안쪽 8 · 그림자 2단.
+          폭은 트리거(--reka-popover-trigger-width)에 맞추되 라벨이 더 길면 늘어난다.
+        -->
         <PopoverContent
-          class="z-50 w-64 rounded-md border border-[var(--Border_input01)] bg-white shadow-md outline-none"
+          class="z-50 min-w-[var(--reka-popover-trigger-width)] rounded-[var(--Radius-medium3)] border border-[var(--Border_gray02)] bg-white p-2 shadow-[0_0_2px_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.08)] outline-none"
           align="start"
           :side-offset="4"
           :avoid-collisions="false"
           position-strategy="absolute"
         >
-          <fieldset class="p-3">
-            <legend class="px-1 pb-2 text-[1.4rem] font-semibold text-[var(--Text-body_0)]">
-              {{ groupLabel }}
-            </legend>
-            <ul class="max-h-60 space-y-0.5 overflow-y-auto">
-              <li v-for="opt in options" :key="opt.value">
+          <fieldset class="min-w-0 p-0">
+            <!-- 시안에는 제목 줄이 없다 — 스크린리더용으로만 남긴다 -->
+            <legend class="sr-only">{{ groupLabel }}</legend>
+            <!-- 행: 안쪽 8/10 · radius 6 · 행 사이 10, 고른 행은 연한 파랑(#EEF2F7).
+                 Checkbox 의 class 는 라벨이 아니라 박스에 붙으므로 행 스타일은 li 가 맡는다 -->
+            <ul class="max-h-60 space-y-[10px] overflow-y-auto">
+              <li
+                v-for="opt in options"
+                :key="opt.value"
+                :class="cn(
+                  'flex items-center rounded-[var(--Radius-medium2)] px-2 py-[10px]',
+                  draft.includes(opt.value) && 'bg-[var(--Base-secondary-lighter)]',
+                )"
+              >
                 <Checkbox
                   :model-value="draft.includes(opt.value)"
                   :label="opt.label"
-                  class="px-2 py-1.5 flex items-center"
                   @update:model-value="(checked) => toggleDraft(opt.value, !!checked)"
                 />
               </li>
             </ul>
           </fieldset>
-          <div class="flex justify-end border-t p-2">
-            <Button type="button" variant="primary" size="xs" @click="apply">
+          <!-- 확인 버튼 줄: 가운데, 위 행과 10 띄우고 안쪽 8/10 (시안 button: secondary-fill · 32px · 좌우 12 = size xs 기본) -->
+          <div class="mt-[10px] flex justify-center px-2 py-[10px]">
+            <Button type="button" variant="secondary" size="xs" @click="apply" padding="12">
               {{ confirmText }}
             </Button>
           </div>

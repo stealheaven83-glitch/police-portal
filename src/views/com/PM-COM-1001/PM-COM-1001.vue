@@ -17,21 +17,19 @@
       <DepartmentCascadeSelect v-model="department" size="sm" />
     </template>
     <template #form>
-      <div class="search-area board-search-row">
-        <div class="group-gap2">
-          <SelectField v-model="authorFilter" label="성명" :options="authorFilterOptions" size="sm" triggerClass="w-[15.4rem]" />
-          <InputField2 v-model="authorKeyword" size="sm" inputClass="w-[37.2rem]" placeholder="이름을 검색해주세요." />
-        </div>
-      </div>
       <div class="search-area">
         <div class="group-gap2">
-          <DatePicker v-model="dateFrom" label="등록일" size="sm" inputClass="w-[25rem]" />
-          <span aria-hidden="true">~</span>
-          <DatePicker v-model="dateTo" size="sm" inputClass="w-[25rem]" />
+          <SelectField v-model="authorFilter" label="성명" :options="authorFilterOptions" size="sm" trigger-class="w-40" />
+          <InputField2 v-model="authorKeyword" size="sm" placeholder="이름을 검색해주세요." />
         </div>
         <div class="group-gap2">
-          <SelectField v-model="searchField" label="검색어" :options="searchFieldOptions" size="sm" triggerClass="w-[15.3rem]" />
-          <InputField2 v-model="keyword" size="sm" inputClass="w-[37.2rem]" placeholder="검색어를 입력하세요." />
+          <DatePicker v-model="dateFrom" label="등록일" size="sm" input-class="w-40" />
+          <span aria-hidden="true">~</span>
+          <DatePicker v-model="dateTo" size="sm" input-class="w-40" />
+        </div>
+        <div class="group-gap2">
+          <SelectField v-model="searchField" label="검색어" :options="searchFieldOptions" size="sm" trigger-class="w-40"/>
+          <InputField2 v-model="keyword" size="sm" placeholder="검색어를 입력하세요." trigger-class="w-60"/>
         </div>
       </div>
     </template>
@@ -49,13 +47,16 @@
     ref="gridRef"
     class="flex-1"
     :columns="columns"
-    :data="rows"
+    :data="pagedRows"
     select-mode="checkbox"
     height="100%"
     min-height="40rem"
     placeholder="등록된 공지사항이 없습니다"
     show-pagination
-    :items-per-page="10"
+    v-model:current-page="currentPage"
+    :items-per-page="itemsPerPage"
+    :total-elements="totalCount"
+    @update:items-per-page="itemsPerPage = $event"
     @row-selection-changed="selectedCount = $event.length"
     @row-click="onRowClick"
   />
@@ -108,7 +109,11 @@ const {
   dateTo,
   searchField,
   keyword,
-  rows,
+  currentPage,
+  itemsPerPage,
+  totalCount,
+  pagedRows,
+  removeRows,
 } = useNoticeList()
 
 /** 중요 공지는 번호 자리에 '중요' 배지(Badge shape="sm" color="point")가 들어간다.
@@ -158,13 +163,29 @@ const columns: TabulatorGridColumn[] = [
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const selectedCount = ref(0)
 
+/**
+ * 삭제 버튼.
+ * 설계서 1) "선택한 항목이 없는 경우 — 삭제 버튼 비활성화"는 사용자 지정으로 알림창으로 대신한다(버튼은 항상 활성).
+ * 설계서 2) 선택이 있으면 Confirm — 되돌릴 수 없는 삭제라 CLAUDE.md §4 의 confirm 예외에 해당한다.
+ *   취소 → 닫고 변동 없음 / 확인 → 닫고 선택 게시물 삭제 후 화면 새로고침
+ */
 async function onDeleteSelected() {
   if (!selectedCount.value) {
     await dialog.alert({ title: '삭제할 공지사항을 선택해 주세요.', btnCancel: '확인' })
     return
   }
-  gridRef.value?.deleteSelected()
-  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
+  const result = await dialog.confirm({
+    title: '삭제된 게시물은 복구할 수 없습니다. 선택된 게시물을 삭제 하시겠습니까?',
+    btnOk: '확인',
+    btnCancel: '취소',
+  })
+  if (!result.confirmed) return
+
+  // 페이징을 화면이 쥐고 있어(pagedRows) 그리드 안에서만 지우면 페이지를 옮길 때 되살아난다 — 원본에서 지운다
+  const ids = (gridRef.value?.getSelectedData() ?? []).map((row: NoticeRow) => row.id)
+  removeRows(ids)
+  selectedCount.value = 0
+  // 화면 새로고침(목록 재조회)은 API 연동 시 개발팀이 붙인다 — 지금은 목업 행 삭제로 목록이 바로 갱신된다
 }
 
 /** 시안의 버튼 문구가 '작성'이다(설계서 6번은 '등록'이라 적혀 있다 — 시안을 따랐다) */

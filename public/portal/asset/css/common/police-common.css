@@ -623,6 +623,7 @@
   gap: unset;
   justify-content: space-between;
   border-radius: var(--Radius-medium3);
+  background:var(--Background-gray01);
 }
 
 /* ══ 지도 ═════════════════════════════════════════════════════ */
@@ -2590,24 +2591,23 @@
   text-align: right;
 }
 
-/*참고사항 페이지*/
+/*참고사항 페이지 — 값 칸 안의 [라벨 | 입력] 여러 줄 묶음.
+  라벨 열은 그 묶음에서 가장 긴 문구 폭(max-content)에 자동으로 맞는다 — 고정폭(15rem)을 두면
+  짧은 문구 뒤에 빈 공간이 남았다. 행(.info-label-group)은 display:contents 로 칸만 내놓아
+  모든 행이 하나의 2열 grid 에 들어가고, 행 간격은 row-gap 이 맡는다. */
 .info-label {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  column-gap: 2.4rem;
+  row-gap: 1.2rem;
+  align-items: center;
 }
 .info-label-group {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 2.4rem;
-}
-.info-label-group + .info-label-group {
-  margin-top: 1.2rem;
+  display: contents;
 }
 
 .info-label-group .info-label-txt {
   font-size: 1.5rem;
-  /* 라벨 열을 가장 긴 문구(강력(강간, 강제추행) — 1.5rem 에서 약 13.8rem)에 맞춰 고정한다.
-     모든 줄의 라벨 폭이 같아져 오른쪽 Stepper 가 세로로 정렬된다 */
-  flex: 0 0 15rem;
   white-space: nowrap;
 }
 
@@ -2798,10 +2798,7 @@
   font-weight: 600;
 }
 
-/* 검색영역이 두 줄일 때 첫 줄 아래 여백. 화면 템플릿에 mb-4 를 직접 쓰지 않으려고 둔다(CLAUDE.md §1) */
-.board-search-row {
-  margin-bottom: 1.6rem;
-}
+
 
 /* 공지사항 목록의 '중요' 배지 — 고정공지(.board-pin-badge, 파랑)와 달리 빨강이다.
    Badge 컴포넌트의 color="danger" variant="solid" 과 같은 --danger 를 쓴다 */

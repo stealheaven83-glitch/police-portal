@@ -49,42 +49,37 @@
           <div class="info-label">
             <div class="info-label-group">
               <span class="info-label-txt">철도범죄</span>
-              <Stepper v-model="crime.railway" :min="0" label="철도범죄" class="w-30" />
+              <InputField2 v-model.number="crime.railway" type="number" min="0" :clearable="false" aria-label="철도범죄" size="sm" class="!space-y-0" input-class="w-30" />
             </div>
             <div class="info-label-group">
               <span class="info-label-txt">폭력범죄</span>
-              <Stepper v-model="crime.violence" :min="0" label="폭력범죄" class="w-30" />
+              <InputField2 v-model.number="crime.violence" type="number" min="0" :clearable="false" aria-label="폭력범죄" size="sm" class="!space-y-0" input-class="w-30" />
             </div>
             <div class="info-label-group">
               <span class="info-label-txt">지능범죄</span>
-              <Stepper v-model="crime.intelligence" :min="0" label="지능범죄" class="w-30" />
+              <InputField2 v-model.number="crime.intelligence" type="number" min="0" :clearable="false" aria-label="지능범죄" size="sm" class="!space-y-0" input-class="w-30" />
             </div>
           </div>
         </InfoField>
 
+        <!-- 네 줄이 한 .info-label(grid) 안에 있어야 라벨 열이 가장 긴 문구에 같이 맞는다 -->
         <InfoField label="강력범죄" layout="column">
           <div class="info-label">
             <div class="info-label-group">
               <span class="info-label-txt">강력(살인)</span>
-              <Stepper v-model="crime.murder" :min="0" label="강력(살인)" class="w-30" />
+              <InputField2 v-model.number="crime.murder" type="number" min="0" :clearable="false" aria-label="강력(살인)" size="sm" class="!space-y-0" input-class="w-30" />
             </div>
-          </div>
-          <div class="info-label">
             <div class="info-label-group">
               <span class="info-label-txt">강력(강도)</span>
-              <Stepper v-model="crime.robbery" :min="0" label="강력(강도)" class="w-30" />
+              <InputField2 v-model.number="crime.robbery" type="number" min="0" :clearable="false" aria-label="강력(강도)" size="sm" class="!space-y-0" input-class="w-30" />
             </div>
-          </div>
-          <div class="info-label">
             <div class="info-label-group">
               <span class="info-label-txt">강력(강간, 강제추행)</span>
-              <Stepper v-model="crime.rape" :min="0" label="강력(강간, 강제추행)" class="w-30" />
+              <InputField2 v-model.number="crime.rape" type="number" min="0" :clearable="false" aria-label="강력(강간, 강제추행)" size="sm" class="!space-y-0" input-class="w-30" />
             </div>
-          </div>
-          <div class="info-label">
             <div class="info-label-group">
               <span class="info-label-txt">강력(방화)</span>
-              <Stepper v-model="crime.arson" :min="0" label="강력(방화)" class="w-30" />
+              <InputField2 v-model.number="crime.arson" type="number" min="0" :clearable="false" aria-label="강력(방화)" size="sm" class="!space-y-0" input-class="w-30" />
             </div>
           </div>
         </InfoField>
@@ -103,10 +98,10 @@
       <h2 id="ref-report-heading" class="lp-heading-md lp-section-title">112신고 통계</h2>
       <InfoTable :columns="2" size="130">
         <InfoField label="Code 1">
-          <Stepper v-model="report.code1" :min="0" label="Code 1" class="w-40"/>
+          <InputField2 v-model.number="report.code1" type="number" min="0" :clearable="false" aria-label="Code 1" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
         <InfoField label="Code 2">
-          <Stepper v-model="report.code2" :min="0" label="Code 2" class="w-40"/>
+          <InputField2 v-model.number="report.code2" type="number" min="0" :clearable="false" aria-label="Code 2" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
         <InfoField label="합계" full>
           <span class="readonly-text">{{ reportTotal }}</span>
@@ -118,52 +113,52 @@
       <h2 id="ref-population-heading" class="lp-heading-md lp-section-title">인구,사회학적 통계</h2>
       <InfoTable :columns="2" size="170">
         <InfoField label="지피면적">
-          <Stepper v-model="population.landArea" :min="0" label="지피면적" class="w-40"/>
+          <InputField2 v-model.number="population.landArea" type="number" min="0" :clearable="false" aria-label="지피면적" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
         <InfoField label="면적">
-          <Stepper v-model="population.area" :min="0" label="면적" class="w-40"/>
+          <InputField2 v-model.number="population.area" type="number" min="0" :clearable="false" aria-label="면적" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
 
         <InfoField label="인구밀도">
-          <Stepper v-model="population.density" :min="0" label="인구밀도" class="w-40"/>
+          <InputField2 v-model.number="population.density" type="number" min="0" :clearable="false" aria-label="인구밀도" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
         <InfoField label="전년인구">
-          <Stepper v-model="population.prevPopulation" :min="0" label="전년인구" class="w-40"/>
+          <InputField2 v-model.number="population.prevPopulation" type="number" min="0" :clearable="false" aria-label="전년인구" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
 
         <InfoField label="인구이동">
-          <Stepper v-model="population.migration" :min="0" label="인구이동" class="w-40"/>
+          <InputField2 v-model.number="population.migration" type="number" min="0" :clearable="false" aria-label="인구이동" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
         <InfoField label="기초생활수급자수">
-          <Stepper v-model="population.basicLivingCount" :min="0" label="기초생활수급자수" class="w-40"/>
+          <InputField2 v-model.number="population.basicLivingCount" type="number" min="0" :clearable="false" aria-label="기초생활수급자수" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
 
         <InfoField label="기초생활수급자">
-          <Stepper v-model="population.basicLiving" :min="0" label="기초생활수급자" class="w-40"/>
+          <InputField2 v-model.number="population.basicLiving" type="number" min="0" :clearable="false" aria-label="기초생활수급자" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
         <InfoField label="전체세대">
-          <Stepper v-model="population.households" :min="0" label="전체세대" class="w-40"/>
+          <InputField2 v-model.number="population.households" type="number" min="0" :clearable="false" aria-label="전체세대" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
 
         <InfoField label="1인가구 비율">
-          <Stepper v-model="population.singleHouseholdRate" :min="0" label="1인가구 비율" class="w-40"/>
+          <InputField2 v-model.number="population.singleHouseholdRate" type="number" min="0" :clearable="false" aria-label="1인가구 비율" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
         <InfoField label="1인세대">
-          <Stepper v-model="population.singleHouseholds" :min="0" label="1인세대" class="w-40"/>
+          <InputField2 v-model.number="population.singleHouseholds" type="number" min="0" :clearable="false" aria-label="1인세대" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
 
         <InfoField label="외국인 비율">
-          <Stepper v-model="population.foreignerRate" :min="0" label="외국인 비율" class="w-40"/>
+          <InputField2 v-model.number="population.foreignerRate" type="number" min="0" :clearable="false" aria-label="외국인 비율" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
         <InfoField label="등록 외국인">
-          <Stepper v-model="population.registeredForeigners" :min="0" label="등록 외국인" class="w-40"/>
+          <InputField2 v-model.number="population.registeredForeigners" type="number" min="0" :clearable="false" aria-label="등록 외국인" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
 
         <InfoField label="관리대상자수">
-          <Stepper v-model="population.managedTargets" :min="0" label="관리대상자수" class="w-40"/>
+          <InputField2 v-model.number="population.managedTargets" type="number" min="0" :clearable="false" aria-label="관리대상자수" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
         <InfoField label="우범자수">
-          <Stepper v-model="population.exOffenders" :min="0" label="우범자수" class="w-40"/>
+          <InputField2 v-model.number="population.exOffenders" type="number" min="0" :clearable="false" aria-label="우범자수" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
 
         <InfoField for="ref-entertainment-note" label="풍속업소">
@@ -176,11 +171,11 @@
           />
         </InfoField>
         <InfoField label="신상정보등록대상자수">
-          <Stepper v-model="population.registeredIdentityTargets" :min="0" label="신상정보등록대상자수" class="w-40"/>
+          <InputField2 v-model.number="population.registeredIdentityTargets" type="number" min="0" :clearable="false" aria-label="신상정보등록대상자수" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
 
         <InfoField label="인구">
-          <Stepper v-model="population.population" :min="0" label="인구" class="w-40"/>
+          <InputField2 v-model.number="population.population" type="number" min="0" :clearable="false" aria-label="인구" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
         <InfoField>
         </InfoField>
@@ -188,35 +183,35 @@
 
       <InfoTable :columns="2" size="130" class="form-rest lp-table-gap">
         <InfoField label="유흥주점">
-          <Stepper v-model="entertainment.bar" :min="0" label="유흥주점" class="w-40"/>
+          <InputField2 v-model.number="entertainment.bar" type="number" min="0" :clearable="false" aria-label="유흥주점" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
         <InfoField label="노래연습장">
-          <Stepper v-model="entertainment.karaokeRoom" :min="0" label="노래연습장" class="w-40"/>
+          <InputField2 v-model.number="entertainment.karaokeRoom" type="number" min="0" :clearable="false" aria-label="노래연습장" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
 
         <InfoField label="단란주점">
-          <Stepper v-model="entertainment.pub" :min="0" label="단란주점" class="w-40"/>
+          <InputField2 v-model.number="entertainment.pub" type="number" min="0" :clearable="false" aria-label="단란주점" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
         <InfoField label="게임제공업">
-          <Stepper v-model="entertainment.gameArcade" :min="0" label="게임제공업" class="w-40"/>
+          <InputField2 v-model.number="entertainment.gameArcade" type="number" min="0" :clearable="false" aria-label="게임제공업" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
 
         <InfoField label="숙박업">
-          <Stepper v-model="entertainment.lodging" :min="0" label="숙박업" class="w-40"/>
+          <InputField2 v-model.number="entertainment.lodging" type="number" min="0" :clearable="false" aria-label="숙박업" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
         <InfoField label="무도학원">
-          <Stepper v-model="entertainment.danceAcademy" :min="0" label="무도학원" class="w-40"/>
+          <InputField2 v-model.number="entertainment.danceAcademy" type="number" min="0" :clearable="false" aria-label="무도학원" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
 
         <InfoField label="이용업">
-          <Stepper v-model="entertainment.barbershop" :min="0" label="이용업" class="w-40"/>
+          <InputField2 v-model.number="entertainment.barbershop" type="number" min="0" :clearable="false" aria-label="이용업" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
         <InfoField label="무도장">
-          <Stepper v-model="entertainment.danceHall" :min="0" label="무도장" class="w-40"/>
+          <InputField2 v-model.number="entertainment.danceHall" type="number" min="0" :clearable="false" aria-label="무도장" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
 
         <InfoField label="비디오감상실">
-          <Stepper v-model="entertainment.videoRoom" :min="0" label="비디오감상실" class="w-40"/>
+          <InputField2 v-model.number="entertainment.videoRoom" type="number" min="0" :clearable="false" aria-label="비디오감상실" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
         <InfoField>
         </InfoField>
@@ -241,7 +236,6 @@ import HelpButton from '@/components/custom/button/HelpButton.vue'
 import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
-import Stepper from '@/components/custom/input/Stepper.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import { Button } from '@/components/custom/button'
 import { InfoTable, InfoField } from '@/components/custom/info-table'

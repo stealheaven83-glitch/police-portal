@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 
 /** 공지사항 목록(PM-COM-1001) 한 줄.
@@ -130,6 +130,42 @@ function createMockRows(): NoticeRow[] {
       viewCount: 1850,
       recommendCount: 109,
     },
+    {
+      id: 9,
+      no: 13537,
+      dept: '대구청 지방청',
+      title: '입력한 제목이 표시됩니다. 입력',
+      commentCount: 22,
+      hasAttachment: false,
+      writer: '홍길동',
+      createdAt: '2026-07-10',
+      viewCount: 1850,
+      recommendCount: 109,
+    },
+    {
+      id: 10,
+      no: 13537,
+      dept: '대구청 지방청',
+      title: '입력한 제목이 표시됩니다. 입력',
+      commentCount: 22,
+      hasAttachment: false,
+      writer: '홍길동',
+      createdAt: '2026-07-10',
+      viewCount: 1850,
+      recommendCount: 109,
+    },    
+      {
+      id: 11,
+      no: 13538,
+      dept: '대구청 지방청',
+      title: '입력한 제목이 표시됩니다. 입력',
+      commentCount: 22,
+      hasAttachment: false,
+      writer: '홍길동',
+      createdAt: '2026-07-10',
+      viewCount: 1850,
+      recommendCount: 109,
+    },  
   ]
 }
 
@@ -157,6 +193,34 @@ export function useNoticeList() {
     })
   })
 
+  /* ── 페이징 — 중요 공지는 건수에서 빼고 매 페이지 맨 위에 고정한다 ──
+   * 그리드 내장 페이징은 중요 공지까지 세므로 외부 제어(total-elements / current-page)로 바꿔
+   * 여기서 자른다. API 연동 시 개발팀이 이 자리에 서버 페이징을 붙이면 된다. */
+  const currentPage = ref(1)
+  const itemsPerPage = ref(10)
+
+  const importantRows = computed(() => rows.value.filter((row) => row.no === '중요'))
+  const normalRows = computed(() => rows.value.filter((row) => row.no !== '중요'))
+
+  /** 페이지네이션의 '총 N건' — 중요 공지 제외 */
+  const totalCount = computed(() => normalRows.value.length)
+
+  /** 그리드에 넘기는 행: 중요 공지 + 현재 페이지의 일반 공지 */
+  const pagedRows = computed(() => {
+    const start = (currentPage.value - 1) * itemsPerPage.value
+    return [...importantRows.value, ...normalRows.value.slice(start, start + itemsPerPage.value)]
+  })
+
+  /** 검색 조건이나 페이지당 건수가 바뀌면 1페이지로 */
+  watch([rows, itemsPerPage], () => {
+    currentPage.value = 1
+  })
+
+  /** 선택 삭제 — 그리드가 아니라 원본을 지워야 페이지를 옮겨도 되살아나지 않는다 */
+  function removeRows(ids: number[]) {
+    allRows.value = allRows.value.filter((row) => !ids.includes(row.id))
+  }
+
   return {
     department,
     advancedSearchOpen,
@@ -167,5 +231,10 @@ export function useNoticeList() {
     searchField,
     keyword,
     rows,
+    currentPage,
+    itemsPerPage,
+    totalCount,
+    pagedRows,
+    removeRows,
   }
 }

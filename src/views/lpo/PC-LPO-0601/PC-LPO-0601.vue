@@ -32,12 +32,13 @@
       <InfoTable :columns="3">
         <InfoField label="부서명">{{ department.name }}</InfoField>
 
-        <InfoField label="개소년도" for="dept-opened-year">
+        <!-- lp-date-fill: DatePicker 의 class 는 한 겹 안쪽(InputField2)에 붙어서 값 칸을 못 채운다 -->
+        <InfoField label="개소년도" for="dept-opened-year" class="lp-date-fill">
           <DatePicker
             id="dept-opened-year"
             v-model="department.openedYear"
             size="sm"
-            class="!space-y-0 flex-1"
+            class="!space-y-0"
             input-class="w-full"
           />
         </InfoField>
@@ -706,7 +707,12 @@ async function onSave() {
     await dialog.alert({ title: '필수 항목을 입력해 주세요.', btnCancel: '확인' })
     return
   }
-  await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
+  // 사용자 지정: 저장 컨펌창 — CLAUDE.md §4 기본(alert 만)과 다르지만 요청대로 따름
+  const result = await dialog.confirm({ title: '저장 하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
+  if (!result.confirmed) return
+
+  // 실제 저장은 개발팀이 붙인다(퍼블 범위 밖)
+  await dialog.alert({ title: '저장 되었습니다.', btnCancel: '확인' })
 }
 
 useBottomTabSetup({
