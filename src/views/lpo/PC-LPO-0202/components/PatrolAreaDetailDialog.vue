@@ -2,7 +2,7 @@
   <GenericDialog2 v-model:open="patrolDetailOpen" title="순찰구역 상세" :size="1000">
 
     <div class="meta-wrapper ver1">
-      <span>순찰구역명: <em class="meta-value">{{ patrolDetailName }}</em></span>
+      <span>순찰구역명: <em>{{ patrolDetailName }}</em></span>
     </div>
     <TabulatorGrid
       ref="gridRef"

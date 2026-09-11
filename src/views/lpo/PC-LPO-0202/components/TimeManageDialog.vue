@@ -1,8 +1,8 @@
 <template>
   <GenericDialog2 v-model:open="timeManageOpen" title="시간관리" :size="800">
     <div class="meta-wrapper">
-      <span>근무일 <em class="meta-value">{{ workDate }}</em></span>
-      <span>부서 <em class="meta-value">실습부서</em></span>
+      <span>근무일 <em>{{ workDate }}</em></span>
+      <span>부서 <em>실습부서</em></span>
     </div>
     <!-- <p class="lp-dialog-subtitle lp-note-text"> -->
     <p class="time-tip">

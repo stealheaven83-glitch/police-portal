@@ -1176,13 +1176,6 @@
   font-weight: 700;
   color: var(--Base-primary);
 }
-.lp-file-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.2rem 0.4rem;
-  border-bottom: 0.1rem solid var(--Border_gray02);
-}
 .lp-file-name {
   flex: 1;
   min-width: 0;
@@ -1191,21 +1184,6 @@
   color: var(--Text-body_0);
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-.lp-file-remove {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0;
-  font-size: 1.4rem;
-  color: var(--Text-body_1);
-  background: none;
-  border: 0;
-  cursor: pointer;
-}
-.lp-file-remove:hover {
-  color: var(--Base-primary);
 }
 
 /* ── 업로드 결과 (Figma 11213:88495 참고사항 업로드 팝업) ───── */
@@ -1478,7 +1456,7 @@
   color: var(--Base-primary);
 }
 
-/* 첨부파일을 FileUpload(테두리 박스)로 나열할 때의 세로 간격 — .lp-file-item(구분선 방식)과 다르다 */
+/* 첨부파일을 FileUpload(테두리 박스)로 나열할 때의 세로 간격 */
 .lp-file-boxes {
   display: flex;
   flex-direction: column;
@@ -2521,94 +2499,6 @@
   font-size: 1.6rem;
   font-weight: 600;
   color: var(--Text-body_0);
-}
-.lp-roster-table {
-  width: 100%;
-  border-top: 0.1rem solid var(--Border_gray01);
-  border-collapse: collapse;
-  table-layout: fixed;
-}
-.lp-roster-col-check {
-  width: 4.4rem;
-}
-.lp-roster-col-order {
-  width: 6.4rem;
-}
-.lp-roster-table th,
-.lp-roster-table td {
-  padding: 0.8rem;
-  font-size: 1.5rem;
-  color: var(--Text-body_0);
-  text-align: center;
-  vertical-align: middle;
-  border-bottom: 0.1rem solid var(--Border_gray02);
-}
-.lp-roster-table thead th {
-  font-weight: 500;
-  color: var(--Text-body_1);
-  background: var(--Background-gray01);
-}
-.lp-roster-empty {
-  color: var(--Text-body_2);
-}
-
-/* ── 근무지정표(甲지) 배정 표 ───────────────────────────────────────────── */
-/* 시간대 12칸이 가로로 늘어서 좁은 화면에서는 가로 스크롤로 본다.
-   칸마다 클릭해 배정 팝업을 열므로 칸 안쪽이 버튼이다 */
-.lp-schedule-scroll {
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-}
-.lp-schedule-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.lp-schedule-table th,
-.lp-schedule-table td {
-  min-width: 8rem;
-  font-size: 1.4rem;
-  color: var(--Text-body_0);
-  text-align: center;
-  vertical-align: middle;
-  border: 0.1rem solid var(--Border_gray02);
-}
-.lp-schedule-table th {
-  padding: 0.8rem 1rem;
-  font-weight: 600;
-  color: var(--Text-body_1);
-  background: var(--Background-gray01);
-}
-.lp-schedule-table thead th {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-.lp-schedule-table tbody th {
-  white-space: nowrap;
-}
-/* 칸 전체가 클릭 영역이라 padding 은 안쪽 버튼이 갖는다 */
-.lp-schedule-cell {
-  padding: 0;
-}
-.lp-schedule-cell-btn {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  width: 100%;
-  min-height: 4.4rem;
-  padding: 0.8rem 1rem;
-  font: inherit;
-  color: inherit;
-  background: none;
-  border: 0;
-  cursor: pointer;
-}
-.lp-schedule-cell-btn:hover {
-  background: var(--Surface-primary);
-}
-.lp-schedule-name {
-  color: var(--Base-primary);
 }
 
 /* 근무지정표 아래 중요지시사항 — 라벨 칸 + 입력 칸이 한 상자로 보인다 */
