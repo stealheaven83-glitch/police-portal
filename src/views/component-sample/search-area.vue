@@ -111,35 +111,71 @@
 &lt;/SearchWrapper&gt;</pre>
         </section>
 
-        <!-- 4. form + btns (department 없음) -->
+        <!-- 4. form 만, 배경 없음 (department · btns 없음) -->
         <section class="space-y-4">
-          <h2 class="text-xl font-semibold border-b pb-2">4. #form + #btns — 부서 없이 검색 폼만 (항상 펼침)</h2>
+          <h2 class="text-xl font-semibold border-b pb-2">4. #form + no-background — 부서·조회 버튼 없이 셀렉트만 (항상 펼침)</h2>
           <p class="text-sm text-muted-foreground">
             부서 슬롯이 없으면 접기 없이 항상 펼쳐진다. 지역 → 센터명처럼 앞 값에 따라 뒤 목록이 바뀌는 건
             전용 컴포넌트 없이 <code>SelectField</code> 둘 + <code>computed</code> 로 화면에서 직접 잇는다. PM-PUB-0411 · PC-PUB-0412 · PM-PUB-0409.
           </p>
-  <SearchWrapper no-background>
-    <template #form>
-      <div class="search-area">
-        <SelectField
-          v-model="regionFilter"
-          label="지역"
+          <SearchWrapper no-background>
+            <template #form>
+              <div class="search-area">
+                <SelectField
+                  v-model="regionFilter"
+                  label="지역"
+                  :options="regionOptions"
+                  placeholder="선택"
+                  size="sm"
+                  trigger-class="w-40"
+                />
+                <SelectField
+                  v-model="centerFilter"
+                  label="센터명"
+                  :options="centerFilterOptions"
+                  placeholder="선택"
+                  size="sm"
+                  trigger-class="w-70"
+                />
+              </div>
+            </template>
+          </SearchWrapper>
+          <pre class="text-xs bg-muted p-3 rounded">&lt;SearchWrapper no-background&gt;
+  &lt;template #form&gt;…&lt;/template&gt;
+&lt;/SearchWrapper&gt;</pre>
+        </section>
 
-          placeholder="선택"
-          size="sm"
-          trigger-class="w-40"
-        />
-        <SelectField
-          v-model="centerFilter"
-          label="센터명"
-          :options="centerFilterOptions"
-          placeholder="선택"
-          size="sm"
-          trigger-class="w-70"
-        />
-      </div>
-    </template>
-  </SearchWrapper>
+        <!-- 5. form + btns (department 없음) -->
+        <section class="space-y-4">
+          <h2 class="text-xl font-semibold border-b pb-2">5. #form + #btns — 부서 없이 검색 폼 + 조회 버튼 (항상 펼침)</h2>
+          <p class="text-sm text-muted-foreground">
+            기간 + 검색어 + 조회 버튼의 가장 흔한 조회 폼. <code>#btns</code> 슬롯에 넣은 버튼은 폼 오른쪽 끝에 붙는다.
+          </p>
+          <SearchWrapper>
+            <template #form>
+              <div class="search-area">
+                <DateRangePicker
+                  v-model:from="dateFrom"
+                  v-model:to="dateTo"
+                  label="검색기간"
+                  from-label="검색기간 시작일"
+                  to-label="검색기간 종료일"
+                  size="sm"
+                />
+                <InputField2
+                  v-model="keyword"
+                  size="sm"
+                  aria-label="검색어"
+                  placeholder="검색어를 입력해주세요."
+                  input-class="w-60"
+                  clearable
+                />
+              </div>
+            </template>
+            <template #btns>
+              <Button type="button" variant="secondary" size="sm">조회</Button>
+            </template>
+          </SearchWrapper>
           <pre class="text-xs bg-muted p-3 rounded">&lt;SearchWrapper&gt;
   &lt;template #form&gt;…&lt;/template&gt;
   &lt;template #btns&gt;…&lt;/template&gt;
@@ -230,6 +266,7 @@ import { computed, ref, watch } from 'vue'
 import { Download } from 'lucide-vue-next'
 import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
+import InputField2 from '@/components/custom/input/InputField2.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import { DateRangePicker } from '@/components/custom/datepicker'
@@ -245,6 +282,7 @@ const regionOptions = [
 const region = ref('all')
 const dateFrom = ref('')
 const dateTo = ref('')
+const keyword = ref('')
 const department = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
 
 const expanded1 = ref(false)
