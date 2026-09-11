@@ -74,9 +74,10 @@ import SelectField from '@/components/custom/select/SelectField.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import { Button } from '@/components/custom/button'
+import { badgeVariants } from '@/components/custom/badge'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { useDialog } from '@/composable/dialog/dialog'
-import { useNoticeList, authorFilterOptions, searchFieldOptions } from './composable/PM-COM-1001'
+import { useNoticeList, authorFilterOptions, searchFieldOptions, type NoticeRow } from './composable/PM-COM-1001'
 import { useNoticeStore, bulletinMenu } from '../composable/notice'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
@@ -110,24 +111,43 @@ const {
   rows,
 } = useNoticeList()
 
-/** 중요 공지는 번호 자리에 빨간 '중요' 배지가 들어간다.
- *  Tabulator 포매터는 HTML 문자열을 돌려주는 자리라 Badge 컴포넌트를 못 쓴다 */
+/** 중요 공지는 번호 자리에 '중요' 배지(Badge shape="sm" color="point")가 들어간다.
+ *  Tabulator 포매터는 HTML 문자열을 innerHTML 로 넣는 자리라 Vue 컴포넌트 태그를 써도 컴파일되지
+ *  않는다 — 대신 Badge 가 쓰는 badgeVariants() 로 같은 클래스 문자열을 받아 <span> 에 입힌다 */
 function noFormatter(cell: any) {
   const value = cell.getValue()
   if (value === '중요') {
-    return '<span class="board-pin-badge board-pin-badge-danger">중요</span>'
+    return `<span class="${badgeVariants({ shape: 'sm', color: 'point' })}">중요</span>`
   }
   return String(value)
 }
 
+/** 첨부파일 있음 아이콘 — 포털 공통 SVG(20×20). 포매터도 HTML 문자열 자리라 <img> 로 넣는다 */
+const attachIcon = '/portal/asset/images/icon/ico_attach.svg'
+
 function attachmentFormatter(cell: any) {
-  return cell.getValue() ? '📎' : '-'
+  return cell.getValue() ? `<img src="${attachIcon}" alt="첨부파일 있음" width="20" height="20">` : '-'
+}
+
+/** 제목 뒤에 댓글 수를 point 색(.lp-em-point)으로 '+22' 처럼 붙인다.
+ *  제목은 사용자 입력이라 innerHTML 문자열이 아니라 textContent 로 넣는다 */
+function titleFormatter(cell: any) {
+  const row = cell.getData() as NoticeRow
+  const wrap = document.createElement('span')
+  wrap.textContent = row.title
+  if (row.commentCount > 0) {
+    const count = document.createElement('b')
+    count.className = 'lp-em-point'
+    count.textContent = ` +${row.commentCount}`
+    wrap.appendChild(count)
+  }
+  return wrap
 }
 
 const columns: TabulatorGridColumn[] = [
   { title: '번호', field: 'no', width: 90, hozAlign: 'center', formatter: noFormatter },
   { title: '부서', field: 'dept', width: 200, hozAlign: 'center' },
-  { title: '제목', field: 'title', widthGrow: 4, hozAlign: 'center' },
+  { title: '제목', field: 'title', widthGrow: 4, hozAlign: 'center', formatter: titleFormatter },
   { title: '첨부파일', field: 'hasAttachment', width: 90, hozAlign: 'center', formatter: attachmentFormatter },
   { title: '작성자', field: 'writer', width: 110, hozAlign: 'center' },
   { title: '등록일', field: 'createdAt', width: 120, hozAlign: 'center' },

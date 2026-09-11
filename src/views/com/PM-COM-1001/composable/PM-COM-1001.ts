@@ -9,6 +9,8 @@ export interface NoticeRow {
   no: number | '중요'
   dept: string
   title: string
+  /** 제목 뒤에 붙는 댓글 수 — 0 이면 안 그린다(포매터가 point 색으로 '+22' 처럼 그린다) */
+  commentCount: number
   hasAttachment: boolean
   writer: string
   createdAt: string
@@ -36,7 +38,8 @@ function createMockRows(): NoticeRow[] {
       id: 1,
       no: '중요',
       dept: '대구청 지방청',
-      title: '입력한 제목이 표시됩니다. 입력한 제목이 표시됩니다.입력한 제목이 표시됩니다. 입력한 제목이 표... +22',
+      title: '입력한 제목이 표시됩니다. 입력한 제목이 표시됩니다.입력한 제목이 표시됩니다. 입력한 제목이 표...',
+      commentCount: 22,
       hasAttachment: true,
       writer: '홍길동',
       createdAt: '2026-07-10',
@@ -47,7 +50,8 @@ function createMockRows(): NoticeRow[] {
       id: 2,
       no: '중요',
       dept: '대구청 지방청',
-      title: '27.10.10 27.10. 10. 대구청 상황점검회의 양식 등 알림 (수범사례 양식) +22',
+      title: '27.10.10 27.10. 10. 대구청 상황점검회의 양식 등 알림 (수범사례 양식)',
+      commentCount: 22,
       hasAttachment: true,
       writer: '홍길동',
       createdAt: '2026-07-11',
@@ -58,7 +62,8 @@ function createMockRows(): NoticeRow[] {
       id: 3,
       no: 13539,
       dept: '대전청 대전둔산서',
-      title: '입력한 제목이 표시됩니다. 입력 +22',
+      title: '입력한 제목이 표시됩니다. 입력',
+      commentCount: 22,
       hasAttachment: false,
       writer: '홍길동',
       createdAt: '2026-07-10',
@@ -69,7 +74,8 @@ function createMockRows(): NoticeRow[] {
       id: 4,
       no: 13538,
       dept: '광주청 범죄예방대응과',
-      title: '입력한 제목이 표시됩니다. 입력 +22',
+      title: '입력한 제목이 표시됩니다. 입력',
+      commentCount: 22,
       hasAttachment: true,
       writer: '홍길동',
       createdAt: '2026-07-10',
@@ -80,7 +86,8 @@ function createMockRows(): NoticeRow[] {
       id: 5,
       no: 13537,
       dept: '본청 범죄예방대응 지역...',
-      title: '입력한 제목이 표시됩니다. 입력 +22',
+      title: '입력한 제목이 표시됩니다. 입력',
+      commentCount: 22,
       hasAttachment: true,
       writer: '홍길동',
       createdAt: '2026-07-10',
@@ -91,7 +98,8 @@ function createMockRows(): NoticeRow[] {
       id: 6,
       no: 13536,
       dept: '대구청 지방청',
-      title: '입력한 제목이 표시됩니다. 입력 +22',
+      title: '입력한 제목이 표시됩니다. 입력',
+      commentCount: 22,
       hasAttachment: false,
       writer: '홍길동',
       createdAt: '2026-07-10',
@@ -103,6 +111,7 @@ function createMockRows(): NoticeRow[] {
       no: 13535,
       dept: '대구청 지방청',
       title: '입력한 제목이 표시됩니다. 입력',
+      commentCount: 0,
       hasAttachment: true,
       writer: '홍길동',
       createdAt: '2026-07-10',
@@ -114,6 +123,7 @@ function createMockRows(): NoticeRow[] {
       no: 13534,
       dept: '대구청 지방청',
       title: '입력한 제목이 표시됩니다. 입력',
+      commentCount: 0,
       hasAttachment: true,
       writer: '홍길동',
       createdAt: '2026-07-10',
