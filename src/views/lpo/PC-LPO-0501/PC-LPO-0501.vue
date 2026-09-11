@@ -69,7 +69,7 @@
         size="sm"
         @click="onManualRegister"
         >삭제</Button
-      >     
+      >
       <Button
         type="button"
         variant="tertiary2"
@@ -166,11 +166,10 @@ const {
   saveManualRegistration,
 } = useDispatchAllowanceList();
 
-// 화면ID(PC-LPO-0501 목록 / PC-LPO-0502 임의등록 팝업) ↔ URL 동기화.
-// router.ts 에 0502 를 이 컴포넌트를 재사용하는 별도 라우트로 등록해뒀다(PC-LPO-0701 과 동일 패턴).
 const screenTriggers: ScreenTriggerMap = {
   "PC-LPO-0501": [],
   "PC-LPO-0502": [[manualRegisterOpen, true]],
+  "PC-LPO-0504": [[detailDialogOpen, true]],
 };
 useAutoTrigger(screenTriggers);
 
