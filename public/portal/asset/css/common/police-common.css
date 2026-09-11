@@ -2930,3 +2930,13 @@
 .board-pin-badge-danger {
   background: var(--danger);
 }
+
+/*
+ * TableWrapper 2단 헤더 — 컬럼 그룹이 시작되는 칸의 왼쪽 세로 구분선.
+ * TableWrapper 의 headClass 에는 아래 선만 있어 그룹 칸(활동실적·특별활동실적) 왼쪽이 비어 있다.
+ * 색은 본문 칸 구분선(bodyCellClass 의 border-[#E6E8EA])과 같은 --Border_gray03 이라
+ * 헤더에서 본문까지 세로선이 끊기지 않고 이어진다.
+ */
+.lp-th-group-start {
+  border-left: 0.1rem solid var(--Border_gray03);
+}
