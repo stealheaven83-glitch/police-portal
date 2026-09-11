@@ -361,14 +361,15 @@
               <div class="lp-row-between">
                 <template v-if="item.areaDetail">
                   <span class="readonly-text">{{ item.areaDetail }}</span>
-                  <button
-                    type="button"
-                    class="lp-icon-btn lp-icon-btn-dark"
+                  <!-- 2026-09-11 컴포넌트로 교체: button.lp-icon-btn -> Button variant="icon" -->
+                  <Button
+                    variant="icon"
+                    class="lp-icon-dark"
                     @click="openPatrolDetail(item.vehicle)"
                   >
                     <Icon name="search" :size="20" />
                     <span class="blind">{{ item.vehicle }} 순찰구역 상세 보기</span>
-                  </button>
+                  </Button>
                 </template>
                 <Button
                   v-else
@@ -407,16 +408,21 @@
             </Button>
             <Button type="button" variant="tertiary2" size="xs" padding="12" @click="onAddSafetyCenter">추가</Button>
           </div>
-          <button
-            type="button"
-            class="lp-icon-btn lp-icon-btn-dark lp-icon-btn-32"
+          <!-- 2026-09-11 컴포넌트로 교체: button.lp-icon-btn -> Button variant="icon" -->
+          <!-- 클릭 영역만 32 로 키운다. lucide 는 width·height 속성이라 베이스의
+               [&_svg:not([class*='size-'])]:size-4 에 져서 16px 이 되므로,
+               :size 가 아니라 class="size-5"(20px) 로 준다 -->
+          <Button
+            variant="icon"
+            size="32"
+            class="lp-icon-dark"
             :aria-expanded="safetyCenterOpen"
             aria-controls="safety-center-panel"
             @click="safetyCenterOpen = !safetyCenterOpen"
           >
-            <component :is="safetyCenterOpen ? Minus : Plus" :size="20" />
+            <component :is="safetyCenterOpen ? Minus : Plus" class="size-5" />
             <span class="blind">치안센터 {{ safetyCenterOpen ? '접기' : '펼치기' }}</span>
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -445,16 +451,21 @@
             </Button>
             <Button type="button" variant="tertiary2" size="xs" padding="12" @click="onAddHistory">추가</Button>
           </div>
-          <button
-            type="button"
-            class="lp-icon-btn lp-icon-btn-dark lp-icon-btn-32"
+          <!-- 2026-09-11 컴포넌트로 교체: button.lp-icon-btn -> Button variant="icon" -->
+          <!-- 클릭 영역만 32 로 키운다. lucide 는 width·height 속성이라 베이스의
+               [&_svg:not([class*='size-'])]:size-4 에 져서 16px 이 되므로,
+               :size 가 아니라 class="size-5"(20px) 로 준다 -->
+          <Button
+            variant="icon"
+            size="32"
+            class="lp-icon-dark"
             :aria-expanded="historyOpen"
             aria-controls="history-panel"
             @click="historyOpen = !historyOpen"
           >
-            <component :is="historyOpen ? Minus : Plus" :size="20" />
+            <component :is="historyOpen ? Minus : Plus" class="size-5" />
             <span class="blind">연혁 {{ historyOpen ? '접기' : '펼치기' }}</span>
-          </button>
+          </Button>
         </div>
       </div>
 

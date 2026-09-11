@@ -18,17 +18,17 @@
           보낸 사람: {{ memo.sender }} ｜ 받은 일시: {{ memo.receivedAt }}
         </span>
         <span class="lp-icon-row">
-          <button
-            type="button"
-            class="lp-icon-btn lp-icon-btn-24"
+          <!-- 2026-09-11 컴포넌트로 교체: button.lp-icon-btn -> Button variant="icon" -->
+          <Button
+            variant="icon"
             :aria-label="memo.important ? '중요 해제' : '중요 표시'"
             @click="toggleImportant"
           >
             <Icon :name="memo.important ? 'starFill' : 'star'" :size="24" />
-          </button>
-          <button type="button" class="lp-icon-btn lp-icon-btn-24" aria-label="공유" @click="openShare">
+          </Button>
+          <Button variant="icon" aria-label="공유" @click="openShare">
             <Icon name="share" :size="24" />
-          </button>
+          </Button>
         </span>
       </div>
 

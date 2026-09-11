@@ -27,16 +27,18 @@
         <span class="lp-label-text">근무일</span>
         <!-- 시안(11969:40069): 버튼 영역 20×20(삼각형 13.35×8.11), 버튼↔날짜 10 -->
         <span class="lp-daynav">
-          <button type="button" class="lp-icon-btn lp-icon-btn-20" aria-label="이전 근무일" @click="shiftWorkDate(-1)">
+          <!-- 2026-09-11 컴포넌트로 교체: button.lp-icon-btn -> Button variant="icon" -->
+          <Button variant="icon" aria-label="이전 근무일" @click="shiftWorkDate(-1)">
             <Icon name="arrowDropDown" :size="20" class="lp-icon-prev" />
-          </button>
+          </Button>
           <span class="group-gap2">
             <span class="lp-heading-lg">{{ workDate }}</span>
             <Icon name="calendar" :size="24" />
           </span>
-          <button type="button" class="lp-icon-btn lp-icon-btn-20" aria-label="다음 근무일" @click="shiftWorkDate(1)">
+          <!-- 2026-09-11 컴포넌트로 교체: button.lp-icon-btn -> Button variant="icon" -->
+          <Button variant="icon" aria-label="다음 근무일" @click="shiftWorkDate(1)">
             <Icon name="arrowDropDown" :size="20" class="lp-icon-next" />
-          </button>
+          </Button>
         </span>
       </span>
       <span class="lp-divider-v" aria-hidden="true"></span>

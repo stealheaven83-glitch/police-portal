@@ -30,9 +30,10 @@
     <div class="calendar-area">
       <span class="lp-label-text">근무일</span>
       <div class="calendar-area-date lp-daynav">
-        <button type="button" class="lp-icon-btn lp-icon-btn-20" aria-label="이전 근무일" @click="shiftWorkDate(-1)">
+        <!-- 2026-09-11 컴포넌트로 교체: button.lp-icon-btn -> Button variant="icon" -->
+        <Button variant="icon" aria-label="이전 근무일" @click="shiftWorkDate(-1)">
           <Icon name="arrowDropDown" :size="20" class="lp-icon-prev" />
-        </button>
+        </Button>
         <DatePicker
           v-model="workDate"
           label="근무일 선택"
@@ -42,9 +43,10 @@
           value-format="yyyy.MM.dd."
           input-class="lp-date-borderless lp-heading-lg w-40"
         />
-        <button type="button" class="lp-icon-btn lp-icon-btn-20" aria-label="다음 근무일" @click="shiftWorkDate(1)">
+        <!-- 2026-09-11 컴포넌트로 교체: button.lp-icon-btn -> Button variant="icon" -->
+        <Button variant="icon" aria-label="다음 근무일" @click="shiftWorkDate(1)">
           <Icon name="arrowDropDown" :size="20" class="lp-icon-next" />
-        </button>
+        </Button>
       </div>
       <span class="calendar-area-divider" aria-hidden="true" />
       <span class="lp-heading-md">{{ weekdayLabel }}</span>

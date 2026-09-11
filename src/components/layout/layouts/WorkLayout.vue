@@ -5,7 +5,7 @@
 -->
 <template>
   <div class="wrap sub-page">
-    <PortalHeader :show-banner="false" />
+    <PortalHeader :show-banner="false" v-if="!isMobile" />
     <main class="work-main">
       <SideMenu v-if="sideMenuStore.visible" />
       <div
@@ -37,6 +37,7 @@ import { useBottomTabStore } from '@/stores/tab/useBottomTab'
 import { useSideMenuStore } from '@/stores/menu/useSideMenu'
 import { useBreakpoint } from '@/composable/responsive/useResponsive.ts'
 
+
 const bottomTabStore = useBottomTabStore()
 const sideMenuStore = useSideMenuStore()
 
@@ -45,6 +46,7 @@ const isMobile = useBreakpoint('<=');
 defineSlots<{
   main: () => any
 }>()
+
 
 </script>
 

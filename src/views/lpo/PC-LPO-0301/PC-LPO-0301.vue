@@ -21,7 +21,7 @@
         <div class="search-area">
           <div class="group-gap3">
             <SelectField label="근무일" v-model="workYear" :options="yearOptions" size="sm" triggerClass="w-30" />
-            <SelectField v-model="workMonth" :options="monthOptions" size="sm" triggerClass="w-20" />
+            <SelectField v-model="workMonth" :options="monthOptions" size="sm" triggerClass="w-25" />
           </div>
           <Checkbox v-model="unconfirmedOnly" label="미 인수인계" />
         </div>

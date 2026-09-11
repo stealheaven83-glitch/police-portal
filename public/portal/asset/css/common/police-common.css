@@ -264,34 +264,12 @@
 
 /* ══ 아이콘 버튼 ══════════════════════════════════════════════ */
 
-/* 테두리·배경 없는 아이콘 전용 버튼. 크기는 -24 / -32 로 따로 준다 */
-.lp-icon-btn {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  background: none;
-  border: 0;
-  cursor: pointer;
-}
-.lp-icon-btn svg {
-  display: block;
-}
-.lp-icon-btn-20 {
-  width: 2rem;
-  height: 2rem;
-}
-.lp-icon-btn-24 {
-  width: 2.4rem;
-  height: 2.4rem;
-}
-.lp-icon-btn-32 {
-  width: 3.2rem;
-  height: 3.2rem;
-}
-/* 상속색이 아니라 본문색으로 고정해야 할 때 */
-.lp-icon-btn-dark {
+/* 2026-09-11 .lp-icon-btn / -20 / -24 / -32 제거 —
+   <Button variant="icon"> + <Icon :size> 로 대체했다. 아이콘 전용 버튼은
+   더 이상 CSS 로 만들지 않는다(component-guide.md §8-2) */
+
+/* 아이콘 색을 상속이 아니라 본문색으로 고정해야 할 때 Button 에 함께 준다 */
+.lp-icon-dark {
   color: var(--Text-body_0);
 }
 

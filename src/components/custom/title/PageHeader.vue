@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
 import { cn } from "@/lib/utils"
+import Icon from "@/components/custom/icon/Icon.vue"
+import { Button } from "@/components/custom/button"
+import { useBreakpoint } from '@/composable/responsive/useResponsive.ts'
 
 interface Props {
   class?: HTMLAttributes["class"]
@@ -12,19 +15,35 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   bordered: true,
 })
+
+const isMobile = useBreakpoint('<=');
 </script>
 
 <template>
-  <div
+  <!-- <div
     :class="cn(
       'flex items-center justify-between gap-5 py-[20px] px-0 max-[768px]:flex-col-reverse max-[768px]:items-start',
       props.class
     )"
+  > -->
+  <div
+    :class="cn(
+      'flex items-center justify-between gap-5 py-5 px-0',
+      isMobile ? 'py-[1.5rem]' : '',
+      props.class
+    )"
   >
-    <div :class="cn(props.leftClass)">
+  <div :class="cn(
+    isMobile ? 'flex items-center gap-2' : '',
+    props.leftClass)">
+      <Icon name="arrowLeft" :size="24" v-if="isMobile" />
       <slot name="left" />
     </div>
-    <div :class="cn(props.rightClass)">
+    <!-- 2026-09-11 컴포넌트로 교체: button.lp-icon-btn -> Button variant="icon" -->
+    <Button variant="icon" aria-label="메뉴" @click="emit('share')">
+      <Icon name="menu" :size="24" />
+    </Button>
+    <div :class="cn(props.rightClass)" v-if="!isMobile">
       <slot name="right" />
     </div>
   </div>

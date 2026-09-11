@@ -15,8 +15,8 @@
   <template v-if="view === 'list'">
     <Tabs v-model="activeTab">
       <TabsList variant="fill" :grow="true">
-        <!-- <TabsTrigger value="mine" tone="secondary">내 메모</TabsTrigger> -->
-        <TabsTrigger value="mine" tone="secondary">{{isMobile ? '모바일' : '아님'}}</TabsTrigger>
+        <TabsTrigger value="mine" tone="secondary">내 메모</TabsTrigger>
+        <!-- <TabsTrigger value="mine" tone="secondary">{{isMobile ? '모바일' : '아님'}}</TabsTrigger> -->
         <TabsTrigger value="received" tone="secondary">받은 메모</TabsTrigger>
         <TabsTrigger value="sent" tone="secondary">보낸 메모</TabsTrigger>
       </TabsList>
@@ -102,22 +102,21 @@
                   </button>
                 </h3>
                 <div class="lp-memo-card-actions">
-                  <button
-                    type="button"
-                    class="lp-icon-btn"
+                  <!-- 2026-09-11 컴포넌트로 교체: button.lp-icon-btn -> Button variant="icon" -->
+                  <Button
+                    variant="icon"
                     :aria-label="memo.important ? '중요 해제' : '중요 표시'"
                     @click.stop="toggleImportant(memo.id)"
                   >
                     <Icon :name="memo.important ? 'starFill' : 'star'" :size="24" />
-                  </button>
-                  <button
-                    type="button"
-                    class="lp-icon-btn"
+                  </Button>
+                  <Button
+                    variant="icon"
                     aria-label="공유"
                     @click.stop="openShare()"
                   >
                     <Icon name="share" :size="24" />
-                  </button>
+                  </Button>
                 </div>
               </div>
               <p class="lp-memo-card-preview">{{ memo.content }}</p>

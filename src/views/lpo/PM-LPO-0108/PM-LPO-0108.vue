@@ -21,9 +21,11 @@
     <template #day-detail="{ date, close }">
       <div class="lp-cal-popover-head">
         <span>{{ formatDay(date) }}</span>
-        <button type="button" class="lp-icon-btn lp-icon-btn-24" aria-label="닫기" @click="close">
+        <!-- 2026-09-11 컴포넌트로 교체: button.lp-icon-btn -> Button variant="icon" -->
+        <!-- 클릭 영역만 24 로 키운다. 아이콘 크기는 <Icon :size> 가 정한다 -->
+        <Button variant="icon" size="24" aria-label="닫기" @click="close">
           <Icon name="closePop" :size="20" />
-        </button>
+        </Button>
       </div>
 
       <ul v-if="dutiesOn(date).length" class="lp-cal-popover-list">

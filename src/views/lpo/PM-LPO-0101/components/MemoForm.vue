@@ -6,17 +6,17 @@
           <span>{{ createdAt }}</span>
         </div>
         <div class="lp-icon-row">
-          <button
-            type="button"
-            class="lp-icon-btn lp-icon-btn-24"
+          <!-- 2026-09-11 컴포넌트로 교체: button.lp-icon-btn -> Button variant="icon" -->
+          <Button
+            variant="icon"
             :aria-label="important ? '중요 해제' : '중요 표시'"
             @click="important = !important"
           >
             <Icon :name="important ? 'starFill' : 'star'" :size="24" />
-          </button>
-          <button type="button" class="lp-icon-btn lp-icon-btn-24" aria-label="공유" @click="emit('share')">
+          </Button>
+          <Button variant="icon" aria-label="공유" @click="emit('share')">
             <Icon name="share" :size="24" />
-          </button>
+          </Button>
         </div>
       </div>
 
