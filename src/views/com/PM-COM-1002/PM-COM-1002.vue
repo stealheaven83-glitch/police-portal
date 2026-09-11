@@ -15,7 +15,7 @@
     <article class="lp-notice-detail">
       <!-- 시안: 중요 배지 + 부서만 온다. 공지사항은 공개상태 칸이 없다(설계서 8장 표) -->
       <p class="lp-notice-badges">
-        <Badge v-if="notice.important" color="danger" variant="solid" size="md" shape="sm">중요</Badge>
+        <Badge v-if="notice.important" color="point" variant="solid" size="md" shape="sm">중요</Badge>
         <span class="lp-notice-dept">{{ notice.dept }}</span>
       </p>
 

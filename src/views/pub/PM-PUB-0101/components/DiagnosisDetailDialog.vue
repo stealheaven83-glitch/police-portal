@@ -41,7 +41,7 @@
     <!-- ── 일반현황 ─────────────────────────────── -->
     <div class="pop-title-sub"><h2>일반현황</h2></div>
 
-    <InfoTable :columns="2" popup>
+    <InfoTable :columns="2" popup size="90">
       <InfoField label="진단사유" for="detail-reason">
         <SelectField
           id="detail-reason"

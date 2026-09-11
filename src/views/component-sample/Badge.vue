@@ -77,6 +77,7 @@ const colors = ["primary", "secondary", "tertiary", "point", "danger", "warning"
           <div class="flex items-center gap-3 p-4">
             <Badge shape="full">Full</Badge>
             <Badge shape="sm">4px</Badge>
+            <Badge shape="sm" color="point">point</Badge>
           </div>
         </section>
         <section class="space-y-4">
