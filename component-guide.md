@@ -758,6 +758,11 @@ Figma 프레임에서 아이콘 확인 → get_design_context 응답의 asset UR
   → <Icon name="..." :size="20" /> 로 사용
 ```
 
+**SVG 원본의 `viewBox` 를 지우지 않는다.** `viewBox` 가 없으면 `:size` 가 박스만 키우고
+그림은 원본 크기 그대로라 아이콘이 안 커진다. Figma 에서 받은 SVG 에는 들어 있으니 그대로 저장하면
+된다. 빌드 때 SVGO(`preset-default`)가 `width`/`height` 가 있는 SVG 에서 이걸 지우는데,
+2026-09-11 에 `vite.config.ts` 에서 `removeViewBox: false` 로 껐다 — 그 설정을 되돌리지 않는다.
+
 지금 `icons.ts` 에 6개뿐이라 기존 화면들이 lucide 로 때우고 있다(23곳).
 **새로 만드는 화면부터는 Figma 아이콘을 등록해서 쓴다** — 등록하면 다음 화면이 재사용한다.
 이것도 공통화다(§1). Figma 에 없는 아이콘만 `lucide-vue-next` 를 쓰고, 그 사실을 인계 메모에

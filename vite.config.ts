@@ -22,7 +22,16 @@ export default ({ mode }: { mode: string }) => {
         },
       }),
       tailwindcss(),
-      svgLoader(),
+      // 2026-09-11 removeViewBox 끔 — SVGO preset-default 는 width/height 가 있는 svg 에서
+      // viewBox 를 지운다. 그러면 <Icon :size> 가 박스만 키우고 그림은 원본 크기 그대로라
+      // 아이콘이 안 커진다(18개 중 15개가 이 상태였다).
+      svgLoader({
+        svgoConfig: {
+          plugins: [
+            { name: 'preset-default', params: { overrides: { removeViewBox: false } } },
+          ],
+        },
+      }),
     ],
     resolve: {
       alias: {
