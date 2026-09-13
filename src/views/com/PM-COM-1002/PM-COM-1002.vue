@@ -11,7 +11,7 @@
     </template>
   </PageHeader>
 
-  <div class="lp-page-scroll">
+  <div class="lp-notice-scroll">
     <article class="lp-notice-detail">
       <!-- 시안: 중요 배지 + 부서만 온다. 공지사항은 공개상태 칸이 없다(설계서 8장 표) -->
       <p class="lp-notice-badges">
@@ -27,12 +27,12 @@
         </span>
         <Button type="button" variant="tertiary2" size="sm" @click="toggleRecommend">
           <ThumbsUp :size="16" aria-hidden="true" />
-          추천수 <b class="lp-em-primary">{{ notice.recommendCount }}</b>
+          추천수 <b>{{ notice.recommendCount }}</b>
         </Button>
       </div>
 
       <!-- 본문 대표 이미지 자리 — Figma 는 회색 박스로만 그려져 있다 -->
-      <div class="lp-notice-thumb" aria-hidden="true"></div>
+      <div class="lp-notice-thumb" aria-hidden="true"><img src="" :alt="notice.title"></div>
 
       <div class="lp-notice-body">
         <p v-for="(line, i) in contentLines" :key="i" class="lp-body-text">{{ line }}</p>
@@ -44,8 +44,8 @@
           :key="file.id"
           :file-name="file.name"
           readonly
+          :show-preview="false"
           @download="onDownload(file.name)"
-          @preview="onPreview(file.name)"
         />
       </div>
 
@@ -83,6 +83,7 @@ import CommentThread from '../components/CommentThread.vue'
 import { useNoticeStore, bulletinMenu } from '../composable/notice'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
+import { useWorkLayoutSetup } from '@/composable/layout/useWorkLayoutSetup'
 
 defineOptions({
   name: 'PmCom1002',
@@ -90,6 +91,9 @@ defineOptions({
 
 // LNB: 게시판 > 공지사항
 useSideMenuSetup({ ...bulletinMenu, activeChild: '공지사항' })
+
+// 공지 상세는 본문이 하나의 흐름이라 work-body 째로 스크롤돼야 한다
+useWorkLayoutSetup({ scrollable: true })
 
 const navItems = [
   { label: '홈', path: '/' },
@@ -112,13 +116,9 @@ const {
 
 const contentLines = computed(() => notice.value.content.split('\n'))
 
-/** 실제 다운로드/미리보기는 개발팀 몫 — 화면에서는 눌린 것만 알린다 */
+
 async function onDownload(name: string) {
   await dialog.alert({ title: `${name} 다운로드를 시작합니다.`, btnCancel: '확인' })
-}
-
-async function onPreview(name: string) {
-  await dialog.alert({ title: `${name} 을(를) 새 창에서 엽니다.`, btnCancel: '확인' })
 }
 
 function goList() {
@@ -130,7 +130,7 @@ function goEdit() {
   router.push({ name: 'PM-COM-1003' })
 }
 
-/** 삭제는 되돌릴 수 없어 컨펌창을 띄운다(CLAUDE.md §4 예외) */
+
 async function onDelete() {
   const { confirmed } = await dialog.confirm({
     title: '공지사항 삭제',

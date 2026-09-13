@@ -31,6 +31,16 @@ import PlusIcon from '@/assets/images/icons/plus.svg?component'
 // Figma icon/open-new-window — 외부 사이트로 나가는 링크 표시(새 창)
 import OpenNewWindowIcon from '@/assets/images/icons/openNewWindow.svg?component'
 
+// Figma icon/inquiry — 말풍선 안에 점 3개(댓글/답글 수). currentColor 라 글자색을 따라간다
+import InquiryIcon from '@/assets/images/icons/inquiry.svg?component'
+
+// Figma (댓글 영역 대댓글 화살표) — 답글임을 표시하는 꺾인 연결선. #CDD1D5 고정색
+import ReplyArrowIcon from '@/assets/images/icons/replyArrow.svg?component'
+
+// Figma (댓글 "..." 팝오버 메뉴) — 수정(연필) / 삭제(휴지통)
+import EditIcon from '@/assets/images/icons/edit.svg?component'
+import TrashIcon from '@/assets/images/icons/trash.svg?component'
+
 
 export const icons = {
   search: SearchIcon,
@@ -54,6 +64,10 @@ export const icons = {
   minus: MinusIcon,
   plus: PlusIcon,
   openNewWindow: OpenNewWindowIcon,
+  inquiry: InquiryIcon,
+  replyArrow: ReplyArrowIcon,
+  edit: EditIcon,
+  trash: TrashIcon,
 }
 
 export type IconName = keyof typeof icons

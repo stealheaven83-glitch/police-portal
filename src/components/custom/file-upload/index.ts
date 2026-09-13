@@ -5,7 +5,7 @@ export { default as FileUpload } from "./FileUpload.vue"
 
 // Figma: file_upload__atomic__pc / __mo (State=[ongoing|progress_completed|upload|error|download])
 export const fileUploadVariants = cva(
-  "flex items-center gap-2 w-full h-[4.8rem] px-[1.6rem] rounded-[var(--Radius-medium3)] border bg-white text-left transition-colors " +
+  "flex items-center gap-2 w-full h-[5.6rem] px-[1.6rem] rounded-[var(--Radius-medium3)] border bg-white text-left transition-colors " +
   "outline-none focus-visible:border-[var(--Border_primary)] focus-visible:border-2",
   {
     variants: {

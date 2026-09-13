@@ -2073,6 +2073,13 @@
 }
 
 /* ── 게시판 글 상세 ──────────────────────────────────────────────────────── */
+.lp-notice-scroll{
+  flex: 1;
+  min-height: 0;
+  max-width:100rem;
+  width: calc(100% + 30px);
+  margin:0 auto;  
+}
 .lp-notice-detail {
   display: flex;
   flex-direction: column;
@@ -2087,7 +2094,8 @@
 }
 .lp-notice-dept {
   font-size: 1.5rem;
-  color: var(--Text-body_0);
+  color: var(--Text-body_2);
+  font-weight: 700;
 }
 .lp-notice-title {
   font-size: 2.4rem;
@@ -2102,7 +2110,6 @@
 /* 본문 대표 이미지 자리 — Figma 는 회색 박스로만 그려져 있다 */
 .lp-notice-thumb {
   width: 100%;
-  max-width: 54rem;
   height: 28rem;
   margin: 0 auto;
   background: var(--Background-gray01);
@@ -2126,14 +2133,14 @@
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
-  padding: 2rem;
+  padding: 3.2rem;
   border: 0.1rem solid var(--Border_gray02);
   border-radius: var(--Radius-medium2);
 }
 .lp-comment-write {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 1.65rem;
 }
 .lp-comment-list {
   display: flex;
@@ -2147,11 +2154,15 @@
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  flex: 1;
+  min-width: 0;
 }
 .lp-comment-head {
   display: flex;
   align-items: center;
   gap: 0.8rem;
+  height: 4rem;
+
 }
 .lp-comment-writer {
   font-size: 1.5rem;
@@ -2159,10 +2170,23 @@
   color: var(--Text-body_0);
 }
 .lp-comment-date {
+  position: relative;
+  display: flex;
   flex: 1;
+  padding-left:0.8rem;
   min-width: 0;
   font-size: 1.3rem;
   color: var(--Text-body_2);
+} 
+.lp-comment-date::before{
+  position:absolute;
+  left:0;
+  top:3.2px;
+  display: block;
+  content:"";
+  width: 1px;
+  height: 16px;
+  background: var(--Surface-gray01);
 }
 .lp-comment-more {
   display: inline-flex;
@@ -2176,6 +2200,32 @@
 }
 .lp-comment-more:hover {
   color: var(--Text-body_0);
+}
+/* "..." 클릭 시 뜨는 팝오버 메뉴(수정/삭제/답변) */
+.lp-comment-menu {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  min-width: 7.4rem;
+  padding: 0.4rem 0;
+  border-radius: var(--Radius-medium1);
+  border-color: var(--Border_gray01);
+  box-shadow: 0 0 0.1rem 0 rgba(0, 0, 0, 0.08), 0 0.8rem 0.8rem 0 rgba(0, 0, 0, 0.12);
+}
+.lp-comment-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.6rem 1.2rem;
+  font-size: 1.3rem;
+  color: var(--Text-body_0);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.lp-comment-menu-item:hover {
+  background: var(--Surface-gray01);
 }
 .lp-comment-body {
   font-size: 1.5rem;
@@ -2202,13 +2252,21 @@
 .lp-comment-reply-btn:hover {
   color: var(--Base-primary);
 }
-/* 대댓글은 한 단 들여쓴다 */
+/* 대댓글은 한 단 들여쓴다 — 들여쓰기는 padding 이 아니라 화살표 아이콘(lp-comment-reply-arrow) 폭+간격이 만든다 */
 .lp-comment-replies {
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
-  padding-left: 3.2rem;
-  margin-top: 1.6rem;
+  padding-top: 1.6rem;
+}
+/* Figma: 화살표 아이콘이 작성자 줄만이 아니라 대댓글 전체(작성자~본문) 왼쪽에 나란히 선다 */
+.lp-comment-reply-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+}
+.lp-comment-reply-arrow {
+  flex-shrink: 0;
 }
 
 /*

@@ -14,11 +14,11 @@
       >
          <!--
            화면 내용. .wrap 이 화면 높이로 잠겨 있으므로 넘치는 내용은 이 래퍼가 스크롤한다.
-           바깥 컬럼이 아니라 안쪽 래퍼가 스크롤을 맡는 이유는, 탭 바가 컬럼에 absolute 로
-           붙어 있어서 컬럼이 스크롤 컨테이너가 되면 탭 바가 내용을 따라다니며 그리드 위로
-           겹쳐 올라오기 때문이다.
+           바깥 컬럼(work-body)이 아니라 이 안쪽 래퍼가 스크롤을 맡는 이유는, 탭 바가 work-body 에
+           absolute 로 붙어 있어서 work-body 가 스크롤 컨테이너(overflow:auto)가 되면 그 바깥으로
+           밀려나 있던 탭 바가 클리핑돼 사라지기 때문이다(useWorkLayoutSetup({ scrollable: true })).
          -->
-         <div class="flex flex-col flex-1 min-h-0">
+         <div class="work-content flex flex-col flex-1 min-h-0" :class="{ 'is-scrollable': workLayoutStore.scrollable }">
            <slot name="main" />
          </div>
          <!-- 하단 동적 탭. 목록은 화면(View)의 useBottomTabSetup 이 채운다 -->
@@ -35,11 +35,13 @@ import { SideMenu } from '@/components/custom/sidemenu/index.ts'
 import { BottomTab } from '@/components/custom/bottom-tab'
 import { useBottomTabStore } from '@/stores/tab/useBottomTab'
 import { useSideMenuStore } from '@/stores/menu/useSideMenu'
+import { useWorkLayoutStore } from '@/stores/layout/useWorkLayout'
 import { useBreakpoint } from '@/composable/responsive/useResponsive.ts'
 
 
 const bottomTabStore = useBottomTabStore()
 const sideMenuStore = useSideMenuStore()
+const workLayoutStore = useWorkLayoutStore()
 
 const isMobile = useBreakpoint('<=');
 
@@ -92,6 +94,16 @@ defineSlots<{
  */
 .work-body:has(.splitLayout) {
   padding-bottom: 4px;
+}
+
+/*
+ * 본문이 하나의 흐름이라 화면 내용 전체가 스크롤돼야 하는 화면용
+ * (useWorkLayoutSetup({ scrollable: true })). work-body 가 아니라 그 안쪽 래퍼(work-content)만
+ * 스크롤 컨테이너가 된다 — work-body 를 스크롤 컨테이너로 만들면 그 자식인 탭 바(BottomTab,
+ * absolute 로 work-body 박스 밖까지 밀려나 있음)가 overflow 에 걸려 잘려버린다.
+ */
+.work-content.is-scrollable {
+  overflow-y: auto;
 }
 
 /* 탭 바 자체의 스타일은 BottomTab.vue 가 들고 있다 */

@@ -27,6 +27,8 @@ interface Props {
   error?: string
   /** true면 다운로드 전용(다운로드/바로보기 링크만 표시, 삭제 불가) */
   readonly?: boolean
+  /** readonly 일 때 바로보기 링크도 같이 보여줄지. 다운로드만 필요한 화면에서 false */
+  showPreview?: boolean
   /**
    * 겉모습. 기본 "default" = 기존 그대로(삭제 14px 회색 + lucide X),
    * "circle" = Figma file_upload__atomic__pc 시안(파일명 #131416, 삭제 15px + 회색 원 x 아이콘).
@@ -45,6 +47,7 @@ const props = withDefaults(defineProps<Props>(), {
   uploaded: false,
   error: undefined,
   readonly: false,
+  showPreview: true,
   variant: "default",
   class: undefined,
 })
@@ -114,6 +117,7 @@ function onRemove(e: Event) {
           다운로드 <Download class="size-4" />
         </button>
         <button
+          v-if="showPreview"
           type="button"
           class="flex items-center gap-1 text-[var(--Text-body_1)] hover:text-[var(--Base-primary)]"
           @click.stop="emit('preview')"

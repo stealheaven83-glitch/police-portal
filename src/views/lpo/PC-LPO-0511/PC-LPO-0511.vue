@@ -69,6 +69,7 @@
     placeholder="조회된 출동수당 취합 내역이 없습니다"
     show-pagination
     :items-per-page="10"
+    class="flex-1"
   />
 </template>
 
@@ -144,8 +145,8 @@ const columns: TabulatorGridColumn[] = [
   { title: "출동건수", field: "dispatchCount", width: 90, hozAlign: "center" },
   { title: "접수일시", field: "receivedAt", width: 140, hozAlign: "center" },
   { title: "범죄명", field: "crimeName", width: 100, hozAlign: "center" },
-  { title: "접수번호", field: "receiptNo", width: 130, hozAlign: "center" },
-  { title: "사건번호", field: "caseNo", width: 90, hozAlign: "center" },
+  { title: "접수번호", field: "receiptNo", width: 180, hozAlign: "center" },
+  { title: "사건번호", field: "caseNo", width: 200, hozAlign: "center" },
   {
     title: "신고내용",
     field: "reportContent",
@@ -171,6 +172,7 @@ const columns: TabulatorGridColumn[] = [
     hozAlign: "center",
   },
   {
+    
     title: "도착 소요시간",
     field: "arrivalTime",
     width: 130,

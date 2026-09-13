@@ -186,6 +186,7 @@ async function onDeleteSelected() {
   removeRows(ids)
   selectedCount.value = 0
   // 화면 새로고침(목록 재조회)은 API 연동 시 개발팀이 붙인다 — 지금은 목업 행 삭제로 목록이 바로 갱신된다
+  await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
 /** 시안의 버튼 문구가 '작성'이다(설계서 6번은 '등록'이라 적혀 있다 — 시안을 따랐다) */

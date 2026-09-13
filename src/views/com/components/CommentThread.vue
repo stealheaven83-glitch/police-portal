@@ -24,14 +24,24 @@
           <p class="lp-comment-head">
             <b class="lp-comment-writer">{{ comment.writer }}</b>
             <span class="lp-comment-date">{{ comment.createdAt }}</span>
-            <button
-              type="button"
-              class="lp-comment-more"
-              :aria-label="`${comment.writer} 댓글 메뉴`"
-              @click="toggleMenu(comment.id)"
-            >
-              <MoreHorizontal :size="18" aria-hidden="true" />
-            </button>
+            <Popover :open="openMenuId === comment.id" @update:open="setMenuOpen(comment.id, $event)">
+              <PopoverTrigger as-child>
+                <button type="button" class="lp-comment-more" :aria-label="`${comment.writer} 댓글 메뉴`">
+                  <MoreHorizontal :size="18" aria-hidden="true" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent side="bottom" align="end" :side-offset="4" class="lp-comment-menu">
+                <button type="button" class="lp-comment-menu-item" @click="startEdit(comment)">
+                  <Icon name="edit" :size="16" aria-hidden="true" /> 수정
+                </button>
+                <button type="button" class="lp-comment-menu-item" @click="onRemove(comment.id)">
+                  <Icon name="trash" :size="16" aria-hidden="true" /> 삭제
+                </button>
+                <button type="button" class="lp-comment-menu-item" @click="toggleReply(comment.id); openMenuId = null">
+                  <Icon name="inquiry" :size="16" aria-hidden="true" /> 답변
+                </button>
+              </PopoverContent>
+            </Popover>
           </p>
 
           <template v-if="editingId === comment.id">
@@ -44,12 +54,8 @@
           </template>
           <template v-else>
             <p class="lp-comment-body">{{ comment.content }}</p>
-            <div v-if="openMenuId === comment.id" class="lp-comment-actions">
-              <Button type="button" variant="tertiary2" size="sm" padding="16" @click="startEdit(comment)">수정</Button>
-              <Button type="button" variant="tertiary2" size="sm" padding="16" @click="onRemove(comment.id)">삭제</Button>
-            </div>
             <button type="button" class="lp-comment-reply-btn" @click="toggleReply(comment.id)">
-              <MessageSquare :size="16" aria-hidden="true" />
+              <Icon name="inquiry" :size="19" />
               {{ repliesOf(comment.id).length }}
             </button>
           </template>
@@ -57,20 +63,27 @@
 
         <!-- 대댓글 -->
         <ul v-if="repliesOf(comment.id).length" class="lp-comment-replies">
-          <li v-for="reply in repliesOf(comment.id)" :key="reply.id">
+          <li v-for="reply in repliesOf(comment.id)" :key="reply.id" class="lp-comment-reply-row">
+            <Icon name="replyArrow" :size="32" class="lp-comment-reply-arrow" />
             <article class="lp-comment">
               <p class="lp-comment-head">
-                <CornerDownRight :size="14" aria-hidden="true" />
                 <b class="lp-comment-writer">{{ reply.writer }}</b>
                 <span class="lp-comment-date">{{ reply.createdAt }}</span>
-                <button
-                  type="button"
-                  class="lp-comment-more"
-                  :aria-label="`${reply.writer} 답글 메뉴`"
-                  @click="toggleMenu(reply.id)"
-                >
-                  <MoreHorizontal :size="18" aria-hidden="true" />
-                </button>
+                <Popover :open="openMenuId === reply.id" @update:open="setMenuOpen(reply.id, $event)">
+                  <PopoverTrigger as-child>
+                    <button type="button" class="lp-comment-more" :aria-label="`${reply.writer} 답글 메뉴`">
+                      <MoreHorizontal :size="18" aria-hidden="true" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent side="bottom" align="end" :side-offset="4" class="lp-comment-menu">
+                    <button type="button" class="lp-comment-menu-item" @click="startEdit(reply)">
+                      <Icon name="edit" :size="16" aria-hidden="true" /> 수정
+                    </button>
+                    <button type="button" class="lp-comment-menu-item" @click="onRemove(reply.id)">
+                      <Icon name="trash" :size="16" aria-hidden="true" /> 삭제
+                    </button>
+                  </PopoverContent>
+                </Popover>
               </p>
 
               <template v-if="editingId === reply.id">
@@ -82,10 +95,6 @@
               </template>
               <template v-else>
                 <p class="lp-comment-body">{{ reply.content }}</p>
-                <div v-if="openMenuId === reply.id" class="lp-comment-actions">
-                  <Button type="button" variant="tertiary2" size="sm" padding="16" @click="startEdit(reply)">수정</Button>
-                  <Button type="button" variant="tertiary2" size="sm" padding="16" @click="onRemove(reply.id)">삭제</Button>
-                </div>
               </template>
             </article>
           </li>
@@ -121,10 +130,12 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { CornerDownRight, MessageSquare, MoreHorizontal } from 'lucide-vue-next'
+import { MoreHorizontal } from 'lucide-vue-next'
+import Icon from '@/components/custom/icon/Icon.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { Button } from '@/components/custom/button'
 import { Pagination } from '@/components/custom/pagination'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import type { NoticeComment } from '../composable/notice'
 import { useDialog } from '@/composable/dialog/dialog'
 
@@ -173,8 +184,8 @@ function repliesOf(id: number) {
 
 const nowLabel = 'YYYY-MM-DD (HH:MM)'
 
-function toggleMenu(id: number) {
-  openMenuId.value = openMenuId.value === id ? null : id
+function setMenuOpen(id: number, isOpen: boolean) {
+  openMenuId.value = isOpen ? id : null
 }
 
 function toggleReply(id: number) {
