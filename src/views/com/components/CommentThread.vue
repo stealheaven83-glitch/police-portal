@@ -26,7 +26,7 @@
             <span class="lp-comment-date">{{ comment.createdAt }}</span>
             <Popover :open="openMenuId === comment.id" @update:open="setMenuOpen(comment.id, $event)">
               <PopoverTrigger as-child>
-                <button type="button" class="lp-comment-more" :aria-label="`${comment.writer} 댓글 메뉴`">
+                <button type="button" class="lp-comment-more" :disabled="anyEditing" :aria-label="`${comment.writer} 댓글 메뉴`">
                   <MoreHorizontal :size="18" aria-hidden="true" />
                 </button>
               </PopoverTrigger>
@@ -34,7 +34,7 @@
                 <button type="button" class="lp-comment-menu-item" @click="startEdit(comment)">
                   <Icon name="edit" :size="16" aria-hidden="true" /> 수정
                 </button>
-                <button type="button" class="lp-comment-menu-item" @click="onRemove(comment.id)">
+                <button v-if="!repliesOf(comment.id).length" type="button" class="lp-comment-menu-item" @click="onRemove(comment.id)">
                   <Icon name="trash" :size="16" aria-hidden="true" /> 삭제
                 </button>
                 <button type="button" class="lp-comment-menu-item" @click="toggleReply(comment.id); openMenuId = null">
@@ -46,10 +46,13 @@
 
           <template v-if="editingId === comment.id">
             <TextareaField v-model="editText" aria-label="댓글 수정" :height="64" />
-            <div class="lp-comment-actions">
-              <Button type="button" variant="tertiary2" size="sm" padding="16" @click="cancelEdit">취소</Button>
-              <Button type="button" variant="tertiary2" size="sm" padding="16" @click="onRemove(comment.id)">삭제</Button>
-              <Button type="button" variant="primary" size="sm" padding="16" @click="onSaveEdit(comment.id)">등록</Button>
+            <div class="lp-comment-actions is-edit">
+              <Button type="button" variant="tertiary2" size="sm" padding="16" @click="onCancelEditClick">취소</Button>
+              <span class="lp-comment-actions-group">
+                <Button v-if="!repliesOf(comment.id).length" type="button" variant="tertiary2" size="sm" padding="16" @click="onRemove(comment.id)">삭제</Button>
+                <span v-else class="lp-comment-edit-note">* 답변이 작성된 댓글은 삭제할 수 없습니다.</span>
+                <Button type="button" variant="primary" size="sm" padding="16" @click="onSaveEdit(comment.id)">등록</Button>
+              </span>
             </div>
           </template>
           <template v-else>
@@ -71,7 +74,7 @@
                 <span class="lp-comment-date">{{ reply.createdAt }}</span>
                 <Popover :open="openMenuId === reply.id" @update:open="setMenuOpen(reply.id, $event)">
                   <PopoverTrigger as-child>
-                    <button type="button" class="lp-comment-more" :aria-label="`${reply.writer} 답글 메뉴`">
+                    <button type="button" class="lp-comment-more" :disabled="anyEditing" :aria-label="`${reply.writer} 답글 메뉴`">
                       <MoreHorizontal :size="18" aria-hidden="true" />
                     </button>
                   </PopoverTrigger>
@@ -88,8 +91,8 @@
 
               <template v-if="editingId === reply.id">
                 <TextareaField v-model="editText" aria-label="답글 수정" :height="64" />
-                <div class="lp-comment-actions">
-                  <Button type="button" variant="tertiary2" size="sm" padding="16" @click="cancelEdit">취소</Button>
+                <div class="lp-comment-actions is-edit">
+                  <Button type="button" variant="tertiary2" size="sm" padding="16" @click="onCancelEditClick">취소</Button>
                   <Button type="button" variant="primary" size="sm" padding="16" @click="onSaveEdit(reply.id)">저장</Button>
                 </div>
               </template>
@@ -121,7 +124,7 @@
       :current-page="currentPage"
       :total-pages="totalPages"
       :items-per-page="itemsPerPage"
-      :total-elements="roots.length"
+      :total-elements="totalElements"
       @update:page="(p: number) => (currentPage = p)"
       @update:items-per-page="onChangePageSize"
     />
@@ -172,17 +175,44 @@ const currentPage = ref(1)
 const itemsPerPage = ref(10)
 
 const allRoots = computed(() => props.comments.filter((c) => c.parentId === null))
-const totalPages = computed(() => Math.max(1, Math.ceil(allRoots.value.length / itemsPerPage.value)))
-const roots = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value
-  return allRoots.value.slice(start, start + itemsPerPage.value)
-})
 
 function repliesOf(id: number) {
   return props.comments.filter((c) => c.parentId === id)
 }
 
+/**
+ * 페이지네이션 기준 개수는 답글까지 포함한다(화면 요구사항 9번). 한 스레드(원댓글+답글)는
+ * 페이지 경계에서 쪼개지 않는다 — 답글이 부모와 다른 페이지에 떨어지면 문맥을 잃는다.
+ * 그래서 목록당 건수만큼 원댓글을 단순히 자르지 않고, 누적 개수가 목록당 건수를 넘기 전까지
+ * 원댓글(+그 답글)을 그러모아 한 페이지로 묶는다.
+ */
+const pages = computed(() => {
+  const result: NoticeComment[][] = []
+  let current: NoticeComment[] = []
+  let currentCount = 0
+  for (const root of allRoots.value) {
+    const threadCount = 1 + repliesOf(root.id).length
+    if (current.length && currentCount + threadCount > itemsPerPage.value) {
+      result.push(current)
+      current = []
+      currentCount = 0
+    }
+    current.push(root)
+    currentCount += threadCount
+  }
+  if (current.length) result.push(current)
+  return result.length ? result : [[]]
+})
+
+const totalPages = computed(() => pages.value.length)
+const roots = computed(() => pages.value[currentPage.value - 1] ?? [])
+/** 총 건수 표시도 답글을 포함한다 */
+const totalElements = computed(() => props.comments.length)
+
 const nowLabel = 'YYYY-MM-DD (HH:MM)'
+
+/** 어느 댓글이든 수정 중이면 다른 댓글의 수정/삭제/답변 메뉴를 잠근다 — 동시 편집 방지 */
+const anyEditing = computed(() => editingId.value !== null)
 
 function setMenuOpen(id: number, isOpen: boolean) {
   openMenuId.value = isOpen ? id : null
@@ -193,18 +223,28 @@ function toggleReply(id: number) {
   replyText.value = ''
 }
 
+/** 사용자 지정: 저장 컨펌창 — CLAUDE.md §4 기본(alert만)과 다르지만 요청(화면 정의서 ②)대로 따름 */
 async function onAdd() {
   if (!newComment.value.trim()) {
-    await dialog.alert({ title: '댓글 내용을 입력해 주세요.', btnCancel: '확인' })
+    await dialog.alert({ title: '입력된 내용이 없습니다. 내용을 입력해 주시기 바랍니다.', btnCancel: '확인' })
     return
   }
+  const { confirmed } = await dialog.confirm({
+    title: '댓글을 등록하시겠습니까?',
+    btnOk: '확인',
+    btnCancel: '취소',
+  })
+  if (!confirmed) return
+
   emit('add', newComment.value.trim(), null)
   newComment.value = ''
+  // 새 댓글은 목록 최상단에 붙으므로, 다른 페이지를 보고 있었다면 1페이지로 되돌려 보이게 한다
+  currentPage.value = 1
 }
 
 async function onAddReply(parentId: number) {
   if (!replyText.value.trim()) {
-    await dialog.alert({ title: '답글 내용을 입력해 주세요.', btnCancel: '확인' })
+    await dialog.alert({ title: '입력된 내용이 없습니다. 내용을 입력해 주시기 바랍니다.', btnCancel: '확인' })
     return
   }
   emit('add', replyText.value.trim(), parentId)
@@ -223,16 +263,44 @@ function cancelEdit() {
   editText.value = ''
 }
 
+/** 수정 화면의 "취소" 클릭 — 사용자 지정: 컨펌창(화면 정의서 1-2/3-2) */
+async function onCancelEditClick() {
+  const { confirmed } = await dialog.confirm({
+    title: '수정된 내용이 있습니다. 취소하시겠습니까?',
+    btnOk: '확인',
+    btnCancel: '취소',
+  })
+  if (!confirmed) return
+  cancelEdit()
+}
+
+/** 사용자 지정: 저장 컨펌창(화면 정의서 1-4/3-4) — CLAUDE.md §4 기본과 다르지만 요청대로 따름 */
 async function onSaveEdit(id: number) {
   if (!editText.value.trim()) {
     await dialog.alert({ title: '댓글 내용을 입력해 주세요.', btnCancel: '확인' })
     return
   }
+  const { confirmed } = await dialog.confirm({
+    title: '수정된 내용을 저장하시겠습니까?',
+    btnOk: '확인',
+    btnCancel: '취소',
+  })
+  if (!confirmed) return
   emit('update', id, editText.value.trim())
   cancelEdit()
 }
 
-function onRemove(id: number) {
+/**
+ * 사용자 지정: 삭제 컨펌창(화면 정의서 1-3) — CLAUDE.md §4 기본(alert만)과 다르지만 요청대로 따름.
+ * 답변이 달린 원댓글은 이 함수에 닿기 전에 UI(팝오버·수정 화면)에서 삭제 버튼 자체를 가린다.
+ */
+async function onRemove(id: number) {
+  const { confirmed } = await dialog.confirm({
+    title: '삭제된 댓글은 복구할 수 없습니다. 삭제 하시겠습니까?',
+    btnOk: '확인',
+    btnCancel: '취소',
+  })
+  if (!confirmed) return
   emit('remove', id)
   cancelEdit()
   openMenuId.value = null

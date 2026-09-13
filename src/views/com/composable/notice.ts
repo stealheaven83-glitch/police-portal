@@ -164,12 +164,13 @@ function createNoticeStore() {
     }
   }
 
+  /** 새 댓글(parentId 없음)은 목록 최상단에 표시한다 — 화면 요구사항. 답글은 기존대로 등록 순 */
   function addComment(content: string, parentId: number | null = null) {
     const nextId = comments.value.length ? Math.max(...comments.value.map((c) => c.id)) + 1 : 1
-    comments.value = [
-      ...comments.value,
-      { id: nextId, parentId, writer: '강길동', createdAt: nowText(), content },
-    ]
+    const created = { id: nextId, parentId, writer: '강길동', createdAt: nowText(), content }
+    comments.value = parentId === null
+      ? [created, ...comments.value]
+      : [...comments.value, created]
   }
 
   function updateComment(id: number, content: string) {
