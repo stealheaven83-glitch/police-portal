@@ -562,6 +562,14 @@ tbody .row-total > td:first-child {
   padding-right: 12.2rem;
 }
 
+/* SearchWrapper 의 #form·#btns 줄 상하 여백(py-5) 제거 — 조회조건 한 줄만 있고
+   no-background 라 회색 상자도 없어 위아래로 띄울 면이 없는 화면. 좌우 여백과
+   아래 간격(mb-20)은 그대로 둔다. 컴포넌트의 테일윈드를 덮으므로 이 파일이다(CLAUDE.md §2). */
+.lp-search-flush > div {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 /* 근무일정 달력 툴바(연·월 선택) — 시안(13312:71297)은 24px bold + 24px 화살표다.
    TextSelect 의 xlarge 는 19px/20px 이라 이 화면에서만 키운다.
    TextSelect 가 테일윈드로 크기를 먹이므로 common 이 아니라 이 파일이어야 이긴다(CLAUDE.md §2). */
@@ -745,6 +753,24 @@ tbody .row-total > td:first-child {
  */
 [data-slot="alert-dialog-title"] {
   white-space: pre-line;
+}
+
+/*
+ * 그룹 머리(2단) 왼쪽 경계선.
+ *
+ * tabulator-theme.css 가 .tabulator-col 의 border-right 를 0 으로 지워서 머리줄에는
+ * 세로선이 없다 — 본문 셀만 그어진다. 그래서 그룹 머리가 시작되는 자리에서 본문 선이
+ * 머리줄로 이어지지 않고 끊긴다. 그 한 줄만 잇는다 — 머리줄의 다른 칸 경계는
+ * 테마 그대로 선이 없다.
+ *
+ * border-left 가 아니라 box-shadow 인 이유: 본문 선은 앞 칸의 border-right 라 경계의
+ * 왼쪽 1px 에 그려지는데, 그룹에 border-left 를 주면 경계의 오른쪽 1px 에 그려져 1px 어긋난다.
+ * 바깥쪽 그림자로 그으면 본문 선과 같은 픽셀에 얹힌다. 그림자는 칸 폭을 차지하지 않아
+ * Tabulator 가 인라인으로 넣는 그룹 폭도 그대로다.
+ * 테마는 @layer 밖이라 !important 가 아니면 덮이지 않는다.
+ */
+.lp-grid-group-line .tabulator-header .tabulator-col.tabulator-col-group {
+  box-shadow: -1px 0 0 0 var(--Border-grid-body) !important;
 }
 
 /*

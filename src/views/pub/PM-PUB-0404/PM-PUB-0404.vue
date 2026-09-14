@@ -11,25 +11,29 @@
     </template>
   </PageHeader>
 
-  <!-- 시안에 조회 버튼·상세조회가 없어서 SearchWrapper 가 아니라 부서줄 하나다 -->
-  <div class="dept-area">
-    <SelectField
-      v-model="searchOffice"
-      label="관할청"
-      :options="officeOptions"
-      size="sm"
-      trigger-class="w-37"
-      placeholder="선택"
-    />
-    <SelectField
-      v-model="searchCenterName"
-      label="센터명"
-      :options="centerNameOptions"
-      size="sm"
-      trigger-class="w-37"
-      placeholder="선택"
-    />
-  </div>
+  <!-- 시안에 조회 버튼·상세조회가 없어서 #form 만 쓰고 회색 배경을 뺀다(/component/search-area 4번) -->
+  <SearchWrapper no-background class="lp-search-flush">
+    <template #form>
+      <div class="search-area">
+        <SelectField
+          v-model="searchOffice"
+          label="관할청"
+          :options="officeOptions"
+          size="sm"
+          trigger-class="w-37"
+          placeholder="선택"
+        />
+        <SelectField
+          v-model="searchCenterName"
+          label="센터명"
+          :options="centerNameOptions"
+          size="sm"
+          trigger-class="w-37"
+          placeholder="선택"
+        />
+      </div>
+    </template>
+  </SearchWrapper>
 
   <!-- 시안에는 버튼줄이 없지만 등록 팝업(PC-PUB-0418)으로 들어갈 길이 필요해 신규를 뒀다 -->
   <div class="list-actions">
@@ -39,7 +43,7 @@
   <TabulatorGrid
     :columns="columns"
     :data="rows"
-    class="flex-1"
+    class="flex-1 lp-grid-group-line"
     height="100%"
     :row-class="rowClass"
     placeholder="조회된 사용자가 없습니다"
@@ -57,6 +61,7 @@ import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
+import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
@@ -74,11 +79,7 @@ import {
 // KeepAlive 캐싱 대상 이름 — useBottomTabSetup 의 componentName 과 정확히 같아야 한다(§5)
 defineOptions({ name: 'PmPub0404' })
 
-/*
- * LNB: publicSafetyMenu items[3] = '해바라기센터'.
- * ⚠ 프리셋 children 에 '해바라기센터 사용자' 가 아직 없다 — 시안 라벨을 그대로 넣어 뒀고
- *   프리셋 배치 등록 시 확인이 필요하다(CLAUDE.md §5 ③).
- */
+/* LNB: publicSafetyMenu items[3] = '해바라기센터' → '해바라기센터 사용자' */
 useSideMenuSetup({ ...publicSafetyMenu, openIndex: 3, activeChild: '해바라기센터 사용자' })
 
 // '/pub' 은 라우터에 없는 URL 구획이라 path 를 주지 않는다(CLAUDE.md §4)

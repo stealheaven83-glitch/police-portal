@@ -89,7 +89,18 @@ export const publicSafetyMenu: SideMenuConfig = {
         { name: "활동현황", path: "/views/pub/PC-PUB-0307" },
       ],
     },
-    { name: "해바라기센터", children: [{ name: "센터현황" }] },
+    /*
+     * 사용자 지정(2026-09-14): 시안(13462-139493) 대로 갱신 — docs/create.md §3 은
+     * presets.ts 수정을 ⛔ 로 두지만 요청대로 따랐다. 지우고 들어간 "센터현황" 은 시안에 없고
+     * 쓰는 화면도 없었다. 시안에는 "조사예약" · "예약불가 관리" 도 있으나 화면이 아직 없어 뺐다.
+     */
+    {
+      name: "해바라기센터",
+      children: [
+        { name: "해바라기센터 관리", path: "/views/pub/PM-PUB-0401" },
+        { name: "해바라기센터 사용자", path: "/views/pub/PM-PUB-0404" },
+      ],
+    },
     {
       name: "보호조치 대응팀",
       children: [

@@ -6,8 +6,7 @@
     :show-close-button="true"
   >
     <InfoTable :columns="1" popup size="110">
-      <InfoField for="center-form-name">
-        <template #label>센터명<span :class="styles.requiredDot" /></template>
+      <InfoField label="센터명" for="center-form-name">
         <InputField2
           id="center-form-name"
           v-model="form.centerName"
@@ -30,8 +29,7 @@
         />
       </InfoField>
 
-      <InfoField for="center-form-office">
-        <template #label>관할청<span :class="styles.requiredDot" /></template>
+      <InfoField label="관할청" for="center-form-office">
         <SelectField
           id="center-form-office"
           v-model="form.office"
@@ -94,7 +92,6 @@ import SelectField from '@/components/custom/select/SelectField.vue'
 import { AddressInput, AddressSearchDialog } from '@/components/custom/address'
 import { useDialog } from '@/composable/dialog/dialog'
 import { SunflowerCenterKey, officeOptions } from '../composable/PM-PUB-0401'
-import styles from '@/components/custom/info-table/InfoTable.module.css'
 
 const store = inject(SunflowerCenterKey)!
 const { formDialogOpen, formMode, form, validateForm, commitForm } = store

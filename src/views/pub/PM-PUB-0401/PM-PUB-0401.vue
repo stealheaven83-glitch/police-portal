@@ -11,25 +11,29 @@
     </template>
   </PageHeader>
 
-  <!-- 시안에 조회 버튼·상세조회가 없어서 SearchWrapper 가 아니라 부서줄 하나다 -->
-  <div class="dept-area">
-    <SelectField
-      v-model="searchOffice"
-      label="관할청"
-      :options="officeOptions"
-      size="sm"
-      trigger-class="w-37"
-      placeholder="선택"
-    />
-    <SelectField
-      v-model="searchCenterName"
-      label="센터명"
-      :options="centerNameOptions"
-      size="sm"
-      trigger-class="w-37"
-      placeholder="선택"
-    />
-  </div>
+  <!-- 시안에 조회 버튼·상세조회가 없어서 #form 만 쓰고 회색 배경을 뺀다(/component/search-area 4번) -->
+  <SearchWrapper no-background class="lp-search-flush">
+    <template #form>
+      <div class="search-area">
+        <SelectField
+          v-model="searchOffice"
+          label="관할청"
+          :options="officeOptions"
+          size="sm"
+          trigger-class="w-37"
+          placeholder="선택"
+        />
+        <SelectField
+          v-model="searchCenterName"
+          label="센터명"
+          :options="centerNameOptions"
+          size="sm"
+          trigger-class="w-37"
+          placeholder="선택"
+        />
+      </div>
+    </template>
+  </SearchWrapper>
 
   <div class="list-actions">
     <Button type="button" variant="tertiary" size="sm" @click="onDelete">삭제</Button>
@@ -57,6 +61,7 @@ import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
+import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
@@ -75,12 +80,7 @@ import {
 // KeepAlive 캐싱 대상 이름 — useBottomTabSetup 의 componentName 과 정확히 같아야 한다(§5)
 defineOptions({ name: 'PmPub0401' })
 
-/*
- * LNB: publicSafetyMenu items[3] = '해바라기센터'.
- * ⚠ 프리셋의 children 은 아직 '센터현황' 하나뿐인데 시안 LNB 는
- *   '해바라기센터 관리 / 해바라기센터 사용자 / 조사예약' 세 개다.
- *   시안 라벨을 그대로 넣어 둔다 — 프리셋 배치 등록 시 확인 필요(CLAUDE.md §5 ③).
- */
+/* LNB: publicSafetyMenu items[3] = '해바라기센터' → '해바라기센터 관리' */
 useSideMenuSetup({ ...publicSafetyMenu, openIndex: 3, activeChild: '해바라기센터 관리' })
 
 // '/pub' 은 라우터에 없는 URL 구획이라 path 를 주지 않는다(CLAUDE.md §4)
