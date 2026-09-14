@@ -12,6 +12,10 @@ export const tabsListVariants = cva(
       variant: {
         fill: "gap-2",
         line: "border-[var(--Border_gray01)] border-b",
+        // Figma chip(11220:71184): chip__single 을 가로로 늘어놓은 탭 — 칩 사이 16px
+        chip: "gap-4",
+        // Figma category tab(14374:123334): pill 모양 카테고리 탭 — 탭 사이 8px
+        category: "gap-2",
       },
       scrollable: {
         false: "w-full",
@@ -37,6 +41,23 @@ export const tabsTriggerVariants = cva(
         "data-[state=active]:bg-[var(--Base-secondary)] data-[state=active]:text-white data-[state=active]:border-[var(--Base-secondary)] data-[state=active]:shadow-xs",
         line: "rounded-none border-b-4 border-transparent text-[var(--Text-body_1)] hover:text-slate-900 " +
         "data-[state=active]:border-[var(--Base-primary)] data-[state=active]:text-[var(--Base-primary)] px-6 ",
+        /**
+         * chip: Figma chip__single(medium) 을 탭으로 쓰는 것(11220:71184 — Q&A 등록의 분류 선택 등).
+         * custom/chip/Chip 의 medium·checked 와 같은 모양(48px, 17px regular, 연파랑 배경 + 파란 테두리/글자,
+         * 활성 탭 앞에 체크 아이콘). Chip 은 폼 값(라디오/체크박스) 이고, 이건 아래 내용이 바뀌는 탭이라 여기 둔다.
+         * tone 은 영향 없다(칩은 primary 파랑 하나).
+         */
+        chip: "group gap-1 px-3 rounded-[var(--Radius-medium2)] text-[1.7rem] font-normal " +
+        "border border-[var(--Border_gray01)] bg-white text-[var(--Text-body_0)] hover:bg-[var(--Surface-primary)] " +
+        "data-[state=active]:bg-[var(--Surface-primary)] data-[state=active]:border-[var(--Base-primary)] data-[state=active]:text-[var(--Base-primary)]",
+        /**
+         * category: Figma category tab(14374:123334) — 목록 위 카테고리 pill 탭(40px, 15px, 좌우 20px, 완전 둥근 모서리).
+         * 활성은 연파랑 배경 + 파란 테두리/글자 + bold. 체크 아이콘 없음. 항상 내용 폭(grow 무시 — compoundVariants 참고).
+         * FilterChip 과 다르다 — FilterChip 은 개수를 달고 목록을 거르는 토글이고, 이건 아래 내용이 바뀌는 탭이다.
+         */
+        category: "px-5 rounded-full text-[1.5rem] font-normal " +
+        "border border-[var(--Border_gray01)] bg-white text-[var(--Text-body_0)] hover:bg-[var(--Surface-primary)] " +
+        "data-[state=active]:bg-[var(--Surface-primary)] data-[state=active]:border-[var(--Base-primary)] data-[state=active]:text-[var(--Base-primary)] data-[state=active]:font-bold",
       },
       /**
        * Figma: tab > Type (primary | secondary) — 코드에서는 tone — 활성 탭의 파랑 계열을 바꾼다.
@@ -79,6 +100,16 @@ export const tabsTriggerVariants = cva(
         variant: "line",
         tone: "secondary",
         class: "data-[state=active]:border-[var(--Base-secondary)] data-[state=active]:text-[var(--Base-secondary)]",
+      },
+      // chip 은 size 와 무관하게 Figma 높이 48 — size 의 h-[44px] 보다 뒤에 와야 이긴다
+      {
+        variant: "chip",
+        class: "h-12",
+      },
+      // category 는 높이 40 고정, 폭은 항상 내용에 맞춘다(grow 의 flex-1/w-0 를 덮는다)
+      {
+        variant: "category",
+        class: "h-10 flex-none w-auto",
       },
     ],
     defaultVariants: {

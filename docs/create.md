@@ -75,6 +75,7 @@
 | **탭 + 다중 팝업이 컴포넌트 하나를 공유**(화면군) | **`docs/create/tab-popup.md`** | `PC-LPO-0701` |
 | **목록/상세/등록이 별개 라우트** | **`docs/create/multi-route.md`** | `PC-PUB-0301`(목록) + `PC-PUB-0302`/`0303`(상세/등록) |
 | 대형 검색바 + 검색결과(그리드 아님) | 유형 문서 없음 — 기준 파일을 그대로 따른다 | `PM-COM-0801`(검색창) + `PM-COM-0802`(결과). `custom/search/SearchBar.vue` · `SearchKeywordPanel.vue`, 결과는 구역별 목록 + `Pagination simple` |
+| **한 장짜리 긴 작성 문서** — 조회조건이 아니라 날짜 한 개를 고르고, 결재선 + 입력 구역 + 정적 표가 세로로 이어진다 | 유형 문서 없음 — 기준 파일을 그대로 따른다 | `PC-LPO-0301`. 위는 `.dept-area` + `.list-actions .lp-date-actions`(`.lp-workday-row`), 본문은 `ScrollWrapper` 안에 `<section class="lp-section">` 나열. 결재선은 `TableWrapper .lp-approval-table`(PM-PUB-0702 와 공유), 입력 구역은 `InfoTable`+`.lp-unit-row`, 정적 표는 `TableWrapper` |
 
 - **어느 유형과도 애매하게 걸치면 혼자 고르지 말고 사용자에게 확인한다.**
 - **표에 없는 새 유형이면** 화면 완성 후 이 표에 새 줄로 등록한다(다른 세션도 같은 파일을 가리키게).

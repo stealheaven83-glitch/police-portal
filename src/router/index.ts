@@ -201,7 +201,7 @@ const router = createRouter({
             component: () => import('../views/lpo/PC-LPO-0301/PC-LPO-0301.vue'),
             meta: {
                 layout: 'WorkLayout',
-                title: '월별인수인계현황',
+                title: '인수인계',
             }
         },
         {

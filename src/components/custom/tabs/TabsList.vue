@@ -6,7 +6,7 @@ import { tabsListVariants } from "./index"
 
 interface CustomProps extends TabsListProps {
   class?: HTMLAttributes["class"]
-  variant?: "fill" | "line"
+  variant?: "fill" | "line" | "chip" | "category"
   /** Figma: tab > Type. 활성 탭의 파랑 계열. inherit면 기존 동작 그대로 */
   tone?: "inherit" | "primary" | "secondary"
   scrollable?: boolean

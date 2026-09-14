@@ -950,3 +950,15 @@ tbody .row-total > td:first-child {
     padding: 0;
   }
 }
+
+/*
+ * 표 한 칸에 여러 줄 글이 들어가는 칸(주요취급사항의 '내용').
+ * TableWrapper 는 모든 칸에 text-center 를 테일윈드로 먹이므로 이 파일이어야 이긴다.
+ * 표 전체를 왼쪽으로 돌리는 .lp-table-left 와 달리 컬럼 하나에만 cellClass 로 건다.
+ */
+.lp-cell-note {
+  padding-block: 1.2rem;
+  text-align: left;
+  vertical-align: top;
+  white-space: pre-line;
+}
