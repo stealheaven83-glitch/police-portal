@@ -135,7 +135,7 @@
       </ul>
 
       <div class="lp-table-gap">
-        <h3 class="lp-heading-sm lp-substat-title">1) 주요범죄 발생 및 검거 실적</h3>
+        <h3 class="lp-heading-sm lp-block-title">1) 주요범죄 발생 및 검거 실적</h3>
         <InfoTable :columns="2" size="200">
           <InfoField v-for="row in crimeStatRows" :key="row.fields[0].key" :label="row.label">
             <span class="lp-unit-row">
@@ -156,7 +156,7 @@
       </div>
 
       <div class="lp-table-gap">
-        <h3 class="lp-heading-sm lp-substat-title">2) 기소중지 검거 및 경범처리</h3>
+        <h3 class="lp-heading-sm lp-block-title">2) 기소중지 검거 및 경범처리</h3>
         <InfoTable :columns="2" size="200">
           <InfoField v-for="row in minorCaseRows" :key="row.fields[0].key" :label="row.label">
             <span class="lp-unit-row">
@@ -177,7 +177,7 @@
       </div>
 
       <div class="lp-table-gap">
-        <h3 class="lp-heading-sm lp-substat-title">3) 112 신고건수</h3>
+        <h3 class="lp-heading-sm lp-block-title">3) 112 신고건수</h3>
         <InfoTable :columns="2" size="200">
           <InfoField v-for="row in reportRows" :key="row.fields[0].key" :label="row.label">
             <span class="lp-unit-row">

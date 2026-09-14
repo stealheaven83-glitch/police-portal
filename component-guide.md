@@ -585,7 +585,8 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-result-pagination` | 결과 아래 페이지네이션 여백 | 0802 |
 | `.lp-link-list` / `.lp-path-link` | 메뉴 경로 링크만 나열 / 그 링크(Figma button_link) | 0802 |
 | `.lp-ai-answer` + `-head` `-icon` `-body` | AI 생성 답변 상자 | IRC-0101 |
-| `.lp-answer-block` / `.lp-block-title` / `.lp-bullet-list` / `.lp-answer-note` | 답변 안 소구역 / 그 제목 여백 / 불릿 / **칸 맨 아래에 붙는** 주의문(`margin-top:auto` — 세로 flex 부모 안에서만 의도대로 선다) | IRC-0101 |
+| `.lp-answer-block` / `.lp-bullet-list` / `.lp-answer-note` | 답변 안 소구역 / 불릿 / **칸 맨 아래에 붙는** 주의문(`margin-top:auto` — 세로 flex 부모 안에서만 의도대로 선다) | IRC-0101 |
+| `.lp-block-title` | **소구역 제목의 아래 여백(8)** — 구역 제목의 `.lp-section-title`(12)보다 한 단계 좁을 때. **제목 크기는 이게 정하지 않는다** — 같이 쓰는 클래스가 정한다(`.lp-heading-lg` / `.lp-heading-sm` / `.lp-note-text2`). IRC-0101 전용이 아니다 | IRC-0101, LPO-0202 팝업, LPO-0601 팝업, LPO-0301 |
 | `.lp-answer-main` | AI 답변의 **좌측 본문 칸**. 주의문을 바닥에 붙이려고 세로 flex 다 — 남는 폭만 채우면 되는 자리엔 `.lp-flex-fill` 을 쓴다 | IRC-0101 |
 | `.lp-ref-column` | 우측 참고자료 칸. **왼쪽 세로 구분선을 이 칸이 그린다**(본문 칸 높이만큼 꽉 차야 해서). 폭 29.2rem + 여백 2.4rem + 선 0.1rem = 31.7rem | IRC-0101 |
 | `.lp-ref-list` / `.lp-ref-desc` / `.lp-ref-link` | 참고자료 아코디언 목록(간격 1.2rem) / 펼쳤을 때 설명(1.5rem) / 그 아래 문서 링크(1.3rem 밑줄) | IRC-0101 |
@@ -629,7 +630,6 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-mark-note-sm` | `.lp-mark-note` 와 **함께** — 같은 `＊` 안내 문구인데 글자만 한 단계 작은 것(13px) | LPO-0301 |
 | `.lp-approval-label` | 결재 표 **첫 칸의 라벨 줄**('직급 / 성명', '보고일 / 승인일시'). 높이를 맞추려고 `.lp-approval-person`/`-status` 를 그대로 쓰고 글자만 라벨(13px/400)로 되돌린다 | LPO-0301 |
 | `.lp-equip-grid` `.lp-equip-card` `-card-head` `-card-body` `.lp-equip-name` `.lp-equip-count` | 장비 현황 카드 묶음(최소 28rem, 넓으면 5열) / 테두리 상자 + 회색 머리줄 카드 / 장비명 + 수량 한 줄. 제목·설명·태그가 있는 `Card` 와 달리 [분류][이름][수] 세 조각뿐이다 | LPO-0301 |
-| `.lp-substat-title` | 번호 붙은 하위 항목 제목('1) 주요범죄 발생 및 검거 실적')의 아래 여백(8). 구역 제목의 `.lp-section-title`(12)보다 한 단계 좁다. `.lp-heading-sm` 과 함께 | LPO-0301 |
 
 > 위 등록 폼·요약·드롭존 스타일은 원래 PM-LPO-0104(메모 등록)를 위해 미리 만들어 둔 것이었고,
 > 그 화면이 생기면서 실제로 쓰이기 시작했다.

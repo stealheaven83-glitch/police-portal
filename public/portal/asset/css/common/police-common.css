@@ -798,7 +798,11 @@
 .lp-answer-block {
   margin-top: 2rem;
 }
-/* .lp-heading-lg 와 함께 쓴다 */
+/*
+ * 소구역 제목의 아래 여백(8) — 구역 제목의 .lp-section-title(12) 보다 한 단계 좁다.
+ * 제목 크기는 이게 정하지 않는다: 함께 쓰는 클래스가 정한다
+ * (.lp-heading-lg IRC-0101 / .lp-heading-sm LPO-0301 '1) …' / .lp-note-text2 팝업 안내문).
+ */
 .lp-block-title {
   margin-bottom: 0.8rem;
 }
@@ -3380,12 +3384,4 @@
   color: var(--Text-body_1);
   font-size: 1.5rem;
   font-weight: 700;
-}
-
-/*
- * 번호 붙은 하위 항목 제목('1) 주요범죄 발생 및 검거 실적')의 아래 여백.
- * 구역 제목의 .lp-section-title(12) 보다 한 단계 좁다(시안 8). .lp-heading-sm 과 함께 쓴다.
- */
-.lp-substat-title {
-  margin-bottom: 0.8rem;
 }
