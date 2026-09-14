@@ -832,18 +832,6 @@ tbody .row-total > td:first-child {
   color: var(--Text-body_0);
 }
 
-
-.site-map-header{
-  padding: 16px 0;
-  background: var(--Background-gray01);
-}
-.site-map-header .container{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 1200px;
-  margin: 0 auto;
-}
 .lp-badge-xl {
   padding: 0 0.8rem;
   font-size: 1.7rem;
@@ -861,4 +849,78 @@ tbody .row-total > td:first-child {
  */
 .lp-pane-wrap > [class*="popTable"]:first-child {
   margin-top: 0 !important;
+}
+
+/* ══ 전체메뉴(사이트맵) — Tabs 컴포넌트 덮어쓰기 ═══════════════
+   layer(screen) 이라 테일윈드(utilities)를 특정도 싸움 없이 이긴다.
+   Tabs 루트의 w-full·mb-[16px], TabsContent 의 mt-2, TabsList/Trigger 의
+   높이·간격이 대상이다. 나머지 .sitemap-* 은 police-common.css 에 있다. */
+
+/* 루트는 전체 폭 그대로 둔다 — 폭 제한은 .sitemap-tabs 와 .sitemap-panel 이 각각 갖는다 */
+.sitemap-tabs-root {
+  margin-bottom: 0;
+}
+.sitemap-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  max-width: 120rem;
+  margin: 0 auto;
+  padding: 4rem 0 8rem;
+}
+
+/* PC — Figma 탭 높이 49. 밑줄은 .sitemap-tabbar 가 가지므로 여기선 끈다 */
+.sitemap-tabs {
+  max-width: 120rem;
+  margin: 0 auto;
+  gap: 2.4rem;
+  border-bottom: 0;
+}
+.sitemap-tabs [role="tab"] {
+  height: 4.9rem;
+  font-size: 1.7rem;
+}
+
+/* 모바일 — 좌측 세로 목록 + 우측 패널.
+   reka-ui 가 orientation="vertical" 로 aria-orientation 과 ↑↓ 키를 맡는다 */
+@media (max-width: 1000px) {
+  .sitemap-tabs-root {
+    display: flex;
+    align-items: stretch;
+    gap: 1.6rem;
+    padding: 1.6rem;
+  }
+  /* 모바일은 좌우 2단이라 전체폭 줄이 필요 없다. 폭은 안쪽 목록이 정한다 */
+  .sitemap-tabbar {
+    flex-shrink: 0;
+    border-bottom: 0;
+  }
+  .sitemap-tabs {
+    flex-direction: column;
+    align-items: stretch;
+    width: 13rem;
+    max-width: none;
+    margin: 0;
+    gap: 0;
+    border-bottom: 0;
+    border-right: 1px solid var(--Border_gray03);
+  }
+  .sitemap-tabs [role="tab"] {
+    height: auto;
+    justify-content: flex-start;
+    padding: 1.4rem 1.2rem;
+    font-size: 1.6rem;
+    border-bottom: 0;
+  }
+  .sitemap-tabs [role="tab"][data-state="active"] {
+    background: var(--Background-gray01);
+  }
+  .sitemap-panel {
+    flex: 1;
+    min-width: 0;
+    gap: 1.6rem;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
 }

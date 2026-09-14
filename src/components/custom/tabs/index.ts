@@ -35,8 +35,8 @@ export const tabsTriggerVariants = cva(
       variant: {
         fill: "border border-[var(--Border_gray02)] rounded-[6px] text-[var(--Text-body_1)] hover:bg-[var(--Surface-secondary)] " +
         "data-[state=active]:bg-[var(--Base-secondary)] data-[state=active]:text-white data-[state=active]:border-[var(--Base-secondary)] data-[state=active]:shadow-xs",
-        line: "rounded-none border-b-2 border-transparent text-[var(--Text-body_1)] hover:text-slate-900 " +
-        "data-[state=active]:border-[var(--Base-primary)] data-[state=active]:text-[var(--Base-primary)] ",
+        line: "rounded-none border-b-4 border-transparent text-[var(--Text-body_1)] hover:text-slate-900 " +
+        "data-[state=active]:border-[var(--Base-primary)] data-[state=active]:text-[var(--Base-primary)] px-6 ",
       },
       /**
        * Figma: tab > Type (primary | secondary) — 코드에서는 tone — 활성 탭의 파랑 계열을 바꾼다.
