@@ -671,6 +671,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 |---|---|---|
 | `.lp-grid-active-row` | Tabulator 행 배경 — "지금 오른쪽 상세에 떠 있는 행". 체크박스 다중선택(`.tabulator-selected`)과 별개 개념 | 2204, 0801, STT-0103 |
 | `.lp-grid-link-cell` | 값이 링크처럼 보여야 하는 셀(밑줄) | 2204 |
+| `.lp-grid-done-row` | Tabulator 행 배경 — "확인이 끝난 행"(미확인 없음) 회색. Figma `color/surface/gray-subtle`(#e6e8ea) = `--Border_gray03`. 미확인이 남은 행은 배경 없음이 기본이라 클래스를 안 붙인다. 선택/상세 강조(`.lp-grid-active-row`)와 별개. **레이어 밖인 `tabulator-theme.css` 의 행 배경을 덮어야 해서 `!important` 필요** | LPO-0304 |
 | `.lp-perm-menu-grid` | Tabulator 가 JS 로 넣는 그룹헤더 높이(빈 서브헤더 줄 접기, `!important` 필요) | 2204 |
 | `.lp-grid-depth-cell` | 2depth 메뉴 칸 회색 배경 | 2204 |
 | `.lp-grid-search-cell` | button 셀 라벨 뒤에 돋보기 아이콘을 가상요소로 얹기 | 2204 |
@@ -682,7 +683,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-segmented-tabs` | 탭 컴포넌트의 간격·모서리를 세그먼트 형태로 | 0802 |
 | `.lp-dialog-body .form-note` | 팝업 안에서 공통 `.form-note` 의 아래 여백 해제 | 0601 |
 | `.lp-dropzone-sub` | `.lp-dropzone-txt p` 의 크기·색 되돌리기 | LPO-0104 |
-| `.lp-cell-danger` | Tabulator 셀 안의 미완료 값만 빨간 글씨(셀 색은 테마 CSS 가 먼저 먹는다) | LPO-0304 |
+| `.lp-cell-point` | Tabulator 셀 안의 미완료 값(`미확인`)만 강조색 글씨. Figma `color/text/point` = `--Base--point` — 오류색 `--danger` 가 아니다(셀 색은 테마 CSS 가 먼저 먹는다) | LPO-0304 |
 | `.lp-field-flush` | InfoField 값 칸의 안쪽 여백 제거(표를 칸에 딱 붙일 때). `.control` 이 CSS Module 해시 이름이라 마지막 자식으로 짚는다 | LPO-0601 |
 | `.lp-info-nested` | `InfoField` 값 칸에 `InfoTable` 을 한 번 더 넣을 때 `.control` 여백·중복 테두리 제거(라벨 병합처럼 보이게) | PUB-0111 |
 | `.lp-grid-btn-compact` | 좁은 열(시안 88px)에 들어가는 표 안 버튼. `Button` 베이스의 `min-w-25`(100px)를 풀고 좌우 여백만 준다(컬럼 정의는 `buttonClass` 만 받아서 `padding` prop 을 못 쓴다) | LPO-0223 |

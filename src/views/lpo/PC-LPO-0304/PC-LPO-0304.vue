@@ -33,8 +33,11 @@
     class="flex-1"
     :columns="columns"
     :data="rows"
+    :row-class="rowClass"
     height="100%"
     placeholder="조회된 인수인계가 없습니다"
+    show-pagination
+    :items-per-page="10"
   />
 </template>
 
@@ -52,7 +55,7 @@ import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tab
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
-import { useMonthlyHandover, yearOptions, monthOptions } from './composable/PC-LPO-0304'
+import { useMonthlyHandover, isPendingHandover, yearOptions, monthOptions, type HandoverRow } from './composable/PC-LPO-0304'
 import { useDialog } from '@/composable/dialog/dialog'
 
 const dialog = useDialog()
@@ -73,10 +76,18 @@ const navItems = [
 
 const { department, advancedSearchOpen, year, month, onlyPending, rows } = useMonthlyHandover()
 
-/** '미확인'만 빨간 글씨로 — Figma 에서 미완료 건을 눈에 띄게 표시한다 */
+/** '미확인'만 강조색 글씨로 — Figma color/text/point(#b02a30) */
 function pendingFormatter(cell: { getValue: () => string }) {
   const value = cell.getValue() ?? ''
-  return value === '미확인' ? `<span class="lp-cell-danger">${value}</span>` : value
+  return value === '미확인' ? `<span class="lp-cell-point">${value}</span>` : value
+}
+
+/**
+ * 확인이 끝난 행만 회색 배경 — Figma color/surface/gray-subtle.
+ * 미확인이 남은 행은 배경 없음(흰색)이라 클래스를 안 붙인다.
+ */
+function rowClass(row: HandoverRow) {
+  return isPendingHandover(row) ? undefined : 'lp-grid-done-row'
 }
 
 const columns: TabulatorGridColumn[] = [

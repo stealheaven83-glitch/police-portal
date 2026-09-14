@@ -36,6 +36,20 @@ export const monthOptions = Array.from({ length: 12 }, (_, i) => ({
   value: String(i + 1),
 }))
 
+/**
+ * 아직 인수인계가 안 끝난 행 — 확인/취소 칸 중 하나라도 `미확인` 이면 해당.
+ * Figma 에서 이 행들만 배경이 없고(흰색), 확인이 끝난 행에 회색 배경이 깔린다.
+ * `미 인수인계` 체크박스 필터도 같은 기준이라 한 군데서 판정한다.
+ * (`-` 는 미확인이 아니다 — `-` 만 있는 행은 확인이 끝난 쪽으로 본다)
+ */
+export function isPendingHandover(row: HandoverRow) {
+  return (
+    row.receiverConfirmedAt === '미확인' ||
+    row.approverConfirmedAt === '미확인' ||
+    row.canceledAt === '미확인'
+  )
+}
+
 function createMockRows(): HandoverRow[] {
   return [
     { no: 5, dept: '본청 중앙학교 실습부서', workDate: '2026-07-15', shift: '주', team: '1', giver: '팀장 홍길동', receiver: '팀장 정우영', receiverConfirmedAt: '2026-07-01', approver: '지/파장 윤홍길', approverConfirmedAt: '2026-07-01', inspector: '과장 최철우', canceledAt: '미확인' },
@@ -60,7 +74,7 @@ export function useMonthlyHandover() {
   const rows = computed(() =>
     allRows.value.filter((row) => {
       if (!onlyPending.value) return true
-      return row.receiverConfirmedAt === '-' || row.approverConfirmedAt === '미확인'
+      return isPendingHandover(row)
     }),
   )
 

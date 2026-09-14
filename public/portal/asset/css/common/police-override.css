@@ -35,6 +35,27 @@
   font-weight: 700;
 }
 
+/*
+ * "확인이 끝난 행" 회색 배경 — Figma color/surface/gray-subtle(#e6e8ea).
+ * 값이 같은 --Border_gray03 을 쓴다(이름은 border 지만 같은 파일 .lp-cal-event 가 이미
+ * 같은 시안 색을 배경으로 쓰고 있다). --Background-gray01(#f4f5f6)은 한 단계 옅어서 다르다.
+ * 미확인이 남은 행은 배경 없음(흰색)이 기본이라 클래스를 안 붙인다 — 강조가 반대로 걸린 형태다.
+ * 미확인 값만 강조색으로 내는 건 .lp-cell-point 가 따로 맡는다.
+ *
+ * !important 인 이유: tabulator-theme.css 는 컴포넌트가 import 하는 파일이라 @layer 밖에
+ * 있고, 레이어 밖 규칙은 layer(screen) 인 이 파일을 특이도와 무관하게 항상 이긴다.
+ * 그 파일의 .tabulator-row{background:#fff} 와 .tabulator-row-even{transparent} 를
+ * 레이어로는 못 덮으므로 여기서만 되돌린다(CLAUDE.md §2 의 Tabulator 예외).
+ * 쓰는 곳: PC-LPO-0304
+ */
+.tabulator-row.lp-grid-done-row {
+  background-color: var(--Border_gray03) !important;
+}
+/* 고정열 셀은 테마가 흰 배경을 직접 물려서 행 배경을 안 따라온다 — 되돌린다 */
+.tabulator-row.lp-grid-done-row .tabulator-cell.tabulator-frozen {
+  background-color: inherit !important;
+}
+
 /* 값이 링크처럼 보여야 하는 셀(사용자ID 등) */
 .lp-grid-link-cell.tabulator-cell {
   text-decoration: underline;
@@ -167,9 +188,12 @@
   border-bottom: 0;
 }
 
-/* Tabulator 셀 안에서 미완료 값(미확인 등)만 빨간 글씨로 — 셀 색은 테마 CSS 가 먼저 먹는다 */
-.lp-cell-danger {
-  color: var(--danger);
+/*
+ * Tabulator 셀 안에서 미완료 값(미확인 등)만 강조색 글씨로 — 셀 색은 테마 CSS 가 먼저 먹는다.
+ * Figma color/text/point(#b02a30) = --Base--point. 오류를 뜻하는 --danger(#de3412)가 아니다.
+ */
+.lp-cell-point {
+  color: var(--Base--point);
 }
 
 /* 통보 체크박스 줄 — 문장 중간에 셀렉트가 끼어드는 형태 */
