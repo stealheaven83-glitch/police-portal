@@ -625,6 +625,11 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-photo-grid` `-item` `-label` `-box` `-img` `-empty` `-empty-icon` `-empty-label` `-meta` `-actions` | 진단 상세의 취약/개선 상황사진 4칸(112사건 표 아래에 붙는 칸). **`police-style.css` 의 `.photo-box`/`.photo-empty` 는 인사관리 증명사진용 12rem 칸이라 서로 다른 것 — 이름이 비슷해도 섞어 쓰지 않는다** | PUB-0101 |
 | `.lp-stat-field` `.lp-stat-grade` `.lp-stat-value` | 라벨-값 표의 한 칸에 [등급][수치] 두 조각이 들어가는 통계 표. 값 영역 여백을 걷어내고 두 조각 사이에 세로선을 넣는다 | PUB-0101 참고사항 |
 | `.lp-log-cell` `.lp-log-activity` `.lp-log-tag`(`-danger`/`-primary`/`-success`) `.lp-log-written-at` | 표 한 칸에 [앞머리 표시][본문 여러 줄] + 오른쪽 아래 작성일시가 함께 들어가는 활동내역 칸. 행 높이가 늘어나야 하므로 그리드에 `.lp-grid-multiline` 을 같이 건다 | LPO-0223 |
+| `.lp-workday-row` | 근무일 줄에서 [근무일 선택][요일][주·야]를 **36** 간격으로 끊는 묶음(안쪽 12 묶음은 공통 `.group-gap3`). 사이를 **세로선으로** 끊는 화면은 `.calendar-area`(12 + `-divider`) 쪽이다 | LPO-0301 |
+| `.lp-mark-note-sm` | `.lp-mark-note` 와 **함께** — 같은 `＊` 안내 문구인데 글자만 한 단계 작은 것(13px) | LPO-0301 |
+| `.lp-approval-label` | 결재 표 **첫 칸의 라벨 줄**('직급 / 성명', '보고일 / 승인일시'). 높이를 맞추려고 `.lp-approval-person`/`-status` 를 그대로 쓰고 글자만 라벨(13px/400)로 되돌린다 | LPO-0301 |
+| `.lp-equip-grid` `.lp-equip-card` `-card-head` `-card-body` `.lp-equip-name` `.lp-equip-count` | 장비 현황 카드 묶음(최소 28rem, 넓으면 5열) / 테두리 상자 + 회색 머리줄 카드 / 장비명 + 수량 한 줄. 제목·설명·태그가 있는 `Card` 와 달리 [분류][이름][수] 세 조각뿐이다 | LPO-0301 |
+| `.lp-substat-title` | 번호 붙은 하위 항목 제목('1) 주요범죄 발생 및 검거 실적')의 아래 여백(8). 구역 제목의 `.lp-section-title`(12)보다 한 단계 좁다. `.lp-heading-sm` 과 함께 | LPO-0301 |
 
 > 위 등록 폼·요약·드롭존 스타일은 원래 PM-LPO-0104(메모 등록)를 위해 미리 만들어 둔 것이었고,
 > 그 화면이 생기면서 실제로 쓰이기 시작했다.
@@ -679,6 +684,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-grid-search-cell` | button 셀 라벨 뒤에 돋보기 아이콘을 가상요소로 얹기 | 2204 |
 | `.lp-grid-search-end` | 위 아이콘을 라벨 뒤가 아니라 **칸 오른쪽 끝**에 세우기(`.lp-grid-search-cell` 과 같이 준다) | LPO-0202 |
 | `.lp-table-left` | `TableWrapper` 의 가운데 정렬을 좌측으로 되돌림 | 0601 |
+| `.lp-cell-note` | `TableWrapper` **한 칸만** 좌측 정렬 + 줄바꿈 유지 + 위 정렬(여러 줄 글이 들어가는 '내용' 칸). 컬럼 정의의 `cellClass` 로 건다 — 표 전체를 돌리는 `.lp-table-left` 와 다르다 | LPO-0301 |
 | `.lp-table-sticky` (+ `.lp-table-sticky-head2`) | `TableWrapper` 헤더와 합계 줄(`.row-total`)을 고정하고 본문만 스크롤. 높이는 `--lp-table-h`, 합계 줄 위치는 `--lp-thead-h`(2단 헤더면 `-head2` 를 같이) | PUB-0306, PUB-0307(2단 헤더) |
 | `.row-total` (`tbody .row-total > td`) | `TableWrapper` 합계 줄 — 굵은 글씨 + 아래로 [선-간격-선] 두 줄로 데이터 영역과 끊는다. **`lp` 접두사가 없는 건 `tabulator-theme.css` 부터 쓰던 기존 표시자라서** — 같은 뜻의 이름을 새로 만들지 않는다 | PUB-0306, PUB-0307 |
 | `.lp-th-group-start` | `TableWrapper` 2단 헤더에서 **컬럼 그룹이 시작되는 칸**의 왼쪽 세로선. `headClass` 에는 아래 선만 있어 그룹 칸 왼쪽이 빈다. 색은 본문 칸 구분선과 같은 `--Border_gray03` 이라 헤더~본문 세로선이 이어진다 | PUB-0307 |
