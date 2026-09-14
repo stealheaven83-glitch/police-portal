@@ -235,6 +235,9 @@ Figma 에는 동작이 안 그려져 있다. **사용자가 지정하지 않은 
 - **블록 순서** — `<template>` → `<script setup>`. **`<style>` 블록은 두지 않는다**(CSS 는 §2).
   화면 파일과 그 폴더의 `components/` 팝업까지 전부 같은 순서다.
 - **화면 폴더에 `style/` 을 만들지 않는다.** `route.ts` 도 만들지 않는다(라우터는 `docs/create.md` §3).
+- **기준 파일에서 가져오는 건 형태(블록 순서·코드 스타일·컴포넌트 선택·클래스 이름)뿐이다. 치수
+  (`gap`·`margin`·`padding`·`size`)는 항상 내 시안에서 다시 잰다** — 절차는 `docs/create.md` §4 "치수".
+  기준 화면의 값을 복사하면 그 화면이 잘못 옮긴 값까지 따라온다(PM-COM-1002 → 0402 에서 실제로 일어났다).
 - **코드 스타일** — 줄 끝 세미콜론 없음 / 화살표 상수가 아닌 `function` 선언 / import 순서
   (vue → 외부 라이브러리 → 공통 컴포넌트 → 화면 composable → menu·tab) / 검색 옵션은 composable 에
   `export const xxxOptions` 로 두고 화면에서 import.

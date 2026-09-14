@@ -274,6 +274,41 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 
 ---
 
+---
+
+## 8-3. 시안 높이 → `size` 대응표 — 추측하지 않는다
+
+루트 폰트가 10px 이라 `h-10` = 40px 이다. 시안에서 잰 높이로 아래 표에서 고른다. 표에 없는 높이면
+가까운 값을 고르지 말고 알린다(컴포넌트에 그 크기가 없다는 뜻이다).
+
+| 컴포넌트 | 20 | 24 | 32 | 40 | 48 | 56 |
+|---|---|---|---|---|---|---|
+| `Button` | — | `xxs` | `xs` | `sm` | `md` | `lg` |
+| `Badge` | `sm` | `md` | `lg` | — | — | — |
+| `Chip` | — | — | — | `small` | `medium` | `large` |
+| `Tag` | — | `small` | `medium` | `large` | — | — |
+| `Switch`(트랙) | `default`(32×20) | `lg`(40×24) | `xl`(64×32) | — | — | — |
+| `SelectField` | — | — | `xs`(36) | `sm` | `md` | `lg`(기본) |
+| `InputField2` · `DatePicker` | — | — | — | `sm` | `md` | `lg`(기본) |
+
+- **`Tabs` 트리거는 눈금이 둘로 갈린다** — `size` 축과 `variant` 축이 따로다:
+
+  | 축 | 값 | 높이 |
+  |---|---|---|
+  | `size` | `sm` / `default` / `lg` | 36 / 44 / 50 |
+  | `variant` | `category` / `chip` | **40 / 48** (`size` 를 무시하고 고정) |
+
+  시안이 40 이면 `variant="category"`(pill, 15px), 48 이면 `variant="chip"`(17px, 체크 아이콘)이다.
+  `size` 로는 그 높이가 안 나온다.
+- `Button` 은 `min-width 100px` 이 기본이라 시안 폭 100 이면 클래스가 필요 없고, 더 좁으면
+  `padding` prop(§8-1).
+- 시안 폰트 크기도 같이 본다 — 높이가 맞아도 글자가 다르면(15 vs 17) 다른 size 다.
+- **`xs`(36) 는 `SelectField` 에만 있다.** `InputField2`·`DatePicker` 는 `lg | md | sm` 셋뿐, 기본 `lg`.
+- `TextareaField` 는 `size` 가 없다 — 높이는 `:height` prop(숫자면 px).
+- 전체 절차와 "컴포넌트 값 ≠ 시안" 일 때의 보고 형식은 `docs/create/dimensions.md` ③.
+
+---
+
 ## 9. 헷갈리는 형제들 — 이걸로 구분한다
 
 **Badge / Tag / Chip / FilterChip** — 넷 다 pill 모양이라 제일 많이 틀린다.
