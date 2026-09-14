@@ -151,7 +151,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | 테두리 없는 텍스트형 셀렉트(툴바·정렬) | `custom/select/TextSelect.vue` |
 | 폼 안에서 값 고르기(버튼 모양) | `custom/chip/ChipGroup.vue` |
 | 체크 목록 항목 | `custom/checklist-item/ChecklistItem.vue` |
-| 탭 | `custom/tabs/` — `variant` fill/line, `tone` primary/secondary |
+| 탭 | `custom/tabs/` — `variant` fill/line/**chip**/**category**, `tone` primary/secondary. chip 은 Figma `chip__single` 을 가로로 늘어놓은 탭(활성 탭에 체크), category 는 Figma `category tab`(pill, 항상 내용 폭) — `<TabsList variant="…">` 만 주면 된다 |
 
 ---
 
@@ -357,6 +357,8 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | `chip__single`, `chip__multi` | `custom/chip/` |
 | `FilterChip` | `custom/filter-chip/` |
 | `tab` | `custom/tabs/` |
+| `chip`(chip__single 이 한 줄로 늘어선 프레임, 아래 내용이 바뀜) | `custom/tabs/` `variant="chip"`. 폼 값 고르기면 `custom/chip/` |
+| `category tab`(pill 탭줄, 아래 내용이 바뀜) | `custom/tabs/` `variant="category"`. 개수 달고 목록을 거르는 거면 `custom/filter-chip/` |
 | `accordion`, `Accordion` | `custom/accordion/` |
 | `disclosure` | `custom/disclosure/Disclosure.vue` |
 | `alert` | `custom/alert/Alert.vue` |

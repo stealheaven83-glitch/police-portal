@@ -269,6 +269,15 @@ function removeTag(t: string) {
             <TabsTrigger value="b">두번째</TabsTrigger>
           </TabsList>
         </Tabs>
+        <!-- variant=chip: Figma chip(11220:71184) — chip__single 을 탭으로, 활성 탭에 체크 -->
+        <Tabs default-value="a">
+          <TabsList variant="chip">
+            <TabsTrigger value="a">장애처리</TabsTrigger>
+            <TabsTrigger value="b">출동수당</TabsTrigger>
+            <TabsTrigger value="c">범죄예방진단</TabsTrigger>
+            <TabsTrigger value="d">해바라기센터</TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
     </section>
 
