@@ -194,14 +194,6 @@ export function useCenterBedStatus() {
 
   const detail = reactive<BedDetailForm>(createEmptyDetail())
 
-  const itemsPerPage = 10
-  const currentPage = ref(1)
-  const totalPages = computed(() => Math.max(1, Math.ceil(listRows.value.length / itemsPerPage)))
-  const pagedRows = computed(() => {
-    const start = (currentPage.value - 1) * itemsPerPage
-    return listRows.value.slice(start, start + itemsPerPage)
-  })
-
   const selectedRow = computed(() =>
     listRows.value.find((row) => row.id === selectedId.value) ?? null,
   )
@@ -213,7 +205,6 @@ export function useCenterBedStatus() {
       if (searchRegion.value !== 'all') return row.region === searchRegion.value
       return true
     })
-    currentPage.value = 1
   }
 
   function selectRow(row: CenterBedRow | null) {
@@ -231,6 +222,16 @@ export function useCenterBedStatus() {
     })
   }
 
+  /**
+   * 기획서 4: 주취자등록 & 병상배정 등록 시작.
+   * 고른 센터의 병상 수는 그대로 두고 주취자 입력만 비운다(기획서 PC-PUB-0410 시안에서
+   * 총 병상·사용가능 병상은 값이 채워진 채로 시작한다).
+   */
+  function startRegister() {
+    const { totalBeds, availableBeds } = detail
+    Object.assign(detail, createEmptyDetail(), { totalBeds, availableBeds })
+  }
+
   /** 기획서 5: 선택된 목록 삭제 */
   function deleteSelected(): boolean {
     if (selectedId.value == null) return false
@@ -242,10 +243,6 @@ export function useCenterBedStatus() {
 
   return {
     listRows,
-    pagedRows,
-    itemsPerPage,
-    currentPage,
-    totalPages,
     selectedId,
     selectedRow,
     searchRegion,
@@ -254,6 +251,79 @@ export function useCenterBedStatus() {
     detail,
     search,
     selectRow,
+    startRegister,
     deleteSelected,
   }
 }
+
+/* ------------------------------------------------------------------ 병상현황 셀 */
+
+/**
+ * 병상현황 그리드 셀. Tabulator 셀 안은 Vue 템플릿이 아니라 DOM 이라 컴포넌트를 못 붙여서,
+ * 시안 bed 컴포넌트(10951:65227 / 10951:65246)를 내보낸 SVG 를 좌표 그대로 그린다.
+ * 색은 police-common.css 의 .lp-bed-* 가 잡는다(하드코딩 hex 금지 — CLAUDE.md §2).
+ * 목록을 그대로 쓰는 PC-PUB-0410 과 공유한다.
+ */
+const BED_FRAME =
+  '<path class="lp-bed-frame" d="M0.625 20.3906H23.3738"/>' +
+  '<path class="lp-bed-frame" d="M0.625 8V23.6762"/>' +
+  '<path class="lp-bed-frame" d="M23.3738 23.6759V18.1188C23.3738 16.9154 22.3979 15.9395 21.1945 15.9395H0.625"/>'
+
+/** 침대 오른쪽 위에 겹치는 상태 배지 — 원 + 글리프 */
+const BADGE_DOT = '<circle class="lp-bed-dot" cx="13" cy="9" r="7.5"/>'
+const X_MARK =
+  '<path class="lp-bed-mark" d="M14.8251 6.32613C15.0594 6.09181 15.4394 6.09181 15.6737 6.32613C15.9079 6.56046 15.908 6.94051 15.6737 7.17476L13.8476 9.00093L15.6728 10.8261C15.9068 11.0605 15.907 11.4405 15.6728 11.6748C15.4385 11.9089 15.0584 11.9087 14.8241 11.6748L12.9989 9.84956L11.1737 11.6748C10.9395 11.9088 10.5594 11.9088 10.3251 11.6748C10.0909 11.4405 10.091 11.0605 10.3251 10.8261L12.1503 9.00093L10.3241 7.17476C10.0898 6.94048 10.0899 6.56045 10.3241 6.32613C10.5584 6.09181 10.9384 6.09181 11.1728 6.32613L12.9989 8.1523L14.8251 6.32613Z"/>'
+const CHECK_MARK =
+  '<path class="lp-bed-mark" fill-rule="evenodd" clip-rule="evenodd" d="M15.8155 6.25506C16.0891 6.44202 16.1593 6.81537 15.9723 7.08896L12.8973 11.589C12.7966 11.7364 12.6355 11.8312 12.4577 11.8478C12.28 11.8644 12.1041 11.801 11.9778 11.6748L10.1016 9.79984C9.86726 9.5656 9.86714 9.1857 10.1014 8.95132C10.3356 8.71693 10.7155 8.71681 10.9499 8.95105L12.3146 10.3149L14.9816 6.41193C15.1685 6.13834 15.5419 6.06811 15.8155 6.25506Z"/>'
+
+function bedSvg(inUse: boolean): string {
+  return (
+    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">' +
+    BED_FRAME +
+    BADGE_DOT +
+    (inUse ? X_MARK : CHECK_MARK) +
+    '</svg>'
+  )
+}
+
+const BED_IN_USE_SVG = bedSvg(true)
+const BED_FREE_SVG = bedSvg(false)
+
+/**
+ * 사용중(연회색 침대 + 회색 원 X) / 사용가능(진회색 침대 + 초록 원 체크) — 기획서 3.
+ * 대체텍스트(Figma 코멘트): 아이콘 하나하나를 읽히면 병상 수만큼 반복되므로 줄 전체를
+ * role="img" 한 덩어리로 묶어 '사용가능 N개'를 읽히고, 마우스에는 title 로 상태를 보여준다.
+ */
+export function bedCellFormatter(cell: any): string {
+  const beds = (cell.getValue() ?? []) as BedState[]
+  const free = beds.filter((b) => b === 'free').length
+  const icons = beds
+    .map((bed) => {
+      const inUse = bed === 'inuse'
+      const stateClass = inUse ? 'lp-bed-in-use' : 'lp-bed-free'
+      const title = inUse ? '사용중' : '사용가능'
+      const svg = inUse ? BED_IN_USE_SVG : BED_FREE_SVG
+      return `<span class="lp-bed ${stateClass}" title="${title}" aria-hidden="true">${svg}</span>`
+    })
+    .join('')
+  const label = `총 ${beds.length}병상 중 사용가능 ${free}개`
+  return `<span class="lp-bed-row" role="img" aria-label="${label}">${icons}</span>`
+}
+
+/** 목록 컬럼 — PM-PUB-0409 · PC-PUB-0410 이 같은 목록을 쓴다(시안 폭 그대로) */
+export const centerBedColumns = [
+  { title: '번호', field: 'no', width: 60, hozAlign: 'center' },
+  { title: '지역', field: 'region', width: 80, hozAlign: 'center' },
+  { title: '센터명', field: 'centerName', width: 228, hozAlign: 'left' },
+  { title: '연락처', field: 'phone', width: 148, hozAlign: 'center' },
+  {
+    title: '병상현황',
+    field: 'beds',
+    width: 188,
+    hozAlign: 'left',
+    headerSort: false,
+    formatter: bedCellFormatter,
+  },
+  { title: '등록자', field: 'registrant', width: 72, hozAlign: 'center' },
+  { title: '수정일시', field: 'updatedAt', width: 148, hozAlign: 'center' },
+]

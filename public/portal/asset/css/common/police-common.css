@@ -210,6 +210,18 @@
   gap: 0.8rem;
 }
 
+/*
+ * 선택지가 한 줄에 다 안 들어가 줄을 나눠 쌓는 묶음 — 각 줄은 [라디오][그 선택지에 딸린 입력]
+ * 형태다(PM-PUB-0409 접수경로: 1줄 '112신고 + 접수번호', 2줄 '소방 / 기타 + 사유').
+ * .lp-choice-row(한 줄에 늘어서는 선택지)와 달리 줄 자체가 쌓이는 구조라 따로 둔다.
+ */
+.lp-choice-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.8rem;
+}
+
 /* 한 줄에 좌우로 벌려 놓기 */
 .lp-row-between {
   display: flex;
@@ -1568,6 +1580,50 @@
   line-height: 1.5;
   color: var(--Text-body_1);
   text-align: right;
+}
+
+/* ── 병상현황 아이콘(주취자센터 병상 현황) ──────────────────────────────────
+   시안 bed 컴포넌트(10951:65227 사용중 / 10951:65246 사용가능)를 내보낸 SVG 를 그대로 그린다.
+   침대는 선 3개(굵기 1.6), 배지는 침대 오른쪽 위에 겹치는 원(중심 13,9 · 반지름 7.5).
+   Tabulator 셀 안은 DOM 이라 컴포넌트를 못 붙여서 formatter 가 이 클래스들로 SVG 를 만든다. */
+.lp-bed-row {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.6rem;
+}
+.lp-bed {
+  display: inline-flex;
+  width: 2.4rem;
+  height: 2.4rem;
+}
+/* 침대 선 3개. 색은 아래 상태 클래스가 color 로 내려 준다 */
+.lp-bed-frame {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.lp-bed-in-use {
+  color: var(--Border_gray01, #b1b8be);
+}
+.lp-bed-in-use .lp-bed-dot {
+  fill: var(--Surface-gray01, #cdd1d5);
+}
+/* 시안은 #131416 인데 대응 토큰이 없어 가장 가까운 본문색을 쓴다 */
+.lp-bed-in-use .lp-bed-mark {
+  fill: var(--Text-body_0, #1e2124);
+}
+.lp-bed-free {
+  color: var(--icon-gray, #33363d);
+}
+.lp-bed-free .lp-bed-dot {
+  fill: var(--success, #00aa0e);
+}
+.lp-bed-free .lp-bed-mark {
+  fill: var(--white, #fff);
 }
 
 /* ── 월간 일정 달력(MonthScheduleCalendar) ──────────────────────────────── */
