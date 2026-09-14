@@ -105,7 +105,7 @@
         </template>
       </div>
 
-      <div class="lp-form-actions-center">
+      <div class="lp-board-form-actions">
         <!-- Figma: 버튼 높이 40 = sm (기준 PM-LPO-0102 는 md/48). 제목이 비면 저장은 비활성(등록 시안과 같은 규칙) -->
         <Button type="button" variant="tertiary2" size="sm" @click="onCancel">취소</Button>
         <Button type="button" variant="primary" size="sm" :disabled="!canSave" @click="onSave">저장</Button>

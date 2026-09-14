@@ -659,6 +659,11 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-notice-form` `-actions` | 게시판 글 등록/수정 폼(본문 폭을 꽉 쓴다). **가운데 1000px 폼은 `.lp-narrow-form`** | COM-1003, 1004 |
 | `.lp-notice-detail` `-badges` `-dept` `-title` `-meta` `-thumb` `-body` `-detail-actions` | 게시판 글 상세 | COM-1002 |
 | `.lp-comment-area` `-write` `-list` `-item` `-head` `-writer` `-date` `-more` `-body` `-actions` `-reply-btn` `-replies` | 댓글·대댓글 영역(CommentThread) | COM-1002 |
+| `.lp-comment-menu` `-menu-item` | 댓글 "..." 팝오버(수정/삭제/답변) 폭 7.4rem — 폭·여백·모서리·그림자는 PopoverContent 테일윈드를 덮어야 해서 `police-override.css` 쪽 | COM-1002, 0402 |
+| `.lp-comment-mention` `-mention-field` `-mention-input` | 답글 본문 앞 "@이름"(파란 굵은 글자) / 멘션 칩(Badge)이 앞에 든 답글 입력 상자 / 그 안의 테두리 없는 textarea(override 쪽) | COM-1002, 0402 |
+| `.lp-writer-line` `-name` `-date` | 등록/수정 폼 머리의 "작성자 ｜ 일시" 한 줄(이름 bold, 세로선, 일시 회색). 댓글 머리 `.lp-comment-head` 와 모양이 같지만 의도가 달라 따로 | COM-1003, 1004, 0403 |
+| `.lp-switch-box` | 라벨 아래 스위치를 입력칸 높이(4.8rem)에 세로 가운데 놓는 상자 — 같은 줄의 md 입력과 라벨·밑선을 맞출 때 | COM-1003, 1004 |
+| `.lp-board-form-actions` | 게시판 등록/수정 폼 하단 버튼줄 — 폼 마지막 블록과 40, 버튼 사이 12(Figma). 메모 폼의 `.lp-form-actions-center`(16/4)와 값이 달라 따로 | COM-1003, 1004, 0403 |
 | `.lp-photo-grid` `-item` `-label` `-box` `-img` `-empty` `-empty-icon` `-empty-label` `-meta` `-actions` | 진단 상세의 취약/개선 상황사진 4칸(112사건 표 아래에 붙는 칸). **`police-style.css` 의 `.photo-box`/`.photo-empty` 는 인사관리 증명사진용 12rem 칸이라 서로 다른 것 — 이름이 비슷해도 섞어 쓰지 않는다** | PUB-0101 |
 | `.lp-stat-field` `.lp-stat-grade` `.lp-stat-value` | 라벨-값 표의 한 칸에 [등급][수치] 두 조각이 들어가는 통계 표. 값 영역 여백을 걷어내고 두 조각 사이에 세로선을 넣는다 | PUB-0101 참고사항 |
 | `.lp-log-cell` `.lp-log-activity` `.lp-log-tag`(`-danger`/`-primary`/`-success`) `.lp-log-written-at` | 표 한 칸에 [앞머리 표시][본문 여러 줄] + 오른쪽 아래 작성일시가 함께 들어가는 활동내역 칸. 행 높이가 늘어나야 하므로 그리드에 `.lp-grid-multiline` 을 같이 건다 | LPO-0223 |
@@ -732,7 +737,8 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-field-flush` | InfoField 값 칸의 안쪽 여백 제거(표를 칸에 딱 붙일 때). `.control` 이 CSS Module 해시 이름이라 마지막 자식으로 짚는다 | LPO-0601 |
 | `.lp-info-nested` | `InfoField` 값 칸에 `InfoTable` 을 한 번 더 넣을 때 `.control` 여백·중복 테두리 제거(라벨 병합처럼 보이게) | PUB-0111 |
 | `.lp-grid-btn-compact` | 좁은 열(시안 88px)에 들어가는 표 안 버튼. `Button` 베이스의 `min-w-25`(100px)를 풀고 좌우 여백만 준다(컬럼 정의는 `buttonClass` 만 받아서 `padding` prop 을 못 쓴다) | LPO-0223 |
-| `.lp-date-fill` | **`InfoField` 에 건다** — 값 칸을 꽉 채우는 `DatePicker`. `DatePicker` 는 `class` 를 VueDatePicker 루트가 아니라 안쪽 `InputField2` 에 넘겨서(`inheritAttrs:false`) 화면에서 `flex-1` 을 줘도 안 먹는다. 늘어나야 하는 건 값 칸의 직계 자식인 `.dp__main` 이다 | PUB-0302/0303 |
+| `.lp-date-fill` | **`InfoField` 에 건다** — 값 칸을 꽉 채우는 `DatePicker`. `DatePicker` 는 `class` 를 VueDatePicker 루트가 아니라 안쪽 `InputField2` 에 넘겨서(`inheritAttrs:false`) 화면에서 `flex-1` 을 줘도 안 먹는다. 늘어나야 하는 건 값 칸의 직계 자식인 `.dp__main` 이다 . `DateRangePicker` 에 걸면 두 입력이 폭을 반씩 나눠 갖는다(`input-class="w-full"` 같이) | PUB-0302/0303, COM-1003, 1004 |
+| `.lp-dept-fill` | `DepartmentCascadeSelect` 에 걸어 셀렉트 셋이 폼 폭을 16px 간격으로 나눠 갖게 한다(컴포넌트 기본은 각 160px·gap 8) | COM-1003, 1004 |
 | `.lp-cell-datetime` | Tabulator 셀의 `white-space: nowrap`(라이브러리 기본)을 풀어 일시를 날짜/시간 두 줄로 끊는다. 행 높이 4.8rem 고정에 맞춰 `line-height: 1.3` | LPO-0501 |
 
 ---

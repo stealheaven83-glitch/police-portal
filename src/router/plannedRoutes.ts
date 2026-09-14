@@ -293,6 +293,9 @@ export const plannedScreens: ReadonlyArray<readonly [string, string]> = [
   ['PM-COM-0202', '프로필_알림'],
   ['PM-COM-0203', '프로필_ 보고서 승인 현황'],
   ['PM-COM-0301', '에러페이지 화면'],
+  // 사용자 지정 ID — Figma 프레임은 PM-COM-1102(Q&A 상세)지만 PM-COM-0402 폴더로 만들라고 해서 추가(2026-09-14)
+  ['PM-COM-0402', 'Q&A 상세내역 화면'],
+  ['PM-COM-0403', 'Q&A 수정 화면'],
   ['PC-COM-0401', '도로명 찾기 탭'],
   ['PC-COM-0402', '법정동 찾기 탭'],
   ['PC-COM-0403', 'GIS 찾기 탭'],

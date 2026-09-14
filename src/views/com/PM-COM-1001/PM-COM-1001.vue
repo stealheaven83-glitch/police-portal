@@ -152,7 +152,7 @@ function titleFormatter(cell: any) {
 const columns: TabulatorGridColumn[] = [
   { title: '번호', field: 'no', width: 90, hozAlign: 'center', formatter: noFormatter },
   { title: '부서', field: 'dept', width: 200, hozAlign: 'center' },
-  { title: '제목', field: 'title', widthGrow: 4, hozAlign: 'center', formatter: titleFormatter },
+  { title: '제목', field: 'title', widthGrow: 4, hozAlign: 'left', formatter: titleFormatter },
   { title: '첨부파일', field: 'hasAttachment', width: 90, hozAlign: 'center', formatter: attachmentFormatter },
   { title: '작성자', field: 'writer', width: 110, hozAlign: 'center' },
   { title: '등록일', field: 'createdAt', width: 120, hozAlign: 'center' },

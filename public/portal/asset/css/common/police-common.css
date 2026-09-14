@@ -1500,6 +1500,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
+  margin-top: 3.2rem;
 }
 
 /* 테두리 있는 첨부파일 한 줄 — FileUpload 컴포넌트가 안 맞는 조합(다운로드+삭제)일 때 쓴다.
@@ -2175,9 +2176,6 @@
   margin:0 auto;  
 }
 .lp-notice-detail {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
   padding-bottom: 3.2rem;
 }
 .lp-notice-badges {
@@ -2192,17 +2190,20 @@
   font-weight: 700;
 }
 .lp-notice-title {
-  font-size: 2.4rem;
+  margin-top:1.2rem;
+  font-size: 3.2rem;
   font-weight: 700;
   line-height: 1.4;
   color: var(--Text-body_0);
 }
 .lp-notice-meta {
-  padding-bottom: 1.6rem;
+  margin-top: 3.2rem;
+  padding-bottom:2.4rem;
   border-bottom: 0.1rem solid var(--Border_gray02);
 }
 /* 본문 대표 이미지 자리 — Figma 는 회색 박스로만 그려져 있다 */
 .lp-notice-thumb {
+  padding-top:4rem;
   width: 100%;
   margin: 0 auto;
 }
@@ -2224,6 +2225,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
+  margin-top: 3.2rem;
   padding: 3.2rem;
   border: 0.1rem solid var(--Border_gray02);
   border-radius: var(--Radius-medium2);
@@ -2375,14 +2377,15 @@
 .lp-comment-reply-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.6rem;
   align-self: flex-start;
   padding: 0;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   color: var(--Text-body_1);
   background: none;
   border: 0;
   cursor: pointer;
+  line-height:100%;
 }
 .lp-comment-reply-btn:hover {
   color: var(--Base-primary);
@@ -3385,3 +3388,23 @@
   font-size: 1.5rem;
   font-weight: 700;
 }
+<<<<<<< Updated upstream
+=======
+
+/*
+ * 번호 붙은 하위 항목 제목('1) 주요범죄 발생 및 검거 실적')의 아래 여백.
+ * 구역 제목의 .lp-section-title(12) 보다 한 단계 좁다(시안 8). .lp-heading-sm 과 함께 쓴다.
+ */
+.lp-substat-title {
+  margin-bottom: 0.8rem;
+}
+
+/* 게시판 등록/수정 폼(PM-COM-1003/1004/0403)의 하단 버튼줄 — Figma: 폼 마지막 블록과 40, 버튼 사이 12.
+   .lp-narrow-form 의 gap 20 에 20 을 더해 40 을 만든다. 메모 폼의 .lp-form-actions-center(gap 16, 위 4)와 값이 달라 따로 둔다 */
+.lp-board-form-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+  margin-top: 2rem;
+}
+>>>>>>> Stashed changes

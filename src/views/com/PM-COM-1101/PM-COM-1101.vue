@@ -23,16 +23,16 @@
       <div class="search-area">
         <div class="group-gap2">
           <SelectField v-model="authorFilter" label="성명" :options="authorFilterOptions" size="sm" trigger-class="w-40" />
-          <InputField2 v-model="authorKeyword" size="sm" placeholder="이름을 검색해주세요." input-class="w-92" />
+          <InputField2 v-model="authorKeyword" size="sm" placeholder="이름을 검색해주세요." input-class="w-60" />
         </div>
         <div class="group-gap2">
-          <DatePicker v-model="dateFrom" label="등록일" size="sm" input-class="w-60" />
+          <DatePicker v-model="dateFrom" label="등록일" size="sm" input-class="w-40"/>
           <span aria-hidden="true">~</span>
-          <DatePicker v-model="dateTo" size="sm" input-class="w-60" />
+          <DatePicker v-model="dateTo" size="sm" input-class="w-40" />
         </div>
         <div class="group-gap2">
-          <SelectField v-model="searchField" label="검색어" :options="searchFieldOptions" size="sm" trigger-class="w-40" />
-          <InputField2 v-model="keyword" size="sm" placeholder="검색어를 입력하세요." input-class="w-92" />
+          <SelectField v-model="searchField" label="검색어" :options="searchFieldOptions" size="sm" trigger-class="w-30" />
+          <InputField2 v-model="keyword" size="sm" placeholder="검색어를 입력하세요." input-class="w-70" />
         </div>
         <div class="group-gap2">
           <SelectField v-model="openState" label="공개상태" :options="openStateOptions" size="sm" trigger-class="w-40" />
@@ -96,6 +96,7 @@ import {
   type QnaRow,
 } from './composable/PM-COM-1101'
 import { bulletinMenu } from '../composable/notice'
+import { useQnaStore } from '../composable/qna'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 
@@ -114,6 +115,7 @@ const navItems = [
 
 const router = useRouter()
 const dialog = useDialog()
+const { selectQna } = useQnaStore()
 
 const {
   category,
@@ -219,9 +221,10 @@ function onCreate() {
   router.push({ name: 'PM-COM-1104' })
 }
 
-/** 행을 누르면 상세(PM-COM-1102)로 간다 — 상세 화면은 아직 없어 NotReady 가 뜬다 */
-function onRowClick() {
-  router.push({ name: 'PM-COM-1102' })
+/** 행을 누르면 상세로 간다 — 상세는 사용자 지정으로 PM-COM-0402 폴더에 있다(Figma 는 PM-COM-1102) */
+function onRowClick(_event: unknown, row: { getData: () => { id?: number } }) {
+  selectQna(row.getData().id ?? 1)
+  router.push({ name: 'PM-COM-0402' })
 }
 
 useBottomTabSetup({
