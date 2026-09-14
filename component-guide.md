@@ -137,6 +137,20 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 > </InfoField>
 > ```
 > (`styles`는 `@/components/custom/info-table/InfoTable.module.css`)
+>
+> **클래스는 세 자리로 나눠 준다** — 어디에 붙는지가 다르다:
+>
+> | prop | 붙는 곳 |
+> |---|---|
+> | `class` | 칸 전체(라벨+값을 감싸는 바깥) |
+> | `label-class` | **제목(라벨)** — `for` 유무로 `<label>`/`<span>` 이 갈리는데 양쪽 다 붙는다 |
+> | `col-class` | **값(정보) 영역** |
+>
+> ⚠ `InfoTable.module.css` 는 `@layer` 밖이라 **레이어 있는 스타일을 전부 이긴다.**
+> 그 파일이 이미 정한 속성(라벨 폭·테두리·grid 등)은 `police-common`/`override` 의 클래스로
+> 못 덮는다(특정도를 올려도 안 된다). 셋 중 하나로 한다:
+> **① `--info-label-w` 같은 CSS 변수** ② `!important` ③ 컴포넌트 수정.
+> module 이 **안 정한** 속성(`background` `min-height` 등)은 그냥 클래스로 먹는다.
 
 ---
 
