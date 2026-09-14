@@ -1096,7 +1096,41 @@
   display: flex;
   justify-content: center;
   gap: 1.6rem;
-  padding-top: 0.4rem;
+  padding-top: 2rem;
+}
+/* 등록/수정 폼 머리의 "작성자 ｜ 일시" 한 줄(Figma 작성자 인스턴스 — 이름 15px bold, 세로선, 일시 13px 회색).
+   댓글 머리(.lp-comment-head)와 모양이 같지만 폼 머리라 따로 둔다 — 한쪽 값이 바뀔 때 다른 쪽이 같이 안 깨지게 */
+.lp-writer-line {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.lp-writer-line-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--Text-body_0);
+}
+.lp-writer-line-date {
+  position: relative;
+  padding-left: 0.8rem;
+  font-size: 1.3rem;
+  color: var(--Text-body_2);
+}
+.lp-writer-line-date::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0.1rem;
+  height: 1.6rem;
+  transform: translateY(-50%);
+  background: var(--Border_gray02);
+}
+/* 라벨 아래 스위치를 입력칸 높이(4.8rem)에 세로 가운데 놓는다 — 같은 줄의 입력(md)과 라벨·밑선이 맞는다 */
+.lp-switch-box {
+  display: flex;
+  align-items: center;
+  height: 4.8rem;
 }
 
 /* 요약 영역 — 빈 상태는 점선, 진행/완료는 실선 (Figma 3개 프레임) */
@@ -1449,7 +1483,7 @@
 .lp-file-boxes {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.6rem;
 }
 
 /* 테두리 있는 첨부파일 한 줄 — FileUpload 컴포넌트가 안 맞는 조합(다운로드+삭제)일 때 쓴다.
@@ -2110,9 +2144,7 @@
 /* 본문 대표 이미지 자리 — Figma 는 회색 박스로만 그려져 있다 */
 .lp-notice-thumb {
   width: 100%;
-  height: 28rem;
   margin: 0 auto;
-  background: var(--Background-gray01);
 }
 .lp-notice-body {
   display: flex;
@@ -2120,8 +2152,7 @@
   gap: 0.4rem;
 }
 .lp-notice-detail-actions {
-  padding-top: 1.6rem;
-  border-top: 0.1rem solid var(--Border_gray02);
+  padding-top: 2rem;
 }
 .lp-notice-detail-actions2 {
   padding-top: 1.6rem;
@@ -2140,14 +2171,14 @@
 .lp-comment-write {
   display: flex;
   flex-direction: column;
-  gap: 1.65rem;
+  gap: 0.8rem;
 }
 .lp-comment-list {
   display: flex;
   flex-direction: column;
 }
 .lp-comment-item {
-  padding: 1.6rem 0;
+  padding: 1.6rem 0 2.3rem;
   border-top: 0.1rem solid var(--Border_gray02);
 }
 .lp-comment {
@@ -2206,16 +2237,13 @@
   color: var(--Text-body_disable);
   cursor: not-allowed;
 }
-/* "..." 클릭 시 뜨는 팝오버 메뉴(수정/삭제/답변) */
+/* "..." 클릭 시 뜨는 팝오버 메뉴(수정/삭제/답변).
+   폭·여백·모서리·그림자는 PopoverContent 의 테일윈드(w-72/p-4/rounded-md/shadow-md)에 지므로
+   police-override.css 의 같은 이름 블록에 있다(CLAUDE.md §2). */
 .lp-comment-menu {
   display: flex;
   flex-direction: column;
-  width: auto;
-  min-width: 7.4rem;
-  padding: 0.4rem 0;
-  border-radius: var(--Radius-medium1);
   border-color: var(--Border_gray01);
-  box-shadow: 0 0 0.1rem 0 rgba(0, 0, 0, 0.08), 0 0.8rem 0.8rem 0 rgba(0, 0, 0, 0.12);
 }
 .lp-comment-menu-item {
   display: flex;
@@ -2237,9 +2265,38 @@
   line-height: 1.6;
   color: var(--Text-body_0);
 }
+/* 답글 본문 앞에 붙는 "@이름" — 지목된 사람. 링크 톤이지만 누르는 건 아니다 */
+.lp-comment-mention {
+  margin-right: 0.4rem;
+  font-weight: 700;
+  color: var(--Base-primary);
+}
+/* 멘션 칩(@이름)이 앞에 든 답글 입력칸. 상자가 textarea 모양(테두리·모서리·여백)을 맡고
+   안의 textarea 는 테두리 없이 남은 폭을 채운다(그 덮어쓰기는 police-override.css .lp-comment-mention-input).
+   높이 6.4rem 은 다른 댓글 입력칸(:height="64")과 맞춘 값 */
+.lp-comment-mention-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  height: 6.4rem;
+  padding: 0.8rem 1.6rem;
+  border: 0.1rem solid var(--Border_input01);
+  border-radius: 0.6rem;
+}
+.lp-comment-mention-field:focus-within {
+  border-color: var(--Border_primary);
+  box-shadow: inset 0 0 0 0.1rem var(--Border_primary);
+}
+.lp-comment-mention-person{
+  display:block;
+  padding:0.2rem 0.4rem;
+  background:#E6E8EA;
+  font-size: 1.3rem;
+  border-radius:2px;
+}
 .lp-comment-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 0.8rem;
 }
 /* 댓글/답글 수정 화면의 액션 줄 — 취소는 왼쪽, 삭제(또는 안내문)+저장은 오른쪽으로 갈라진다 */
@@ -2279,9 +2336,21 @@
 }
 /* Figma: 화살표 아이콘이 작성자 줄만이 아니라 대댓글 전체(작성자~본문) 왼쪽에 나란히 선다 */
 .lp-comment-reply-row {
+  position:relative;
   display: flex;
+  padding-left:4rem;
   align-items: flex-start;
   gap: 0.8rem;
+}
+.lp-comment-reply-row:after{
+  position:absolute;
+  left:1.6rem;
+  top:0.5rem;
+  content:"";
+  display:block;
+  width: 1.6rem;
+  height:1.6rem;
+  background:url('../../images/icon/ico_reply.svg')
 }
 .lp-comment-reply-arrow {
   flex-shrink: 0;
