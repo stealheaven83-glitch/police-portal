@@ -2969,3 +2969,282 @@
 .lp-pane-list {
   flex: 0 0 60rem;
 }
+
+/* ══ 전체메뉴(사이트맵) ═══════════════════════════════════════
+   Figma PC_SiteMap(10531:28348) + 모바일 와이어프레임. Menu.vue 한 파일이 둘 다 그린다.
+   Tabs 컴포넌트 루트에 붙는 것(-tabs-root · -tabs · -panel)은 police-override.css 에 있다.
+   모바일 경계 1000 은 useResponsive.ts 의 BP_MOBILE 과 같은 값이어야 한다 */
+
+.sitemap {
+  min-height: 100vh;
+  background: #fff;
+}
+
+/* ── 헤더 (PC·모바일 공통) ───────────────────────────────── */
+.sitemap-header {
+  border-bottom: 1px solid var(--Border_gray03);
+  background: var(--Background-gray01);
+}
+.sitemap-header-in {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 120rem;
+  margin: 0 auto;
+  padding: 1.6rem 0;
+}
+.sitemap-logo img {
+  width: 19.9rem;
+  height: 3.6rem;
+}
+
+/* ── 모바일 전용 상단 ────────────────────────────────────── */
+.sitemap-mtop {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  padding: 1.6rem;
+  border-bottom: 1px solid var(--Border_gray03);
+}
+.sitemap-user {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+.sitemap-avatar {
+  flex-shrink: 0;
+  width: 4.8rem;
+  height: 4.8rem;
+  border: 1px solid var(--Border_gray03);
+  border-radius: 50%;
+  background: var(--Background-gray01);
+}
+.sitemap-user-name {
+  flex: 1;
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: var(--Text-body_0);
+}
+.sitemap-user-rank {
+  display: block;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--Text-body_1);
+}
+.sitemap-user-actions {
+  display: flex;
+  gap: 1.6rem;
+}
+.sitemap-user-btn {
+  border: 0;
+  background: none;
+  color: var(--Text-body_1);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+.sitemap-recent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.sitemap-recent-label {
+  font-size: 1.4rem;
+  color: var(--Text-body_1);
+}
+.sitemap-recent-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+.sitemap-recent-chip {
+  padding: 0.6rem 1.2rem;
+  border: 1px solid var(--Border_gray03);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--Text-body_0);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+/* ── 1뎁스 탭 줄 ─────────────────────────────────────────
+   밑줄은 화면 전체 폭, 탭은 본문 폭(1200). 그래서 줄과 탭을 나눠 갖는다 —
+   TabsList 자신의 border-b 는 police-override.css 에서 끈다 */
+.sitemap-tabbar {
+  border-bottom: 1px solid var(--Border_gray01);
+  padding-top: 2.4rem;
+}
+
+/* ── 구역 제목 ───────────────────────────────────────────── */
+.sitemap-title {
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.1rem;
+  color: var(--Text-body_0);
+}
+
+/* ── PC: 2뎁스 4컬럼 그리드 (264 × 4 + gap 48 = 1200) ────── */
+.sitemap-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 4.8rem;
+  row-gap: 4rem;
+  align-items: start;
+}
+.sitemap-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.sitemap-group-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  width: 100%;
+  padding: 1rem 2rem;
+  border: 0;
+  border-radius: var(--Radius-medium3);
+  background: var(--Base-primary);
+  color: #fff;
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* 3뎁스 — 회색 링크 상자 */
+.sitemap-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.sitemap-link {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+  padding: 1rem 2rem;
+  border: 1px solid var(--Border_gray03);
+  border-radius: var(--Radius-medium3);
+  background: var(--Background-gray01);
+  color: var(--Text-body_0);
+  font-size: 1.7rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sitemap-link.open-sub {
+  border-radius: var(--Radius-medium3) var(--Radius-medium3) 0 0;
+}
+/* 라벨이 남는 폭을 먹고 아이콘은 오른쪽에 붙는다.
+   -label 은 MenuLinkTag 가, -link-label 은 4뎁스 토글 버튼이 쓴다 */
+.sitemap-label,
+.sitemap-link-label {
+  flex: 1;
+  min-width: 0;
+}
+.sitemap-ext {
+  flex-shrink: 0;
+}
+.sitemap-group-link .sitemap-ext path{
+  fill: #fff;
+}
+
+/* 4뎁스 — 3뎁스 상자 아래 들여쓴 불릿 목록 */
+.sitemap-sub {
+  display: flex;
+  flex-direction: column;
+  padding: 1.2rem 2.5rem 0;
+  border: 1px solid var(--Border_gray03);
+  border-top: 0;
+  border-radius: 0 0 var(--Radius-medium3) var(--Radius-medium3);
+}
+.sitemap-sub-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.6rem 0;
+  border: 0;
+  background: none;
+  color: var(--Text-body_1);
+  font-size: 1.5rem;
+  line-height: 1.5;
+  text-align: left;
+  cursor: pointer;
+}
+.sitemap-sub-link::before {
+  content: '-';
+  flex-shrink: 0;
+}
+
+/* ── 모바일: 2뎁스 아코디언 ──────────────────────────────── */
+.sitemap-acc {
+  display: flex;
+  flex-direction: column;
+}
+.sitemap-acc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  width: 100%;
+  padding: 1.4rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--Border_gray03);
+  background: none;
+  color: var(--Text-body_0);
+  font-size: 1.7rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+/* 아이콘 하나(arrowDown)를 돌려 펼침/접힘을 표현한다 */
+.sitemap-acc-arrow {
+  flex-shrink: 0;
+  transition: transform 0.15s;
+}
+.sitemap-acc-head[aria-expanded='true'] .sitemap-acc-arrow {
+  transform: rotate(180deg);
+}
+.sitemap-acc-list {
+  display: flex;
+  flex-direction: column;
+  padding: 0.8rem 0;
+  background: var(--Background-gray01);
+}
+.sitemap-acc-link {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+  padding: 1rem 1.6rem;
+  border: 0;
+  background: none;
+  color: var(--Text-body_0);
+  font-size: 1.6rem;
+  text-align: left;
+  cursor: pointer;
+}
+.sitemap-acc-sub {
+  padding-left: 1.6rem;
+}
+
+@media (max-width: 1000px) {
+  .sitemap-header-in {
+    padding-left: 1.6rem;
+    padding-right: 1.6rem;
+  }
+  .sitemap-logo img {
+    width: 16rem;
+    height: auto;
+  }
+  .sitemap-title {
+    font-size: 2rem;
+    letter-spacing: 0;
+  }
+}

@@ -4,6 +4,8 @@
 /** 3뎁스 항목. children 이 있으면 4뎁스를 가진 접기/펼치기 항목이다 */
 export interface MenuLink {
   label: string
+  /** 라우트 경로. 아직 안 정해진 메뉴가 대부분이라 optional — 있으면 RouterLink, 없으면 버튼 */
+  path?: string
   /** 외부 사이트로 나가는 링크 — 새 창 아이콘을 붙인다 */
   external?: boolean
   children?: MenuLink[]
@@ -12,6 +14,7 @@ export interface MenuLink {
 /** 2뎁스 — 파란 헤더 하나와 그 아래 3뎁스 목록. 한 칸(컬럼)을 이룬다 */
 export interface MenuGroup {
   label: string
+  path?: string
   /** 외부 사이트로 나가는 링크 — 헤더 자체에 새 창 아이콘을 붙인다 */
   external?: boolean
   items?: MenuLink[]
@@ -223,4 +226,13 @@ export const menuSections: MenuSection[] = [
       { label: '도움말 관리기능' },
     ],
   },
+]
+
+/** 모바일 상단 '최근 메뉴' 칩. 실제로는 사용자별 이력이라 개발팀이 채운다 — 화면용 목업 */
+export const recentMenus: string[] = [
+  '메모',
+  '근무일지(乙)',
+  '미성년자 조회',
+  '사고자/자원근무 신청',
+  'Q&A',
 ]
