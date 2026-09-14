@@ -65,7 +65,7 @@
       </Button>
        <Button
         type="button"
-        variant="tertiary"
+        variant="tertiary2"
         size="sm"
         @click="onManualRegister"
         >삭제</Button

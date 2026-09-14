@@ -12,8 +12,8 @@
         placeholder="내용을 입력하세요"
         :height="64"
       />
-      <div class="lp-comment-actions">
-        <Button type="button" variant="primary" size="sm" padding="16" @click="onAdd()">등록</Button>
+      <div class="lp-comment-actions" style="margin-left:auto">
+        <Button type="button" variant="secondary" size="xs" padding="16" @click="onAdd()">등록</Button>
       </div>
     </div>
 
@@ -47,16 +47,19 @@
           <template v-if="editingId === comment.id">
             <TextareaField v-model="editText" aria-label="댓글 수정" :height="64" />
             <div class="lp-comment-actions is-edit">
-              <Button type="button" variant="tertiary2" size="sm" padding="16" @click="onCancelEditClick">취소</Button>
+              <Button type="button" variant="tertiary2" size="xs" padding="16" @click="onCancelEditClick">취소</Button>
               <span class="lp-comment-actions-group">
-                <Button v-if="!repliesOf(comment.id).length" type="button" variant="tertiary2" size="sm" padding="16" @click="onRemove(comment.id)">삭제</Button>
+                <Button v-if="!repliesOf(comment.id).length" type="button" variant="tertiary2" size="xs" padding="16" @click="onRemove(comment.id)">삭제</Button>
                 <span v-else class="lp-comment-edit-note">* 답변이 작성된 댓글은 삭제할 수 없습니다.</span>
-                <Button type="button" variant="primary" size="sm" padding="16" @click="onSaveEdit(comment.id)">등록</Button>
+                <Button type="button" variant="secondary" size="xs" padding="16" @click="onSaveEdit(comment.id)">등록</Button>
               </span>
             </div>
           </template>
           <template v-else>
-            <p class="lp-comment-body">{{ comment.content }}</p>
+            <p class="lp-comment-body">
+              <span v-if="comment.mention" class="lp-comment-mention">@{{ comment.mention }}</span>
+              {{ comment.content }}
+            </p>
             <button type="button" class="lp-comment-reply-btn" @click="toggleReply(comment.id)">
               <Icon name="inquiry" :size="19" />
               {{ repliesOf(comment.id).length }}
@@ -67,7 +70,6 @@
         <!-- 대댓글 -->
         <ul v-if="repliesOf(comment.id).length" class="lp-comment-replies">
           <li v-for="reply in repliesOf(comment.id)" :key="reply.id" class="lp-comment-reply-row">
-            <Icon name="replyArrow" :size="32" class="lp-comment-reply-arrow" />
             <article class="lp-comment">
               <p class="lp-comment-head">
                 <b class="lp-comment-writer">{{ reply.writer }}</b>
@@ -85,6 +87,9 @@
                     <button type="button" class="lp-comment-menu-item" @click="onRemove(reply.id)">
                       <Icon name="trash" :size="16" aria-hidden="true" /> 삭제
                     </button>
+                    <button type="button" class="lp-comment-menu-item" @click="startReplyTo(comment.id, reply.writer)">
+                      <Icon name="inquiry" :size="16" aria-hidden="true" /> 답변
+                    </button>
                   </PopoverContent>
                 </Popover>
               </p>
@@ -92,12 +97,15 @@
               <template v-if="editingId === reply.id">
                 <TextareaField v-model="editText" aria-label="답글 수정" :height="64" />
                 <div class="lp-comment-actions is-edit">
-                  <Button type="button" variant="tertiary2" size="sm" padding="16" @click="onCancelEditClick">취소</Button>
-                  <Button type="button" variant="primary" size="sm" padding="16" @click="onSaveEdit(reply.id)">저장</Button>
+                  <Button type="button" variant="tertiary2" size="xs" padding="16" @click="onCancelEditClick">취소</Button>
+                  <Button type="button" variant="secondary" size="xs" padding="16" @click="onSaveEdit(reply.id)">저장</Button>
                 </div>
               </template>
               <template v-else>
-                <p class="lp-comment-body">{{ reply.content }}</p>
+                <p class="lp-comment-body">
+                  <span v-if="reply.mention" class="lp-comment-mention">@{{ reply.mention }}</span>
+                  {{ reply.content }}
+                </p>
               </template>
             </article>
           </li>
@@ -110,10 +118,14 @@
               <b class="lp-comment-writer">{{ me }}</b>
               <span class="lp-comment-date">{{ nowLabel }}</span>
             </p>
-            <TextareaField v-model="replyText" aria-label="답글 입력" placeholder="내용을 입력하세요" :height="64" />
+            <div v-if="replyMention" class="lp-comment-mention-field">
+              <span class="lp-comment-mention-person">@{{ replyMention }}</span>
+              <Textarea v-model="replyText" class="lp-comment-mention-input" :aria-label="`${replyMention} 님에게 답글 입력`" placeholder="내용을 입력하세요" />
+            </div>
+            <TextareaField v-else v-model="replyText" aria-label="답글 입력" placeholder="내용을 입력하세요" :height="64" />
             <div class="lp-comment-actions">
-              <Button type="button" variant="tertiary2" size="sm" padding="16" @click="replyToId = null">취소</Button>
-              <Button type="button" variant="primary" size="sm" padding="16" @click="onAddReply(comment.id)">저장</Button>
+              <Button type="button" variant="tertiary2" size="xs" padding="16" @click="cancelReply">취소</Button>
+              <Button type="button" variant="secondary" size="xs" padding="16" @click="onAddReply(comment.id)">저장</Button>
             </div>
           </div>
         </div>
@@ -135,7 +147,9 @@
 import { computed, ref } from 'vue'
 import { MoreHorizontal } from 'lucide-vue-next'
 import Icon from '@/components/custom/icon/Icon.vue'
+import Textarea from '@/components/custom/textarea/Textarea.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
+import { Badge } from '@/components/custom/badge'
 import { Button } from '@/components/custom/button'
 import { Pagination } from '@/components/custom/pagination'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -158,7 +172,8 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'add', content: string, parentId: number | null): void
+  /** mention: 답글이 지목한 사람 이름(@ 없이). 답글 메뉴의 "답변"으로 열었을 때만 있다 */
+  (e: 'add', content: string, parentId: number | null, mention?: string): void
   (e: 'update', id: number, content: string): void
   (e: 'remove', id: number): void
 }>()
@@ -166,6 +181,8 @@ const emit = defineEmits<{
 const newComment = ref('')
 const replyToId = ref<number | null>(null)
 const replyText = ref('')
+/** 답글 입력칸 앞에 칩으로 붙는 멘션 대상 — 답글 메뉴의 "답변"으로 열었을 때 그 답글 작성자 */
+const replyMention = ref<string | null>(null)
 const editingId = ref<number | null>(null)
 const editText = ref('')
 /** 점 3개 메뉴가 열린 댓글 id — 수정/삭제 버튼이 그 아래 펼쳐진다 */
@@ -221,6 +238,15 @@ function setMenuOpen(id: number, isOpen: boolean) {
 function toggleReply(id: number) {
   replyToId.value = replyToId.value === id ? null : id
   replyText.value = ''
+  replyMention.value = null
+}
+
+/** 답글의 "답변" — 같은 원댓글 아래에 답글 폼을 열고, 그 답글 작성자를 멘션 칩으로 붙인다 */
+function startReplyTo(parentId: number, writer: string) {
+  replyToId.value = parentId
+  replyText.value = ''
+  replyMention.value = writer
+  openMenuId.value = null
 }
 
 /** 사용자 지정: 저장 컨펌창 — CLAUDE.md §4 기본(alert만)과 다르지만 요청(화면 정의서 ②)대로 따름 */
@@ -247,9 +273,14 @@ async function onAddReply(parentId: number) {
     await dialog.alert({ title: '입력된 내용이 없습니다. 내용을 입력해 주시기 바랍니다.', btnCancel: '확인' })
     return
   }
-  emit('add', replyText.value.trim(), parentId)
-  replyText.value = ''
+  emit('add', replyText.value.trim(), parentId, replyMention.value ?? undefined)
+  cancelReply()
+}
+
+function cancelReply() {
   replyToId.value = null
+  replyText.value = ''
+  replyMention.value = null
 }
 
 function startEdit(comment: NoticeComment) {

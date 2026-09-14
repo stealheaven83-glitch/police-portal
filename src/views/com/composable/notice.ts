@@ -65,6 +65,8 @@ export interface NoticeComment {
   writer: string
   createdAt: string
   content: string
+  /** 답글이 지목한 사람 이름(@ 없이). 본문 앞에 "@이름" 으로 표시된다 — 답글에만 있다 */
+  mention?: string
 }
 
 /** 등록/수정 폼이 다루는 값 */
@@ -98,8 +100,9 @@ function createMockNotice(): Notice {
   return {
     id: 1,
     important: true,
-    importantFrom: '2026.07.01',
-    importantTo: '2026.07.31',
+    // DatePicker 가 읽는 형식(yyyy-MM-dd) — '2026.07.01' 은 파싱이 안 돼 수정 폼에 빈 칸으로 떴다
+    importantFrom: '2026-07-01',
+    importantTo: '2026-07-31',
     open: true,
     dept: '본청 범죄예방대응 지역경찰운영과 지역경찰기획계',
     title: '타이틀이 노출됩니다.타이틀이 노출됩니다.타이틀이 노출됩니다.타이틀이 노출됩니다.',
@@ -125,6 +128,7 @@ function createMockComments(): NoticeComment[] {
   return [
     { id: 1, parentId: null, writer: '강길동', createdAt: '2026-07-01 10:20', content: MOCK_COMMENT_BODY },
     { id: 2, parentId: 1, writer: '강길동', createdAt: '2026-07-01 10:32', content: MOCK_COMMENT_BODY },
+    { id: 5, parentId: 1, writer: '김미소', createdAt: '2026-07-01 11:05', content: MOCK_COMMENT_BODY, mention: '강길동' },
     { id: 3, parentId: null, writer: '강길동', createdAt: '2026-07-02 09:11', content: MOCK_COMMENT_BODY },
     { id: 4, parentId: 3, writer: '강길동', createdAt: '2026-07-02 09:40', content: MOCK_COMMENT_BODY },
   ]
@@ -165,9 +169,9 @@ function createNoticeStore() {
   }
 
   /** 새 댓글(parentId 없음)은 목록 최상단에 표시한다 — 화면 요구사항. 답글은 기존대로 등록 순 */
-  function addComment(content: string, parentId: number | null = null) {
+  function addComment(content: string, parentId: number | null = null, mention?: string) {
     const nextId = comments.value.length ? Math.max(...comments.value.map((c) => c.id)) + 1 : 1
-    const created = { id: nextId, parentId, writer: '강길동', createdAt: nowText(), content }
+    const created: NoticeComment = { id: nextId, parentId, writer: '강길동', createdAt: nowText(), content, mention }
     comments.value = parentId === null
       ? [created, ...comments.value]
       : [...comments.value, created]

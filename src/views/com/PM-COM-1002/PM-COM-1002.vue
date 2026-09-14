@@ -57,10 +57,10 @@
       />
 
       <div class="lp-row-between lp-notice-detail-actions">
-        <Button type="button" variant="tertiary2" size="md" @click="goList">목록</Button>
+        <Button type="button" variant="tertiary2" size="sm" @click="goList">목록</Button>
         <span class="group-gap2">
-          <Button type="button" variant="tertiary2" size="md" @click="onDelete">삭제</Button>
-          <Button type="button" variant="primary" size="md" @click="goEdit">수정</Button>
+          <Button type="button" variant="tertiary2" size="sm" @click="onDelete">삭제</Button>
+          <Button type="button" variant="primary" size="sm" @click="goEdit">수정</Button>
         </span>
       </div>
     </article>
