@@ -1,7 +1,7 @@
 import { computed, ref, watch } from 'vue'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 
-/** 공지사항 목록(PM-COM-1001) 한 줄.
+/** 공지사항 목록(PM-COM-0301) 한 줄.
  *  칸 구성은 화면설계서_게시판_V1.1 8장 표(공지사항: 부서 O, 추천수 O, 공개상태 X, 카테고리 X) */
 export interface NoticeRow {
   id: number

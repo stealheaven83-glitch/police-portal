@@ -1,7 +1,7 @@
 <template>
   <PageHeader>
     <template #left>
-      <PageTitle title="공지사항" />
+      <PageTitle title="지역경찰 시책" />
     </template>
     <template #right>
       <span class="group-gap2">
@@ -12,6 +12,7 @@
   </PageHeader>
 
   <div class="lp-page-scroll">
+    <!-- Figma 11220:93526 "list": 블록 사이 20 균일(.lp-narrow-form gap) / 라벨→입력 8(.lp-field gap) -->
     <div class="lp-narrow-form">
       <p class="lp-writer-line">
         <b class="lp-writer-line-name">{{ writer }}</b>
@@ -22,33 +23,11 @@
         <span class="lp-label-text">부서명</span>
         <!-- Figma selectbox ×3(전체/전체/전체) = 상위 → 하위 → 세부 3단 부서 셀렉트.
              컴포넌트가 항상 유효한 값으로 보정해서 첫 칸은 placeholder 대신 첫 옵션(본청)이 보인다 -->
-        <DepartmentCascadeSelect v-model="dept" size="md" class="lp-dept-fill" />
-      </div>
-
-      <div class="lp-field-row">
-        <div class="lp-field">
-          <span class="lp-label-text">중요공지</span>
-          <div class="lp-switch-box">
-            <Switch v-model="form.important" size="xl" aria-label="중요공지" />
-          </div>
-        </div>
-        <div class="lp-field lp-flex-fill">
-          <span class="lp-label-text">중요공지기간</span>
-          <!-- 사용자 지정: 기간은 custom/datepicker/DateRangePicker 를 그대로 쓴다(폭만 .lp-date-fill 로 채움) -->
-          <DateRangePicker
-            v-model:from="form.importantFrom"
-            v-model:to="form.importantTo"
-            from-label="중요공지 시작일"
-            to-label="중요공지 종료일"
-            size="md"
-            input-class="w-full"
-            class="lp-date-fill"
-          />
-        </div>
+        <DepartmentCascadeSelect v-model="form.dept" size="md" class="lp-dept-fill" />
       </div>
 
       <InputField2
-        id="notice-title"
+        id="case-title"
         v-model="form.title"
         label="제목"
         label-position="top"
@@ -57,13 +36,12 @@
         :clearable="false"
       />
 
+      <!-- Figma: 수정 화면의 내용 칸에는 글자수 카운터가 없다(등록 화면 0504 와 다름) -->
       <TextareaField
-        id="notice-content"
+        id="case-content"
         v-model="form.content"
         label="내용"
         placeholder="내용을 입력하세요"
-        :maxlength="CONTENT_MAX_LENGTH"
-        show-count
         :height="144"
       />
 
@@ -90,8 +68,8 @@
         </div>
 
         <template v-if="fileCount">
+          <!-- 드롭존→개수 20(= field gap 8 + 12), 개수→목록 8, 파일 사이 12 -->
           <p class="lp-file-count lp-file-count-below"><b>{{ fileCount }}개</b></p>
-          <!-- 파일 한 줄 = 공통 FileUpload(Figma file_upload__atomic__pc): 업로드 중이면 스피너, 끝나면 '삭제 ⨯' -->
           <div class="lp-file-list">
             <FileUpload
               v-for="file in form.files"
@@ -105,10 +83,10 @@
         </template>
       </div>
 
+      <!-- Figma: 버튼 높이 48(md)·폭 120·사이 12, 폼과 40 -->
       <div class="lp-board-form-actions">
-        <!-- Figma: 버튼 높이 40 = sm (기준 PM-LPO-0102 는 md/48). 제목이 비면 저장은 비활성(등록 시안과 같은 규칙) -->
-        <Button type="button" variant="tertiary2" size="sm" @click="onCancel">취소</Button>
-        <Button type="button" variant="primary" size="sm" :disabled="!canSave" @click="onSave">저장</Button>
+        <Button type="button" variant="tertiary2" size="md" class="w-30" @click="onCancel">취소</Button>
+        <Button type="button" variant="primary" size="md" class="w-30" :disabled="!canSave" @click="onSave">저장</Button>
       </div>
     </div>
   </div>
@@ -122,24 +100,22 @@ import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
-import { Switch } from '@/components/custom/switch'
-import { DateRangePicker } from '@/components/custom/datepicker'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { Button } from '@/components/custom/button'
 import { FileUpload } from '@/components/custom/file-upload'
 import { useDialog } from '@/composable/dialog/dialog'
-import { bulletinMenu, CONTENT_MAX_LENGTH, FILE_ACCEPT } from '../composable/notice'
-import { useNoticeEdit } from './composable/PM-COM-1003'
+import { bulletinMenu, FILE_ACCEPT } from '../composable/notice'
+import { usePolicyCaseEdit } from './composable/PM-COM-0503'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 
 defineOptions({
-  name: 'PmCom1003',
+  name: 'PmCom0503',
 })
 
-// LNB: 게시판 > 공지사항 (PM-COM-1001/1002 와 같은 메뉴 항목)
-useSideMenuSetup({ ...bulletinMenu, activeChild: '공지사항' })
+// LNB: 게시판 > 우수사례(items[2]) > 지역경찰 시책
+useSideMenuSetup({ ...bulletinMenu, openIndex: 2, activeChild: '지역경찰 시책' })
 
 const router = useRouter()
 const dialog = useDialog()
@@ -147,10 +123,11 @@ const dialog = useDialog()
 const navItems = [
   { label: '홈', path: '/' },
   { label: '게시판' },
-  { label: '공지사항', path: '/views/com/PM-COM-1001' },
+  { label: '우수사례' },
+  { label: '지역경찰 시책', path: '/views/com/PM-COM-0501' },
 ]
 
-const { form, writer, writtenAt, dept, fileCount, canSave, addFiles, removeFile } = useNoticeEdit()
+const { form, writer, writtenAt, fileCount, canSave, addFiles, removeFile } = usePolicyCaseEdit()
 
 const fileInputRef = ref<HTMLInputElement | null>(null)
 
@@ -169,15 +146,16 @@ function onDrop(e: DragEvent) {
   if (files?.length) addFiles(files)
 }
 
+/** 수정은 상세에서 들어오므로 취소하면 상세(PM-COM-0502)로 돌아간다 */
 function onCancel() {
-  router.push({ name: 'PM-COM-1002' })
+  router.push({ name: 'PM-COM-0502' })
 }
 
 /**
- * 사용자 지정(화면 정의서 2-①·③): 제목이 있으면 컨펌 "수정된 내용을 저장 하시겠습니까?"
+ * 사용자 지정(화면 정의서 2-①·③, 공지사항 수정과 같은 흐름): 제목이 있으면 컨펌 "수정된 내용을 저장 하시겠습니까?"
  *  - 취소: 컨펌만 닫고 화면 변동 없음
  *  - 확인: 저장 후 목록으로 이동(목록은 라우트 이동으로 다시 그려진다 = 새로고침)
- * 제목이 없는 경우는 버튼 자체가 비활성(등록 시안 PM-COM-1004 와 같은 규칙)이라 여기까지 오지 않는다.
+ * 제목이 없는 경우는 버튼 자체가 비활성이라 여기까지 오지 않는다.
  * CLAUDE.md §4 기본(알림창)과 다르지만 요청대로 완료 알림은 띄우지 않는다.
  */
 async function onSave() {
@@ -188,14 +166,14 @@ async function onSave() {
     btnCancel: '취소',
   })
   if (!confirmed) return
-  router.push({ name: 'PM-COM-1001' })
+  router.push({ name: 'PM-COM-0501' })
 }
 
 useBottomTabSetup({
-  value: 'PM-COM-1003',
-  label: '공지사항 수정',
-  path: '/views/com/PM-COM-1003',
-  componentName: 'PmCom1003',
+  value: 'PM-COM-0503',
+  label: '우수사례 수정',
+  path: '/views/com/PM-COM-0503',
+  componentName: 'PmCom0503',
   closable: true,
 })
 </script>

@@ -916,15 +916,6 @@ const router = createRouter({
             }
         },
         {
-            path: '/views/com/PM-COM-1001',
-            name: 'PM-COM-1001',
-            component: () => import('../views/com/PM-COM-1001/PM-COM-1001.vue'),
-            meta: {
-                layout: 'WorkLayout',
-                title: '공지사항'
-            }
-        },
-        {
             path: '/views/pub/PM-PUB-0101',
             name: 'PM-PUB-0101',
             component: () => import('../views/pub/PM-PUB-0101/PM-PUB-0101.vue'),

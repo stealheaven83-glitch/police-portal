@@ -78,13 +78,13 @@ import { Button } from '@/components/custom/button'
 import { badgeVariants } from '@/components/custom/badge'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { useDialog } from '@/composable/dialog/dialog'
-import { useNoticeList, authorFilterOptions, searchFieldOptions, type NoticeRow } from './composable/PM-COM-1001'
+import { useNoticeList, authorFilterOptions, searchFieldOptions, type NoticeRow } from './composable/PM-COM-0301'
 import { useNoticeStore, bulletinMenu } from '../composable/notice'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 
 defineOptions({
-  name: 'PmCom1001',
+  name: 'PmCom0301',
 })
 
 // LNB: 게시판 > 공지사항 (presets.ts 에 게시판 메뉴가 아직 없어 도메인 composable 의 구성을 쓴다)
@@ -191,20 +191,20 @@ async function onDeleteSelected() {
 
 /** 시안의 버튼 문구가 '작성'이다(설계서 6번은 '등록'이라 적혀 있다 — 시안을 따랐다) */
 function onCreate() {
-  router.push({ name: 'PM-COM-1004' })
+  router.push({ name: 'PM-COM-0304' })
 }
 
-/** 행을 누르면 상세(PM-COM-1002)로 간다 */
+/** 행을 누르면 상세(PM-COM-0302)로 간다 */
 function onRowClick(_event: unknown, row: { getData: () => { id?: number } }) {
   selectNotice(row.getData().id ?? 1)
-  router.push({ name: 'PM-COM-1002' })
+  router.push({ name: 'PM-COM-0302' })
 }
 
 useBottomTabSetup({
-  value: 'PM-COM-1001',
+  value: 'PM-COM-0301',
   label: '공지사항',
-  path: '/views/com/PM-COM-1001',
-  componentName: 'PmCom1001',
+  path: '/views/com/PM-COM-0301',
+  componentName: 'PmCom0301',
   closable: true,
 })
 </script>

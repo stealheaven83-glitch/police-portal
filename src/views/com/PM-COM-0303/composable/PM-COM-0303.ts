@@ -4,8 +4,8 @@ import { useNoticeStore } from '../../composable/notice'
 import { useNoticeFiles } from '../../composable/noticeFiles'
 
 /**
- * 공지사항 수정(PM-COM-1003) 화면 상태.
- * 폼 값은 도메인 스토어(notice.ts)의 editForm 을 그대로 쓴다 — 상세(PM-COM-1002)의 '수정' 버튼이
+ * 공지사항 수정(PM-COM-0303) 화면 상태.
+ * 폼 값은 도메인 스토어(notice.ts)의 editForm 을 그대로 쓴다 — 상세(PM-COM-0302)의 '수정' 버튼이
  * loadEditForm() 으로 채우고 이 화면으로 넘어온다(docs/create/multi-route.md §3).
  */
 export function useNoticeEdit() {
@@ -27,7 +27,7 @@ export function useNoticeEdit() {
   const fileCount = computed(() => editForm.files.length)
   const { addFiles, removeFile } = useNoticeFiles(editForm)
 
-  /** 등록 시안(PM-COM-1004)처럼 제목이 비어 있으면 저장 버튼을 비활성으로 둔다 */
+  /** 등록 시안(PM-COM-0304)처럼 제목이 비어 있으면 저장 버튼을 비활성으로 둔다 */
   const canSave = computed(() => editForm.title.trim().length > 0)
 
   return {
