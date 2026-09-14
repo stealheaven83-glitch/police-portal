@@ -39,12 +39,8 @@ export const tabsTriggerVariants = cva(
       variant: {
         fill: "border border-[var(--Border_gray02)] rounded-[6px] text-[var(--Text-body_1)] hover:bg-[var(--Surface-secondary)] " +
         "data-[state=active]:bg-[var(--Base-secondary)] data-[state=active]:text-white data-[state=active]:border-[var(--Base-secondary)] data-[state=active]:shadow-xs",
-<<<<<<< Updated upstream
         line: "rounded-none border-b-4 border-transparent text-[var(--Text-body_1)] hover:text-slate-900 " +
         "data-[state=active]:border-[var(--Base-primary)] data-[state=active]:text-[var(--Base-primary)] px-6 ",
-=======
-        line: "rounded-none border-b-2 border-transparent text-[var(--Text-body_1)] hover:text-slate-900 " +
-        "data-[state=active]:border-[var(--Base-primary)] data-[state=active]:text-[var(--Base-primary)] ",
         /**
          * chip: Figma chip__single(medium) 을 탭으로 쓰는 것(11220:71184 — Q&A 등록의 분류 선택 등).
          * custom/chip/Chip 의 medium·checked 와 같은 모양(48px, 17px regular, 연파랑 배경 + 파란 테두리/글자,
@@ -62,7 +58,6 @@ export const tabsTriggerVariants = cva(
         category: "px-5 rounded-full text-[1.5rem] font-normal " +
         "border border-[var(--Border_gray01)] bg-white text-[var(--Text-body_0)] hover:bg-[var(--Surface-primary)] " +
         "data-[state=active]:bg-[var(--Surface-primary)] data-[state=active]:border-[var(--Base-primary)] data-[state=active]:text-[var(--Base-primary)] data-[state=active]:font-bold",
->>>>>>> Stashed changes
       },
       /**
        * Figma: tab > Type (primary | secondary) — 코드에서는 tone — 활성 탭의 파랑 계열을 바꾼다.
