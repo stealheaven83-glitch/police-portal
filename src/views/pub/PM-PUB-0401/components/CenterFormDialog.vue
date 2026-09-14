@@ -2,7 +2,7 @@
   <GenericDialog2
     v-model:open="formDialogOpen"
     :title="formMode === 'detail' ? '해바라기센터 상세' : '해바라기센터 등록'"
-    :size="500"
+    :size="560"
     :show-close-button="true"
   >
     <InfoTable :columns="1" popup size="110">
