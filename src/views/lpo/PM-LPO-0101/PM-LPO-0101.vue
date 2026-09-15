@@ -16,7 +16,6 @@
     <Tabs v-model="activeTab">
       <TabsList variant="fill" :grow="true">
         <TabsTrigger value="mine" tone="secondary">내 메모</TabsTrigger>
-        <!-- <TabsTrigger value="mine" tone="secondary">{{isMobile ? '모바일' : '아님'}}</TabsTrigger> -->
         <TabsTrigger value="received" tone="secondary">받은 메모</TabsTrigger>
         <TabsTrigger value="sent" tone="secondary">보낸 메모</TabsTrigger>
       </TabsList>
@@ -61,7 +60,7 @@
           size="sm"
           :disabled="!selectedCount"
           @click="onDeleteSelected"
-          v-if="!isMobile"
+          class="mo:hidden"
         >
           선택 삭제
         </Button>
@@ -73,7 +72,7 @@
           label="중요 메모만 보기"
           @update:model-value="onToggleImportantOnly"
         />
-        <Button type="button" variant="primary" size="sm" @click="openWrite" v-if="!isMobile">작성</Button>
+        <Button type="button" variant="primary" size="sm" @click="openWrite" class="mo:hidden">작성</Button>
       </div>
     </div>
 
@@ -208,7 +207,6 @@ import { useAutoTrigger, type ScreenTriggerMap } from '@/composables/useAutoTrig
 import MemoForm from './components/MemoForm.vue'
 import MemoReadonlyView from './components/MemoReadonlyView.vue'
 import { useMemoList, type MemoFormPayload } from './composable/PM-LPO-0101'
-import { useBreakpoint } from '@/composable/responsive/useResponsive.ts'
 
 defineOptions({
   name: 'PmLpo0101',
@@ -317,7 +315,6 @@ async function onDeleteSelected() {
   deleteSelected()
 }
 
-const isMobile = useBreakpoint('<=');
 useBottomTabSetup({
   value: 'PM-LPO-0101',
   label: '메모',

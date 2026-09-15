@@ -31,7 +31,7 @@
       </div>
 
       <!-- 본문 대표 이미지 자리 — Figma 는 회색 박스로만 그려져 있다 -->
-      <div class="lp-notice-thumb" aria-hidden="true"><img src="" :alt="qna.title"></div>
+      <div class="lp-notice-thumb" aria-hidden="true"><img src="/portal/asset/images/img/img_temp.jpg" :alt="qna.title"></div>
 
       <div class="lp-notice-body">
         <p v-for="(line, i) in contentLines" :key="i" class="lp-body-text">{{ line }}</p>
@@ -92,13 +92,11 @@ defineOptions({
 // LNB: 게시판 > Q&A
 useSideMenuSetup({ ...bulletinMenu, activeChild: 'Q&A' })
 
-// 상세는 본문이 하나의 흐름이라 work-body 째로 스크롤돼야 한다(PM-COM-0302 와 같음)
-useWorkLayoutSetup({ scrollable: true })
 
 const navItems = [
   { label: '홈', path: '/' },
   { label: '게시판' },
-  { label: 'Q&A', path: '/views/com/PM-COM-1101' },
+  { label: 'Q&A', path: '/views/com/PM-COM-0401' },
 ]
 
 const router = useRouter()
@@ -120,7 +118,7 @@ async function onDownload(name: string) {
 }
 
 function goList() {
-  router.push({ name: 'PM-COM-1101' })
+  router.push({ name: 'PM-COM-0401' })
 }
 
 /** 수정 화면은 사용자 지정으로 PM-COM-0403 폴더에 있다(Figma 는 PM-COM-1103) */

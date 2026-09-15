@@ -5,12 +5,12 @@
 -->
 <template>
   <div class="wrap sub-page">
-    <PortalHeader :show-banner="false" v-if="!isMobile" />
+    <PortalHeader :show-banner="false" class="mo:hidden"/>
     <main class="work-main">
       <SideMenu v-if="sideMenuStore.visible" />
       <div
-      class="work-body flex-1 min-w-0 relative flex flex-col pb-[4px] pb-[32px]"
-      :class="isMobile ? 'pl-4 pr-4' : 'pl-[36px] pr-10'"
+      class="work-body flex-1 min-w-0 relative flex flex-col pb-[32px] mo:pl-4 mo:pr-4 pc:pl-[36px] pr-10"
+
       >
          <!--
            화면 내용. .wrap 이 화면 높이로 잠겨 있으므로 넘치는 내용은 이 래퍼가 스크롤한다.
@@ -36,14 +36,10 @@ import { BottomTab } from '@/components/custom/bottom-tab'
 import { useBottomTabStore } from '@/stores/tab/useBottomTab'
 import { useSideMenuStore } from '@/stores/menu/useSideMenu'
 import { useWorkLayoutStore } from '@/stores/layout/useWorkLayout'
-import { useBreakpoint } from '@/composable/responsive/useResponsive.ts'
-
 
 const bottomTabStore = useBottomTabStore()
 const sideMenuStore = useSideMenuStore()
 const workLayoutStore = useWorkLayoutStore()
-
-const isMobile = useBreakpoint('<=');
 
 defineSlots<{
   main: () => any

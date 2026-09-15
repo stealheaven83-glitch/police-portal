@@ -238,6 +238,17 @@ const columns: TabulatorGridColumn[] = [
     badgeColorMap: { 활성화: 'success', 비활성화: 'danger', 대기중: 'warning' },
   },
   {
+    // cellNumeric: 숫자만 받는 항상 보이는 입력칸(글자·기호는 입력 즉시 걷어냄, 모바일 숫자 키패드)
+    title: '수량',
+    field: 'qty',
+    width: 100,
+    hozAlign: 'center',
+    cellType: 'input',
+    cellNumeric: true,
+    cellMaxlength: 5,
+    cellPlaceholder: '숫자만',
+  },
+  {
     title: '비고',
     field: 'memo',
     minWidth: 130,

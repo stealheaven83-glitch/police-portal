@@ -1,7 +1,7 @@
 import { computed, ref, watch } from 'vue'
 import { qnaCategoryLabels, type QnaCategory } from '../../composable/qna'
 
-/** Q&A 목록(PM-COM-1101) 한 줄.
+/** Q&A 목록(PM-COM-0401 — Figma 는 PM-COM-1101) 한 줄.
  *  칸 구성은 Figma 11220:44762 — 공지사항(PM-COM-1001)과 달리 부서·추천수가 없고 공개상태·카테고리가 있다 */
 export interface QnaRow {
   id: number

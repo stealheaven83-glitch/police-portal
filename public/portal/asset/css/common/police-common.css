@@ -2170,13 +2170,13 @@
 /* ── 게시판 글 상세 ──────────────────────────────────────────────────────── */
 .lp-notice-scroll{
   flex: 1;
-  min-height: 0;
-  max-width:100rem;
   width: calc(100% + 30px);
-  margin:0 auto;  
+  overflow-y:auto;
 }
 .lp-notice-detail {
   padding-bottom: 3.2rem;
+  margin:0 auto;  
+  max-width:100rem;
 }
 .lp-notice-badges {
   display: flex;
@@ -3442,4 +3442,27 @@
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
+}
+
+/* 카테고리 탭줄이 폭을 넘칠 때(현장조치 지방청 탭 20개) — TabsList scrollable 위에 얹는 넘김 장치.
+   Figma swiper__atomic(56×40): 오른쪽 끝 흰 그라데이션 24 + 화살표 아이콘칸 32. 탭줄 → 검색상자 20 은 여기 margin-bottom 으로 */
+.lp-tab-swiper {
+  position: relative;
+  margin-bottom: 2rem;
+}
+.lp-tab-swiper [role="tablist"] {
+  scrollbar-width: none;
+}
+.lp-tab-swiper [role="tablist"]::-webkit-scrollbar {
+  display: none;
+}
+.lp-tab-swiper-next {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  height: 4rem;
+  padding-left: 2.4rem;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.25), var(--white) 27%);
 }

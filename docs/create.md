@@ -173,6 +173,8 @@ const pageModules = import.meta.glob('../views/*/*/*.vue')   // 실재하는 파
 
 ### 브레드크럼 `path` — 라우터에 실재하는 것만 준다
 `Breadcrumb` 의 `navItems` 에서 **`path` 는 실제 라우트가 있을 때만** 쓴다. 없으면 라벨만 둔다.
+카테고리(LNB 타이틀·1뎁스 이름)는 `path` 를 안 줘도 `Breadcrumb` 이 현재 LNB 에서 같은 이름을 찾아 그 항목(없으면
+하위 첫 화면)의 `path` 로 링크한다(2026-09-15). LNB 에 없는 라벨은 그대로 글자만 나온다.
 ```ts
 const navItems = [
   { label: '홈', path: '/' },   // 라우터에 있음 → path OK

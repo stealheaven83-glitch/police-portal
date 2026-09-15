@@ -6,6 +6,20 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
+ * 반응형 변형 — 화면·컴포넌트에서 `max-[1000px]:` 처럼 숫자를 직접 쓰지 말고 이걸 쓴다.
+ * 경계는 1000px 하나이고 composable/responsive/useResponsive.ts 의 BP_MOBILE 과 같은 값이다.
+ * 바꾸려면 두 곳을 같이 바꾼다.
+ *
+ *   mo:  모바일일 때 (w < 1000)   — `mo:hidden` 이면 모바일에서 숨김 = PC 전용
+ *   pc:  PC일 때     (w >= 1000)  — `pc:hidden` 이면 PC에서 숨김 = 모바일 전용
+ *
+ * 둘이 정확히 여집합이라 겹치는 구간도, 비는 구간도 없다.
+ * (Tailwind 의 `max-[N]` 은 `<N`, `min-[N]` 은 `>=N` 이라 숫자를 직접 쓰면 1px 이 어긋나기 쉽다.)
+ */
+@custom-variant mo (@media not all and (min-width: 1000px));
+@custom-variant pc (@media (min-width: 1000px));
+
+/*
  * police reset 의 html { font-size: 62.5% } (1rem = 10px) 보정.
  * 보정하지 않으면 Tailwind / shadcn 의 rem 기반 값이 모두 62.5% 크기로 렌더된다.
  * 기본 스케일에 1.6 을 곱해 원래 픽셀 크기를 복원한다.

@@ -74,7 +74,7 @@
   --Base--point-dark: #e15258;
 
   /* Surface */
-  --Surface-primary: #f0f7ff;
+  --Surface-primary: #EDF6FF;
   --Surface-primary-dark: #07264a;
   --Surface-secondary: #eef2f7;
   --Surface-secondary-dark: #001a39;
@@ -723,10 +723,10 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   height: 6rem;
   border-radius: 50%;
 }
-.search-wrap .search-bar .serach-box {
+.search-wrap .search-bar .search-box {
   position: relative;
 }
-.search-wrap .search-bar .serach-box .btn-search {
+.search-wrap .search-bar .search-box .btn-search {
   position: absolute;
   right: 1rem;
   top: 1rem;

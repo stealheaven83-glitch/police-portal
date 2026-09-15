@@ -45,7 +45,7 @@ CLAUDE.md §1(재사용 원칙)의 실행 편. §1은 "찾아봐라"까지 말�
 | 분할 안의 패널(제목+내용) | `custom/content-layout/layoutPanel.vue` | `title` 필수, 접근성 이름 겸함 |
 | 자유 배치(2단 분할·툴바 등) | `custom/flex-grid/FlexRow.vue` + `FlexCol.vue` | **라벨-값 폼에는 쓰지 않는다 → §4** |
 | 상단 이동 버튼 | `custom/top-button/TopButton.vue` | |
-| 빵부스러기 | `custom/breadcrumb/Breadcrumb.vue` | |
+| 빵부스러기 | `custom/breadcrumb/Breadcrumb.vue` | `path` 없는 항목은 현재 LNB 에서 같은 이름을 찾아 자동 링크(그 항목 또는 하위 첫 화면). 못 찾으면 글자만 — 화면은 `path` 를 안 줘도 된다(2026-09-15) |
 
 LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vue`와 `custom/sidemenu`,
 `custom/bottom-tab`이 담당한다. `menu-tab-guide.md` 참고.
@@ -92,7 +92,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 - **체크박스 다중선택 + 추가/선택삭제**: `select-mode="checkbox"` + `ref.addRow(data, top)` / `ref.deleteSelected()`. 예: `PC-COM-2301.vue`.
 - **`@row-selection-changed` 는 데이터가 아니라 Tabulator `RowComponent` 배열**을 넘긴다. 필드가 필요하면 `row.getData()` 로 꺼낸다(이미 데이터인 경우까지 방어적으로 — `PM-PUB-0103` 참고).
 - **셀 인라인 편집은 컬럼 정의에 `cellType` 만 지정한다.** 셀마다 커스텀 input/select 를 마운트하지 않는다.
-  - `cellType:'input'` — 텍스트 인라인 편집
+  - `cellType:'input'` — 텍스트 인라인 편집. **숫자만** 받으려면 `cellNumeric: true`(숫자 아닌 글자 즉시 제거 + 모바일 숫자 키패드). 소수점·음수·범위검사는 `editor:'number'` + `validator`(더블클릭 편집)
   - `cellType:'checkbox'` — 체크박스 셀(전체/읽기/편집 같은 권한 매트릭스)
   - `cellType:'select'` — `selectOptions` 배열과 함께 쓰는 드롭다운(`PC-COM-2401` 목록수/페이지수)
   - `cellType:'button'` — `buttonLabel`/`buttonVariant`/`buttonVisible`/`onButtonClick` 으로 행마다 다른 라벨·표시여부의 버튼(`PC-COM-2204` "부서 조회")
@@ -679,6 +679,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-comment-mention` `-mention-field` `-mention-input` | 답글 본문 앞 "@이름"(파란 굵은 글자) / 멘션 칩(Badge)이 앞에 든 답글 입력 상자 / 그 안의 테두리 없는 textarea(override 쪽) | COM-1002, 0402 |
 | `.lp-writer-line` `-name` `-date` | 등록/수정 폼 머리의 "작성자 ｜ 일시" 한 줄(이름 bold, 세로선, 일시 회색). 댓글 머리 `.lp-comment-head` 와 모양이 같지만 의도가 달라 따로 | COM-1003, 1004, 0403 |
 | `.lp-switch-box` | 라벨 아래 스위치를 입력칸 높이(4.8rem)에 세로 가운데 놓는 상자 — 같은 줄의 md 입력과 라벨·밑선을 맞출 때 | COM-1003, 1004 |
+| `.lp-tab-swiper` `-next` | 카테고리 탭줄이 폭을 넘칠 때(`TabsList scrollable`) 오른쪽 끝에 흰 그라데이션+화살표(Figma `swiper__atomic`)를 얹는 감싸개. 탭줄→검색상자 20 도 여기서 | COM-0601 |
 | `.lp-search-rows` | 검색상자 안 조건 줄을 시안대로 여러 줄로 고정(`.search-area` 를 줄마다, 줄 사이 16). 한 줄에 다 넣고 wrap 에 맡기면 창 폭에 따라 시안과 다르게 접힌다 | COM-0501 |
 | `.lp-board-form-actions` | 게시판 등록/수정 폼 하단 버튼줄 — 폼 마지막 블록과 40, 버튼 사이 12(Figma). 메모 폼의 `.lp-form-actions-center`(16/4)와 값이 달라 따로 | COM-1003, 1004, 0403 |
 | `.lp-photo-grid` `-item` `-label` `-box` `-img` `-empty` `-empty-icon` `-empty-label` `-meta` `-actions` | 진단 상세의 취약/개선 상황사진 4칸(112사건 표 아래에 붙는 칸). **`police-style.css` 의 `.photo-box`/`.photo-empty` 는 인사관리 증명사진용 12rem 칸이라 서로 다른 것 — 이름이 비슷해도 섞어 쓰지 않는다** | PUB-0101 |
@@ -755,6 +756,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-info-nested` | `InfoField` 값 칸에 `InfoTable` 을 한 번 더 넣을 때 `.control` 여백·중복 테두리 제거(라벨 병합처럼 보이게) | PUB-0111 |
 | `.lp-grid-btn-compact` | 좁은 열(시안 88px)에 들어가는 표 안 버튼. `Button` 베이스의 `min-w-25`(100px)를 풀고 좌우 여백만 준다(컬럼 정의는 `buttonClass` 만 받아서 `padding` prop 을 못 쓴다) | LPO-0223 |
 | `.lp-date-fill` | **`InfoField` 에 건다** — 값 칸을 꽉 채우는 `DatePicker`. `DatePicker` 는 `class` 를 VueDatePicker 루트가 아니라 안쪽 `InputField2` 에 넘겨서(`inheritAttrs:false`) 화면에서 `flex-1` 을 줘도 안 먹는다. 늘어나야 하는 건 값 칸의 직계 자식인 `.dp__main` 이다 . `DateRangePicker` 에 걸면 두 입력이 폭을 반씩 나눠 갖는다(`input-class="w-full"` 같이) | PUB-0302/0303, COM-1003, 1004 |
+| `.lp-chip-fill` | `ChipGroup` 에 걸어 칩들이 폼 폭을 16px 간격으로 나눠 갖게 한다(컴포넌트 기본은 내용 폭·gap 8). 폼의 카테고리 선택 | COM-0403, 0404 |
 | `.lp-dept-fill` | `DepartmentCascadeSelect` 에 걸어 셀렉트 셋이 폼 폭을 16px 간격으로 나눠 갖게 한다(컴포넌트 기본은 각 160px·gap 8) | COM-1003, 1004 |
 | `.lp-cell-datetime` | Tabulator 셀의 `white-space: nowrap`(라이브러리 기본)을 풀어 일시를 날짜/시간 두 줄로 끊는다. 행 높이 4.8rem 고정에 맞춰 `line-height: 1.3` | LPO-0501 |
 

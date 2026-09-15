@@ -26,7 +26,7 @@ export const bulletinMenu: SideMenuConfig = {
       name: '우수사례',
       children: [
         { name: '지역경찰 시책', path: '/views/com/PM-COM-0501' },
-        { name: '현장조치' },
+        { name: '현장조치', path: '/views/com/PM-COM-0601' },
         { name: '범죄예방진단' },
       ],
     },

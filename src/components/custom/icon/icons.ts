@@ -40,6 +40,11 @@ import ReplyArrowIcon from '@/assets/images/icons/replyArrow.svg?component'
 // Figma (댓글 "..." 팝오버 메뉴) — 수정(연필) / 삭제(휴지통)
 import EditIcon from '@/assets/images/icons/edit.svg?component'
 import TrashIcon from '@/assets/images/icons/trash.svg?component'
+// Figma icon/ellipsis_vertical — 세로 점 3개(댓글 "..." 메뉴 트리거). 24×24 프레임 기준, currentColor 라 글자색을 따라간다
+import EllipsisVerticalIcon from '@/assets/images/icons/ellipsisVertical.svg?component'
+// 퍼블 원본 ico_board_more.svg(public/portal/asset/images/icon) — 게시판 댓글 "⋮" 메뉴 트리거. 40×40 프레임 안에 점 3개(12~28),
+// Figma "icon btn" 40×40 과 같아 :size="40" 으로 쓴다. 원본의 #33363D 를 currentColor 로 바꿔 hover 색을 따라가게 했다
+import BoardMoreIcon from '@/assets/images/icons/boardMore.svg?component'
 
 
 export const icons = {
@@ -68,6 +73,8 @@ export const icons = {
   replyArrow: ReplyArrowIcon,
   edit: EditIcon,
   trash: TrashIcon,
+  ellipsisVertical: EllipsisVerticalIcon,
+  boardMore: BoardMoreIcon,
 }
 
 export type IconName = keyof typeof icons

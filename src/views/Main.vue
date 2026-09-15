@@ -52,7 +52,7 @@
                   <span>검색혼잡</span>
                 </span> -->
               </div>
-              <div class="serach-box">
+              <div class="search-box">
                 <input
                   v-model="scenarioKeyword"
                   class="input-search"
