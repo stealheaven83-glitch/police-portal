@@ -2171,7 +2171,7 @@
 .lp-notice-scroll{
   flex: 1;
   width: calc(100% + 30px);
-  overflow:auto;
+  overflow-y:auto;
 }
 .lp-notice-detail {
   padding-bottom: 3.2rem;
