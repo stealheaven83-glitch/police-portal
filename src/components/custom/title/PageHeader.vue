@@ -3,7 +3,6 @@ import type { HTMLAttributes } from "vue"
 import { cn } from "@/lib/utils"
 import Icon from "@/components/custom/icon/Icon.vue"
 import { Button } from "@/components/custom/button"
-import { useBreakpoint } from '@/composable/responsive/useResponsive.ts'
 
 interface Props {
   class?: HTMLAttributes["class"]
@@ -16,7 +15,6 @@ const props = withDefaults(defineProps<Props>(), {
   bordered: true,
 })
 
-const isMobile = useBreakpoint('<=');
 </script>
 
 <template>
@@ -29,23 +27,23 @@ const isMobile = useBreakpoint('<=');
   <div
     :class="cn(
       'flex items-center justify-between gap-5 py-5 px-0',
-      isMobile ? 'py-[1.5rem] mb-5' : '',
+      'mo:py-[1.5rem] mo:mb-5',
       props.class
     )"
   >
   <div :class="cn(
-    isMobile ? 'flex items-center gap-2' : '',
+    'mo:flex mo:items-center mo:gap-2',
     props.leftClass)">
-      <Button variant="icon" aria-label="뒤로가기" v-if="isMobile">
+      <Button variant="icon" aria-label="뒤로가기" class="pc:hidden">
         <Icon name="arrowLeft" :size="24" />
       </Button>
       <slot name="left" />
     </div>
     <!-- 2026-09-11 컴포넌트로 교체: button.lp-icon-btn -> Button variant="icon" -->
-    <Button variant="icon" aria-label="메뉴" v-if="isMobile">
+    <Button variant="icon" aria-label="메뉴" class="pc:hidden">
       <Icon name="menu" :size="20" />
     </Button>
-    <div :class="cn(props.rightClass)" v-if="!isMobile">
+    <div :class="cn('mo:hidden', props.rightClass)">
       <slot name="right" />
     </div>
   </div>
