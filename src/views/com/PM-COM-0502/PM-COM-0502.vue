@@ -12,15 +12,11 @@
   </PageHeader>
 
   <div class="lp-notice-scroll">
-    <!-- Figma 11220:91899: 머리(Detail_title) → 이미지 32 → 본문 32 → 파일 32 → 댓글 32 → 버튼줄 32 -->
     <article class="lp-notice-detail">
-      <!-- 시안(11694:40952): 배지 없이 부서명만 온다(19px bold 회색) -->
       <p class="lp-notice-badges">
         <span class="lp-notice-dept">{{ item.dept }}</span>
       </p>
-
       <h2 class="lp-notice-title">{{ item.title }}</h2>
-
       <div class="lp-notice-meta">
         <span class="lp-meta-nowrap">
           {{ item.writer }} ｜ {{ item.createdAt }} ｜ 조회수 {{ item.viewCount }}
@@ -28,7 +24,9 @@
       </div>
 
       <!-- 본문 대표 이미지 자리 — Figma 는 회색 박스로만 그려져 있다 -->
-      <div class="lp-notice-thumb" aria-hidden="true"><img src="/portal/asset/images/img/img_temp.jpg" :alt="item.title"></div>
+      <div class="lp-notice-thumb" aria-hidden="true">
+        <img src="/portal/asset/images/img/img_temp.jpg" :alt="item.title">
+      </div>
 
       <div class="lp-notice-body">
         <p v-for="(line, i) in contentLines" :key="i" class="lp-body-text">{{ line }}</p>
@@ -88,8 +86,7 @@ defineOptions({
 // LNB: 게시판 > 우수사례(items[2]) > 지역경찰 시책
 useSideMenuSetup({ ...bulletinMenu, openIndex: 2, activeChild: '지역경찰 시책' })
 
-// 상세는 본문이 하나의 흐름이라 work-body 째로 스크롤돼야 한다(PM-COM-0302 와 같음)
-useWorkLayoutSetup({ scrollable: true })
+
 
 const navItems = [
   { label: '홈', path: '/' },
