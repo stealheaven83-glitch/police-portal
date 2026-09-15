@@ -8,7 +8,7 @@
         <SelectField v-model="incidentReason" :options="incidentReasonOptions" placeholder="선택" size="sm" class="w-full"/>
       </InfoField>
       <InfoField label="사고시간">
-        <RadioGroup v-model="incidentRange" class="lp-icon-row">
+        <RadioGroup v-model="incidentRange" :class="styles['info-table-radio']">
           <RadioGroupItem value="all" label="전일" />
           <RadioGroupItem value="part" label="부분" />
         </RadioGroup>
@@ -49,6 +49,7 @@ import { Button } from '@/components/custom/button'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
 import SelectField from '@/components/custom/select/SelectField.vue'
+import styles from '@/components/custom/info-table/InfoTable.module.css'
 import { WorkScheduleKey } from '../composable/useWorkSchedule'
 import { incidentReasonOptions, hourOptions } from '../composable/useWorkScheduleDialogs'
 import { useDialog } from '@/composable/dialog/dialog'

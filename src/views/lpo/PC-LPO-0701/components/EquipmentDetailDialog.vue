@@ -6,7 +6,7 @@
       <!-- 라디오/버튼처럼 값 영역에 컨트롤이 여러 개면 for 를 주지 않는다(InfoField 가 role="group" 으로 묶는다) -->
       <InfoField full>
         <template #label>기동장비 구분<span :class="styles.requiredDot" /></template>
-        <RadioGroup v-model="detail.vehicleType" class="flex gap-6">
+        <RadioGroup v-model="detail.vehicleType" :class="styles['info-table-radio']">
           <RadioGroupItem v-for="(label, value) in vehicleTypeLabel" :key="value" :value="value" :label="label" />
         </RadioGroup>
       </InfoField>

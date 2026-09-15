@@ -51,7 +51,7 @@
       <span class="calendar-area-divider" aria-hidden="true" />
       <span class="lp-heading-md">{{ weekdayLabel }}</span>
       <span class="calendar-area-divider" aria-hidden="true" />
-      <RadioGroup v-model="shift" class="calendar-area-options">
+      <RadioGroup v-model="shift" class="calendar-area-options" aria-label="교대">
         <RadioGroupItem value="day" label="주" />
         <RadioGroupItem value="night" label="야" />
       </RadioGroup>

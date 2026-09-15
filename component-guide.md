@@ -643,7 +643,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-dialog-head` / `.lp-dialog-head-title` / `.lp-dialog-head-label` | 팝업 본문 위쪽 제목줄(`.lp-row-between` 과 함께). `-label`+`-title` 은 "권한명: 범죄예방대응국" 처럼 **크기·굵기는 같고 색만 다른** 라벨·값 짝(1.9rem/600). 줄 배치는 `.group-gap3`. 페이지 액션바의 `.list-actions-title`/`.list-actions-part`(2rem/700)와는 별개다 | 2204 |
 | `.lp-grid-title` `-label` `-count` `-num` | 그리드 위에 얹는 회색 제목 바(왼쪽 표 이름 + 오른쪽 건수, 숫자만 포인트색). 면이 채워진 한 줄이라 `LayoutPanel` 의 `.lp-pane-title` 과는 별개 | 2207 전체 사용자 팝업 |
 | `.lp-pop-body-pager` | 페이지네이션으로 끝나는 팝업 본문(`.pop-body` 와 함께). `.pop-body` 의 overflow:hidden 이 Pagination 의 -8px 음수 아래여백을 잘라먹는 것을 막는다 | 2207 전체 사용자 팝업 |
-| `.lp-dialog-body` / `.lp-dialog-subtitle` / `.lp-dialog-footer` | 팝업 본문 세로 묶음 / 부제 / 우측 버튼줄 | 0601 |
+| `.lp-dialog-body` / `.lp-dialog-subtitle` / `.lp-dialog-footer` | 팝업 본문 세로 묶음(16) / 부제 / 우측 버튼줄 | 0601, LPO-0303 |
 | `.lp-search-form-gap` | 팝업 안 검색 폼의 행·열 간격 | 0601 |
 
 #### 통합검색 · 시나리오 검색 (본문을 가운데 정렬하는 화면)

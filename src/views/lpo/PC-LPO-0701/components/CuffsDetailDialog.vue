@@ -31,7 +31,7 @@
 
       <InfoField>
         <template #label>관리상태<span :class="styles.requiredDot" /></template>
-        <RadioGroup v-model="cuffsDetail.status" class="flex gap-6">
+        <RadioGroup v-model="cuffsDetail.status" :class="styles['info-table-radio']">
           <RadioGroupItem
             v-for="(label, value) in cuffsStatusLabel"
             :key="value"

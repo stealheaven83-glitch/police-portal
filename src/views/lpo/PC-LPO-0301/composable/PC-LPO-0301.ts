@@ -15,6 +15,8 @@ export interface ApprovalStep {
   action: 'none' | 'cancel' | 'decide'
   /** action 이 decide 일 때 파란 버튼 라벨(확인관은 '검토', 점검관은 '승인') */
   decideLabel?: string
+  /** 반려 버튼으로 돌려보낸 칸 — 보고일 자리에 '반려' 로 표시한다(화면 정의서 2) */
+  rejected?: boolean
 }
 
 /** 결재선 한 줄(표 하나) */

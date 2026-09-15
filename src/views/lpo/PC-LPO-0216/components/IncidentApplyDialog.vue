@@ -28,7 +28,7 @@
         />
       </InfoField>
       <InfoField label="사고시간">
-        <RadioGroup v-model="form.range" class="lp-icon-row">
+        <RadioGroup v-model="form.range" :class="styles['info-table-radio']">
           <RadioGroupItem value="all" label="전일" />
           <RadioGroupItem value="part" label="부분" />
         </RadioGroup>
@@ -74,6 +74,7 @@ import { InfoField, InfoTable } from '@/components/custom/info-table'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
 import SelectField from '@/components/custom/select/SelectField.vue'
+import styles from '@/components/custom/info-table/InfoTable.module.css'
 
 export interface IncidentApplyForm {
   reason: string

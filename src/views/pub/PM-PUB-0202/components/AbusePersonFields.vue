@@ -29,7 +29,7 @@
     </template>
 
     <InfoField label="국적" full>
-      <RadioGroup v-model="person.nationality" class="lp-unit-row" :aria-label="`${legend} 국적`">
+      <RadioGroup v-model="person.nationality" :class="infoStyles['info-table-radio']" :aria-label="`${legend} 국적`">
         <RadioGroupItem value="kr" label="한국" />
         <RadioGroupItem value="etc" label="기타" />
       </RadioGroup>
@@ -48,7 +48,7 @@
 
     <!-- 학대행위자에만 있는 칸 -->
     <InfoField v-if="showRelation" label="아동과의 관계" full>
-      <RadioGroup v-model="person.relation" class="lp-unit-row" aria-label="아동과의 관계">
+      <RadioGroup v-model="person.relation" :class="infoStyles['info-table-radio']" aria-label="아동과의 관계">
         <RadioGroupItem value="father" label="부" />
         <RadioGroupItem value="mother" label="모" />
         <RadioGroupItem value="grandparent" label="(외)조부모" />
