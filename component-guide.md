@@ -45,7 +45,7 @@ CLAUDE.md §1(재사용 원칙)의 실행 편. §1은 "찾아봐라"까지 말�
 | 분할 안의 패널(제목+내용) | `custom/content-layout/layoutPanel.vue` | `title` 필수, 접근성 이름 겸함 |
 | 자유 배치(2단 분할·툴바 등) | `custom/flex-grid/FlexRow.vue` + `FlexCol.vue` | **라벨-값 폼에는 쓰지 않는다 → §4** |
 | 상단 이동 버튼 | `custom/top-button/TopButton.vue` | |
-| 빵부스러기 | `custom/breadcrumb/Breadcrumb.vue` | |
+| 빵부스러기 | `custom/breadcrumb/Breadcrumb.vue` | `path` 없는 항목은 현재 LNB 에서 같은 이름을 찾아 자동 링크(그 항목 또는 하위 첫 화면). 못 찾으면 글자만 — 화면은 `path` 를 안 줘도 된다(2026-09-15) |
 
 LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vue`와 `custom/sidemenu`,
 `custom/bottom-tab`이 담당한다. `menu-tab-guide.md` 참고.
@@ -92,7 +92,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 - **체크박스 다중선택 + 추가/선택삭제**: `select-mode="checkbox"` + `ref.addRow(data, top)` / `ref.deleteSelected()`. 예: `PC-COM-2301.vue`.
 - **`@row-selection-changed` 는 데이터가 아니라 Tabulator `RowComponent` 배열**을 넘긴다. 필드가 필요하면 `row.getData()` 로 꺼낸다(이미 데이터인 경우까지 방어적으로 — `PM-PUB-0103` 참고).
 - **셀 인라인 편집은 컬럼 정의에 `cellType` 만 지정한다.** 셀마다 커스텀 input/select 를 마운트하지 않는다.
-  - `cellType:'input'` — 텍스트 인라인 편집
+  - `cellType:'input'` — 텍스트 인라인 편집. **숫자만** 받으려면 `cellNumeric: true`(숫자 아닌 글자 즉시 제거 + 모바일 숫자 키패드). 소수점·음수·범위검사는 `editor:'number'` + `validator`(더블클릭 편집)
   - `cellType:'checkbox'` — 체크박스 셀(전체/읽기/편집 같은 권한 매트릭스)
   - `cellType:'select'` — `selectOptions` 배열과 함께 쓰는 드롭다운(`PC-COM-2401` 목록수/페이지수)
   - `cellType:'button'` — `buttonLabel`/`buttonVariant`/`buttonVisible`/`onButtonClick` 으로 행마다 다른 라벨·표시여부의 버튼(`PC-COM-2204` "부서 조회")

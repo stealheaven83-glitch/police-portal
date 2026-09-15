@@ -27,7 +27,7 @@
             <Popover :open="openMenuId === comment.id" @update:open="setMenuOpen(comment.id, $event)">
               <PopoverTrigger as-child>
                 <button type="button" class="lp-comment-more" :disabled="anyEditing" :aria-label="`${comment.writer} 댓글 메뉴`">
-                  <MoreHorizontal :size="18" aria-hidden="true" />
+                  <Icon name="ellipsisVertical" :size="24" aria-hidden="true" />
                 </button>
               </PopoverTrigger>
               <PopoverContent side="bottom" align="end" :side-offset="4" class="lp-comment-menu">
@@ -77,7 +77,7 @@
                 <Popover :open="openMenuId === reply.id" @update:open="setMenuOpen(reply.id, $event)">
                   <PopoverTrigger as-child>
                     <button type="button" class="lp-comment-more" :disabled="anyEditing" :aria-label="`${reply.writer} 답글 메뉴`">
-                      <MoreHorizontal :size="18" aria-hidden="true" />
+                      <Icon name="ellipsisVertical" :size="24" aria-hidden="true" />
                     </button>
                   </PopoverTrigger>
                   <PopoverContent side="bottom" align="end" :side-offset="4" class="lp-comment-menu">
@@ -145,7 +145,6 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { MoreHorizontal } from 'lucide-vue-next'
 import Icon from '@/components/custom/icon/Icon.vue'
 import Textarea from '@/components/custom/textarea/Textarea.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'

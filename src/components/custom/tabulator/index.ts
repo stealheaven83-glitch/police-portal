@@ -110,6 +110,12 @@ export interface TabulatorGridColumn {
   maxlength?: number | string;
   /** 글자수 카운터 표시 여부 (InputField2 에서 표시) */
   cellShowCount?: boolean;
+  /**
+   * 숫자만 받는 입력 셀. 숫자가 아닌 글자는 입력 즉시 걷어내고(붙여넣기 포함), 모바일 키패드가 숫자로 뜨게
+   * inputmode="numeric" 을 붙인다. 값은 문자열 그대로 커밋한다('007' 이 '7' 로 바뀌지 않는다).
+   * 소수점·음수·범위 검사가 필요하면 validator 와 함께 Tabulator 의 editor:'number' 를 쓴다(더블클릭 편집).
+   */
+  cellNumeric?: boolean;
 
   /* cellType: 'select' */
   /** 셀렉트 옵션 목록 */

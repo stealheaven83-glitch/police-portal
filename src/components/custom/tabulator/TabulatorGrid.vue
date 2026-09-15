@@ -845,6 +845,42 @@ function inputCellFormatter(col: TabulatorGridColumn, columnKey: string) {
       col.cellClearable || col.cellIcon || parsedMaxlength != null || col.cellShowCount,
     )
 
+    /**
+     * cellNumeric: 숫자 아닌 글자를 걷어낸다(타이핑·붙여넣기·IME 조합 끝 모두 이 경로를 지난다).
+     * Input 이 useVModel(passive) 라 '' → 'a' → '' 처럼 부모 값이 안 바뀌면 안쪽 글자가 그대로 남는다 —
+     * 걷어낸 결과가 원문과 다르면 native input 의 value 를 직접 되돌린다.
+     */
+    const sanitize = (raw: string) => {
+      if (!col.cellNumeric) return raw
+      const next = raw.replace(/\D/g, '')
+      if (next !== raw) {
+        const el = cell.getElement().querySelector('input') as HTMLInputElement | null
+        if (el && el.value !== next) el.value = next
+      }
+      return next
+    }
+    // 숫자 셀: 모바일 숫자 키패드(inputmode) + 숫자 아닌 글자는 들어오기 전에 막는다(beforeinput).
+    // 붙여넣기처럼 숫자·글자가 섞여 오면 숫자만 골라 넣는다. IME 조합은 막지 않고 sanitize 가 뒷받침
+    const numericAttrs = col.cellNumeric
+      ? {
+          inputmode: 'numeric',
+          onBeforeinput: (e: InputEvent) => {
+            if (!e.data || !/\D/.test(e.data) || e.inputType.startsWith('insertComposition')) return
+            e.preventDefault()
+            const el = e.target as HTMLInputElement
+            const start = el.selectionStart ?? el.value.length
+            const end = el.selectionEnd ?? start
+            let cleaned = e.data.replace(/\D/g, '')
+            if (parsedMaxlength != null && !isNaN(parsedMaxlength)) {
+              cleaned = cleaned.slice(0, Math.max(0, parsedMaxlength - (el.value.length - (end - start))))
+            }
+            if (!cleaned) return
+            el.setRangeText(cleaned, start, end, 'end')
+            el.dispatchEvent(new Event('input', { bubbles: true }))
+          },
+        }
+      : {}
+
     return mountCell(cell, columnKey, 'grid-input-cell', () =>
       rich
         ? h(InputField2, {
@@ -869,8 +905,9 @@ function inputCellFormatter(col: TabulatorGridColumn, columnKey: string) {
             labelClass: 'sr-only',
             class: '!space-y-0',
             inputClass: 'w-full',
+            ...numericAttrs,
             'onUpdate:modelValue': (val: string | number) => {
-              let next = String(val ?? '')
+              let next = sanitize(String(val ?? ''))
               if (parsedMaxlength != null && !isNaN(parsedMaxlength) && next.length > parsedMaxlength) {
                 next = next.slice(0, parsedMaxlength)
               }
@@ -887,8 +924,9 @@ function inputCellFormatter(col: TabulatorGridColumn, columnKey: string) {
             // 값이 비어 있을 때 안내 문구(시안에서 '부서조회'처럼 회색으로 깔리는 글자)
             placeholder: col.cellPlaceholder,
             maxlength: parsedMaxlength,
+            ...numericAttrs,
             'onUpdate:modelValue': (val: string | number) => {
-              let next = String(val ?? '')
+              let next = sanitize(String(val ?? ''))
               if (parsedMaxlength != null && !isNaN(parsedMaxlength) && next.length > parsedMaxlength) {
                 next = next.slice(0, parsedMaxlength)
               }

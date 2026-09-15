@@ -85,7 +85,7 @@ const columns: TabulatorGridColumn[] = [
   { title: '공감', field: 'like', cellType: 'checkbox', hozAlign: 'center' },
   { title: '파일<br/>업로드', field: 'fileUpload', cellType: 'checkbox', hozAlign: 'center', width: 70, },
   { title: '최대<br/>업로드수', field: 'maxUploadCount', cellType: 'input', hozAlign: 'center' },
-  { title: '파일용량(MB)', field: 'maxFileSize', cellType: 'input', hozAlign: 'center' },
+  { title: '파일용량(MB)', field: 'maxFileSize', cellType: 'input', cellNumeric: true, hozAlign: 'center' },
   {
     title: '목록수',
     field: 'listCount',

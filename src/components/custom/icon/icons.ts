@@ -40,6 +40,8 @@ import ReplyArrowIcon from '@/assets/images/icons/replyArrow.svg?component'
 // Figma (댓글 "..." 팝오버 메뉴) — 수정(연필) / 삭제(휴지통)
 import EditIcon from '@/assets/images/icons/edit.svg?component'
 import TrashIcon from '@/assets/images/icons/trash.svg?component'
+// Figma icon/ellipsis_vertical — 세로 점 3개(댓글 "..." 메뉴 트리거). 24×24 프레임 기준, currentColor 라 글자색을 따라간다
+import EllipsisVerticalIcon from '@/assets/images/icons/ellipsisVertical.svg?component'
 
 
 export const icons = {
@@ -68,6 +70,7 @@ export const icons = {
   replyArrow: ReplyArrowIcon,
   edit: EditIcon,
   trash: TrashIcon,
+  ellipsisVertical: EllipsisVerticalIcon,
 }
 
 export type IconName = keyof typeof icons

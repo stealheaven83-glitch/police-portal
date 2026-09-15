@@ -485,7 +485,7 @@ const worklist = ref([
   { id: 377, category: '스마트워크', depth1: '', depth2: '앱 업데이트 화면', depth3: '', depth4: '', depth5: '', screenName: '앱업데이트 안내화면', screenId: 'MO-COM-0103', path: '', status: '대기' },
   { id: 378, category: '스마트워크', depth1: '', depth2: '로그인', depth3: '', depth4: '', depth5: '', screenName: '로그인 화면', screenId: 'PM-COM-0101', path: '/views/com/PM-COM-0101', status: '완료' },
   { id: 379, category: '스마트워크', depth1: '', depth2: '', depth3: '공인인증서 등록 팝업', depth4: '', depth5: '', screenName: '공인인증서 등록 팝업', screenId: 'PM-COM-0102', path: '/views/com/PM-COM-0102', status: '완료' },
-  { id: 380, category: '스마트워크', depth1: '', depth2: '메인', depth3: '', depth4: '', depth5: '', screenName: '메인화면', screenId: 'PM-COM-0201', path: '', status: '대기' },
+  { id: 380, category: '스마트워크', depth1: '', depth2: '메인', depth3: '', depth4: '', depth5: '', screenName: '메인화면', screenId: 'main', path: '/', status: '대기' },
   { id: 381, category: '스마트워크', depth1: '', depth2: '', depth3: '프로필_알림', depth4: '', depth5: '', screenName: '프로필_알림', screenId: 'PM-COM-0202', path: '', status: '대기' },
   { id: 382, category: '스마트워크', depth1: '', depth2: '', depth3: '프로필_ 보고서 승인 현황', depth4: '', depth5: '', screenName: '프로필_ 보고서 승인 현황', screenId: 'PM-COM-0203', path: '', status: '대기' },
   { id: 383, category: '스마트워크', depth1: '', depth2: '에러페이지', depth3: '', depth4: '', depth5: '', screenName: '에러페이지 화면', screenId: 'PM-COM-0301', path: '', status: '대기' },
