@@ -34,7 +34,12 @@
         <button class="btn btn-search" type="submit" aria-label="검색하기"></button>
       </div>
 
-      <button class="btn btn-voice" type="button" aria-label="음성검색"></button>
+      <button
+        class="btn btn-voice"
+        type="button"
+        aria-label="음성검색"
+        @click="emit('voice')"
+      ></button>
     </form>
   </div>
 </template>
@@ -81,6 +86,8 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   (e: "update:modelValue", value: string): void
   (e: "search", value: string): void
+  /** 음성검색 버튼 클릭. 버튼은 police-style.css 의 모바일 미디어쿼리에서만 보인다 */
+  (e: "voice"): void
 }>()
 
 const inputRef = ref<HTMLInputElement | null>(null)

@@ -182,6 +182,28 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 
 > **일반 저장/삭제에는 `confirm`을 붙이지 않는다.** 알림창(`dialog.alert`)이 기본이다 — CLAUDE.md §4.
 
+### 6-1. 알림창·확인창의 `device` 와 태그 제목 (2026-09-15 추가)
+`useDialog().alert()` · `.confirm()` 의 옵션 두 개. **둘 다 선택이고, 안 주면 지금까지와 똑같다.**
+
+| 옵션 | 값 | 무엇 |
+|---|---|---|
+| `device` | `'responsive'`(기본) / `'pc'` / `'mobile'` | 팝업 폭·제목 크기·본문 글자·버튼 폭을 어느 화면 기준으로 그리나. `'responsive'` 는 **1000px 경계로 자동**(`useResponsive.ts` 의 `BP_MOBILE`·`style.css` 의 `mo:`/`pc:` 와 같은 값) |
+| `title` | 문자열 (**태그 가능**) | `v-html` 이라 태그가 그대로 그려진다. 시안 상단 아이콘은 여기에 `<img>` 로 넣는다 — `.lp-dialog-title img` 가 글자 위 가운데로 놓아 준다 |
+
+```ts
+await dialog.confirm({
+  title: '<img src="/portal/asset/images/icon/ico_exclamation_32.svg" alt="" width="32" height="32">대기시간이 초과되었습니다.',
+  description: '대기자가 많아 …',
+  btnOk: '음성인식 시작',
+  btnCancel: '취소',
+  device: 'mobile',   // 이 팝업을 여는 버튼이 모바일 폭에서만 보인다
+})
+```
+- **`title` 에 사용자 입력을 넣지 않는다.** 화면이 들고 있는 상수 문구 자리다(퍼블 목업).
+- 기기별 치수는 `police-override.css` 의 `.lp-dialog-*` 가 **CSS 변수로만** 들고 있다(§12).
+  미디어쿼리라 JS 폭 감시가 없고 첫 프레임 깜빡임도 없다. 값을 늘릴 땐 토큰만 추가한다.
+- 타입·기본값은 `custom/dialog/dialogDevice.ts`. `GenericDialog2` 는 대상이 아니다.
+
 ---
 
 ## 7. 피드백 · 안내
@@ -643,6 +665,8 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-ref-column` | 우측 참고자료 칸. **왼쪽 세로 구분선을 이 칸이 그린다**(본문 칸 높이만큼 꽉 차야 해서). 폭 29.2rem + 여백 2.4rem + 선 0.1rem = 31.7rem | IRC-0101 |
 | `.lp-ref-list` / `.lp-ref-desc` / `.lp-ref-link` | 참고자료 아코디언 목록(간격 1.2rem) / 펼쳤을 때 설명(1.5rem) / 그 아래 문서 링크(1.3rem 밑줄) | IRC-0101 |
 | `.lp-ref-item` / `.lp-ref-trigger` / `.lp-ref-body` | **override** — `custom/accordion` 의 카드·트리거·본문 기본 모양(높이·글자·아래선·여백)을 참고자료 시안에 맞게 되돌린다. 아코디언을 카드 안에 얹을 때만 쓴다 | IRC-0101 |
+| `.lp-dialog-pc` / `-mobile` / `-responsive` | **override** — 알림창·확인창(`AlertDialog2`/`ConfirmDialog2`)의 기기별 치수를 **CSS 변수로만** 들고 있다(폭·제목·본문글자·버튼폭). 화면이 직접 붙이지 않는다 — `useDialog` 의 `device` 옵션이 붙인다(§6-1) | `useDialog` |
+| `.lp-dialog-title` / `-desc-box` / `-desc` / `-footer` | **override** — 위 변수를 실제로 읽는 자리. `.lp-dialog-title img` 는 제목에 넣은 아이콘을 글자 위 가운데로 놓는다. **컴포넌트가 붙이므로 화면에서 쓸 일이 없다** | `AlertDialog2`, `ConfirmDialog2` |
 
 #### 메모 목록 카드 · 등록 폼
 

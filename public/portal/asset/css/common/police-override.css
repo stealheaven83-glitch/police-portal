@@ -973,3 +973,70 @@ tbody .row-total > td:first-child {
   vertical-align: top;
   white-space: pre-line;
 }
+
+/* ══ 알림창·확인창(AlertDialog2 / ConfirmDialog2) 기기별 모양 ═══════════ */
+
+/*
+ * useDialog 의 `device` 옵션이 바깥틀에 .lp-dialog-{pc|mobile|responsive} 를 붙인다.
+ * 컴포넌트 테일윈드(text-[2.4rem] 등)를 덮어야 해서 override 쪽이다(CLAUDE.md §2).
+ *
+ * 값만 CSS 변수로 갈리고 **규칙은 한 벌**이다 — 기기를 늘려도 아래 규칙은 그대로다.
+ * 미디어쿼리라 JS 폭 감시가 없고, 그래서 첫 프레임 깜빡임이 없다
+ * (useResponsive.ts 의 ⚠ 주석 — useBreakpoint 는 첫 렌더가 항상 false 다).
+ *
+ * 경계 1000px 은 useResponsive.ts 의 BP_MOBILE · style.css 의 mo:/pc: 배리언트와 같은 값이다.
+ * 바꾸려면 세 곳을 같이 바꾼다.
+ */
+.lp-dialog-pc,
+.lp-dialog-responsive {
+  --lp-dialog-max-w: 40rem;
+  --lp-dialog-gap: 0;
+  --lp-dialog-title-size: 2.4rem;
+  --lp-dialog-desc-size: 1.7rem;
+  --lp-dialog-desc-bg: #f4f5f6;
+  --lp-dialog-btn-grow: 0;
+}
+.lp-dialog-mobile {
+  --lp-dialog-max-w: 32rem;
+  --lp-dialog-gap: 2.4rem;
+  --lp-dialog-title-size: 1.9rem;
+  --lp-dialog-desc-size: 1.5rem;
+  --lp-dialog-desc-bg: #e6e8ea;
+  --lp-dialog-btn-grow: 1;
+}
+@media (max-width: 999.98px) {
+  .lp-dialog-responsive {
+    --lp-dialog-max-w: 32rem;
+    --lp-dialog-gap: 2.4rem;
+    --lp-dialog-title-size: 1.9rem;
+    --lp-dialog-desc-size: 1.5rem;
+    --lp-dialog-desc-bg: #e6e8ea;
+    --lp-dialog-btn-grow: 1;
+  }
+}
+
+/* 규칙 한 벌 — 위 토큰만 읽는다. 기본값은 PC 모양이라 클래스가 없어도 지금과 같다 */
+.lp-dialog-pc,
+.lp-dialog-mobile,
+.lp-dialog-responsive {
+  max-width: var(--lp-dialog-max-w, 40rem);
+  gap: var(--lp-dialog-gap, 0);
+}
+.lp-dialog-title {
+  font-size: var(--lp-dialog-title-size, 2.4rem);
+}
+/* 제목에 넣은 아이콘(<img>)은 글자 위 가운데에 놓인다 */
+.lp-dialog-title img {
+  display: block;
+  margin: 0 auto 0.8rem;
+}
+.lp-dialog-desc-box {
+  background: var(--lp-dialog-desc-bg, #f4f5f6);
+}
+.lp-dialog-desc {
+  font-size: var(--lp-dialog-desc-size, 1.7rem);
+}
+/* 모바일은 버튼 둘이 폭을 나눠 가진다(시안 132+8+132) */
+.lp-dialog-footer > * {
+  flex: var(--lp-dialog-btn-grow, 0) 1 auto;
+}

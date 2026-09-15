@@ -9,6 +9,25 @@ import type { RecommendedKeyword } from '@/components/custom/search/SearchKeywor
  * AI 답변은 실제로는 서버가 만들어 준다. 여기서는 시안 문구를 그대로 둔 목업이다.
  */
 
+/**
+ * 음성검색 버튼을 눌렀을 때 뜨는 '대기시간 초과' 확인창 문구.
+ * Figma: MO_사건대응시나리오_대기시간 초과 (13323:98196 / 모달 본체 13323:98207).
+ *
+ * - `title` 은 태그를 받는다 — 시안 맨 위 느낌표 아이콘(icon/fill/exclamation)을 여기 넣는다
+ * - `device: 'mobile'` — 이 확인창을 여는 음성검색 버튼 자체가 모바일 폭에서만 보인다
+ *   (police-style.css 의 `@media (max-width: 1000px)`)
+ * - '음식인식' 오타도 시안 그대로 옮겼다 — Figma 가 기준이다(docs/create.md §4)
+ */
+export const voiceWaitTimeoutDialog = {
+  title:
+    '<img src="/portal/asset/images/icon/ico_exclamation_32.svg" alt="" width="32" height="32">대기시간이 초과되었습니다.',
+  description:
+    '대기자가 많아 음식인식이 종료되었습니다. 아래의 [음성인식 시작] 버튼을 선택하여 음성인식을 시작합니다.',
+  btnOk: '음성인식 시작',
+  btnCancel: '취소',
+  device: 'mobile' as const,
+}
+
 /** 답변 본문 한 단락 — 소제목이 있으면 heading, 목록이면 bullets */
 export interface AnswerBlock {
   heading?: string

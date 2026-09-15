@@ -19,6 +19,7 @@
       label="사건대응 시나리오 검색어"
       status="검색 원활"
       @search="onSearch"
+      @voice="onVoiceSearch"
     />
 
     <!-- 검색 전: 최근검색어 · 추천검색어 (시안은 반반이 아니라 795:356 + 세로 구분선) -->
@@ -97,7 +98,7 @@ import {
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useDialog } from '@/composable/dialog/dialog'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
-import { useIncidentScenarioSearch } from './composable/PM-IRC-0101'
+import { useIncidentScenarioSearch, voiceWaitTimeoutDialog } from './composable/PM-IRC-0101'
 defineOptions({ name: 'PmIrc0101' })
 
 /**
@@ -147,6 +148,20 @@ async function onSearch(value: string) {
   }
   pushRecent(trimmed)
   searched.value = true
+}
+
+/**
+ * 음성검색 버튼 → '대기시간이 초과되었습니다' 팝업(Figma 13323:98207).
+ *
+ * 시안 지정: [취소]/[음성인식 시작] 2버튼이라 confirm 을 쓴다 — CLAUDE.md §4 기본(alert 만)과
+ * 다르지만 시안대로 따름. 실제 음성인식 시작은 개발팀이 잇는다.
+ * 음성검색 버튼 자체는 police-style.css 의 모바일 미디어쿼리에서만 보인다.
+ */
+async function onVoiceSearch() {
+  const { confirmed } = await dialog.confirm({ ...voiceWaitTimeoutDialog })
+  if (!confirmed) {
+    focusSearchBar()
+  }
 }
 
 function onSelectKeyword(value: string) {

@@ -3,20 +3,27 @@ import type { VNode, App } from 'vue'
 import ConfirmDialog2 from '../../components/custom/dialog/ConfirmDialog2.vue'
 import AlertDialog2 from '../../components/custom/dialog/AlertDialog2.vue'
 import FormDialog from '../../components/custom/dialog/FormDialog.vue'
+import type { DialogDevice } from '../../components/custom/dialog/dialogDevice'
 
 
 interface ConfirmOptions {
+  /** 제목. **HTML 태그를 넣을 수 있다** — 아이콘은 `<img src="/portal/asset/images/icon/...">` */
   title?: string;
   subtitle?: string;
   description?: string;
   btnOk?: string;
   btnCancel?: string;
+  /** 어느 화면 기준으로 그리나. 기본 'responsive' — dialogDevice.ts 참고 */
+  device?: DialogDevice;
 }
 
 interface AlertOptions {
+  /** 제목. **HTML 태그를 넣을 수 있다** — 아이콘은 `<img src="/portal/asset/images/icon/...">` */
   title?: string;
   description?: string;
   btnCancel?: string;
+  /** 어느 화면 기준으로 그리나. 기본 'responsive' — dialogDevice.ts 참고 */
+  device?: DialogDevice;
 }
 
 interface DialogResult {
@@ -58,7 +65,8 @@ function showConfirmDialog(options: ConfirmOptions): Promise<DialogResult> {
       subtitle: options.subtitle,
       description: options.description,
       btnOk: options.btnOk || '확인',
-      btnCancel: options.btnCancel || '취소'
+      btnCancel: options.btnCancel || '취소',
+      device: options.device
     }
 
     // 다이얼로그 앱 생성
@@ -115,7 +123,8 @@ function showAlertDialog(options: AlertOptions): Promise<void> {
     const dialogInfo = {
       title: options.title || '알림',
       description: options.description || '',
-      btnCancel: options.btnCancel || '확인'
+      btnCancel: options.btnCancel || '확인',
+      device: options.device
     }
 
     // 다이얼로그 앱 생성
