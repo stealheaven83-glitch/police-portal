@@ -64,7 +64,7 @@
           />
         </span>
       </InfoField>
-      <InfoField label="신고내용" full col-class="readonly-text">
+      <InfoField label="신고내용" full value-class="readonly-text">
           장충동 빠리바게트 앞쪽<br> 50대 남자분이 도로가에 쓰러져 잇다면서//
           119도 불럿다면서 장충동 빠리바게트 앞쪽<br/> 50대 남자분이 도로가에
           쓰러져 잇다면서// 119도 불럿다면서

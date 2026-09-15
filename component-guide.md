@@ -144,7 +144,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 > |---|---|
 > | `class` | 칸 전체(라벨+값을 감싸는 바깥) |
 > | `label-class` | **제목(라벨)** — `for` 유무로 `<label>`/`<span>` 이 갈리는데 양쪽 다 붙는다 |
-> | `col-class` | **값(정보) 영역** |
+> | `value-class` | **값(정보) 영역** |
 >
 > ⚠ `InfoTable.module.css` 는 `@layer` 밖이라 **레이어 있는 스타일을 전부 이긴다.**
 > 그 파일이 이미 정한 속성(라벨 폭·테두리·grid 등)은 `police-common`/`override` 의 클래스로

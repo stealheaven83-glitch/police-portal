@@ -311,7 +311,7 @@
               <Checkbox v-model="detail.noSpecial" label="특이사항 없음" />
             </div>
             <InfoTable :columns="1" size="100">
-              <InfoField label="정신상태" class="lp-info-nested" col-class="no-padding">
+              <InfoField label="정신상태" class="lp-info-nested" value-class="no-padding">
                 <InfoTable :columns="1" size="120">
                   <InfoField label="주취">
                     <RadioGroup v-model="detail.drunk" :disabled="detail.noSpecial" class="lp-field-row" aria-label="주취">
@@ -345,7 +345,7 @@
             </InfoTable>
 
             <InfoTable :columns="1" size="100" class="lp-table-gap">
-              <InfoField label="신체상태" class="lp-info-nested" col-class="no-padding">
+              <InfoField label="신체상태" class="lp-info-nested" value-class="no-padding">
                 <InfoTable :columns="1" size="120">
                   <InfoField label="체격">
                     <RadioGroup v-model="detail.build" :disabled="detail.noSpecial" class="lp-field-row" aria-label="체격">
