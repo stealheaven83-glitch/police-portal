@@ -1179,6 +1179,28 @@ const router = createRouter({
             meta: { layout: 'WorkLayout', title: '해바라기센터 사용자 등록', screenGroup: 'PM-PUB-0404' }
         },
 
+        /* 예약불가 관리 — 상세/수정(PC-PUB-0420) · 등록(PC-PUB-0421)은 이 컴포넌트 안의 팝업이다.
+           0421 은 useAutoTrigger 로 URL 과 동기화하고, 0420 은 사유 셀의 행을 골라야 열려
+           URL 만으로 어느 행인지 알 수 없어(비대칭, docs/create/tab-popup.md §4) 라우트만 등록했다 */
+        {
+            path: '/views/pub/PC-PUB-0419',
+            name: 'PC-PUB-0419',
+            component: () => import('../views/pub/PC-PUB-0419/PC-PUB-0419.vue'),
+            meta: { layout: 'WorkLayout', title: '예약불가 관리', screenGroup: 'PC-PUB-0419' }
+        },
+        {
+            path: '/views/pub/PC-PUB-0420',
+            name: 'PC-PUB-0420',
+            component: () => import('../views/pub/PC-PUB-0419/PC-PUB-0419.vue'),
+            meta: { layout: 'WorkLayout', title: '예약불가 상세/수정', screenGroup: 'PC-PUB-0419' }
+        },
+        {
+            path: '/views/pub/PC-PUB-0421',
+            name: 'PC-PUB-0421',
+            component: () => import('../views/pub/PC-PUB-0419/PC-PUB-0419.vue'),
+            meta: { layout: 'WorkLayout', title: '예약불가 등록', screenGroup: 'PC-PUB-0419' }
+        },
+
         /* 조사예약 — 월간/주간은 달력 안의 토글이고, 상세 · 등록은 팝업이다 */
         {
             path: '/views/pub/PM-PUB-0405',

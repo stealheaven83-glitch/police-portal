@@ -161,6 +161,7 @@ export const plannedScreens: ReadonlyArray<readonly [string, string]> = [
   ['PM-PUB-0406', '조사예약 목록(주간별)'],
   ['PM-PUB-0407', '조사예약 상세'],
   ['PM-PUB-0408', '조사예약 등록'],
+  ['PC-PUB-0419', '예약불가 관리'],
   ['PM-PUB-0409', '주취자센터병상현황 목록/상세'],
   ['MO-PUB-0416', '주취자센터병상현황 상세(모바일)'],
   ['PC-PUB-0410', '주취자등록&병상배정 등록'],

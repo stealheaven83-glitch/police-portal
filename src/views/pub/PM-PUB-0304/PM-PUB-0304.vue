@@ -92,10 +92,10 @@
               <DatePicker v-else id="activity-date" v-model="form.date" size="sm" class=" flex-1" />
             </InfoField>
 
-            <InfoField>
+            <InfoField :for="mode === 'edit' ? 'activity-participant' : undefined">
               <template #label>참여자수<span v-if="mode === 'edit'" :class="infoStyles.requiredDot" /></template>
               <span v-if="mode === 'view'" class="readonly-text">{{ form.participantCount }}</span>
-              <Stepper v-else v-model="form.participantCount" :min="0" label="참여자수" />
+              <InputField2 v-else id="activity-participant" v-model.number="form.participantCount" type="number" min="0" :clearable="false" size="sm" class=" flex-1" />
             </InfoField>
             <InfoField :for="mode === 'edit' ? 'activity-type' : undefined">
               <template #label>활동종류<span v-if="mode === 'edit'" :class="infoStyles.requiredDot" /></template>
@@ -187,7 +187,6 @@ import SelectField from '@/components/custom/select/SelectField.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
-import Stepper from '@/components/custom/input/Stepper.vue'
 import { Button } from '@/components/custom/button'
 import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'

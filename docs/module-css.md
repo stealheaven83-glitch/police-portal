@@ -46,11 +46,11 @@ find src/components -name "*.module.css"
 
 | 파일 | 쓰는 컴포넌트 | 클래스 | 노출 변수 |
 |---|---|---|---|
-| `custom/info-table/InfoTable.module.css` | `InfoTable` · `InfoField` | 43개 | `--info-label-w`(기본 `14rem`) |
+| `custom/info-table/InfoTable.module.css` | `InfoTable` · `InfoField` | 46개 | `--info-label-w`(기본 `14rem`) |
 | `custom/flex-grid/FlexGrid.module.css` | `FlexRow` · `FlexCol` | 2개(`.row` `.col`) | `--flex-col-min-w`(기본 `20rem`) |
 
 ### `InfoTable.module.css` — 라벨-값 표
-클래스 43개가 역할별로 이렇게 나뉜다. **이름만 보고 짐작하지 말고 파일을 열어 확인한다**:
+클래스 46개가 역할별로 이렇게 나뉜다. **이름만 보고 짐작하지 말고 파일을 열어 확인한다**:
 ```bash
 grep -nE "^\.[a-zA-Z-]" src/components/custom/info-table/InfoTable.module.css
 ```
@@ -63,7 +63,7 @@ grep -nE "^\.[a-zA-Z-]" src/components/custom/info-table/InfoTable.module.css
 | 필수·안내 | `.requiredDot` `.legend` `.hint` `.hintSuccess` |
 | 표 위아래 버튼줄 | `.toolbar` `.deptGroup` `.toggleButton` `.list-actions` `.info-table-actions` |
 | 팝업 안 표 | `.popTable` `.tempVehicleRow` `.searchRow` `.searchInput` |
-| 값 표현 | `.info-table-txt` `.info-table-radio` `.info-table-divided` `.flex-wrap` `.disclaimerStrong` |
+| 값 표현 | `.info-table-txt` `.info-table-radio` `.info-table-divided` `.flex-wrap` `.disclaimerStrong` `.info-table-value-row` `.info-table-hyphen` `.info-table-unit` |
 
 **⚠ 이 파일은 컴포넌트 전용이 아니다.** 화면 33곳이 직접 import 해서 쓴다:
 ```ts

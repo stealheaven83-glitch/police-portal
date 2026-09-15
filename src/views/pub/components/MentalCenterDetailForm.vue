@@ -3,7 +3,7 @@ import { InfoTable, InfoField } from '@/components/custom/info-table'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import { regionOptions, type MentalCenterDetail } from '../composable/mentalEmergency'
-import styles from '../style/MentalCenterDetailForm.module.css'
+import styles from '@/components/custom/info-table/InfoTable.module.css'
 
 /**
  * 정신응급대응팀 상세(PM-PUB-0414)/등록(PC-PUB-0415) 공용 폼.
@@ -52,7 +52,7 @@ function onBedTotalInput(value: string | number) {
     </InfoField>
 
     <InfoField label="연락처">
-      <div :class="styles.valueRow">
+      <div :class="styles['info-table-value-row']">
         <InputField2
           v-model="form.phone1"
           size="sm"
@@ -62,7 +62,7 @@ function onBedTotalInput(value: string | number) {
           class="!space-y-0 flex-1"
           input-class="text-center"
         />
-        <span :class="styles.hyphen" aria-hidden="true">-</span>
+        <span :class="styles['info-table-hyphen']" aria-hidden="true">-</span>
         <InputField2
           v-model="form.phone2"
           size="sm"
@@ -72,7 +72,7 @@ function onBedTotalInput(value: string | number) {
           class="!space-y-0 flex-1"
           input-class="text-center"
         />
-        <span :class="styles.hyphen" aria-hidden="true">-</span>
+        <span :class="styles['info-table-hyphen']" aria-hidden="true">-</span>
         <InputField2
           v-model="form.phone3"
           size="sm"
@@ -86,7 +86,7 @@ function onBedTotalInput(value: string | number) {
     </InfoField>
 
     <InfoField label="총 병상 수" :for="`${props.idPrefix}-bed-total`">
-      <div :class="styles.valueRow">
+      <div :class="styles['info-table-value-row']">
         <InputField2
           :id="`${props.idPrefix}-bed-total`"
           :model-value="form.bedTotal"
@@ -95,7 +95,7 @@ function onBedTotalInput(value: string | number) {
           inputmode="numeric"
           class="!space-y-0 w-[80px]"
         />
-        <span :class="styles.unit">개</span>
+        <span :class="styles['info-table-unit']">개</span>
       </div>
     </InfoField>
   </InfoTable>

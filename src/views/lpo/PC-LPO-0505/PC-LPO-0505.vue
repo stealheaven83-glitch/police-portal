@@ -34,18 +34,16 @@
   </div>
 
   <div class="list-actions space-between">
-    <span class="lp-toolbar-left">
-      <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
-        <Download :size="16" aria-hidden="true" />
-        엑셀다운로드
-      </Button>
-    </span>
-    <span class="lp-toolbar-right">
+    <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
+      <Download :size="16" aria-hidden="true" />
+      엑셀다운로드
+    </Button>
+    <div class="group-gap2">
       <Button type="button" variant="tertiary2" size="sm" @click="approveOpen = true">승인관리</Button>
       <Button type="button" variant="tertiary2" size="sm" @click="cancelOpen = true">승인취소관리</Button>
       <Button type="button" variant="tertiary2" size="sm" @click="otherApplyOpen = true">타직원 출동수당 신청</Button>
       <Button type="button" variant="secondary" size="sm" @click="dispatchInfoOpen = true">출동사건정보</Button>
-    </span>
+    </div>
   </div>
 
   <TabulatorGrid
@@ -56,7 +54,6 @@
     height="100%"
     min-height="40rem"
     placeholder="조회된 출동수당 취합 내역이 없습니다"
-
     :items-per-page="10"
   />
 

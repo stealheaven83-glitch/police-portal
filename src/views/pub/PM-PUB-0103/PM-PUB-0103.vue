@@ -64,7 +64,7 @@
         />
         <div class="group-gap2">
           <DatePicker label="진단일자" labelPosition="left" size="sm" inputClass="w-40" />
-          <span :class="styles.dateSeparator" aria-hidden="true">~</span>
+          <span aria-hidden="true">~</span>
           <DatePicker size="sm" inputClass="w-40" label="진단일자 종료일" labelClass="sr-only" />
         </div>
 
@@ -266,7 +266,7 @@ import {
   type CpoDiagnosisRow,
   type CpoHistoryRow,
 } from './composable/PM-PUB-0103'
-import styles from './style/PM-PUB-0103.module.css'
+
 
 // KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!)
 defineOptions({

@@ -93,7 +93,11 @@
       <LayoutPanel title="간이 범죄예방진단 현황">
         <TabulatorGrid
           ref="gridRef"
+<<<<<<< Updated upstream
           class="flex-1"
+=======
+
+>>>>>>> Stashed changes
           :columns="listColumns"
           :data="rows"
           select-mode="single"
@@ -109,7 +113,11 @@
     <template #layout-2>
       <LayoutPanel title="간이 범죄예방진단 이력">
         <TabulatorGrid
+<<<<<<< Updated upstream
           class="flex-1"
+=======
+
+>>>>>>> Stashed changes
           :columns="historyColumns"
           :data="historyRows"
           select-mode="single"
