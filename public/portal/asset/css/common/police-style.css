@@ -537,7 +537,7 @@ header .header-in .header-container {
 header .header-in .header-container .header-branding {
   display: flex;
   justify-content: space-between;
-  padding: 1.4rem 0 0.4rem;
+  padding: 1.2rem 0 1.2rem;
 }
 header .header-in .header-container .header-branding .logo a {
   display: block;
@@ -590,7 +590,7 @@ header .header-in .header-container .main-menu .inner .my-info a {
   position: relative;
   display: flex;
   align-items: center;
-  padding: 0.4rem 2.8rem 0.4rem 0.4rem;
+  padding: 0.7rem 4.0rem 0.7rem 1.6rem;
   background: var(--Background-gray01);
   border-radius: 100px;
   height:4rem;
@@ -599,6 +599,7 @@ header .header-in .header-container .main-menu .inner .my-info a .mypic{border-r
 header .header-in .header-container .main-menu .inner .my-info a .name {
   margin-left: 1.2rem;
   font-weight: 600;
+  font-size: 1.7rem;
 }
 header .header-in .header-container .main-menu .inner .my-info a .position {
   margin: 0 0 0 0.4rem;
@@ -608,15 +609,15 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   content: "";
   display: block;
   position: absolute;
-  top: 1.2rem;
-  right: 0.8rem;
-  width: 1.6rem;
-  height: 1.6rem;
-  background: url("../../images/icon/ico_arrow_next_black_16.svg") no-repeat center/1.3rem auto;
+  top: 1rem;
+  right: 1.2rem;
+  width: 2rem;
+  height: 2rem;
+  background: url("../../images/icon/ico-arrow-down-20.svg") no-repeat center/contain;
 }
 
 .footer {
-  padding: 3.2rem 4rem;
+  padding: 3.2rem 0 4rem;
   background: var(--Background-gray01);
 }
 .footer .inner {
@@ -633,14 +634,19 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
 .footer .inner .f-cnt .f-txt {
   color: var(--Text-body_0);
   font-weight: 700;
+  font-size: 1.7rem;
 }
 .footer .inner .f-cnt .f-info {
   margin-top: 1.2rem;
   color: var(--Text-body_1);
   text-align: right;
 }
+.footer .inner .f-cnt .f-info .info-addr {
+  font-size: 1.7rem;
+}
 .footer .inner .f-cnt .f-info .f-copy {
   margin-top: 0.4rem;
+  font-size: 1.5rem;
 }
 
 .search-tab {
@@ -790,6 +796,7 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   justify-content: center;
   gap: 2rem;
   color: var(--Text-body_1);
+  font-size: 1.5rem;
 }
 
 .rowgroup.service {
@@ -880,6 +887,7 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
 .rowgroup.service .service-col.result .card a span {
   display: block;
   font-weight: 600;
+  font-size: 1.7rem;
 }
 .rowgroup.service .service-col.result .card a span.value {
   margin-top: 0.6rem;
@@ -914,20 +922,21 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   background: url(../../images/icon/ico-arrow-24.svg) no-repeat center/100% auto;
 }
 .rowgroup.service .service-col .service-bnr .service-list {
-  padding-top: 2rem;
+  padding-top: 1.6rem;
 }
 .rowgroup.service .service-col .service-bnr .service-list li {
   position: relative;
   display: flex;
   gap: 1.6rem;
   padding-left: 1.2rem;
+  font-size: 1.7rem;
 }
 .rowgroup.service .service-col .service-bnr .service-list li .date {
   color: var(--Base-secondary);
   font-weight: 600;
 }
 .rowgroup.service .service-col .service-bnr .service-list li + li {
-  margin-top: 1.1rem;
+  margin-top: 1.5rem;
 }
 .rowgroup.service .service-col .service-bnr .service-list li:after {
   position: absolute;
@@ -978,9 +987,16 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
 }
 .rowgroup.service .service-col.last .service-bnr {
   padding: 2.8rem 2rem 2rem 3.2rem;
+  height: 18.8rem;
+  position: relative;
 }
 .rowgroup.service .service-col.last .service-bnr .title {
   line-height: 1.3;
+}
+.rowgroup.service .service-col.last .service-bnr i {
+  position: absolute;
+  right: 2rem;
+  bottom: 2rem;
 }
 .rowgroup.notice {
   margin: 3.6rem 0 6rem;
@@ -1011,6 +1027,7 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   overflow: hidden;
   flex: 1;
   font-weight: 500;
+  font-size: 1.5rem;
 }
 .rowgroup.notice .notice-list .noticeSwiper .notice-pagination {
   position: absolute;
@@ -1279,6 +1296,7 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   }
   .rowgroup.service .service-col.last .service-bnr {
     padding: 1.8rem 1.6rem 1.2rem 2rem;
+    height: auto;
   }
   .rowgroup.service .service-col .service-bnr {
     padding: 1.8rem 2rem 1.6rem;
@@ -1327,7 +1345,7 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
     left: 0;
   }
   .footer {
-    padding: 2.4rem 1.6rem;
+    padding: 3.2rem 1.6rem;
   }
   .footer .inner {
     flex-direction: column;
