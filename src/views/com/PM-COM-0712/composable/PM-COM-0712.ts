@@ -39,7 +39,6 @@ export function useLawCreate() {
   const writer = '강길동'
   const writtenAt = 'YYYY-MM-DD (HH:MM)'
 
-
   const fileCount = computed(() => form.files.length)
   const { addFiles, removeFile } = useBoardFiles(form)
 

@@ -1,7 +1,7 @@
 <template>
   <PageHeader>
     <template #left>
-      <PageTitle :title="spec.title" />
+      <PageTitle title="법령 · 지침 · 매뉴얼" />
     </template>
     <template #right>
       <span class="group-gap2">
@@ -13,13 +13,15 @@
 
   <div class="lp-page-scroll">
     <div class="lp-narrow-form">
-      <!-- 시안: 작성자 줄 오른쪽 끝에 '공지' 체크박스가 온다(1003 의 중요공지 토글 줄이 없다) -->
+      <!-- 시안: 작성자 줄 오른쪽 끝에 '공지' 체크박스가 온다 -->
       <div class="lp-row-between">
         <p class="lp-writer-line">
           <b class="lp-writer-line-name">{{ writer }}</b>
           <span class="lp-writer-line-date">{{ writtenAt }}</span>
         </p>
-        <Checkbox v-model="form.pinned" size="lg" label="공지" />
+        <span class="lp-radio-inline">
+          <Checkbox v-model="form.pinned" size="lg" label="공지" />
+        </span>
       </div>
 
       <InputField2
@@ -102,7 +104,7 @@ import { Checkbox } from '@/components/custom/checkbox'
 import { Button } from '@/components/custom/button'
 import { FileUpload } from '@/components/custom/file-upload'
 import { useDialog } from '@/composable/dialog/dialog'
-import { BOARD_SPECS, boardMenu, CONTENT_MAX_LENGTH, FILE_ACCEPT } from '../composable/board'
+import { boardMenu, CONTENT_MAX_LENGTH, FILE_ACCEPT } from '../composable/board'
 import { useLawEdit } from './composable/PM-COM-0711'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
@@ -111,11 +113,8 @@ defineOptions({
   name: 'PmCom0711',
 })
 
-/** 게시판 구성은 board.ts 의 스펙 하나로 정해진다 */
-const spec = BOARD_SPECS.law
-
 // LNB: 게시판 > 교육자료 나눔터 > 법령 · 지침 · 매뉴얼
-useSideMenuSetup({ ...boardMenu, openIndex: spec.openIndex, activeChild: spec.menuChild })
+useSideMenuSetup({ ...boardMenu, openIndex: 4, activeChild: '법령 · 지침 · 매뉴얼' })
 
 const router = useRouter()
 const dialog = useDialog()
@@ -123,8 +122,8 @@ const dialog = useDialog()
 const navItems = [
   { label: '홈', path: '/' },
   { label: '게시판' },
-  ...spec.breadcrumb.slice(0, -1).map((label) => ({ label })),
-  { label: spec.title, path: `/views/com/${spec.listId}` },
+  { label: '교육자료 나눔터' },
+  { label: '법령 · 지침 · 매뉴얼', path: '/views/com/PM-COM-0709' },
 ]
 
 const { form, writer, writtenAt, fileCount, canSave, addFiles, removeFile } = useLawEdit()
@@ -170,7 +169,7 @@ async function onSave() {
 
 useBottomTabSetup({
   value: 'PM-COM-0711',
-  label: `${spec.title} 수정`,
+  label: '법령 · 지침 · 매뉴얼 수정',
   path: '/views/com/PM-COM-0711',
   componentName: 'PmCom0711',
   closable: true,

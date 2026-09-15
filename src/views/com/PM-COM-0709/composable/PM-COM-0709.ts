@@ -3,10 +3,9 @@ import { computed, ref, watch } from 'vue'
 /**
  * 법령 · 지침 · 매뉴얼 목록(PM-COM-0709) 한 줄.
  *
- * 칸 구성은 `board.ts` 의 BOARD_SPECS.law 을 따른다
- * (부서 O / 공지 고정 O / 추천수 X / 공개상태 X / 카테고리 X).
+ * 칸 구성: 부서 X / 공지 고정 O / 추천수 X / 공개상태 X / 카테고리 X.
  * 상세·수정·등록(PM-COM-0710~0712)은 `useBoardStore('law')` 의 상태를 쓰고,
- * 목록 rows 는 그 스토어에 없어서 여기서 따로 둔다(PM-COM-1001 과 같은 구성).
+ * 목록 rows 는 그 스토어에 없어서 여기서 따로 둔다.
  */
 export interface LawRow {
   id: number
@@ -78,7 +77,7 @@ export function useLawList() {
   )
 
   /* ── 페이징 — 고정 공지는 건수에서 빼고 매 페이지 맨 위에 고정한다 ──
-   * 설계서 5: 공지는 번호를 받지 않으며 게시글 영역에 표시되지 않는다(= 총 건수에서 제외).
+   * 공지는 번호를 받지 않으며 게시글 영역에 표시되지 않는다(= 총 건수에서 제외).
    * 그리드 내장 페이징은 공지까지 세므로 외부 제어(total-elements / current-page)로 바꿔 여기서 자른다. */
   const currentPage = ref(1)
   const itemsPerPage = ref(10)
