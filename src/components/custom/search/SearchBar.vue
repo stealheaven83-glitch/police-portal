@@ -79,7 +79,7 @@ defineExpose({ focus })
         </span>
       </div>
 
-      <div class="serach-box">
+      <div class="search-box">
         <input
           ref="inputRef"
           class="input-search"

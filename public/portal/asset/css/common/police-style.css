@@ -717,10 +717,10 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   height: 6rem;
   border-radius: 50%;
 }
-.search-wrap .search-bar .serach-box {
+.search-wrap .search-bar .search-box {
   position: relative;
 }
-.search-wrap .search-bar .serach-box .btn-search {
+.search-wrap .search-bar .search-box .btn-search {
   position: absolute;
   right: 1rem;
   top: 1rem;
