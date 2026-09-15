@@ -28,12 +28,16 @@
 
       <div class="lp-field">
         <span class="lp-label-text">카테고리</span>
-        <!-- 사용자 지정: 카테고리 칩(Figma chip 11220:71184)은 custom/tabs 의 chip 변형. Tabs 루트의 mb-16 은 여기선 폼 gap 이 대신하므로 뺀다 -->
-        <Tabs v-model="form.category" class="mb-0">
-          <TabsList variant="chip" aria-label="카테고리">
-            <TabsTrigger v-for="opt in qnaCategoryOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <!-- Figma chip__single(11220:71184) — 폼 안에서 값 하나 고르기라 탭이 아니라 custom/chip 의 ChipGroup(단일 = radiogroup).
+             medium = 48px·17px. 칩 넷이 폼 폭을 16 간격으로 나눠 갖는 건 .lp-chip-fill(override) -->
+        <ChipGroup
+          :model-value="form.category"
+          :items="qnaCategoryOptions"
+          size="medium"
+          class="lp-chip-fill"
+          aria-label="카테고리"
+          @update:model-value="onCategoryChange"
+        />
       </div>
 
       <InputField2
@@ -110,14 +114,14 @@ import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
 import { Checkbox } from '@/components/custom/checkbox'
-import { Tabs, TabsList, TabsTrigger } from '@/components/custom/tabs'
+import { ChipGroup } from '@/components/custom/chip'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { Button } from '@/components/custom/button'
 import { FileUpload } from '@/components/custom/file-upload'
 import { useDialog } from '@/composable/dialog/dialog'
 import { bulletinMenu, FILE_ACCEPT } from '../composable/notice'
-import { qnaCategoryOptions } from '../composable/qna'
+import { qnaCategoryOptions, type QnaCategory } from '../composable/qna'
 import { useQnaEdit } from './composable/PM-COM-0403'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
@@ -139,6 +143,11 @@ const navItems = [
 ]
 
 const { form, writer, writtenAt, fileCount, canSave, addFiles, removeFile } = useQnaEdit()
+
+/** ChipGroup 은 고른 칩을 다시 누르면 '' 를 보낸다 — 수정 화면에서 카테고리는 비울 수 없으니 그 경우만 무시 */
+function onCategoryChange(value: string | string[]) {
+  if (typeof value === 'string' && value) form.category = value as QnaCategory
+}
 
 const fileInputRef = ref<HTMLInputElement | null>(null)
 

@@ -27,9 +27,9 @@
             <Popover :open="openMenuId === comment.id" @update:open="setMenuOpen(comment.id, $event)">
               <PopoverTrigger as-child>
                 <button type="button" class="lp-comment-more" :disabled="anyEditing" :aria-label="`${comment.writer} 댓글 메뉴`">
-                  <Icon name="ellipsisVertical" :size="24" aria-hidden="true" />
+                  <Icon name="boardMore" :size="40" aria-hidden="true" />
                 </button>
-              </PopoverTrigger>
+              </PopoverTrigger> 
               <PopoverContent side="bottom" align="end" :side-offset="4" class="lp-comment-menu">
                 <button type="button" class="lp-comment-menu-item" @click="startEdit(comment)">
                   <Icon name="edit" :size="16" aria-hidden="true" /> 수정
@@ -77,7 +77,7 @@
                 <Popover :open="openMenuId === reply.id" @update:open="setMenuOpen(reply.id, $event)">
                   <PopoverTrigger as-child>
                     <button type="button" class="lp-comment-more" :disabled="anyEditing" :aria-label="`${reply.writer} 답글 메뉴`">
-                      <Icon name="ellipsisVertical" :size="24" aria-hidden="true" />
+                      <Icon name="boardMore" :size="40" aria-hidden="true" />
                     </button>
                   </PopoverTrigger>
                   <PopoverContent side="bottom" align="end" :side-offset="4" class="lp-comment-menu">

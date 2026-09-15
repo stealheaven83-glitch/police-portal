@@ -28,7 +28,7 @@
       </div>
 
       <!-- 본문 대표 이미지 자리 — Figma 는 회색 박스로만 그려져 있다 -->
-      <div class="lp-notice-thumb" aria-hidden="true"><img src="" :alt="item.title"></div>
+      <div class="lp-notice-thumb" aria-hidden="true"><img src="/portal/asset/images/img/img_temp.jpg" :alt="item.title"></div>
 
       <div class="lp-notice-body">
         <p v-for="(line, i) in contentLines" :key="i" class="lp-body-text">{{ line }}</p>
