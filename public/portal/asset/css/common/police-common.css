@@ -3385,3 +3385,31 @@
   font-size: 1.5rem;
   font-weight: 700;
 }
+
+/* 검색 폼 안의 라디오 묶음 — 항목 사이 24 (.lp-field-row 12/20 · .lp-unit-row 4/8 과 간격이 다르다) */
+.lp-radio-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2.4rem;
+}
+
+/* 그리드 셀 안의 가로 막대그래프 — 막대 + 값이 한 줄, 막대 길이가 값에 비례한다 */
+.lp-visit-graph {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  width: 100%;
+}
+/* 왼쪽 끝은 셀 시작점이라 각지게 두고 오른쪽만 둥글린다 */
+.lp-visit-graph-bar {
+  height: 0.8rem;
+  border-radius: 0 1rem 1rem 0;
+  background: var(--Base-primary);
+}
+.lp-visit-graph-value {
+  flex-shrink: 0;
+  color: var(--Text-body_0);
+  font-size: 1.5rem;
+  line-height: 1.5;
+}

@@ -553,6 +553,8 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-unit-row` | 한 값을 여러 칸으로 쪼갠 줄 — 작은 입력 + 단위 글자('시' '분' '세' '~') | PUB-0405 |
 | `.lp-summary-row` | 값 텍스트 + 우측 버튼 (표 셀 안, 자기도 늘어남) | 0601 |
 | `.lp-field-row` | 라벨+입력 여러 쌍이 한 줄에 늘어서고 좁아지면 줄바꿈 | 0601 |
+| `.lp-radio-row` | `police-common.css` — 검색 폼 안의 라디오 묶음(항목 사이 24). `.lp-field-row`(12/20)·`.lp-unit-row`(4/8) 와 간격이 달라 따로 둔다 | STT-0402 |
+| `.lp-visit-graph` `-bar` `-value` | `police-common.css` — 그리드 셀 안 가로 막대그래프(막대 8px + 값 한 줄, 사이 12). 막대 폭은 데이터라 포매터가 인라인 style 로 넣는다 | STT-0402 |
 | `.lp-page-scroll` | **페이지 본문** 이 넘칠 때 이 영역만 세로 스크롤 (상세 패널 안쪽은 `.detail-scroll`) | 0801, 0802, IRC-0101 |
 | `.lp-page-toolbar` | 화면 위쪽 부서선택 + 우측 버튼 줄 | 0601 |
 | `.lp-section` / `.lp-section-title` | 구역 사이 간격 / 구역 제목 여백(`.lp-heading-lg` 와 함께) | 0601 |

@@ -27,3 +27,4 @@ export type SideMenuPresetKey =
   | 'systemAdmin'
   | 'menuTabSample'
   | 'flexiblePatrol'
+  | 'statistics'

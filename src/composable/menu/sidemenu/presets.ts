@@ -175,12 +175,38 @@ export const flexiblePatrolMenu: SideMenuConfig = {
   ],
 };
 
+/** 통계 LNB */
+export const statisticsMenu: SideMenuConfig = {
+  title: "통계",
+  // 시안은 '사용이력통계'가 펼쳐진 상태다
+  openIndex: 4,
+  activeChild: "메뉴사용통계",
+  items: [
+    // 시안에서 앞 4개는 외부 시스템으로 나가는 ↗ 항목이다. 다만 SideMenu 는 href·↗ 를
+    // 2뎁스에서만 처리하고 1뎁스는 <button> 으로 그려서, 여기 href 를 달면 눌러도 안 열린다.
+    // 링크 주소도 아직 없어 지금은 라벨만 둔다(flexiblePatrolMenu 의 하위 없는 1뎁스와 같은 형태).
+    { name: "112통계 바로가기" },
+    { name: "기초통계" },
+    { name: "근무현황" },
+    { name: "바인더통계" },
+    {
+      name: "사용이력통계",
+      children: [
+        { name: "메뉴사용통계", path: "/views/stt/PC-STT-0401" },
+        { name: "접속이력조회", path: "/views/stt/PC-STT-0402" },
+        { name: "중요정보 변경이력 조회", path: "/views/stt/PC-STT-0403" },
+      ],
+    },
+  ],
+};
+
 const PRESETS: Record<SideMenuPresetKey, SideMenuConfig> = {
   localPolice: localPoliceMenu,
   publicSafety: publicSafetyMenu,
   systemAdmin: systemAdminMenu,
   flexiblePatrol: flexiblePatrolMenu,
   menuTabSample: menuTabSampleMenu,
+  statistics: statisticsMenu,
 };
 
 /** 등록되지 않은 키를 넘기면 undefined 를 돌려주고, 호출부에서 메뉴를 건드리지 않는다 */
