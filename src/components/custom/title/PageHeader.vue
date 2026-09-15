@@ -41,7 +41,7 @@ const props = withDefaults(defineProps<Props>(), {
     </div>
     <!-- 2026-09-11 컴포넌트로 교체: button.lp-icon-btn -> Button variant="icon" -->
     <Button variant="icon" aria-label="메뉴" class="pc:hidden">
-      <Icon name="menu" :size="20" />
+      <Icon name="menu" :size="24" />
     </Button>
     <div :class="cn('mo:hidden', props.rightClass)">
       <slot name="right" />

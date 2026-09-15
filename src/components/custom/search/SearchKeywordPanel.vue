@@ -46,7 +46,7 @@ const emit = defineEmits<{
 <template>
   <div :class="cn('grid w-full grid-cols-1 gap-[4rem] lg:grid-cols-2', props.class)">
     <!-- 최근검색어 -->
-    <section class="px-6">
+    <section class="px-6 mo:px-0">
       <div class="flex items-center justify-between gap-4">
         <h2 class="text-[1.9rem] leading-[1.5] font-bold text-[var(--Text-body_0)]">최근검색어</h2>
         <Button
@@ -85,7 +85,7 @@ const emit = defineEmits<{
     </section>
 
     <!-- 추천검색어 -->
-    <section class="px-6">
+    <section class="px-6 mo:px-0">
       <h2 class="text-[1.9rem] leading-[1.5] font-bold text-[var(--Text-body_0)]">추천검색어</h2>
       <ol class="mt-4 flex flex-col gap-4">
         <li v-for="(item, index) in recommended" :key="item.keyword" class="flex items-center gap-2">
