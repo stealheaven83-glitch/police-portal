@@ -92,8 +92,6 @@ defineOptions({
 // LNB: 게시판 > Q&A
 useSideMenuSetup({ ...bulletinMenu, activeChild: 'Q&A' })
 
-// 상세는 본문이 하나의 흐름이라 work-body 째로 스크롤돼야 한다(PM-COM-0302 와 같음)
-useWorkLayoutSetup({ scrollable: true })
 
 const navItems = [
   { label: '홈', path: '/' },
