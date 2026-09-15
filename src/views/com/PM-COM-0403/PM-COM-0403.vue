@@ -135,7 +135,7 @@ const dialog = useDialog()
 const navItems = [
   { label: '홈', path: '/' },
   { label: '게시판' },
-  { label: 'Q&A', path: '/views/com/PM-COM-1101' },
+  { label: 'Q&A', path: '/views/com/PM-COM-0401' },
 ]
 
 const { form, writer, writtenAt, fileCount, canSave, addFiles, removeFile } = useQnaEdit()
@@ -177,7 +177,7 @@ async function onSave() {
     btnCancel: '취소',
   })
   if (!confirmed) return
-  router.push({ name: 'PM-COM-1101' })
+  router.push({ name: 'PM-COM-0401' })
 }
 
 useBottomTabSetup({

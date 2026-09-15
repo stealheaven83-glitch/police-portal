@@ -94,14 +94,14 @@ import {
   searchFieldOptions,
   openStateOptions,
   type QnaRow,
-} from './composable/PM-COM-1101'
+} from './composable/PM-COM-0401'
 import { bulletinMenu } from '../composable/notice'
 import { useQnaStore } from '../composable/qna'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 
 defineOptions({
-  name: 'PmCom1101',
+  name: 'PmCom0401',
 })
 
 // LNB: 게시판 > Q&A (presets.ts 에 게시판 메뉴가 아직 없어 도메인 composable 의 구성을 쓴다)
@@ -229,10 +229,10 @@ function onRowClick(_event: unknown, row: { getData: () => { id?: number } }) {
 }
 
 useBottomTabSetup({
-  value: 'PM-COM-1101',
+  value: 'PM-COM-0401',
   label: 'Q&A',
-  path: '/views/com/PM-COM-1101',
-  componentName: 'PmCom1101',
+  path: '/views/com/PM-COM-0401',
+  componentName: 'PmCom0401',
   closable: true,
 })
 </script>

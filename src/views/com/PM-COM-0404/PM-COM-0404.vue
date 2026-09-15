@@ -137,7 +137,7 @@ const dialog = useDialog()
 const navItems = [
   { label: '홈', path: '/' },
   { label: '게시판' },
-  { label: 'Q&A', path: '/views/com/PM-COM-1101' },
+  { label: 'Q&A', path: '/views/com/PM-COM-0401' },
 ]
 
 const { form, writer, writtenAt, fileCount, canSave, addFiles, removeFile } = useQnaCreate()
@@ -161,7 +161,7 @@ function onDrop(e: DragEvent) {
 
 /** 등록은 목록의 '작성' 버튼에서 들어오므로 취소하면 목록으로 돌아간다 */
 function onCancel() {
-  router.push({ name: 'PM-COM-1101' })
+  router.push({ name: 'PM-COM-0401' })
 }
 
 /**
@@ -179,7 +179,7 @@ async function onSave() {
     btnCancel: '취소',
   })
   if (!confirmed) return
-  router.push({ name: 'PM-COM-1101' })
+  router.push({ name: 'PM-COM-0401' })
 }
 
 useBottomTabSetup({

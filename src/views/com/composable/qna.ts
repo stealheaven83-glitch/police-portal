@@ -2,7 +2,7 @@ import { reactive, ref } from 'vue'
 import type { NoticeComment, NoticeFile } from './notice'
 
 /**
- * Q&A(PM-COM-1101 목록 / PM-COM-0402 상세) 도메인 상태.
+ * Q&A(PM-COM-0401 목록 / PM-COM-0402 상세) 도메인 상태.
  *
  * 목록/상세가 별개 라우트라 Layout.vue 가 화면을 통째로 리마운트한다. setup() 안에서 상태를 만들면
  * 화면을 옮길 때마다 초기화되므로 모듈 스코프 싱글턴으로 둔다(notice.ts 와 같은 방식 —

@@ -98,7 +98,7 @@ useWorkLayoutSetup({ scrollable: true })
 const navItems = [
   { label: '홈', path: '/' },
   { label: '게시판' },
-  { label: 'Q&A', path: '/views/com/PM-COM-1101' },
+  { label: 'Q&A', path: '/views/com/PM-COM-0401' },
 ]
 
 const router = useRouter()
@@ -120,7 +120,7 @@ async function onDownload(name: string) {
 }
 
 function goList() {
-  router.push({ name: 'PM-COM-1101' })
+  router.push({ name: 'PM-COM-0401' })
 }
 
 /** 수정 화면은 사용자 지정으로 PM-COM-0403 폴더에 있다(Figma 는 PM-COM-1103) */

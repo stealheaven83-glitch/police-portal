@@ -299,6 +299,8 @@ export const plannedScreens: ReadonlyArray<readonly [string, string]> = [
   ['PM-COM-0302', '공지사항 상세내역 화면'],
   ['PM-COM-0303', '공지사항 수정 화면'],
   ['PM-COM-0304', '공지사항 등록 화면'],
+  // 사용자 지정 ID — Q&A 목록/상세/수정/등록(Figma·대응표는 PM-COM-1101~1104). 0401 은 1101 폴더를 개명한 것(2026-09-15)
+  ['PM-COM-0401', 'Q&A 리스트 화면'],
   // 사용자 지정 ID — Figma 프레임은 PM-COM-1102(Q&A 상세)지만 PM-COM-0402 폴더로 만들라고 해서 추가(2026-09-14)
   ['PM-COM-0402', 'Q&A 상세내역 화면'],
   ['PM-COM-0403', 'Q&A 수정 화면'],
