@@ -1,26 +1,26 @@
 <template>
-  <div :class="styles['login-page']">
-    <div :class="styles['login-card']">
-      <div :class="styles.brand" aria-label="지역경찰포털 안내">
-        <div :class="styles['brand-inner']">
-          <img :class="styles.logo" src="/portal/asset/images/img/img_logo_white.svg" alt="지역경찰포털" />
+  <div class="login-page">
+    <div class="login-card">
+      <div class="login-brand" aria-label="지역경찰포털 안내">
+        <div class="login-brand-inner">
+          <img class="login-logo" src="/portal/asset/images/img/img_logo_white.svg" alt="지역경찰포털" />
         </div>
 
-        <div :class="styles.notice">
-          <div :class="styles['notice-header']">
+        <div class="login-notice">
+          <div class="login-notice-header">
             <img src="/portal/asset/images/icon/icon_info_white.svg" alt="" />
-            <p :class="styles['notice-title']">안내사항</p>
+            <p class="login-notice-title">안내사항</p>
           </div>
-          <ul :class="styles['notice-list']">
+          <ul class="login-notice-list">
             <li>아이디와 비밀번호는 [공조 조회 시스템]에서 찾을 수 있습니다.</li>
             <li>로그인 5회 실패 시 계정이 잠기게 됩니다. 잠금 해제는 관리자에게 문의 바랍니다.</li>
           </ul>
         </div>
       </div>
 
-      <div :class="styles['form-area']">
-        <h1 :class="styles['form-title']">로그인</h1>
-        <form :class="styles.form" @submit.prevent="onSubmit">
+      <div class="login-form-area">
+        <h1 class="login-form-title">로그인</h1>
+        <form class="login-form" @submit.prevent="onSubmit">
           <InputField2
             v-model="userId"
             label="아이디"
@@ -45,17 +45,17 @@
             :disabled="locked"
           />
 
-          <div :class="styles['save-id-row']">
+          <div class="login-save-id-row">
             <Checkbox v-model="saveId" label="아이디 저장" :disabled="locked" />
           </div>
 
-          <Button type="submit" variant="primary" size="md" :class="styles['submit-btn']">
+          <Button type="submit" variant="primary" size="md" class="login-submit-btn">
             로그인
           </Button>
         </form>
 
-        <div :class="styles['cert-section']">
-          <p :class="styles['cert-title']">행정전자서명 로그인</p>
+        <div class="login-cert-section">
+          <p class="login-cert-title">행정전자서명 로그인</p>
           <ButtonGroup :items="certButtons" class="gap-3 max-md:flex-col" />
         </div>
       </div>
@@ -75,7 +75,6 @@ import { useAutoTrigger, type ScreenTriggerMap } from '@/composables/useAutoTrig
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import CertRegisterDialog from './components/CertRegisterDialog.vue'
 import { useLogin } from './composable/PM-COM-0101'
-import styles from './style/PM-COM-0101.module.css'
 import { useDialog } from '@/composable/dialog/dialog'
 
 const dialog = useDialog()
@@ -108,8 +107,8 @@ function onCertLogin() {
 const certDialogOpen = ref(false)
 
 const certButtons: ButtonCaseItem[] = [
-  { key: 'register', label: '공인인증서 등록', variant: 'tertiary2', size: 'sm', class: styles['cert-btn'], onClick: () => (certDialogOpen.value = true) },
-  { key: 'login', label: '공인인증서 로그인', variant: 'secondary', size: 'sm', class: styles['cert-btn'], onClick: onCertLogin },
+  { key: 'register', label: '공인인증서 등록', variant: 'tertiary2', size: 'sm', class: 'login-cert-btn', onClick: () => (certDialogOpen.value = true) },
+  { key: 'login', label: '공인인증서 로그인', variant: 'secondary', size: 'sm', class: 'login-cert-btn', onClick: onCertLogin },
 ]
 
 /**

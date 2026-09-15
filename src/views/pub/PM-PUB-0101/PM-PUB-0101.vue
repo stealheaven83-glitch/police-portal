@@ -51,7 +51,7 @@
             input-class="w-40"
             placeholder="YYYY-MM-DD"
           />
-          <span :class="styles['date-separator']" aria-hidden="true">~</span>
+          <span aria-hidden="true">~</span>
           <DatePicker
             v-model="searchForm.diagnosedTo"
             size="sm"
@@ -76,7 +76,7 @@
       </template>
     </SearchWrapper>
 
-  <div class="list-actions"> 
+  <div class="list-actions">
     <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
       <Download :size="16" aria-hidden="true" />
       엑셀다운로드
@@ -93,7 +93,7 @@
       <LayoutPanel title="간이 범죄예방진단 현황">
         <TabulatorGrid
           ref="gridRef"
-          :class="styles['panel-grid']"
+          class="flex-1"
           :columns="listColumns"
           :data="rows"
           select-mode="single"
@@ -109,7 +109,7 @@
     <template #layout-2>
       <LayoutPanel title="간이 범죄예방진단 이력">
         <TabulatorGrid
-          :class="styles['panel-grid']"
+          class="flex-1"
           :columns="historyColumns"
           :data="historyRows"
           select-mode="single"
@@ -152,7 +152,6 @@ import {
   type DiagnosisRow,
   type DiagnosisHistoryRow,
 } from './composable/PM-PUB-0101'
-import styles from './style/PM-PUB-0101.module.css'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
 
 // KeepAlive 캐싱 대상 컴포넌트 이름 명시 (필수!)

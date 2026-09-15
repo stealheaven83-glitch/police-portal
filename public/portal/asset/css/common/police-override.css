@@ -1240,3 +1240,31 @@ tbody .row-total > td:first-child {
     transform: translateY(100%);
   }
 }
+
+/* ── 로그인 (PM-COM-0101) · 공인인증서 등록 팝업 (PM-COM-0102) ─────────────────
+   컴포넌트 자체 테일윈드(Input 의 pr-3/pr-4, Label 글자 크기, Button 폭)를 덮어야 해서 여기 둔다.
+   나머지 로그인 레이아웃은 police-common.css 의 .login-* 에 있다. */
+.login-submit-btn {
+  width: 100%;
+}
+
+.login-cert-btn {
+  flex: 1 1 0;
+}
+
+.login-pw-label {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--Text-body_1);
+}
+
+/* 오른쪽 지우기·보기 아이콘 두 개가 올라가는 자리만큼 비운다 */
+.login-pw-input {
+  padding-right: 8rem;
+}
+
+/* GenericDialog2 푸터 16px + 4px = 비밀번호 ↔ 등록 버튼 20px */
+.login-dialog-submit-btn {
+  width: 100%;
+  margin-top: 0.4rem;
+}

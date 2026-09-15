@@ -3507,3 +3507,237 @@
   color: var(--Text-body_0);
   text-align: center;
 }
+
+/* ── 로그인 (PM-COM-0101) · 공인인증서 등록 팝업 (PM-COM-0102) ─────────────────
+   화면 폴더의 PM-COM-0101.module.css 에서 옮겨 왔다. 한 단어 이름(.brand .notice .form …)은
+   police-style.css 와 겹칠 수 있어 기능 이름 login- 을 붙였다.
+   공통 컴포넌트(Button·Label·Input)에 직접 입히는 것은 police-override.css 에 있다. */
+.login-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.4rem;
+  background: var(--Background-gray01);
+}
+
+/* 높이를 고정하지 않는다 — 내용 + 상하 padding(브랜드/폼 각 8rem)으로 정해지고, 두 패널은 stretch 로 높이를 맞춘다 */
+.login-card {
+  display: flex;
+  width: 100%;
+  max-width: 120rem;
+  border-radius: 4rem;
+  overflow: hidden;
+  box-shadow: 0 0.4rem 2.4rem 0 rgba(0, 0, 0, 0.12);
+  background: var(--white);
+}
+
+/* 좌측 브랜드 패널 */
+.login-brand {
+  position: relative;
+  flex: 0 0 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8rem;
+  padding: 8rem;
+  overflow: hidden;
+  background: var(--Base-secondary);
+}
+
+/* 반복 패턴 레이어 — 패턴이 아니라 이 레이어의 불투명도를 10% 로 낮춘다 */
+.login-brand::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/portal/asset/images/img/pattern_police.svg');
+  background-repeat: repeat-y;
+  background-size: 60.7rem 9.9rem;
+  background-position: left top;
+  opacity: 0.1;
+}
+
+.login-brand-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 32rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-logo {
+  width: 16rem;
+  height: auto;
+}
+
+/* 안내사항 박스는 로고 컬럼(32rem)이 아니라 브랜드 패널 폭에 맞춰 펼쳐져서 .login-brand 의 직계 자식으로 둔다 */
+.login-notice {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  width: 100%;
+  padding: 1.6rem 2.4rem;
+  border-radius: 0.8rem;
+  background: var(--Base-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--white);
+}
+
+.login-notice-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.login-notice img {
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+}
+
+.login-notice-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--white);
+}
+
+.login-notice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding-left: 0.8rem;
+}
+
+.login-notice-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.2rem;
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--white);
+}
+
+.login-notice-list li::before {
+  content: '';
+  flex: none;
+  width: 0.4rem;
+  height: 0.4rem;
+  margin-top: 0.6em;
+  border-radius: 50%;
+  background: var(--white);
+}
+
+/* 우측 폼 영역 */
+.login-form-area {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8rem 10rem;
+}
+
+.login-form-title {
+  font-size: 4rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--Base-primary);
+  text-align: center;
+  margin-bottom: 2.4rem;
+}
+
+/* 값은 .lp-form-body 와 같지만 그쪽은 메모(개인수첩) 폼 전용이라 따로 둔다(CLAUDE.md §2 ③) */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.login-save-id-row {
+  display: flex;
+}
+
+.login-cert-section {
+  margin-top: 8rem;
+}
+
+.login-cert-title {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--Text-body_0);
+  text-align: left;
+  margin-bottom: 1.2rem;
+}
+
+/* 공인인증서 등록 팝업(PM-COM-0102) — GenericDialog2 헤더 16px + 8px = 제목↔아이디 24px */
+.login-dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 0.8rem;
+}
+
+.login-pw-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.login-pw-wrap {
+  position: relative;
+}
+
+.login-pw-icons {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  position: absolute;
+  top: 50%;
+  right: 1.6rem;
+  transform: translateY(-50%);
+}
+
+.login-pw-icons button {
+  display: flex;
+  color: var(--Text-body_2);
+}
+
+.login-pw-icons img {
+  width: 2rem;
+  height: 2rem;
+}
+
+@media (max-width: 48rem) {
+  .login-page {
+    padding: 0;
+  }
+
+  .login-card {
+    flex-direction: column;
+    max-width: none;
+    min-height: 100vh;
+    min-height: 100dvh;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .login-brand {
+    flex: none;
+    padding: 3.2rem 2.4rem;
+  }
+
+  .login-brand-inner {
+    max-width: 40rem;
+  }
+
+  .login-form-area {
+    padding: 3.2rem 2.4rem 4rem;
+  }
+}
