@@ -156,7 +156,7 @@
                 </span>
               </InfoField>
 
-              <InfoField label="접수경로" full>
+              <InfoField label="접수경로" full layout="column">
                 <RadioGroup v-model="form.receiptRoute" class="lp-choice-stack">
                   <div class="group-gap6">
                     <RadioGroupItem value="report112" label="112신고" />
