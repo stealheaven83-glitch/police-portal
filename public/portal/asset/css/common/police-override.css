@@ -1040,3 +1040,189 @@ tbody .row-total > td:first-child {
 .lp-dialog-footer > * {
   flex: var(--lp-dialog-btn-grow, 0) 1 auto;
 }
+
+/* ══ 레이어 팝업(GenericDialog2) 의 모바일 모양 ═════════════════════════ */
+
+/*
+ * 축이 둘이다 — **모양**(type)과 **범위**(device). GenericDialog2 가 클래스 두 개를 붙인다.
+ *
+ *   모양  .lp-popup-full    전체화면        (Figma MO 14958:133267)
+ *         .lp-popup-bottom  바텀시트 "모양"
+ *   범위  .lp-popup-always       device:'mobile'     — 폭과 무관하게 항상
+ *         .lp-popup-mo           device:'responsive' — 모바일 폭(<1000px)에서만
+ *
+ * `type` 을 안 주거나 device:'pc' 면 클래스가 안 붙는다 → **기존 70개 화면 무영향.**
+ *
+ * ⚠ Alert/Confirm 의 `.lp-dialog-*` 와 **다른 네임스페이스**다. 그쪽은 max-width:40rem 같은
+ *   자기 토큰을 물고 있어서 같이 쓰면 딸려온다.
+ *
+ * ⚠ 아래 규칙은 **두 벌이다** — ①(항상)과 ②(미디어쿼리 안). CSS 는 미디어쿼리 유무가 다른
+ *   두 규칙을 한 벌로 못 쓴다. scripts 로 같은 원본에서 찍어냈으니 **한쪽만 고치지 말 것.**
+ *   안쪽 자리(머리·본문·발)까지 범위를 물려야 한다 — 모양 클래스만 보면 responsive 일 때
+ *   PC 에서도 머리·발이 모바일 모양이 된다.
+ *
+ * ⚠ !important 세 군데(width·max-width·height): size(숫자)·height prop 이 **인라인 style**
+ *   로 들어와 layer(screen) 으로도 못 이긴다. CLAUDE.md §2 의 "JS 가 인라인 style 을 써
+ *   넣는 경우" 예외다.
+ *   특히 width 는 sizeStyle 의 `calc(100% - 20px)` 를 눌러야 한다 — 가운데 정렬을 푼 뒤라
+ *   그 20px 가 반씩 나뉘지 않고 **전부 오른쪽에 몰린다**(PM-PUB-0401 에서 실제로 났다).
+ *
+ * 경계 1000px 은 useResponsive.ts 의 BP_MOBILE · style.css 의 mo:/pc: 와 같은 값이다.
+ */
+
+/* ── ① device:'mobile' — 폭과 무관하게 항상 ───────────────────────────── */
+
+/* 가운데 정렬(top/left 50% + translate)을 푼다. v4 는 transform 이 아니라 translate 속성 */
+.lp-popup-always.lp-popup-full,
+.lp-popup-always.lp-popup-bottom {
+  top: auto;
+  left: 0;
+  right: 0;
+  transform: none;
+  translate: none;
+  width: 100% !important;
+  max-width: none !important;
+  border: 0;
+  box-shadow: none;
+}
+
+/* 전체화면 */
+.lp-popup-always.lp-popup-full {
+  inset: 0;
+  height: 100dvh !important;
+  max-height: none;
+  border-radius: 0;
+  padding: 0;
+}
+.lp-popup-always.lp-popup-full [data-slot="dialog-header"] {
+  height: 5.6rem;
+  margin-bottom: 0;
+  padding: 0 1.6rem;
+  border-bottom: 0.1rem solid var(--Border_gray03);
+}
+.lp-popup-always.lp-popup-full .lp-popup-body {
+  padding: 1.6rem;
+}
+.lp-popup-always.lp-popup-full [data-slot="dialog-footer"] {
+  margin-top: 0;
+  padding: 1.6rem;
+}
+
+/* 바텀시트 "모양" — 드래그로 내려 닫기는 없다(그건 BottomSheet/vaul) */
+.lp-popup-always.lp-popup-bottom {
+  bottom: 0;
+  height: auto !important;
+  max-height: 85dvh;
+  border-radius: 1.6rem 1.6rem 0 0;
+  padding: 2.4rem 1.6rem 1.6rem;
+  animation: lp-popup-bottom-up 0.22s ease-out;
+}
+.lp-popup-always.lp-popup-bottom[data-state="closed"] {
+  animation: lp-popup-bottom-down 0.18s ease-in;
+}
+/* 손잡이 — 모양만이라 잡아끌 수는 없다 */
+.lp-popup-always.lp-popup-bottom::before {
+  content: "";
+  position: absolute;
+  top: 0.8rem;
+  left: 50%;
+  translate: -50% 0;
+  width: 4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--Border_gray02);
+}
+
+/* 두 모양 다 하단 버튼이 폭을 나눠 가진다 */
+.lp-popup-always.lp-popup-full [data-slot="dialog-footer"] > *,
+.lp-popup-always.lp-popup-bottom [data-slot="dialog-footer"] > * {
+  flex: 1 1 auto;
+}
+
+/* ── ② device:'responsive' — 모바일 폭에서만. ①과 같은 내용이다 ────────── */
+@media (max-width: 999.98px) {
+
+  /* 가운데 정렬(top/left 50% + translate)을 푼다. v4 는 transform 이 아니라 translate 속성 */
+  .lp-popup-mo.lp-popup-full,
+  .lp-popup-mo.lp-popup-bottom {
+    top: auto;
+    left: 0;
+    right: 0;
+    transform: none;
+    translate: none;
+    width: 100% !important;
+    max-width: none !important;
+    border: 0;
+    box-shadow: none;
+  }
+
+  /* 전체화면 */
+  .lp-popup-mo.lp-popup-full {
+    inset: 0;
+    height: 100dvh !important;
+    max-height: none;
+    border-radius: 0;
+    padding: 0;
+  }
+  .lp-popup-mo.lp-popup-full [data-slot="dialog-header"] {
+    height: 5.6rem;
+    margin-bottom: 0;
+    padding: 0 1.6rem;
+    border-bottom: 0.1rem solid var(--Border_gray03);
+  }
+  .lp-popup-mo.lp-popup-full .lp-popup-body {
+    padding: 1.6rem;
+  }
+  .lp-popup-mo.lp-popup-full [data-slot="dialog-footer"] {
+    margin-top: 0;
+    padding: 1.6rem;
+  }
+
+  /* 바텀시트 "모양" — 드래그로 내려 닫기는 없다(그건 BottomSheet/vaul) */
+  .lp-popup-mo.lp-popup-bottom {
+    bottom: 0;
+    height: auto !important;
+    max-height: 85dvh;
+    border-radius: 1.6rem 1.6rem 0 0;
+    padding: 2.4rem 1.6rem 1.6rem;
+    animation: lp-popup-bottom-up 0.22s ease-out;
+  }
+  .lp-popup-mo.lp-popup-bottom[data-state="closed"] {
+    animation: lp-popup-bottom-down 0.18s ease-in;
+  }
+  /* 손잡이 — 모양만이라 잡아끌 수는 없다 */
+  .lp-popup-mo.lp-popup-bottom::before {
+    content: "";
+    position: absolute;
+    top: 0.8rem;
+    left: 50%;
+    translate: -50% 0;
+    width: 4rem;
+    height: 0.4rem;
+    border-radius: 999px;
+    background: var(--Border_gray02);
+  }
+
+  /* 두 모양 다 하단 버튼이 폭을 나눠 가진다 */
+  .lp-popup-mo.lp-popup-full [data-slot="dialog-footer"] > *,
+  .lp-popup-mo.lp-popup-bottom [data-slot="dialog-footer"] > * {
+    flex: 1 1 auto;
+  }
+}
+
+@keyframes lp-popup-bottom-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes lp-popup-bottom-down {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}

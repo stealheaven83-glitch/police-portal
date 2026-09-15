@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 // import { cn } from '@/lib/utils'
 
 import closeIcon from '@/assets/icon/icon_popup_x.svg?url'
+import { dialogShapeClass, type DialogDevice, type DialogShape } from './dialogDevice'
 
 /**
  * UI/UX 공통 가이드 4.3.2 레이어 팝업(Layer Pop-up) 컴포넌트
@@ -49,6 +50,19 @@ const props = withDefaults(
      * 지정해도 max-h-[85dvh] 는 그대로 걸리므로 화면보다 커지지 않는다.
      */
     height?: DialogSize
+    /**
+     * 모바일에서 **어떤 모양**이 되나 — 'full'(전체화면) / 'bottom'(바텀시트 모양).
+     * 안 주면 언제나 가운데 팝업이다(지금까지와 같다). dialogDevice.ts 참고
+     */
+    type?: DialogShape
+    /**
+     * 그 모양을 **언제** 쓰나. Alert/Confirm 의 device 와 같은 규칙이다.
+     *   'responsive'(기본) PC 는 가운데 팝업, 모바일 폭에서 `type` 모양
+     *   'mobile'           폭과 무관하게 **항상** `type` 모양 (PC 에서도)
+     *   'pc'               언제나 가운데 팝업
+     * `type` 을 안 주면 이 값은 의미가 없다.
+     */
+    device?: DialogDevice
   }>(),
   {
     title: '',
@@ -59,8 +73,12 @@ const props = withDefaults(
     confirmText: '확인',
     cancelText: '취소',
     persistent: false,
+    device: 'responsive',
   },
 )
+
+/** 모양·범위는 police-override.css 의 .lp-popup-* 가 들고 있다. type 이 없으면 빈 배열 */
+const shapeClass = computed(() => dialogShapeClass(props.type, props.device))
 
 /** height 를 준 팝업만 높이를 고정한다 — 본문(flex-1)이 남은 높이를 가져간다 */
 const heightStyle = computed(() => {
@@ -178,7 +196,7 @@ function handleCancel() {
     <DialogContent
       :show-close-button="showCloseButton"
       class="dialog-wrap px-[3.9rem] py-6 gap-0 flex flex-col max-h-[85dvh]"
-      :class="sizeClass"
+      :class="[sizeClass, shapeClass]"
       :style="[sizeStyle, heightStyle]"
       @pointer-down-outside="(e: Event) => persistent && e.preventDefault()"
       @escape-key-down="(e: Event) => persistent && e.preventDefault()"
@@ -207,7 +225,7 @@ function handleCancel() {
       </DialogHeader>
 
       <!-- 본문: 내용이 많으면 내부 스크롤. 스크롤이 생기면 data-scrollable="true" -->
-      <div ref="bodyRef" class="flex-1 min-h-0 overflow-y-auto" :style="scrollStyle" :data-scrollable="isScrollable">
+      <div ref="bodyRef" class="lp-popup-body flex-1 min-h-0 overflow-y-auto" :style="scrollStyle" :data-scrollable="isScrollable">
         <slot />
       </div>
 

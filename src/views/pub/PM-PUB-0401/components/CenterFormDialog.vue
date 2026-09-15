@@ -4,6 +4,7 @@
     :title="formMode === 'detail' ? '해바라기센터 상세' : '해바라기센터 등록'"
     :size="560"
     :show-close-button="true"
+    type="full"
   >
     <InfoTable :columns="1" popup size="110">
       <InfoField label="센터명" for="center-form-name">
