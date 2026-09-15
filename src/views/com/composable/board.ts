@@ -41,9 +41,9 @@ export const boardMenu: SideMenuConfig = {
     {
       name: '교육자료 나눔터',
       children: [
-        { name: '교육훈련 우수사례', path: '/views/com/PM-COM-1401' },
-        { name: '상시학습자료', path: '/views/com/PM-COM-1501' },
-        { name: '법령 · 지침 · 매뉴얼', path: '/views/com/PM-COM-1601' },
+        { name: '교육훈련 우수사례', path: '/views/com/PM-COM-0701' },
+        { name: '상시학습자료', path: '/views/com/PM-COM-0705' },
+        { name: '법령 · 지침 · 매뉴얼', path: '/views/com/PM-COM-0709' },
         { name: '현장대응팁', path: '/views/com/PM-COM-1701' },
       ],
     },
@@ -244,10 +244,13 @@ export const BOARD_SPECS: Record<BoardKey, BoardSpec> = {
     menuChild: '교육훈련 우수사례',
     openIndex: 4,
     breadcrumb: ['교육자료 나눔터', '교육훈련 우수사례'],
-    listId: 'PM-COM-1401',
-    detailId: 'PM-COM-1402',
-    editId: 'PM-COM-1403',
-    createId: 'PM-COM-1404',
+    /* 사용자 지정: 화면ID를 기획서(교육훈련 우수사례 V0.5.6)의 07xx 로 쓴다.
+       screen-id-map.md(351~354행)와 Figma 시안 프레임 이름은 PM-COM-1401~1404 이라 서로 다르다 —
+       어느 쪽이 최신인지 IA 확인이 필요하다(인계 메모). */
+    listId: 'PM-COM-0701',
+    detailId: 'PM-COM-0702',
+    editId: 'PM-COM-0703',
+    createId: 'PM-COM-0704',
     hasPinned: true,
     hasOpenState: false,
     hasCategory: false,
@@ -264,10 +267,12 @@ export const BOARD_SPECS: Record<BoardKey, BoardSpec> = {
     menuChild: '상시학습자료',
     openIndex: 4,
     breadcrumb: ['교육자료 나눔터', '상시학습자료'],
-    listId: 'PM-COM-1501',
-    detailId: 'PM-COM-1502',
-    editId: 'PM-COM-1503',
-    createId: 'PM-COM-1504',
+    /* 사용자 지정: 교육훈련 우수사례(training)와 같은 이유로 기획서의 07xx 를 쓴다.
+       screen-id-map.md 와 Figma 시안 프레임 이름은 PM-COM-1501~1504 라 서로 다르다 — IA 확인 필요. */
+    listId: 'PM-COM-0705',
+    detailId: 'PM-COM-0706',
+    editId: 'PM-COM-0707',
+    createId: 'PM-COM-0708',
     hasPinned: true,
     hasOpenState: false,
     hasCategory: false,
@@ -284,10 +289,12 @@ export const BOARD_SPECS: Record<BoardKey, BoardSpec> = {
     menuChild: '법령 · 지침 · 매뉴얼',
     openIndex: 4,
     breadcrumb: ['교육자료 나눔터', '법령 · 지침 · 매뉴얼'],
-    listId: 'PM-COM-1601',
-    detailId: 'PM-COM-1602',
-    editId: 'PM-COM-1603',
-    createId: 'PM-COM-1604',
+    /* 사용자 지정: 교육훈련 우수사례(training)와 같은 이유로 기획서의 07xx 를 쓴다.
+       screen-id-map.md 와 Figma 시안 프레임 이름은 PM-COM-1601~1604 라 서로 다르다 — IA 확인 필요. */
+    listId: 'PM-COM-0709',
+    detailId: 'PM-COM-0710',
+    editId: 'PM-COM-0711',
+    createId: 'PM-COM-0712',
     hasPinned: true,
     hasOpenState: false,
     hasCategory: false,

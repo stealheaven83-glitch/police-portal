@@ -1,4 +1,5 @@
 import { computed, ref, watch } from 'vue'
+import { qnaCategoryLabels, type QnaCategory } from '../../composable/qna'
 
 /** Q&A 목록(PM-COM-1101) 한 줄.
  *  칸 구성은 Figma 11220:44762 — 공지사항(PM-COM-1001)과 달리 부서·추천수가 없고 공개상태·카테고리가 있다 */
@@ -19,7 +20,7 @@ export interface QnaRow {
   mine: boolean
 }
 
-export type QnaCategory = 'trouble' | 'allowance' | 'diagnosis' | 'sunflower'
+export type { QnaCategory }
 
 /** 카테고리 탭 — Figma category tab(14374:123334). 'all' 은 전체 */
 export const categoryOptions: { label: string; value: 'all' | QnaCategory }[] = [
@@ -30,13 +31,8 @@ export const categoryOptions: { label: string; value: 'all' | QnaCategory }[] = 
   { label: '해바라기 센터', value: 'sunflower' },
 ]
 
-/** 목록 칸에 보이는 카테고리 이름 */
-export const categoryLabels: Record<QnaCategory, string> = {
-  trouble: '장애처리',
-  allowance: '출동수당',
-  diagnosis: '범죄예방진단',
-  sunflower: '해바라기센터',
-}
+/** 목록 칸에 보이는 카테고리 이름 — 도메인(qna.ts)의 것 */
+export const categoryLabels = qnaCategoryLabels
 
 /** 성명 검색 옵션 — 공지사항(PM-COM-1001)과 같은 구성 */
 export const authorFilterOptions = [

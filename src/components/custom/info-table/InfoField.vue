@@ -8,6 +8,10 @@ import styles from './InfoTable.module.css'
  * - `for` 를 주면 단일 입력 요소와 연결되는 진짜 <label for> 로 렌더링한다.
  * - `for` 가 없으면(체크박스+드롭다운 조합처럼 값 영역에 컨트롤이 여러 개인 경우)
  *   라벨은 <span id>, 값 영역은 role="group" aria-labelledby 로 묶어 접근성을 유지한다.
+ *
+ * 클래스는 세 자리로 나눠 받는다 — `class`(칸 전체) · `labelClass`(제목) · `colClass`(값).
+ * InfoTable.module.css 는 @layer 밖이라 여기서 이미 정한 속성(라벨 폭·테두리 등)은
+ * police-*.css 의 클래스로 못 덮는다. 폭은 `--info-label-w` 변수로 바꾼다(CLAUDE.md §1).
  */
 interface Props {
   label?: string
@@ -19,7 +23,11 @@ interface Props {
    */
   rowSpan?: 2
   layout?: 'row' | 'column'
+  /** 칸 전체(라벨+값을 감싸는 바깥) */
   class?: string
+  /** 라벨(제목) 쪽. `for` 유무로 <label>/<span> 이 갈리는데 양쪽 다 붙는다 */
+  labelClass?: string
+  /** 값(정보) 쪽 */
   colClass?: string
 }
 
@@ -48,10 +56,10 @@ function isTextOnly() {
 
 <template>
   <div :class="cn(styles.field, props.full && styles.fieldFull, props.rowSpan === 2 && styles.fieldRowSpan2, props.class)">
-    <label v-if="props.for" :class="styles.label" :for="props.for">
+    <label v-if="props.for" :class="cn(styles.label, props.labelClass)" :for="props.for">
       <slot name="label">{{ label }}</slot>
     </label>
-    <span v-else :class="styles.label" :id="labelId">
+    <span v-else :class="cn(styles.label, props.labelClass)" :id="labelId">
       <slot name="label">{{ label }}</slot>
     </span>
 
