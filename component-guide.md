@@ -705,6 +705,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-switch-box` | 라벨 아래 스위치를 입력칸 높이(4.8rem)에 세로 가운데 놓는 상자 — 같은 줄의 md 입력과 라벨·밑선을 맞출 때 | COM-1003, 1004 |
 | `.lp-tab-swiper` `-next` | 카테고리 탭줄이 폭을 넘칠 때(`TabsList scrollable`) 오른쪽 끝에 흰 그라데이션+화살표(Figma `swiper__atomic`)를 얹는 감싸개. 탭줄→검색상자 20 도 여기서 | COM-0601 |
 | `.lp-search-rows` | 검색상자 안 조건 줄을 시안대로 여러 줄로 고정(`.search-area` 를 줄마다, 줄 사이 16). 한 줄에 다 넣고 wrap 에 맡기면 창 폭에 따라 시안과 다르게 접힌다 | COM-0501 |
+| `.lp-voice-search` `-img` `-body` `-text` `-status` | 음성인식 팝업(`GenericDialog2 type="full"`) 본문 — 마이크 150×156 + 인식된 말(32 bold, `--Base-primary`) + 상태 안내(17 가운데)를 세로 가운데에 놓는다. `max-width 31.2rem` 가운데정렬이라 팝업 본문 여백 16과 합쳐 시안의 24가 된다 | IRC-0102, 0103 |
 | `.lp-board-form-actions` | 게시판 등록/수정 폼 하단 버튼줄 — 폼 마지막 블록과 40, 버튼 사이 12(Figma). 메모 폼의 `.lp-form-actions-center`(16/4)와 값이 달라 따로 | COM-1003, 1004, 0403 |
 | `.lp-photo-grid` `-item` `-label` `-box` `-img` `-empty` `-empty-icon` `-empty-label` `-meta` `-actions` | 진단 상세의 취약/개선 상황사진 4칸(112사건 표 아래에 붙는 칸). **`police-style.css` 의 `.photo-box`/`.photo-empty` 는 인사관리 증명사진용 12rem 칸이라 서로 다른 것 — 이름이 비슷해도 섞어 쓰지 않는다** | PUB-0101 |
 | `.lp-stat-field` `.lp-stat-grade` `.lp-stat-value` | 라벨-값 표의 한 칸에 [등급][수치] 두 조각이 들어가는 통계 표. 값 영역 여백을 걷어내고 두 조각 사이에 세로선을 넣는다 | PUB-0101 참고사항 |

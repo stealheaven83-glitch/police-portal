@@ -3466,3 +3466,44 @@
   padding-left: 2.4rem;
   background: linear-gradient(to right, rgba(255, 255, 255, 0.25), var(--white) 27%);
 }
+
+/* 음성인식 팝업 본문(PM-IRC-0102 진행중 / PM-IRC-0103 결과) — GenericDialog2 type="full" 안에서 세로 가운데.
+   Figma MO 14958:133267 / 14958:133367: 내용폭 312, 마이크 150×156, 이미지↔글 24.
+   팝업 본문 좌우 여백 16(.lp-popup-full)에 max-width 312 가운데정렬이 더해져 360 폭에서 시안의 24가 된다 */
+.lp-voice-search {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.4rem;
+  min-height: 100%;
+  max-width: 31.2rem;
+  margin: 0 auto;
+}
+.lp-voice-search-img {
+  width: 15rem;
+  height: 15.6rem;
+  object-fit: contain;
+}
+/* 인식된 말 + 상태안내 묶음 — 시안 gap 16 */
+.lp-voice-search-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  width: 100%;
+}
+/* 인식된 말 — Figma heading/large(32 bold) + color/text/primary. 시안대로 왼쪽 정렬이다 */
+.lp-voice-search-text {
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--Base-primary);
+  word-break: break-word;
+}
+/* 상태 안내 — Figma body/medium(17), 가운데 */
+.lp-voice-search-status {
+  font-size: 1.7rem;
+  line-height: 1.5;
+  color: var(--Text-body_0);
+  text-align: center;
+}

@@ -990,28 +990,34 @@ tbody .row-total > td:first-child {
 .lp-dialog-pc,
 .lp-dialog-responsive {
   --lp-dialog-max-w: 40rem;
-  --lp-dialog-gap: 0;
   --lp-dialog-title-size: 2.4rem;
   --lp-dialog-desc-size: 1.7rem;
   --lp-dialog-desc-bg: #f4f5f6;
+  --lp-dialog-desc-min-h: 8.4rem;
+  --lp-dialog-head-display: flex;
   --lp-dialog-btn-grow: 0;
+  --lp-dialog-btn-w: auto;
 }
 .lp-dialog-mobile {
   --lp-dialog-max-w: 32rem;
-  --lp-dialog-gap: 2.4rem;
   --lp-dialog-title-size: 1.9rem;
   --lp-dialog-desc-size: 1.5rem;
   --lp-dialog-desc-bg: #e6e8ea;
+  --lp-dialog-desc-min-h: auto;
+  --lp-dialog-head-display: none;
   --lp-dialog-btn-grow: 1;
+  --lp-dialog-btn-w: 100%;
 }
 @media (max-width: 999.98px) {
   .lp-dialog-responsive {
     --lp-dialog-max-w: 32rem;
-    --lp-dialog-gap: 2.4rem;
     --lp-dialog-title-size: 1.9rem;
     --lp-dialog-desc-size: 1.5rem;
     --lp-dialog-desc-bg: #e6e8ea;
+    --lp-dialog-desc-min-h: auto;
+    --lp-dialog-head-display: none;
     --lp-dialog-btn-grow: 1;
+    --lp-dialog-btn-w: 100%;
   }
 }
 
@@ -1020,7 +1026,12 @@ tbody .row-total > td:first-child {
 .lp-dialog-mobile,
 .lp-dialog-responsive {
   max-width: var(--lp-dialog-max-w, 40rem);
-  gap: var(--lp-dialog-gap, 0);
+  /* 세 기기 다 0 — 템플릿의 gap-0 과 같은 값을 여기서 못박는다(베이스는 gap-4 다) */
+  gap: 0;
+}
+/* 닫기(X) 자리. 모바일 시안엔 없어서 통째로 접는다 */
+.lp-dialog-head {
+  display: var(--lp-dialog-head-display, flex);
 }
 .lp-dialog-title {
   font-size: var(--lp-dialog-title-size, 2.4rem);
@@ -1032,13 +1043,16 @@ tbody .row-total > td:first-child {
 }
 .lp-dialog-desc-box {
   background: var(--lp-dialog-desc-bg, #f4f5f6);
+  /* PC 는 안내문이 짧아도 상자 높이를 잡아 두고, 모바일은 내용만큼만 */
+  min-height: var(--lp-dialog-desc-min-h, 8.4rem);
 }
 .lp-dialog-desc {
   font-size: var(--lp-dialog-desc-size, 1.7rem);
 }
-/* 모바일은 버튼 둘이 폭을 나눠 가진다(시안 132+8+132) */
+/* 모바일은 버튼이 폭을 나눠 가진다(시안 132+8+132). 버튼 하나뿐인 알림창은 꽉 찬다 */
 .lp-dialog-footer > * {
   flex: var(--lp-dialog-btn-grow, 0) 1 auto;
+  width: var(--lp-dialog-btn-w, auto);
 }
 
 /* ══ 레이어 팝업(GenericDialog2) 의 모바일 모양 ═════════════════════════ */

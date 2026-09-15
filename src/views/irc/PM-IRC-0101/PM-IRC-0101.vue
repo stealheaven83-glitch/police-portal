@@ -79,6 +79,8 @@
       </div>
     </section>
   </div>
+
+  <VoiceSearchDialog v-model:open="voiceDialogOpen" @search="onVoiceConfirm" />
 </template>
 
 <script setup lang="ts">
@@ -98,7 +100,8 @@ import {
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useDialog } from '@/composable/dialog/dialog'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
-import { useIncidentScenarioSearch, voiceWaitTimeoutDialog } from './composable/PM-IRC-0101'
+import VoiceSearchDialog from './components/VoiceSearchDialog.vue'
+import { useIncidentScenarioSearch } from './composable/PM-IRC-0101'
 defineOptions({ name: 'PmIrc0101' })
 
 /**
@@ -117,6 +120,9 @@ const navItems = [{ label: '홈', path: '/' }, { label: '사건대응 시나리�
 
 const dialog = useDialog()
 const searchBarRef = ref<InstanceType<typeof SearchBar> | null>(null)
+
+// 음성인식 팝업(PM-IRC-0102 진행중 / PM-IRC-0103 결과) 열림 여부
+const voiceDialogOpen = ref(false)
 
 const {
   keyword,
@@ -151,17 +157,20 @@ async function onSearch(value: string) {
 }
 
 /**
- * 음성검색 버튼 → '대기시간이 초과되었습니다' 팝업(Figma 13323:98207).
- *
- * 시안 지정: [취소]/[음성인식 시작] 2버튼이라 confirm 을 쓴다 — CLAUDE.md §4 기본(alert 만)과
- * 다르지만 시안대로 따름. 실제 음성인식 시작은 개발팀이 잇는다.
+ * 음성검색 버튼 → 음성인식 팝업(진행중 → 결과). Figma MO 14958:133267 / 14958:133367.
  * 음성검색 버튼 자체는 police-style.css 의 모바일 미디어쿼리에서만 보인다.
+ *
+ * '대기시간이 초과되었습니다' 확인창(Figma 13323:98207, `voiceWaitTimeoutDialog`)은 실제
+ * 대기시간이 넘었을 때 뜨는 것이라 개발팀이 그 시점에 잇는다 — 버튼을 누를 때마다 뜰 자리가 아니다.
  */
-async function onVoiceSearch() {
-  const { confirmed } = await dialog.confirm({ ...voiceWaitTimeoutDialog })
-  if (!confirmed) {
-    focusSearchBar()
-  }
+function onVoiceSearch() {
+  voiceDialogOpen.value = true
+}
+
+/** 음성인식 결과의 [검색] — 인식된 말로 화면 검색을 실행한다 */
+function onVoiceConfirm(value: string) {
+  keyword.value = value
+  void onSearch(value)
 }
 
 function onSelectKeyword(value: string) {
