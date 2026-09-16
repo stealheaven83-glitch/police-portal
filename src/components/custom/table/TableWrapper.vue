@@ -166,9 +166,16 @@ const emit = defineEmits(['page-change', 'select-row', 'update:itemsPerPage'])
 /**
  * 칸 기본 모양. #header / #summary-row 슬롯으로 직접 그릴 때도 같은 모양을 쓰도록 넘겨준다
  * (호출부 화면에 테일윈드 문자열을 흩뿌리지 않기 위함 — CLAUDE.md 1장).
+ *
+ * 헤더 칸은 36px = 글자줄 20(leading-5) + 상하 여백 8(py-2) x 2.
+ * h-9(36px)로 못 박는 이유: ui/table 의 TableHead 베이스에 h-10(40px)이 있어서
+ * 여백만 주면 40 에서 안 내려온다. cn() 이 tailwind-merge 라 뒤에 오는 h-9 가 이긴다.
+ *
+ * 본문 칸은 48px = 글자줄 24(leading-6) + 상하 여백 12(p-3) x 2. 그리드(tabulator-theme.css)의
+ * 본문 셀과 같은 값이라 두 표가 섞인 화면에서 줄 높이가 갈리지 않는다.
  */
-const headClass = 'text-center text-[#464C53] font-bold border-b border-[#8A949E]'
-const bodyCellClass = 'text-center border-l border-[#E6E8EA] first:border-l-0'
+const headClass = 'h-9 py-2 leading-5 text-center text-[#464C53] font-bold border-b border-[#8A949E]'
+const bodyCellClass = 'h-12 p-3 leading-6 text-center border-l border-[#E6E8EA] first:border-l-0'
 
 // 페이지당 표시건수 select 변경 핸들러 (부모가 update:itemsPerPage 를 안 듣는 기존 사용처는 그대로 무동작)
 const onItemsPerPageSelect = (value: unknown) => {

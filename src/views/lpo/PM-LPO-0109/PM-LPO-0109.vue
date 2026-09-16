@@ -98,7 +98,7 @@ const columns: TabulatorGridColumn[] = [
   { title: '사건번호', field: 'caseNo', width: 160, hozAlign: 'center' },
   { title: '도착소요시간', field: 'arrivalTime', width: 181, hozAlign: 'center' },
   { title: '종결일시', field: 'closedAt', width: 181, hozAlign: 'center' },
-  { title: '출동자', field: 'responders', widthGrow: 2, hozAlign: 'center' },
+  { title: '출동자', field: 'responders', width: 300, hozAlign: 'center' },
   { title: '종결자', field: 'closer', width: 120, hozAlign: 'center' },
 ]
 

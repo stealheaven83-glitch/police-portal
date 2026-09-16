@@ -1174,6 +1174,7 @@
   background: var(--white);
   border: 0.1rem dashed var(--Border_gray01);
   border-radius: var(--Radius-medium2);
+  text-align: center;
 }
 .lp-summary-box-filled {
   flex-direction: column;
@@ -1705,10 +1706,10 @@
 .lp-cal-cell {
   display: flex;
   align-items: flex-start;
-  gap: 2rem;
+  gap: 1.6rem;
   min-height: 0;
   overflow: hidden;
-  padding: 1.2rem;
+  padding: 0.6rem;
   background: var(--white);
   border-right: 0.1rem solid var(--Border_gray03);
   border-bottom: 0.1rem solid var(--Border_gray03);
@@ -1728,6 +1729,11 @@
   outline: 0.2rem solid var(--Base-primary);
   outline-offset: -0.2rem;
 }
+/* 팝오버가 열려 있는 칸 — 날짜 숫자만 진하게 (닫힌 칸은 #464C53/400) */
+.lp-cal-cell-open .lp-cal-date {
+  font-weight: 600;
+  color: var(--Text-body_0);
+}
 .lp-cal-date {
   display: flex;
   flex-shrink: 0;
@@ -1735,9 +1741,9 @@
   justify-content: center;
   width: 2.4rem;
   height: 2.4rem;
-  font-size: 1.7rem;
-  font-weight: 600;
-  color: var(--Text-body_0);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--Text-body_1);
 }
 /* 날짜 오른쪽 칸 — 공휴일 이름과 근무 배지가 세로로 쌓인다 */
 .lp-cal-cell-body {

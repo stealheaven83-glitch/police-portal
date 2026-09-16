@@ -150,7 +150,7 @@ const borderStyleCss = computed(() => {
       <Label
         v-if="label || $slots.label"
         :for="fieldId"
-        :class="cn('font-normal text-[1.5rem]', labelPosition === 'left' ? 'shrink-0 mr-3' : 'mb-2', labelClass)"
+        :class="cn('font-normal text-[1.5rem] text-[var(--Text-body_1)]', labelPosition === 'left' ? 'shrink-0 mr-3' : 'mb-2', labelClass)"
       >
         <slot name="label">{{ label }}</slot>
         <span v-if="required" class="text-destructive">*</span>
