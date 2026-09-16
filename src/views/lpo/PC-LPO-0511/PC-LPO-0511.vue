@@ -24,13 +24,13 @@
             v-model="workYear"
             :options="yearOptions"
             size="sm"
-            triggerClass="w-25"
+            trigger-class="w-30"
           />
           <SelectField
             v-model="workMonth"
             :options="monthOptions"
             size="sm"
-            triggerClass="w-20"
+            trigger-class="w-25"
           />
         </div>
         <SelectField
@@ -38,14 +38,14 @@
           v-model="applicant"
           :options="applicantOptions"
           size="sm"
-          triggerClass="w-50"
+          trigger-class="w-30"
         />
         <SelectField
           label="신청구분"
           v-model="applyType"
           :options="applyTypeOptions"
           size="sm"
-          triggerClass="w-32"
+          trigger-class="w-30"
         />
       </div>
     </template>
@@ -61,6 +61,7 @@
     </Button>
   </div>
 
+  <!-- 신고내용·처리내용이 두 줄로 들어가 행이 내용만큼 늘어난다(lp-grid-multiline + variableHeight) -->
   <TabulatorGrid
     ref="gridRef"
     :columns="columns"
@@ -69,7 +70,7 @@
     placeholder="조회된 출동수당 취합 내역이 없습니다"
     show-pagination
     :items-per-page="10"
-    class="flex-1"
+    class="flex-1 lp-grid-multiline"
   />
 </template>
 
@@ -130,52 +131,49 @@ const {
   rows,
 } = useDispatchSummaryDaily();
 
+// 컬럼 폭은 시안(12853:63853) 값 — 합이 1600 이라 1564 본문에서는 가로 스크롤이 생기는 게 맞다.
+// 시안 개정(2026-09-16)으로 '도착 소요시간' 컬럼은 빠졌다(데이터 필드 arrivalTime 은 그대로 둠).
 const columns: TabulatorGridColumn[] = [
   { title: "번호", field: "no", width: 60, hozAlign: "center" },
-  { title: "부서", field: "dept", hozAlign: "center" },
+  { title: "부서", field: "dept", width: 240, hozAlign: "center" },
   {
     title: "팀",
     field: "team",
-    width: 70,
+    width: 60,
     hozAlign: "center",
     headerSort: true,
   },
-  { title: "직급성명", field: "rankName", hozAlign: "center" },
+  { title: "직급성명", field: "rankName", width: 100, hozAlign: "center" },
   { title: "생년월일", field: "birthDate", width: 110, hozAlign: "center" },
-  { title: "출동건수", field: "dispatchCount", width: 90, hozAlign: "center" },
-  { title: "접수일시", field: "receivedAt", width: 140, hozAlign: "center" },
-  { title: "범죄명", field: "crimeName", width: 100, hozAlign: "center" },
-  { title: "접수번호", field: "receiptNo", width: 180, hozAlign: "center" },
-  { title: "사건번호", field: "caseNo", width: 200, hozAlign: "center" },
+  { title: "출동건수", field: "dispatchCount", width: 70, hozAlign: "center" },
+  { title: "접수일시", field: "receivedAt", width: 110, hozAlign: "center" },
+  { title: "범죄명", field: "crimeName", width: 80, hozAlign: "center" },
+  { title: "접수번호", field: "receiptNo", width: 120, hozAlign: "center" },
+  { title: "사건번호", field: "caseNo", width: 70, hozAlign: "center" },
   {
     title: "신고내용",
     field: "reportContent",
-    widthGrow: 2,
+    width: 180,
     hozAlign: "center",
+    variableHeight: true,
   },
   {
     title: "처리내용",
     field: "processContent",
-    widthGrow: 2,
+    width: 180,
     hozAlign: "center",
+    variableHeight: true,
   },
   {
     title: "현장조치내용",
     field: "onSiteAction",
-    width: 110,
+    width: 100,
     hozAlign: "center",
   },
   {
     title: "임의등록사유",
     field: "manualReason",
-    width: 130,
-    hozAlign: "center",
-  },
-  {
-    
-    title: "도착 소요시간",
-    field: "arrivalTime",
-    width: 130,
+    width: 120,
     hozAlign: "center",
   },
 ];

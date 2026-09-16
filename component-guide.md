@@ -695,6 +695,8 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-duty-table` `-col-date` `-col-side` `-group` `-entry` `-remove` `-scroll` | 근무현황 표(일자 × 주간·야간·심야 × 사고자·자원근무자 — 한 칸에 여러 줄이 들어가 Tabulator 를 못 쓴다). `-group` 은 2단 머리글의 그룹 칸(아래 선을 연하게), `-entry` 는 칸 안 한 줄로 **`.lp-duty-line` 위에 얹어** 낱말 사이 6·줄 사이 4 로 바꾼다(`.lp-duty-line` 자체는 LPO-0217 도 써서 값을 안 건드린다). `-scroll` 은 표를 감싸는 래퍼 — 남은 높이를 채워 **머리글(thead)은 붙여 두고 본문만 스크롤**(`.lp-page-scroll` 은 페이지 본문, `.lp-table-sticky` 는 TableWrapper 전용이라 따로 있다) | LPO-0216 |
 | `.lp-duty-line` | 칸 안 한 줄(flex·wrap·gap 4). 0216 은 `.lp-duty-entry` 를 같이 얹는다 | LPO-0216, 0217 |
 | `.lp-date-select-row` | 목록 위 연·월 텍스트 셀렉트(`TextSelect` 둘) 묶음 — 연 ↔ 월 16px(`group-gap` 에 16 이 없다). 셀렉트 모양은 override 의 `.lp-date-select` | LPO-0216 |
+| `.lp-count-row` | 목록 위 왼쪽의 "요청갯수 : N" 문구 + 버튼 묶음(사이 16, 글자 15/body_1). 숫자는 안쪽 `<b class="lp-hit lp-em-strong">` — 회색 면이 있는 `.lp-grid-title-count` 와 다르다 | LPO-0505 |
+| `.approver-bar` `-title` `-list` `-item` `-name` `-status` `-divider` | 출동수당 승인자 줄 — 표 위 테두리 상자(1px gray02, 모서리 4, 여백 12/20, 아래 20). 오른쪽 묶음 사이 32 에 `.lp-divider-v`(+`-divider` 로 18), 묶음 안 12. `-name` 은 굵은 파랑, `-status`(미승인) 는 `--Alert-danger-text` | LPO-0505 |
 | `.lp-roster-toolbar` `.lp-roster-title` | 근무자 목록 표(좁은 패널) 위의 제목 + 우측 버튼 줄. 표 자체는 `TabulatorGrid` 로 바뀌었다 | LPO-0202 |
 | `.lp-notes-row` `-label` `-body` | 표 아래 붙는 라벨+입력 한 상자(중요지시사항) | LPO-0202 |
 | `.lp-em-primary` / `.lp-em-danger` / `.lp-em-point` / `.lp-em-warning` | 문장 안 한 낱말만 색으로 강조(굵기는 `<b>` 나 `.lp-em-strong`·`.lp-em-medium` 이). `-warning` 은 글자용 주황 `--Alert-warning-text`(#8A5C00 — 배지용 `--warning` 보다 어둡다): 근무현황 사고 사유 | LPO-0208, 0216, 0217 |
@@ -769,6 +771,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-grid-active-row` | Tabulator 행 배경 — "지금 오른쪽 상세에 떠 있는 행". 체크박스 다중선택(`.tabulator-selected`)과 별개 개념 | 2204, 0801, STT-0103 |
 | `.lp-grid-link-cell` | 값이 링크처럼 보여야 하는 셀(밑줄) | 2204 |
 | `.lp-grid-group-line` | **그리드에 건다** — 2단 그룹 머리(`.tabulator-col-group`)의 왼쪽 경계선. `tabulator-theme.css` 가 머리줄의 세로선을 모두 지워서 그룹이 시작되는 자리에서 본문 선이 끊긴다. **그 한 줄만** 잇는다 — 머리줄의 다른 칸 경계는 선이 없는 것이 기본이다. 본문 선과 1px 어긋나지 않게 `border-left` 가 아니라 바깥쪽 `box-shadow` 로 긋는다. 테마가 `@layer` 밖이라 `!important` 필요 | PUB-0404 |
+| `.lp-grid-no-highlight` | Tabulator 그리드 루트에 — **단순 체크 표**라 행 hover·체크 행(`.tabulator-selected`) 강조를 모두 끈다(상태는 체크박스만). 고른 뒤 상세·삭제 같은 결과가 있는 표에는 쓰지 않는다. `tabulator-theme.css` 가 레이어 밖이라 `!important` | COM-2201(권한목록) |
 | `.lp-grid-done-row` | Tabulator 행 배경 — "확인이 끝난 행"(미확인 없음) 회색. Figma `color/surface/gray-subtle`(#e6e8ea) = `--Border_gray03`. 미확인이 남은 행은 배경 없음이 기본이라 클래스를 안 붙인다. 선택/상세 강조(`.lp-grid-active-row`)와 별개. **레이어 밖인 `tabulator-theme.css` 의 행 배경을 덮어야 해서 `!important` 필요** | LPO-0304, PM-LPO-0106(읽은 알림) |
 | `.lp-perm-menu-grid` | Tabulator 가 JS 로 넣는 그룹헤더 높이(빈 서브헤더 줄 접기, `!important` 필요) | 2204 |
 | `.lp-grid-depth-cell` | 2depth 메뉴 칸 회색 배경 | 2204 |
