@@ -126,9 +126,9 @@ export interface Props {
 const props = withDefaults(defineProps<Props>(), {
   itemsPerPage: 10,
   itemsPerPageOptions: () => [
-    { label: '10건', value: '10' },
-    { label: '20건', value: '20' },
-    { label: '30건', value: '30' },
+    { label: '10개씩 보기', value: '10' },
+    { label: '20개씩 보기', value: '20' },
+    { label: '30개씩 보기', value: '30' },
   ],
   totalElements: 0,
   siblingCount: 1,

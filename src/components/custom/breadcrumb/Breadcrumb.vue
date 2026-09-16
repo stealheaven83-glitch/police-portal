@@ -15,7 +15,7 @@
           v-if="index === 0"
           :src="homeIcon"
           alt=""
-          class="w-4 h-4"
+          class="w-3 h-3"
         /></span>
           {{ item.label }}
         </router-link>
@@ -27,7 +27,7 @@
           v-if="index === 0"
           :src="homeIcon"
           alt=""
-          class="w-4 h-4"
+          class="w-3 h-3"
         /></span>
           {{ item.label }}
         </span>
@@ -118,18 +118,19 @@ const visibleItems = computed(() => {
   display: flex;
   align-items: center;
   line-height:1;
+  color: var(--Text-body_0);
 }
 .breadcrumb__item .breadcrumb__link .icon-home{
   display:flex;
   align-items: center;
-  margin-right: 0.5rem;
+  margin-right: 0.4rem;
 }
 .breadcrumb__item + .breadcrumb__item::before {
   content: "";
   display: inline-block;
   width: 1.2rem;
   height: 1.2rem;
-  margin: 0 9px;
+  margin: 0 8px;
   background: url(/portal/asset/images/icon/ico_bread_arrow.svg) no-repeat center / 1.2rem auto;
 }
 

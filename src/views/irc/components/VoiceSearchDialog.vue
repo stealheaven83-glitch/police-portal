@@ -38,6 +38,9 @@ import { Button } from '@/components/custom/button'
  * `type="full"` 은 모바일 폭(<1000px)에서만 전체화면이 된다(device 기본값 responsive).
  * 이 팝업을 여는 음성검색 버튼 자체가 모바일 폭에서만 보인다 — police-style.css 미디어쿼리.
  *
+ * 검색화면(PM-IRC-0101)과 결과화면(PM-IRC-0104) 둘 다 SearchBar 의 음성검색 버튼을 갖고 있어
+ * 어느 화면 폴더에도 속하지 않는다 — 도메인 레벨에 둔다(docs/create/multi-route.md §1 과 같은 이유).
+ *
  * 실제 음성인식(마이크 권한·STT·대기시간 초과 처리)은 개발팀이 잇는다. 여기서는 시안의 두
  * 상태가 보이도록 목업 타이머로 넘어간다.
  */

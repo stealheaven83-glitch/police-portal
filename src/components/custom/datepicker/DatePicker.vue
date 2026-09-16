@@ -143,6 +143,7 @@ const iconCalendar = '/portal/asset/images/icon/ico_calendar.svg'
         :id="fieldId"
         :model-value="value"
         readonly
+        :placeholder="placeholder || 'YYYY.MM.DD'"
         :label="label"
         :label-position="labelPosition"
         :required="required"

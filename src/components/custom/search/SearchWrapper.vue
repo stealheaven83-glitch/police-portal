@@ -8,19 +8,19 @@
           <button
             v-if="collapsible"
             type="button"
-            class="inline-flex items-center gap-1 shrink-0 text-[15px] font-semibold text-[var(--Text-body_1)]"
+            class="inline-flex items-center gap-1 shrink-0 text-[15px] text-[var(--Text-body_0)]"
             :aria-expanded="expanded"
             @click="toggle"
           >
             상세조회 
-            <ChevronDown :size="14" class="transition-transform duration-200" :class="expanded ? 'rotate-180' : ''" />
+            <ChevronDown :size="16" class="shrink-0 text-[var(--icon-gray)] transition-transform duration-200" :class="expanded ? 'rotate-180' : ''" />
           </button>
       </div>
       <slot name="topRightSection"></slot>
     </div>
-    <div v-if="formOnly || collapsible" v-show="formOnly || expanded" :class="cn(defaultClass, (formOnly ? '' : 'mt-[20px]'), props.class)">
+    <div v-if="formOnly || collapsible" v-show="formOnly || expanded" :class="cn(defaultClass, (formOnly ? '' : 'mt-[12px]'), props.class)">
       <!-- 배경 박스가 없으면 왼쪽 여백도 빼서 폼이 페이지 왼쪽 선에 맞물리게 한다 -->
-      <div :class="cn('flex flex-col justify-center py-5 px-6', props.noBackground && 'pl-0')">
+      <div :class="cn('lp-search-form flex flex-col justify-center py-5 px-9', props.noBackground && 'pl-0')">
         <slot name="form" />
       </div>
       <div class="flex items-end py-5 px-6">

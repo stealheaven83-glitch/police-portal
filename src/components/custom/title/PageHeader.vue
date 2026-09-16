@@ -26,7 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
   > -->
   <div
     :class="cn(
-      'flex items-center justify-between gap-5 py-5 px-0',
+      'flex items-center justify-between gap-5 py-[2.2rem] px-0',
       'mo:py-[1.5rem] mo:mb-5',
       props.class
     )"

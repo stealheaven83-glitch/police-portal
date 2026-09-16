@@ -19,13 +19,15 @@
   border-bottom: 1px solid transparent;
 }
 
+/* 헤더 칸 높이 36px — 높이를 .tabulator-header 에 직접 박지 않고 안쪽(col·col-content·col-title)으로 만든다.
+   height 를 고정하면 2단 그룹 헤더(PM-PUB-0404)가 overflow:hidden 에 잘린다. */
 .tabulator .tabulator-header {
   background: none;
   border-top: 1px solid;
 }
 
 .tabulator .tabulator-header .tabulator-col {
-  min-height: 35px;
+  min-height: 36px;
   box-sizing: border-box;
   font-size: 15px;
   text-align: center;
@@ -37,13 +39,13 @@
 }
 
 .tabulator .tabulator-header .tabulator-col .tabulator-col-content {
-  min-height: 39px;
+  min-height: 36px;
   padding: 0;
 }
 
 .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title {
   font-size: 15px;
-  min-height: 39px;
+  min-height: 36px;
   align-content: center;
 }
 
