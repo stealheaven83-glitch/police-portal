@@ -1,0 +1,1 @@
+function u(i){function a(n){const s=Array.from(n).map((e,l)=>({id:Date.now()+l,name:`${e.name} [${Math.ceil(e.size/1024)}KB]`,uploading:!0}));i.files=[...i.files,...s];const d=new Set(s.map(e=>e.id));window.setTimeout(()=>{i.files=i.files.map(e=>d.has(e.id)?{...e,uploading:!1}:e)},1200)}function t(n){i.files=i.files.filter(s=>s.id!==n)}return{addFiles:a,removeFile:t}}export{u};

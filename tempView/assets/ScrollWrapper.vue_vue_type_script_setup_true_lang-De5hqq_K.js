@@ -1,0 +1,1 @@
+import{d as a,c as o,A as l,O as r,o as t}from"./index-DLTMYiiR.js";const p=a({__name:"ScrollWrapper",props:{class:{}},setup(e){return(s,c)=>(t(),o("div",{class:l(["h-full flex-1 overflow-y-auto",e.class])},[r(s.$slots,"default")],2))}});export{p as _};
