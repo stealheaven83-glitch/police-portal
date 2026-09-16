@@ -8,30 +8,6 @@
   .mobileOnly { display: none !important; }
 }
 
-/* ── 필터칩 + 선택삭제 줄 ── */
-.listToolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.2rem;
-  margin-bottom: 2rem;
-}
-@media (max-width: 767px) {
-  .listToolbar { margin-bottom: 2.4rem; }
-  .listToolbar > :first-child { flex: 1; }        /* FilterChipGroup 폭 꽉 */
-  .listToolbar > :first-child > * { flex: 1 1 0; } /* 칩 3개 균등폭 */
-}
-
-/* ── PC: 내용 셀 링크버튼 말줄임 ── */
-.contentBtn {
-  display: block;
-  width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  text-align: left;
-}
-
 /* ── 모바일 앱 헤더 ── */
 .mHeader {
   display: flex;
@@ -54,66 +30,8 @@
   color: var(--Text-body_0);
 }
 
-/* ── 모바일 카드 리스트 ── */
-.cards {
-  display: flex;
-  flex-direction: column;
-  gap: 1.6rem;
-  padding-bottom: 4rem;
-}
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  padding: 1.6rem;
-  border: 1px solid var(--Border_gray02);
-  border-radius: var(--Radius-medium3);
-  background: #fff;
-}
+/* ── 모바일 카드(TabulatorGrid 가 그린다) — 읽은 카드만 회색 ── */
 .cardRead { background: #e6e8ea; } /* 읽음 카드 회색 - surface-gray 토큰 없어 hex */
-.cardSelected {
-  border: 2px solid var(--Base-primary);
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.05), 0 4px 4px rgba(0, 0, 0, 0.08);
-}
-.cardHead {
-  display: flex;
-  align-items: center;
-  gap: 2.4rem;
-}
-.cardTitle {
-  flex: 1;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--Text-body_0);
-}
-.cardBody {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  margin: 0;
-}
-.cardRow {
-  display: flex;
-  gap: 2.4rem;
-  font-size: 1.5rem;
-  line-height: 1.5;
-}
-.cardRow dt {
-  flex-shrink: 0;
-  color: var(--Text-body_1);
-}
-.cardRow dd {
-  flex: 1;
-  margin: 0;
-  text-align: right;
-  color: var(--Text-body_0);
-}
-.cardRowContent dd { white-space: pre-line; } /* 내용 여러 줄 그대로 */
-.cardEmpty {
-  padding: 4rem 0;
-  text-align: center;
-  color: var(--Text-body_1);
-}
 
 /* ── 모바일 하단 고정 삭제 CTA ── */
 .cta {
@@ -122,7 +40,6 @@
   padding: 0.8rem 1.6rem 1.6rem;
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0, #fff 2.4rem); /* 스크롤 끝 그라데이션 */
 }
-.ctaBtn { width: 100%; }
 
 /* ── 모바일 맨 위로 FAB ── */
 .topBtn {

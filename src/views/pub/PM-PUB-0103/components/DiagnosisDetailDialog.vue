@@ -197,7 +197,6 @@
               id="diagnosis-detail-etc-label"
               v-model="form.etcLabel"
               size="sm"
-              :class="styles.detailEtcInput"
               aria-label="기타 항목"
             />
           </template>
@@ -233,7 +232,7 @@
     <div class="pop-title-sub mb-2"><h2>착안사항</h2></div>
       <TextareaField
         v-model="form.note"
-        :class="styles.detailTextarea"
+        class="w-full"
         textarea-class="w-full"
         :height="72"
         aria-label="착안사항"
