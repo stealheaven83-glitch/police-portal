@@ -134,8 +134,8 @@ function toggleDepth2(name: string) {
  * 잘려 나가고 문서 스크롤도 없어서 볼 방법이 없다. 그래서 메뉴가 스스로 스크롤한다.
  */
 .left-menu {
-  padding: 2.4rem 0 0 3.6rem;
-  width: 28.6rem;
+  padding: 2.4rem 0 2.4rem 4rem;
+  width: 29.5rem;
   flex-shrink: 0;
   overflow-y: auto;
   /* 스크롤바가 나타났다 사라져도 메뉴 폭이 흔들리지 않게 자리를 미리 잡아둔다 */
@@ -177,11 +177,13 @@ function toggleDepth2(name: string) {
 }
 .left-menu .lnb .depth1 .depth1-item .depth1-btn.is-open {
   border-bottom: 2px solid var(--Border_primary);
+  font-weight: 700;
 }
 .left-menu .lnb .depth1 .depth1-item .depth1-btn {
   position: relative;
   text-align: left;
   font-weight: 600;
+  font-size: 1.7rem;
 }
 .left-menu .lnb .depth1 .depth1-item .depth1-btn.no-child:after, .left-menu .lnb .depth1 .depth1-item .depth1-btn.no-child::before {
   display: none;
@@ -216,7 +218,7 @@ function toggleDepth2(name: string) {
   transform: rotate(-90deg);
 }
 .left-menu .lnb .depth1 .depth1-item .depth1-btn {
-  padding: 1.6rem 2.8rem 1.6rem 0;
+  padding: 1.6rem 3.2rem 1.6rem 0;
   width: 100%;
 }
 .left-menu .lnb .depth1 .depth2 {
@@ -238,6 +240,7 @@ function toggleDepth2(name: string) {
   text-align: left;
   padding: 1.2rem 1.6rem;
   font-weight: 600;
+  font-size: 1.5rem;
 }
 .left-menu .lnb .depth1 .depth2 .depth2-item.active a {
   background: var(--Surface-primary);

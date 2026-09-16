@@ -9,7 +9,7 @@
     <main class="work-main">
       <SideMenu v-if="sideMenuStore.visible" />
       <div
-      class="work-body flex-1 min-w-0 relative flex flex-col pb-[32px] mo:pl-4 mo:pr-4 pc:pl-[36px] pr-10"
+      class="work-body flex-1 min-w-0 relative flex flex-col pb-[32px] mo:pl-4 mo:pr-4 pc:pl-[21px] pr-10"
 
       >
          <!--

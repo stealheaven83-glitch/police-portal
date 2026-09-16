@@ -561,6 +561,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | 클래스 | 의도 | 쓰는 곳 |
 |---|---|---|
 | `.lp-flex-fill` | 남는 가로폭을 채우되 내용이 넘치지 않게(flex 1 / min-width 0) | 2204, IRC-0101 |
+| `.lp-row-end` | `flex-wrap` 으로 흐르는 줄(`.search-area` 등)에서 **이 항목으로 줄을 끝낸다** — 줄을 통째로 차지해 뒤 항목들을 다음 줄로 함께 내린다 | COM-0301 조회영역(성명) |
 | `.lp-row-between` | 한 줄에 좌우로 벌려 놓기 | 2204, 0601, 0802 |
 | `.lp-date-actions` | `police-common.css` — 날짜 선택이 있는 `.list-actions`에 추가하여 세로 가운데 정렬하고 폭이 부족하면 줄바꿈 | LPO-0202 |
 | `.calendar-area` `-date` `-date-value` `-divider` `-group` `-options` | 근무일 선택 줄. **`.list-actions` 안 왼쪽**에 놓고(`margin-right:auto`) 오른쪽은 그대로 버튼. 구역 사이는 `-divider` 세로선(그룹 간격 36px). `-date-value` 는 날짜+달력아이콘(19px/600), `-options` 는 라디오 묶음(16px — `.lp-icon-row` 2rem 과 값이 다르다). **사용자 지정 이름이라 `lp-` 접두사가 없다** | LPO-0202 |
@@ -623,6 +624,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-pop-body-pager` | 페이지네이션으로 끝나는 팝업 본문(`.pop-body` 와 함께). `.pop-body` 의 overflow:hidden 이 Pagination 의 -8px 음수 아래여백을 잘라먹는 것을 막는다 | 2207 전체 사용자 팝업 |
 | `.lp-dialog-body` / `.lp-dialog-subtitle` / `.lp-dialog-footer` | 팝업 본문 세로 묶음 / 부제 / 우측 버튼줄 | 0601 |
 | `.lp-search-form-gap` | 팝업 안 검색 폼의 행·열 간격 | 0601 |
+| `.lp-search-form` | **`SearchWrapper` 가 #form 슬롯 감싸개에 직접 붙인다(화면에서 걸 필요 없음)** — 상세조회 조회영역 안 라벨의 글자색 `--Text-body_1`(#464C53) · 최소 폭 40px (override) | SearchWrapper 쓰는 전 화면 |
 
 #### 통합검색 · 시나리오 검색 (본문을 가운데 정렬하는 화면)
 

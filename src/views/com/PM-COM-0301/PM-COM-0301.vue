@@ -18,7 +18,7 @@
     </template>
     <template #form>
       <div class="search-area">
-        <div class="group-gap2">
+        <div class="group-gap2 lp-row-end">
           <SelectField v-model="authorFilter" label="성명" :options="authorFilterOptions" size="sm" trigger-class="w-40" />
           <InputField2 v-model="authorKeyword" size="sm" placeholder="이름을 검색해주세요." />
         </div>

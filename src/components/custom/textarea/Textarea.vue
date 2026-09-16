@@ -26,7 +26,7 @@ const modelValue = useVModel(props, "modelValue", emits, {
     :class="cn(
       'border border-[var(--Border_input01)] rounded-[0.6rem] py-[0.8rem] px-[1.6rem] font-normal text-[1.5rem] leading-[1.5] w-full',
       'outline-none focus-visible:border-[var(--Border_primary)] focus-visible:border-2',
-      'placeholder:text-[#1E2124]',
+      'placeholder:text-[var(--Text-body_disable)]',
       'disabled:pointer-events-none disabled:cursor-not-allowed disabled:border-[var(--disabled-input-border)] disabled:bg-[var(--disabled-input-bg)] disabled:text-[var(--disabled-input-text-color)]',
       'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
       props.class,

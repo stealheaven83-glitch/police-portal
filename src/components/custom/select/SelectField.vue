@@ -109,10 +109,10 @@ const borderStyleCss = computed(() => {
 
 /** 사이즈별 트리거 스타일 (Input 과 동일한 기준) */
 const sizeClass = computed(() => {
-  if (props.size === 'md') return 'h-12 text-[1.5rem] px-4 rounded-sm'
-  if (props.size === 'sm') return 'h-10 text-[1.5rem] px-4 rounded-sm'
+  if (props.size === 'md') return 'h-12 text-[1.5rem] pl-4 pr-3 rounded-sm'
+  if (props.size === 'sm') return 'h-10 text-[1.5rem] pl-4 pr-3 rounded-sm'
   if (props.size === 'xs') return 'h-9 text-[1.3rem] px-3 rounded-sm'
-  return 'h-14 text-[1.9rem] px-4 rounded-md'
+  return 'h-14 text-[1.9rem] pl-4 pr-3 rounded-md'
 })
 
 const iconSizeClass = computed(() => {

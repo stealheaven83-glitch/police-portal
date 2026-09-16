@@ -973,3 +973,12 @@ tbody .row-total > td:first-child {
   vertical-align: top;
   white-space: pre-line;
 }
+
+/* 상세조회(SearchWrapper 의 #form 슬롯) 안 라벨 — 글자색 #464C53(--Text-body_1), 최소 폭 40px.
+   최소 폭은 라벨이 짧아도 입력칸 시작선이 들쭉날쭉하지 않게 잡아 주는 것이다.
+   Label 에 색을 테일윈드(label-class)로 먹이는 화면이 있어 common 에 쓰면 지므로 이 파일이다
+   (CLAUDE.md §2). 라벨은 ui/label(data-slot="label")로도, 맨 <label> 로도 나와서 둘 다 잡는다. */
+.lp-search-form :where(label, [data-slot="label"]) {
+  min-width: 4rem;
+  color: var(--Text-body_1);
+}
