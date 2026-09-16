@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
 import { X } from "lucide-vue-next"
+import { computed } from "vue"
 import { cn } from "@/lib/utils"
+import { deviceStyle, type DeviceMode } from "@/lib/deviceStyle"
 import { Button } from "@/components/custom/button"
 import Icon from "@/components/custom/icon/Icon.vue"
 
@@ -25,13 +27,19 @@ interface Props {
   recent?: string[]
   recommended?: RecommendedKeyword[]
   class?: HTMLAttributes["class"]
+  /** 기기 정책. 'responsive'(기본) 폭 따라 / 'pc' 고정 / 'mobile' 고정 */
+  device?: DeviceMode
 }
 
 const props = withDefaults(defineProps<Props>(), {
   recent: () => [],
   recommended: () => [],
   class: undefined,
+  device: "responsive",
 })
+
+/** 두 칸의 좌우 여백 — 모바일은 화면 폭을 꽉 쓴다 */
+const sectionClass = computed(() => deviceStyle({ pc: "px-6", mobile: "px-0" }, props.device))
 
 const emit = defineEmits<{
   /** 검색어(칩·순위)를 눌렀다 — 화면이 그 값으로 검색을 건다 */
@@ -46,7 +54,7 @@ const emit = defineEmits<{
 <template>
   <div :class="cn('grid w-full grid-cols-1 gap-[4rem] lg:grid-cols-2', props.class)">
     <!-- 최근검색어 -->
-    <section class="px-6 mo:px-0">
+    <section :class="sectionClass">
       <div class="flex items-center justify-between gap-4">
         <h2 class="text-[1.9rem] leading-[1.5] font-bold text-[var(--Text-body_0)]">최근검색어</h2>
         <Button
@@ -85,7 +93,7 @@ const emit = defineEmits<{
     </section>
 
     <!-- 추천검색어 -->
-    <section class="px-6 mo:px-0">
+    <section :class="sectionClass">
       <h2 class="text-[1.9rem] leading-[1.5] font-bold text-[var(--Text-body_0)]">추천검색어</h2>
       <ol class="mt-4 flex flex-col gap-4">
         <li v-for="(item, index) in recommended" :key="item.keyword" class="flex items-center gap-2">
