@@ -98,7 +98,10 @@ const columns: TabulatorGridColumn[] = [
   { title: '사건번호', field: 'caseNo', width: 160, hozAlign: 'center' },
   { title: '도착소요시간', field: 'arrivalTime', width: 181, hozAlign: 'center' },
   { title: '종결일시', field: 'closedAt', width: 181, hozAlign: 'center' },
-  { title: '출동자', field: 'responders', width: 300, hozAlign: 'center' },
+  // 시안 폭은 300 이지만 고정(width)으로 두면 아홉 칸이 모두 고정이 되어, 넓은 화면에서
+  // 표 오른쪽이 빈다(fitColumns 는 폭 없는 칸에만 남는 폭을 나눠 준다).
+  // 최소 300 을 바닥으로 깔고 남는 폭은 이 칸이 가져가게 한다.
+  { title: '출동자', field: 'responders', minWidth: 300, widthGrow: 1, hozAlign: 'center' },
   { title: '종결자', field: 'closer', width: 120, hozAlign: 'center' },
 ]
 

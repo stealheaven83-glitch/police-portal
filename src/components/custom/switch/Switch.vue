@@ -44,18 +44,22 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
       :class="cn(switchThumbVariants({ size }))"
     >
       <slot name="thumb" :checked="modelValue">
-        <!-- 기본 아이콘(Check/X) -->
+        <!--
+          Figma toggle_switch(306:27125) 규칙:
+          - 켜짐        → 체크 표시 (활성/비활성 모두)
+          - 꺼짐 + 활성 → 아이콘 없음 (흰 동그라미만)
+          - 꺼짐 + 비활성 → X
+        -->
         <template v-if="variant === 'default'">
           <Check
-          v-if="modelValue"
-          :class="cn(switchIconVariants({ size }), 'text-[#0054A6]')"
+            v-if="modelValue"
+            :class="cn(switchIconVariants({ size }), 'text-[#0054A6]')"
           />
-          <!-- X 아이콘 -->
           <X
-            v-else
+            v-else-if="disabled"
             :class="cn(switchIconVariants({ size }), 'text-[#B1B8BE]')"
-            />
-          </template>
+          />
+        </template>
           <!-- // 기본 아이콘(Check/X) -->
          <!-- variant: none 일 시 아이콘X -->
       </slot>

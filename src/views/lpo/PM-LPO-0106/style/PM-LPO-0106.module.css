@@ -22,13 +22,24 @@
   .listToolbar > :first-child > * { flex: 1 1 0; } /* 칩 3개 균등폭 */
 }
 
-/* ── PC: 내용 셀 링크버튼 말줄임 ── */
+/* ── PC: 내용 셀 링크버튼 ── */
+/*
+ * 목록 "내용" 칸 — 전문을 다 보여준다. 816px 를 넘거나 개행이 있으면 다음 줄로
+ * 접히고 행 높이가 그만큼 늘어난다.
+ * 행이 늘어나는 것은 그리드의 lp-grid-multiline + 이 컬럼의 variableHeight 가 맡는다.
+ * Button 베이스가 inline-flex·whitespace-nowrap 을 테일윈드로 먹이는데, 모듈 CSS 는
+ * @layer 밖이라 여기서 block·pre-line 으로 풀 수 있다.
+ */
 .contentBtn {
   display: block;
   width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  /* Button size=xxs 의 h-6(24px 고정)을 푼다 — 남아 있으면 글자가 두 줄이 돼도 버튼이
+     24px 라 셀·행이 커지지 않고, Tabulator 도 행 높이를 49px 로 잰다 */
+  height: auto;
+  min-height: 0;
+  max-width: 81.6rem;
+  /* pre-line: 데이터의 개행(\n)은 줄바꿈으로 살리고, 긴 줄은 max-width 에서 접는다 */
+  white-space: pre-line;
   text-align: left;
 }
 

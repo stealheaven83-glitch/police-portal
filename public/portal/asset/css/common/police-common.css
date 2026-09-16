@@ -1718,6 +1718,16 @@
 .lp-cal-cell:hover {
   background: var(--Surface-secondary);
 }
+/*
+ * 팝오버를 닫으면 포커스가 이 칸으로 돌아와 전역 *:focus 링(police-style.css)이 그려진다.
+ * 그 링은 outline-offset: 0 이라 테두리 바깥에 그려지는데, 오른쪽·아래쪽은 DOM 에서 뒤에 오는
+ * 이웃 칸(.lp-cal-cell 은 흰 배경)이 나중에 칠해지며 덮어서 선이 잘린 것처럼 보인다.
+ * 선택 표시(.lp-cal-cell-open)와 같이 안쪽으로 당겨 그리면 네 변이 온전히 보인다.
+ */
+.lp-cal-cell:focus,
+.lp-cal-cell:focus-visible {
+  outline-offset: -0.2rem;
+}
 /* 이전·다음 달 칸 — 배경은 흰색 그대로 두고 날짜만 흐리게 (시안 13175:96418) */
 .lp-cal-cell-out {
   background: var(--white);
@@ -3816,4 +3826,58 @@
   .login-form-area {
     padding: 3.2rem 2.4rem 4rem;
   }
+}
+
+/* ══ 메인 공지 띠 ═════════════════════════════════════════════ */
+
+/*
+ * 공지 자동 롤링 재생 상태 아이콘. 원본(police-style.css)에는 .slide-arrow.pause 만 있어서
+ * 멈춘 뒤 다시 재생하는 버튼 모양이 없었다 — Figma 컴포넌트(343:23702 icon/play)를 16px 로
+ * 내려받아 붙인다. 버튼 하나가 pause ↔ play 로 클래스만 바뀐다(Main.vue).
+ * ※ 다크테마용 흰색 아이콘은 만들지 않았다. 원본이 참조하는 ico_arrow_pause_white_16.svg 도
+ *   파일이 없어서 다크테마에서는 정지 아이콘부터 이미 안 나온다.
+ */
+.rowgroup.notice .notice-list .noticeSwiper .swiper-nav .slide-arrow.play {
+  background: url(../../images/icon/ico_arrow_play_black_16.svg) no-repeat center/1.6rem auto;
+}
+
+/*
+ * 공지 한 줄(제목+날짜)의 폭. 원본은 calc(100% - 24.2rem) 으로 오른쪽 컨트롤(페이지 표시·
+ * 정지/이전/다음) 자리를 빼서 잡았는데, 시안 값이 847px 고정이라 그대로 넣는다.
+ * ※ 고정폭이라 창을 줄여도 줄지 않는다 — 좁은 화면에서 넘치면 max-width 로 바꿔야 한다.
+ */
+.rowgroup.notice .notice-list .noticeSwiper li a {
+  width: 84.7rem;
+}
+
+/*
+ * 제목과 날짜 사이 간격. a 가 flex 이고 .subject 가 flex:1 이라 날짜는 오른쪽 끝에 붙는데,
+ * 제목이 길어 말줄임이 걸리면 두 글자가 맞닿아 보인다.
+ * police-style.css 의 같은 선택자에는 margin 이 없어 '덮는' 게 아니라 '더하는' 것이라
+ * override 가 아니라 여기다(CLAUDE.md §2). 같은 선택자를 뒤에서 쓰므로 원본을 이긴다.
+ */
+.rowgroup.notice .notice-list .noticeSwiper li a .date {
+  margin-left: 1.6rem;
+}
+
+/* ══ 포털 헤더 GNB ════════════════════════════════════════════ */
+
+/*
+ * 1depth 메뉴의 hover / pressed. Figma main_menu_bar__atomic__pc (317:46423) 의
+ * State=hover(317:46427) · State=pressed(317:46430) 값이다.
+ * police-style.css 에는 State=selected(= .active, 파란 글자 + 4px 밑줄)만 옮겨져 있었다.
+ *
+ * .active(선택된 메뉴)에는 걸지 않는다 — 시안에서 selected 와 hover 는 서로 다른 상태라
+ * 겹치지 않는다. :not(.active) 를 빼면 :hover 가 특이도로 .active 를 이겨 파란 메뉴가
+ * 회색으로 바뀐다.
+ */
+header .header-in .header-container .main-menu .inner .gnb-menu .depth1-list .depth1-item .depth1-text:not(.active):hover {
+  background: var(--Base-secondary-lighter);
+  color: var(--Text-body_1);
+}
+
+/* pressed 배경 #d6e0eb 은 대응 토큰이 없어 hex 로 둔다(Figma color/action/secondary-pressed) */
+header .header-in .header-container .main-menu .inner .gnb-menu .depth1-list .depth1-item .depth1-text:not(.active):active {
+  background: #d6e0eb;
+  color: var(--Text-body_0);
 }

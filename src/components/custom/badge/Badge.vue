@@ -26,6 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
   <span
     data-slot="badge"
     :data-color="color"
+    :data-variant="variant"
     :data-size="size"
     :data-shape="shape"
     :data-state="state"

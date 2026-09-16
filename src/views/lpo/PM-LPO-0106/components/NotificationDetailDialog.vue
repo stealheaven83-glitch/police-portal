@@ -3,7 +3,7 @@
     <InfoTable :columns="1" popup>
       <InfoField label="구분">{{ row?.category }}</InfoField>
       <InfoField label="내용">
-        <span :class="[infoTableStyles['info-table-txt'], styles.contentText]">{{ contentWithBreak }}</span>
+        <span :class="[infoTableStyles['info-table-txt'], 'lp-pre-line']">{{ contentWithBreak }}</span>
       </InfoField>
       <InfoField label="일시">{{ row?.date }}</InfoField>
     </InfoTable>
@@ -26,7 +26,6 @@ import type { NotificationRow } from '../composable/PM-LPO-0106'
 // 원본 모듈을 가져온다 — 줄바꿈이 있는 값은 InfoField 기본 슬롯의 "텍스트 전용" 판별을
 // 못 타서(내부에 <span> 엘리먼트가 생기므로) 직접 클래스를 입혀야 한다.
 import infoTableStyles from '@/components/custom/info-table/InfoTable.module.css'
-import styles from '../style/PM-LPO-0106.module.css'
 
 const props = defineProps<{
   open: boolean

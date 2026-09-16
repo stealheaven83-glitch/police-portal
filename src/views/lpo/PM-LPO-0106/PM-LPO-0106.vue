@@ -112,11 +112,6 @@ const statusItems = computed<FilterChipItem[]>(() => [
   { key: 'read', label: '읽음', count: counts.value.read },
 ])
 
-/** 기획서: 내용은 첫줄 1줄만 표시, 길면 말줄임(css ellipsis) 처리 */
-function contentPreview(row: NotificationRow) {
-  return row.content.split(/\r?\n/)[0]
-}
-
 /** 내용 클릭 시 읽음 처리 + 상세 팝업 (PC-LPO-0701 의 장비관리명 링크 버튼 셀과 동일한 패턴) */
 function onContentClick(row: NotificationRow) {
   markRead(row.id)
@@ -135,7 +130,13 @@ const columns: TabulatorGridColumn[] = [
     buttonVariant: 'link',
     buttonSize: 'xxs',
     buttonClass: styles.contentBtn,
-    buttonLabel: (row) => contentPreview(row as NotificationRow),
+    // 사용자 지정: 내용 전문을 다 보여준다 — 기획서의 "첫줄 1줄만 표시 + 말줄임" 과 다르다.
+    // 길거나 개행이 있으면 다음 줄로 접히고, 이 칸 높이가 곧 행 높이가 된다
+    variableHeight: true,
+    // 셀 높이 고정(4.8rem)을 푸는 건 이 클래스다 — tabulator-theme.css 가 @layer 밖이라
+    // police-override.css 의 !important 규칙(.lp-grid-multiline-cell)이라야 이긴다(PM-LPO-0217 과 같은 방식)
+    cssClass: 'lp-grid-multiline-cell',
+    buttonLabel: (row) => (row as NotificationRow).content,
     onButtonClick: (row) => onContentClick(row as NotificationRow),
     // 카드에서는 상태·일시 다음에 내용 전문이 온다
     cardOrder: 3,

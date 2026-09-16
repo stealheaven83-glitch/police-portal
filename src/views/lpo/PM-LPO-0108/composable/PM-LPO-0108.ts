@@ -53,7 +53,6 @@ const HOLIDAYS: Record<string, string> = {
 function createMockDuties(): DutyItem[] {
   return [
     { date: '2026-09-01', kind: '주간', time: '09:00', name: '상황 근무', members: ['홍길동', '이세돌', '김색별', '강한나', '장철수'] },
-    { date: '2026-09-01', kind: '주간', time: '13:00', name: '주간전종', volunteer: true, members: ['홍길동'] },
     { date: '2026-09-01', kind: '사고', time: '09:30~15:00', reason: '병가' },
     { date: '2026-09-03', kind: '심야', time: '02:00', name: '심야 순찰' },
     { date: '2026-09-05', kind: '휴가', time: '', name: '연가' },

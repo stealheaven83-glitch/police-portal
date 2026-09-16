@@ -104,7 +104,7 @@ import HelpButton from '@/components/custom/button/HelpButton.vue'
 // 어느 화면ID로 들어오든 항상 이 하나의 "장비관리" 탭으로 고정한다.
 defineOptions({ name: 'PcLpo0701' })
 
-useSideMenuSetup({ ...localPoliceMenu, openIndex: 5, activeChild: '개인장비' })
+useSideMenuSetup({ ...localPoliceMenu, openIndex: 5, activeChild: '장비관리' })
 
 const navItems = [
   { label: '홈', path: '/' },

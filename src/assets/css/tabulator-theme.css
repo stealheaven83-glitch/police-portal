@@ -360,3 +360,25 @@
   padding: 1.2rem;
   white-space: normal;
 }
+
+/*
+ * 행 hover 강조를 끄는 표. 그리드에 이 클래스를 준다.
+ *
+ * 기본 테마는 hover 시 행 배경을 --Surface-primary 로 바꾸고 글자를 --Base-primary + bold 로
+ * 키운다(위쪽 .tabulator-row:hover 규칙들). 클릭할 것이 없는 조회 전용 표에서는 그 강조가
+ * "누를 수 있다"는 오해를 준다. 이 파일 맨 뒤라 같은 특이도여도 뒤에 와서 이긴다.
+ *
+ * 선택 행(.tabulator-selected)은 hover 와 별개 상태라 그대로 둔다 — :not() 이 없으면
+ * 이 규칙이 특이도로 선택 행 스타일까지 덮어 버린다.
+ *
+ * 쓰는 곳: PM-LPO-0120, PM-LPO-0121 (결재함)
+ */
+.lp-grid-no-hover .tabulator-row:hover:not(.tabulator-selected),
+.lp-grid-no-hover .tabulator-row.tabulator-selectable:hover:not(.tabulator-selected) {
+  background-color: #fff;
+}
+
+.lp-grid-no-hover .tabulator-row:hover:not(.tabulator-selected) .tabulator-cell {
+  color: var(--Text-body_0);
+  font-weight: 400;
+}

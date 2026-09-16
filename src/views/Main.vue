@@ -222,7 +222,13 @@
             </ul>
             <div class="notice-pagination"></div>
             <div class="swiper-nav">
-              <button class="slide-arrow pause" aria-label="정지" type="button"></button>
+              <button
+                class="slide-arrow"
+                :class="noticePlaying ? 'pause' : 'play'"
+                :aria-label="noticePlaying ? '정지' : '재생'"
+                type="button"
+                @click="toggleNoticeAutoplay"
+              ></button>
               <button class="slide-arrow prev" aria-label="이전" type="button"></button>
               <button class="slide-arrow next" aria-label="다음" type="button"></button>
             </div>
@@ -296,11 +302,11 @@ const recommendKeywords = [
  * ------------------------------------------------------------------ */
 const resultSlides = [
   [
-    { key: '탄력순찰 이행', value: 7 },
-    { key: 'TCS 사건처리', value: 7 },
-    { key: '즉결 심판', value: 7 },
-    { key: '통고 처분', value: 18 },
-    { key: '유실물 처리', value: 12 },
+    { key: '112신고처리', value: 7 },
+    { key: '즉결심판', value: 7 },
+    { key: '통고처분', value: 7 },
+    { key: 'TCS단속', value: 18 },
+    { key: '차량순찰', value: 12 },
   ],
   [
     { key: '탄력순찰 이행', value: 7 },
@@ -317,7 +323,7 @@ const notifications = [
 ]
 
 const noticeSubject =
-  '[공지] 지역경찰 순찰차 적재함 및 탑재장비 개선 관련 현장 의견을 취합합니다. (댓글로 입력해주세요.) 길어지면 말줄임표로 표'
+  '[공지] 지역경찰 순찰차 적재함 및 탑재장비 개선 관련 현장 의견을 취합합니다. (댓글로 입력해주세요.) 길어지면 말줄임표로 표로 나옵니다'
 
 const notices = [
   { subject: noticeSubject, date: '2026.07.01.' },
@@ -329,6 +335,22 @@ const notices = [
  * Swiper (index.html 에서 로드한 전역 swiper-bundle.min.js 사용)
  * ------------------------------------------------------------------ */
 const swipers: SwiperInstance[] = []
+
+/** 공지 띠 인스턴스 — 정지 버튼이 자동 롤링을 세우려면 이것만 따로 잡아야 한다 */
+let noticeSwiper: SwiperInstance | null = null
+
+/** 공지 자동 롤링이 돌고 있는가 — 버튼 아이콘(pause/play)과 aria-label 이 이 값을 따른다 */
+const noticePlaying = ref(true)
+
+/** 정지 ↔ 재생 토글. 자동으로 움직이는 내용은 멈출 수단이 있어야 한다 */
+function toggleNoticeAutoplay() {
+  if (noticePlaying.value) {
+    noticeSwiper?.autoplay?.stop()
+  } else {
+    noticeSwiper?.autoplay?.start()
+  }
+  noticePlaying.value = !noticePlaying.value
+}
 
 const initSwipers = () => {
   const Swiper = window.Swiper
@@ -352,26 +374,30 @@ const initSwipers = () => {
     }),
   )
 
-  swipers.push(
-    new Swiper('.noticeSwiper', {
-      slidesPerView: 1,
-      spaceBetween: 20,
-      pagination: {
-        el: '.notice-pagination',
-        type: 'fraction',
-        // 현재 페이지 번호를 두 자리(01, 02...)로 포맷팅
-        formatFractionCurrent: (number: number) => String(number).padStart(2, '0'),
-        // 전체 페이지 번호를 두 자리(09)로 포맷팅
-        formatFractionTotal: (number: number) => String(number).padStart(2, '0'),
-        renderFraction: (currentClass: string, totalClass: string) =>
-          `<span class="${currentClass}"></span> | <span class="${totalClass}"></span>`,
-      },
-      navigation: {
-        nextEl: '.next',
-        prevEl: '.prev',
-      },
-    }),
-  )
+  // 공지는 자동으로 넘어간다. loop 가 없으면 마지막 장에서 멈춘다.
+  // 정지 버튼(.slide-arrow.pause)이 이 인스턴스를 세우므로 배열과 별개로 따로 들고 있는다
+  noticeSwiper = new Swiper('.noticeSwiper', {
+    loop: true,
+    // disableOnInteraction:false — 화살표로 넘긴 뒤에도 자동 롤링이 이어진다
+    autoplay: { delay: 5000, disableOnInteraction: false },
+    slidesPerView: 1,
+    spaceBetween: 20,
+    pagination: {
+      el: '.notice-pagination',
+      type: 'fraction',
+      // 현재 페이지 번호를 두 자리(01, 02...)로 포맷팅
+      formatFractionCurrent: (number: number) => String(number).padStart(2, '0'),
+      // 전체 페이지 번호를 두 자리(09)로 포맷팅
+      formatFractionTotal: (number: number) => String(number).padStart(2, '0'),
+      renderFraction: (currentClass: string, totalClass: string) =>
+        `<span class="${currentClass}"></span> | <span class="${totalClass}"></span>`,
+    },
+    navigation: {
+      nextEl: '.next',
+      prevEl: '.prev',
+    },
+  })
+  swipers.push(noticeSwiper)
 }
 
 onMounted(async () => {
@@ -384,5 +410,7 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   swipers.forEach((swiper) => swiper.destroy(true, true))
   swipers.length = 0
+  noticeSwiper = null
+  noticePlaying.value = true
 })
 </script>

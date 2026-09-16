@@ -31,7 +31,7 @@
   </div>
 
   <TabulatorGrid
-    class="flex-1"
+    class="flex-1 lp-grid-no-hover"
     :columns="columns"
     :data="rows"
     height="100%"

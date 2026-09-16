@@ -53,12 +53,12 @@
           label="전체 선택"
           @update:model-value="(checked) => toggleSelectAll(!!checked)"
         />
-        <!-- 기획서 10-1: 선택된 게시물이 없으면 삭제 버튼 비활성화 -->
+        <!-- 사용자 지정: 버튼은 항상 활성. 기획서 10-1 의 "선택 0건이면 비활성" 과 다르며,
+             0건일 때는 onDeleteSelected 가 알림창으로 막는다(CLAUDE.md §4) -->
         <Button
           type="button"
           variant="tertiary2"
           size="sm"
-          :disabled="!selectedCount"
           @click="onDeleteSelected"
           class="mo:hidden"
         >
@@ -68,7 +68,7 @@
       <div class="lp-toolbar-right">
         <Switch
           :model-value="form.importantOnly"
-          variant="none"
+          variant="default"
           label="중요 메모만 보기"
           @update:model-value="onToggleImportantOnly"
         />
@@ -301,9 +301,14 @@ async function onFormDelete() {
 /**
  * 기획서 10: 삭제는 되돌릴 수 없어 컨펌창을 띄운다(§7 기본 toast 와 다르지만 기획서 지정).
  * 선택 항목에 중요 메모가 있으면 안내 문구가 달라진다.
- * 선택이 0건이면 버튼 자체가 비활성이라 여기로 들어오지 않는다(기획서 10-1).
+ * 선택이 0건이어도 버튼은 활성이다 — 사용자 지정(모든 화면 공통)으로 기획서 10-1 의
+ * "선택된 게시물이 없으면 비활성" 을 따르지 않고, 0건은 알림창으로 막는다(CLAUDE.md §4).
  */
 async function onDeleteSelected() {
+  if (!selectedCount.value) {
+    await dialog.alert({ title: '삭제할 메모를 선택해 주세요.', btnCancel: '확인' })
+    return
+  }
   const hasImportant = allMemos.value.some((m) => selectedIds.value.has(m.id) && m.important)
   const { confirmed } = await dialog.confirm({
     title: hasImportant
