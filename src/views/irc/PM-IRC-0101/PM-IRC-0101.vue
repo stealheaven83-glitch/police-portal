@@ -11,6 +11,7 @@
     </template>
   </PageHeader>
 
+
   <div class="lp-page-scroll">
     <SearchBar
       ref="searchBarRef"
@@ -33,6 +34,7 @@
     />
   </div>
 
+
   <VoiceSearchDialog v-model:open="voiceDialogOpen" @search="onVoiceConfirm" />
 </template>
 
@@ -50,6 +52,7 @@ import { useDialog } from '@/composable/dialog/dialog'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import VoiceSearchDialog from '../components/VoiceSearchDialog.vue'
 import { useIncidentScenarioStore } from '../composable/incidentScenario'
+
 defineOptions({ name: 'PmIrc0101' })
 
 /**

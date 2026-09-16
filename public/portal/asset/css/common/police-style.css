@@ -1153,6 +1153,11 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   margin-top: 2rem;
 }
 
+@media (max-width: 1599.98px) {
+  .sub-page > header {
+    display: none;
+  }
+}
 @media (max-width: 1200px) {
   .main-menu{
     display:none;
@@ -1214,10 +1219,6 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   .inner {
     padding: 0 1.6rem;
     width: 100%;
-  }
-  
-  .sub-page > header {
-    display: none;
   }
   header .header-in .header-container .header-branding {
     padding: 0 1.6rem;

@@ -961,14 +961,19 @@
   }
 }
 
-@media (max-width:102.4rem){
-.lp-ai-answer-body{
-  flex-direction:column;
-}
-.lp-page-scroll{
-  overflow:inherit;
-  width: 100%;
-}
+@media (max-width:1599.98px){
+  .lp-ai-answer-body{
+    flex-direction:column;
+  }
+  .lp-ai-answer-body .lp-ref-column{
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .lp-page-scroll{
+    overflow:inherit;
+    width: 100%;
+  }
 }
 /* ══ 메모 목록 카드 ═══════════════════════════════════════════ */
 
@@ -3178,7 +3183,7 @@
 /* ══ 전체메뉴(사이트맵) ═══════════════════════════════════════
    Figma PC_SiteMap(10531:28348) + 모바일 와이어프레임. Menu.vue 한 파일이 둘 다 그린다.
    Tabs 컴포넌트 루트에 붙는 것(-tabs-root · -tabs · -panel)은 police-override.css 에 있다.
-   모바일 경계 1000 은 useResponsive.ts 의 BP_MOBILE 과 같은 값이어야 한다 */
+   모바일 경계 1600 은 useResponsive.ts 의 BP_MOBILE 과 같은 값이어야 한다 */
 
 .sitemap {
   min-height: 100vh;
