@@ -1246,15 +1246,6 @@ const router = createRouter({
             }
         },
         {
-            path: '/worklist-dev',
-            name: 'worklist-dev',
-            component: () => import('../views/worklist/WorkIndex_bk.vue'),
-            meta: {
-                layout: '',
-                title: '워크리스트(개발)'
-            }
-        },
-        {
             path: '/infoTable',
             name: 'info-table',
             component: () => import('../views/component-sample/info-table.vue'),
