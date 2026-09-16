@@ -49,6 +49,7 @@
     placeholder="알림이 없습니다"
     show-pagination
     :items-per-page="10"
+    :row-class="rowClass"
     :card-class="cardClass"
     @card-click="onContentClick"
   />
@@ -148,7 +149,16 @@ const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const detailDialogOpen = ref(false)
 const detailRow = ref<NotificationRow | null>(null)
 
-/** 읽은 알림은 카드만 회색으로 — PC 표의 행에는 적용되지 않아야 해서 row-class 가 아니라 card-class */
+/**
+ * 읽은 알림은 행 배경을 회색(#E6E8EA)으로 — PC 표.
+ * PC-LPO-0304 의 "확인이 끝난 행" 과 같은 의도·같은 색이라 공통 .lp-grid-done-row
+ * (police-override.css) 를 그대로 쓴다.
+ */
+function rowClass(row: NotificationRow) {
+  return row.read ? 'lp-grid-done-row' : undefined
+}
+
+/** 모바일 카드도 같은 회색 — .lp-grid-done-row 는 .tabulator-row 안에서만 먹어서 카드에는 안 걸린다 */
 function cardClass(row: NotificationRow) {
   return row.read ? styles.cardRead : ''
 }

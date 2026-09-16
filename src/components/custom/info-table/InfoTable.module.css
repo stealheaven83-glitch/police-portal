@@ -45,10 +45,15 @@
   grid-row: span 2;
 }
 
+/* 칸 높이 48px = 글자줄 24 + 상하 여백 12 x 2.
+   전역 리셋의 line-height 1.5 를 그대로 두면 글자줄이 22.5px 라 여백이 12.75px 가 되므로,
+   line-height 를 2.4rem 으로 고정해 세 값이 다 정수가 되게 한다.
+   값 칸은 입력요소 40 + 여백 8 로 이미 48 이라 이걸로 라벨 칸과 높이가 맞는다. */
 .label {
   display: flex;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 1.2rem 2rem;
+  line-height: 2.4rem;
   background: var(--Background-gray01, #f5f6f8);
   font-size: 1.5rem;
   color: var(--Text-body_1);
@@ -59,7 +64,9 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 1.2rem;
-  padding: 0.4rem 1.2rem;
+  /* 좌우 20px — 라벨 칸(.label)과 같은 값이라 두 칸의 글자 시작선이 맞는다.
+     상하 4px 는 그대로: 입력요소 40 + 8 = 48 로 라벨 칸 높이와 맞물린다 */
+  padding: 0.4rem 2rem;
   background: #fff;
   min-width: 0;
 }

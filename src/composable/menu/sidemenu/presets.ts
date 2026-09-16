@@ -13,12 +13,18 @@ export const localPoliceMenu: SideMenuConfig = {
   activeChild: "메모",
   items: [
     {
+      // Figma 13312:105013 (지역경찰 LNB) 순서 그대로. 결재함의 화살표는 활성 표시라 하위메뉴가 아니다
       name: "개인수첩",
       children: [
         { name: "메모", path: "/views/lpo/PM-LPO-0101" },
-        { name: "근무일정 조회" },
-        { name: "사고자/자원근무 신청" },
-        { name: "출동수당" },
+        { name: "알림", path: "/views/lpo/PM-LPO-0106" },
+        { name: "근무일정 조회", path: "/views/lpo/PM-LPO-0108" },
+        { name: "출동수당", path: "/views/lpo/PM-LPO-0109" },
+        // 화면 폴더가 아직 없다 — plannedRoutes 에 등록돼 있어 "준비중" 화면이 뜬다
+        { name: "개인실적조회", path: "/views/lpo/PC-LPO-0111" },
+        // 결재요청자(0120)/결재승인자(0121) 두 화면인데 메뉴는 하나라 요청자 쪽으로 건다
+        { name: "결재함", path: "/views/lpo/PM-LPO-0120" },
+        { name: "화면설정", path: "/views/lpo/PM-LPO-0122" },
       ],
     },
     {

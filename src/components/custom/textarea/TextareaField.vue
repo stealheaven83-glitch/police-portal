@@ -122,7 +122,7 @@ const computedHeight = computed(() => {
       <Label
         v-if="label || $slots.label"
         :for="fieldId"
-        class="font-normal text-[1.5rem] mb-2"
+        class="font-normal text-[1.5rem] text-[var(--Text-body_1)] mb-2"
       >
         <slot name="label">{{ label }}</slot>
         <span v-if="required" class="text-destructive">*</span>

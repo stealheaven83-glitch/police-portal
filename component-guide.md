@@ -765,7 +765,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-grid-active-row` | Tabulator 행 배경 — "지금 오른쪽 상세에 떠 있는 행". 체크박스 다중선택(`.tabulator-selected`)과 별개 개념 | 2204, 0801, STT-0103 |
 | `.lp-grid-link-cell` | 값이 링크처럼 보여야 하는 셀(밑줄) | 2204 |
 | `.lp-grid-group-line` | **그리드에 건다** — 2단 그룹 머리(`.tabulator-col-group`)의 왼쪽 경계선. `tabulator-theme.css` 가 머리줄의 세로선을 모두 지워서 그룹이 시작되는 자리에서 본문 선이 끊긴다. **그 한 줄만** 잇는다 — 머리줄의 다른 칸 경계는 선이 없는 것이 기본이다. 본문 선과 1px 어긋나지 않게 `border-left` 가 아니라 바깥쪽 `box-shadow` 로 긋는다. 테마가 `@layer` 밖이라 `!important` 필요 | PUB-0404 |
-| `.lp-grid-done-row` | Tabulator 행 배경 — "확인이 끝난 행"(미확인 없음) 회색. Figma `color/surface/gray-subtle`(#e6e8ea) = `--Border_gray03`. 미확인이 남은 행은 배경 없음이 기본이라 클래스를 안 붙인다. 선택/상세 강조(`.lp-grid-active-row`)와 별개. **레이어 밖인 `tabulator-theme.css` 의 행 배경을 덮어야 해서 `!important` 필요** | LPO-0304 |
+| `.lp-grid-done-row` | Tabulator 행 배경 — "확인이 끝난 행"(미확인 없음) 회색. Figma `color/surface/gray-subtle`(#e6e8ea) = `--Border_gray03`. 미확인이 남은 행은 배경 없음이 기본이라 클래스를 안 붙인다. 선택/상세 강조(`.lp-grid-active-row`)와 별개. **레이어 밖인 `tabulator-theme.css` 의 행 배경을 덮어야 해서 `!important` 필요** | LPO-0304, PM-LPO-0106(읽은 알림) |
 | `.lp-perm-menu-grid` | Tabulator 가 JS 로 넣는 그룹헤더 높이(빈 서브헤더 줄 접기, `!important` 필요) | 2204 |
 | `.lp-grid-depth-cell` | 2depth 메뉴 칸 회색 배경 | 2204 |
 | `.lp-grid-search-cell` | button 셀 라벨 뒤에 돋보기 아이콘을 가상요소로 얹기 | 2204 |

@@ -19,15 +19,14 @@
   border-bottom: 1px solid transparent;
 }
 
-/* 헤더 칸 높이 36px — 높이를 .tabulator-header 에 직접 박지 않고 안쪽(col·col-content·col-title)으로 만든다.
-   height 를 고정하면 2단 그룹 헤더(PM-PUB-0404)가 overflow:hidden 에 잘린다. */
+/* 헤더 셀 36px = 글자줄 20 + 상하 여백 8 x 2. 높이를 .tabulator-header 에 직접 박지 않고
+   안쪽 여백으로 만든다 — height 를 고정하면 2단 그룹 헤더(PM-PUB-0404)가 overflow:hidden 에 잘린다. */
 .tabulator .tabulator-header {
   background: none;
   border-top: 1px solid;
 }
 
 .tabulator .tabulator-header .tabulator-col {
-  min-height: 36px;
   box-sizing: border-box;
   font-size: 15px;
   text-align: center;
@@ -39,13 +38,15 @@
 }
 
 .tabulator .tabulator-header .tabulator-col .tabulator-col-content {
-  min-height: 36px;
-  padding: 0;
+  padding: 0.8rem 0;
+  /* 여백만으로 36 이 나오지만, 제목이 비어 있는 열(체크박스 열 등)에서 칸이 주저앉지 않게 바닥값을 둔다.
+     height 가 아니라 min-height 여야 2단 그룹 헤더(PM-PUB-0404)가 안 잘린다 */
+  min-height: 3.6rem;
 }
 
 .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title {
   font-size: 15px;
-  min-height: 36px;
+  line-height: 2rem;
   align-content: center;
 }
 
@@ -66,7 +67,11 @@
   font-size: 14px;
   color: var(--Text-body_0);
   text-align: center;
-  padding: 0 1.2rem;
+  /* 셀 48px = 글자줄 24 + 상하 여백 12 x 2. 배지·xxs 버튼도 24px 라 같은 높이가 된다.
+     height 는 border-box 라 여백을 품는다 — 여백으로 높이를 만들되 내용이 커져도 48 을 넘지 않게 못 박는다
+     (여러 줄 표는 .lp-grid-multiline 이 height:auto 로 풀어 준다) */
+  padding: 1.2rem;
+  line-height: 2.4rem;
   height: 4.8rem;
   align-content: center;
 }
