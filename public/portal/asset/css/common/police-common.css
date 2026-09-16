@@ -978,6 +978,14 @@
   gap: 3.2rem;
 }
 
+/* 목록 위 연·월 텍스트 셀렉트 둘의 묶음(Figma date_selectbox — 연 ↔ 월 16px).
+   group-gap 은 4·8·12·20·24 라 16 이 없다. 셀렉트 자체 모양은 override 의 .lp-date-select */
+.lp-date-select-row {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
 /* 카드 최소 46rem, 남는 폭은 균등 분배(≈3열 @1564px) */
 .lp-card-grid {
   display: grid;
@@ -1561,9 +1569,17 @@
 .lp-em-point {
   color: var(--Base--point);
 }
+/* 글자용 주황(#8A5C00 — 시안 text/warning). 아이콘·배지용 --warning(#FFB114) 보다 어둡다 */
+.lp-em-warning {
+  color: var(--Alert-warning-text);
+}
 /* 문장 앞머리 표식만 굵게 (근무일지 활동내역의 접수코드·[모바일]·[테블릿] — 시안 600) */
 .lp-em-strong {
   font-weight: 600;
+}
+/* 한 단계만 굵게 — 근무현황 사고자 줄의 전일·부분(시안 500). 600 은 .lp-em-strong */
+.lp-em-medium {
+  font-weight: 500;
 }
 
 /* 표 셀 본문 아래에 붙는 보조 한 줄(작성일시 등) — 시안은 셀 오른쪽 끝에 붙는다 */
@@ -2090,38 +2106,55 @@
   text-align: center;
 }
 
-/* ── 근무현황 표(일자별 근무·자원근무자·사고자) ─────────────────────────── */
-/* 한 칸에 여러 줄이 들어가는 조회용 표라 Tabulator 대신 마크업 표를 쓴다 */
+/* ── 근무현황 표(일자 × 주간·야간·심야 × 사고자·자원근무자) ─────────────────── */
+/* 한 칸에 여러 줄이 들어가는 조회용 표라 Tabulator 대신 마크업 표를 쓴다.
+   시안 12231:126683 — 머리글 2단(35+35), 본문 칸 여백 12/10, 줄 사이 4, 줄 높이 1.5(15px → 23) */
 .lp-duty-table {
   width: 100%;
-  margin-bottom: 2.4rem;
-  border-top: 0.1rem solid var(--Border_gray01);
   border-collapse: collapse;
   table-layout: fixed;
 }
+/* 일자 칸 100 */
 .lp-duty-col-date {
-  width: 8rem;
+  width: 10rem;
 }
+/* 자원근무자 칸 200 — 사고자 칸이 남는 폭을 가진다 */
 .lp-duty-col-side {
   width: 20rem;
 }
 .lp-duty-table th,
 .lp-duty-table td {
-  padding: 1rem 1.2rem;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
+  line-height: 1.5;
   color: var(--Text-body_0);
-  vertical-align: top;
   border-right: 0.1rem solid var(--Border_gray03);
   border-bottom: 0.1rem solid var(--Border_gray03);
 }
+/* 머리글: 위는 진한 실선, 칸 사이·그룹 아래는 gray-light, 맨 아래는 시안 border/gray-2
+   (#8a949e — 색이 같은 토큰이 --Border_input01 뿐이다, .lp-cert-table 과 같은 사정) */
 .lp-duty-table thead th {
-  font-weight: 500;
+  padding: 0.8rem;
+  font-weight: 700;
+  line-height: 1.3;
   color: var(--Text-body_1);
   text-align: center;
   vertical-align: middle;
-  background: var(--Background-gray01);
+  background: var(--white);
+  border-top: 0.1rem solid var(--Border-grid-header);
+  border-right: 0.1rem solid var(--Border_gray02);
+  border-bottom: 0.1rem solid var(--Border_input01);
+}
+/* 주간·야간·심야 그룹 칸 — 아래 하위 칸(사고자·자원근무자)과의 경계는 연한 선 */
+.lp-duty-table thead .lp-duty-group {
+  border-bottom-color: var(--Border_gray02);
+}
+.lp-duty-table td {
+  padding: 1.2rem 1rem;
+  vertical-align: top;
 }
 .lp-duty-table tbody th {
+  padding: 1.2rem;
+  font-weight: 400;
   text-align: center;
   vertical-align: middle;
 }
@@ -2132,17 +2165,47 @@
   gap: 0.4rem;
   line-height: 1.6;
 }
+/* 칸 안의 한 줄 [부분 홍길동 육아 (06:30~08:30)] ⊗ — .lp-duty-line 위에 얹어 낱말 사이 6, 줄 사이 4.
+   .lp-duty-line 은 LPO-0217 팝업도 써서 값을 바꾸지 않고 여기서 덮는다 */
+.lp-duty-entry {
+  gap: 0.6rem;
+  line-height: 1.5;
+}
+.lp-duty-entry + .lp-duty-entry {
+  margin-top: 0.4rem;
+}
+/* 줄 끝 삭제(⊗) — 아이콘 20, 낱말 간격 6 에 2 를 더해 시안 8 */
 .lp-duty-remove {
   display: inline-flex;
   align-items: center;
+  margin-left: 0.2rem;
   padding: 0;
-  color: var(--Text-body_2);
   background: none;
   border: 0;
   cursor: pointer;
 }
-.lp-duty-remove:hover {
-  color: var(--danger);
+/* 표 본문만 스크롤 — 표를 이 래퍼로 감싸면 남은 높이를 채우고 넘치는 본문이 안에서 스크롤되며
+   머리글 2단은 thead 째로 위에 붙는다. .lp-page-scroll 과 선언이 겹치지만 의도가 다르다
+   (페이지 본문 ↔ 표 본문 + 머리글 고정).
+   border-collapse 표는 sticky 칸의 테두리가 스크롤 중 사라지므로(.lp-table-sticky 와 같은 사정)
+   이 안에서는 separate 로 바꿔 테두리를 칸이 갖게 한다 — 그러면 2단 머리글 아랫줄의 border-top 이
+   윗줄 아래선과 겹쳐 2px 이 되어 아랫줄만 끈다 */
+.lp-duty-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+.lp-duty-scroll .lp-duty-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.lp-duty-scroll .lp-duty-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.lp-duty-scroll .lp-duty-table thead tr + tr th {
+  border-top: 0;
 }
 
 /* 라벨 아래 입력과 버튼이 한 줄로 붙는 칸(부서명 + 부서 검색 등) */

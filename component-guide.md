@@ -418,6 +418,7 @@ await dialog.confirm({
 | `text_input`, `Text Field` | `custom/input/InputField2.vue` |
 | `selectbox` | `custom/select/SelectField.vue` |
 | `select_text` | `custom/select/TextSelect.vue` |
+| `date_selectbox` | `custom/select/TextSelect.vue` `size="xlarge"` 둘(연·월) + `class="lp-date-select"`, 묶음은 `.lp-date-select-row` — 전용 컴포넌트 없음(LPO-0216) |
 | `text_area` | `custom/textarea/TextareaField.vue` |
 | `date_input` | `custom/datepicker/DatePicker.vue` |
 | `checkbox`, `checkbox__item/list` | `custom/checkbox/Checkbox.vue` |
@@ -689,10 +690,13 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-mainset-preview` `-col` `-slot` `-slot-reverse` `-badge` `-card` `-card-title` `-card-img` `-empty` `-empty-tall` `-guide` `-menus` `-group-title` `-menu-item` | 메인화면 카드 배치 설정 | LPO-0122 |
 | `.lp-imgpick-grid` `-tile` `-tile-on` `-tile-off` `-thumb` `-pick` | 이미지 선택 팝업의 타일 그리드 | LPO-0122 |
 | `.lp-stepper` `-btn` `-value` | 숫자 증감 입력(`NumberStepper`) 전용 | LPO-0214 |
-| `.lp-duty-table` `-col-date` `-col-side` `-line` `-remove` | 근무현황 표(한 칸에 여러 줄이 들어가 Tabulator 를 못 쓴다) | LPO-0216 |
+| `.lp-duty-table` `-col-date` `-col-side` `-group` `-entry` `-remove` `-scroll` | 근무현황 표(일자 × 주간·야간·심야 × 사고자·자원근무자 — 한 칸에 여러 줄이 들어가 Tabulator 를 못 쓴다). `-group` 은 2단 머리글의 그룹 칸(아래 선을 연하게), `-entry` 는 칸 안 한 줄로 **`.lp-duty-line` 위에 얹어** 낱말 사이 6·줄 사이 4 로 바꾼다(`.lp-duty-line` 자체는 LPO-0217 도 써서 값을 안 건드린다). `-scroll` 은 표를 감싸는 래퍼 — 남은 높이를 채워 **머리글(thead)은 붙여 두고 본문만 스크롤**(`.lp-page-scroll` 은 페이지 본문, `.lp-table-sticky` 는 TableWrapper 전용이라 따로 있다) | LPO-0216 |
+| `.lp-duty-line` | 칸 안 한 줄(flex·wrap·gap 4). 0216 은 `.lp-duty-entry` 를 같이 얹는다 | LPO-0216, 0217 |
+| `.lp-date-select-row` | 목록 위 연·월 텍스트 셀렉트(`TextSelect` 둘) 묶음 — 연 ↔ 월 16px(`group-gap` 에 16 이 없다). 셀렉트 모양은 override 의 `.lp-date-select` | LPO-0216 |
 | `.lp-roster-toolbar` `.lp-roster-title` | 근무자 목록 표(좁은 패널) 위의 제목 + 우측 버튼 줄. 표 자체는 `TabulatorGrid` 로 바뀌었다 | LPO-0202 |
 | `.lp-notes-row` `-label` `-body` | 표 아래 붙는 라벨+입력 한 상자(중요지시사항) | LPO-0202 |
-| `.lp-em-primary` / `.lp-em-danger` | 문장 안 한 낱말만 색으로 강조(굵기는 `<b>` 가) | LPO-0208, 0216, 0217 |
+| `.lp-em-primary` / `.lp-em-danger` / `.lp-em-point` / `.lp-em-warning` | 문장 안 한 낱말만 색으로 강조(굵기는 `<b>` 나 `.lp-em-strong`·`.lp-em-medium` 이). `-warning` 은 글자용 주황 `--Alert-warning-text`(#8A5C00 — 배지용 `--warning` 보다 어둡다): 근무현황 사고 사유 | LPO-0208, 0216, 0217 |
+| `.lp-em-medium` | 낱말 하나만 500 으로(시안 Medium). 600 은 `.lp-em-strong` — 근무현황 사고자 줄의 전일·부분 | LPO-0216 |
 | `.lp-field-inline` | 라벨 아래 입력+버튼이 한 줄로 붙는 칸(부서명 + 부서 검색) | COM-1003, 1004 |
 | `.lp-field-table` `-center` `-empty` | `FieldTable` 전용 — InfoField 칸 안에 들어가는 정적 표 | LPO-0601 |
 | `.lp-cert-scroll` `.lp-cert-table` `-question` `-note` `-note-strong` `-total` `-choice` `-pass` `-fail` | 인증기준표(rowspan 이 많고 칸 안에 라디오가 들어가 Tabulator·InfoTable 을 못 쓴다). 좁은 패널 안이라 표만 가로 스크롤 | PUB-0113 |
@@ -784,6 +788,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-chip-fill` | `ChipGroup` 에 걸어 칩들이 폼 폭을 16px 간격으로 나눠 갖게 한다(컴포넌트 기본은 내용 폭·gap 8). 폼의 카테고리 선택 | COM-0403, 0404 |
 | `.lp-dept-fill` | `DepartmentCascadeSelect` 에 걸어 셀렉트 셋이 폼 폭을 16px 간격으로 나눠 갖게 한다(컴포넌트 기본은 각 160px·gap 8) | COM-1003, 1004 |
 | `.lp-cell-datetime` | Tabulator 셀의 `white-space: nowrap`(라이브러리 기본)을 풀어 일시를 날짜/시간 두 줄로 끊는다. 행 높이 4.8rem 고정에 맞춰 `line-height: 1.3` | LPO-0501 |
+| `.lp-date-select` | **`TextSelect size="xlarge"` 에 건다** — 목록 위 연·월 텍스트 셀렉트(Figma `date_selectbox`, 19px/600·좌우 여백 0·화살표 20). xlarge 기본(700·px-2)과 굵기·여백만 달라 그 둘만 덮고, TextSelect 가 자기 화살표까지 숨기는 문제(`.lp-cal-toolbar` 와 같은 사정)로 마지막 svg 를 되살린다 | LPO-0216 |
 
 ---
 

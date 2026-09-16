@@ -658,6 +658,19 @@ tbody .row-total > td:first-child {
   opacity: 1;
 }
 
+/* 목록 위 연·월 텍스트 셀렉트(Figma date_selectbox, 12231:128930) — 19px/600, 화살표 20, 글자↔화살표 4.
+   TextSelect xlarge(1.9rem/700, px-2, 화살표 20)와 굵기·좌우 여백만 달라 그 둘만 덮는다.
+   TextSelect 의 class prop 이 트리거 button 에 그대로 붙는다 */
+.lp-date-select {
+  padding-inline: 0;
+  font-weight: 600;
+}
+/* 위 .lp-cal-toolbar 와 같은 사정 — TextSelect 가 자기 화살표까지 숨기므로 마지막 svg 만 되살린다 */
+.lp-date-select > svg:last-child {
+  display: block;
+  opacity: 1;
+}
+
 .search-btns {
   display: flex;
   align-items: flex-end;

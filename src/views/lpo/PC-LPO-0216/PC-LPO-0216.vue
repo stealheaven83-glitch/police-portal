@@ -11,117 +11,92 @@
     </template>
   </PageHeader>
 
-  <div class="lp-row-between">
-    <span class="group-gap2">
+  <SearchWrapper>
+    <template #department>
       <span class="dept-name">부서</span>
       <DepartmentCascadeSelect v-model="department" size="sm" />
-    </span>
-  </div>
+    </template>
+  </SearchWrapper>
 
-  <div class="lp-row-between lp-table-gap">
-    <span class="group-gap2">
-      <Button type="button" variant="ghost" size="icon-sm" aria-label="이전 달" @click="shiftMonth(-1)">
-        <Icon name="arrowLeft" :size="18" />
-      </Button>
-      <span class="lp-heading-md">{{ month }}</span>
-      <Button type="button" variant="ghost" size="icon-sm" aria-label="다음 달" @click="shiftMonth(1)">
-        <Icon name="arrowNext" :size="18" />
-      </Button>
-    </span>
-    <span class="group-gap2">
-        <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
+  <div class="list-actions space-between">
+    <div class="lp-date-select-row">
+      <TextSelect v-model="year" :options="yearOptions" size="xlarge" aria-label="근무연도" class="lp-date-select" />
+      <TextSelect v-model="month" :options="monthOptions" size="xlarge" aria-label="근무월" class="lp-date-select" />
+    </div>
+    <div class="group-gap3">
+      <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
         <Download :size="16" aria-hidden="true" />
         엑셀다운로드
       </Button>
       <Button type="button" variant="secondary" size="sm" @click="openApply('incident')">사고신청</Button>
       <Button type="button" variant="secondary" size="sm" @click="openApply('volunteer')">자원근무신청</Button>
-    </span>
+    </div>
   </div>
 
-  <div class="lp-page-scroll">
-    <table v-for="group in groups" :key="group.title" class="lp-duty-table">
-      <caption class="sr-only">{{ group.title }} 근무현황</caption>
+  <!-- 한 칸에 여러 줄(사고자·자원근무자)이 들어가 Tabulator 대신 마크업 표.
+       lp-duty-scroll 이 남은 높이를 채워 머리글은 고정, 본문만 스크롤 -->
+  <div class="lp-duty-scroll">
+    <table class="lp-duty-table">
+      <caption class="sr-only">{{ year }}년 {{ month }}월 사고자·자원근무자 근무현황</caption>
       <colgroup>
         <col class="lp-duty-col-date">
-        <col span="4">
-        <col class="lp-duty-col-side">
-        <col class="lp-duty-col-side">
+        <template v-for="shift in shiftColumns" :key="shift.key">
+          <col>
+          <col class="lp-duty-col-side">
+        </template>
       </colgroup>
       <thead>
         <tr>
           <th scope="col" rowspan="2">일자</th>
-          <th scope="colgroup" colspan="4">{{ group.title }}</th>
-          <th scope="col" rowspan="2">자원근무자</th>
-          <th scope="col" rowspan="2">사고자</th>
+          <th v-for="shift in shiftColumns" :key="shift.key" scope="colgroup" colspan="2" class="lp-duty-group">
+            {{ shift.label }}
+          </th>
         </tr>
         <tr>
-          <th scope="col">주</th>
-          <th scope="col">야</th>
-          <th scope="col">휴</th>
-          <th scope="col">비</th>
+          <template v-for="shift in shiftColumns" :key="shift.key">
+            <th scope="col">사고자</th>
+            <th scope="col">자원근무자</th>
+          </template>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="day in group.days" :key="day.label">
-          <th scope="row">{{ day.label }}</th>
-          <td>
-            <p v-for="(e, i) in day.day" :key="i" class="lp-duty-line">
-              <span class="lp-nowrap">{{ e.time }}</span>
-              <b class="lp-em-primary">{{ e.work }}</b>
-              <span class="lp-em-primary">{{ e.team }}</span>
-              <span>{{ e.names }}</span>
-            </p>
-          </td>
-          <td>
-            <p v-for="(e, i) in day.night" :key="i" class="lp-duty-line">
-              <span class="lp-nowrap">{{ e.time }}</span>
-              <b class="lp-em-danger">{{ e.work }}</b>
-              <span class="lp-em-primary">{{ e.team }}</span>
-              <span>{{ e.names }}</span>
-            </p>
-          </td>
-          <td>
-            <p v-for="(e, i) in day.off" :key="i" class="lp-duty-line">
-              <span class="lp-em-primary">{{ e.team }}</span>
-              <span>{{ e.name }}</span>
-            </p>
-          </td>
-          <td>
-            <p v-for="(e, i) in day.standby" :key="i" class="lp-duty-line">
-              <span class="lp-em-primary">{{ e.team }}</span>
-              <span>{{ e.name }}</span>
-            </p>
-          </td>
-          <td>
-            <p v-for="v in day.volunteers" :key="v.id" class="lp-duty-line">
-              <span class="lp-nowrap">{{ v.time }}</span>
-              <b class="lp-em-primary">{{ v.type }}</b>
-              <span>{{ v.name }}</span>
-              <button
-                type="button"
-                class="lp-duty-remove"
-                aria-label="자원근무 취소"
-                @click="removeVolunteer(day, v.id)"
-              >
-                <Icon name="closePop" :size="14" />
-              </button>
-            </p>
-          </td>
-          <td>
-            <p v-for="inc in day.incidents" :key="inc.id" class="lp-duty-line">
-              <span>{{ inc.name }}</span>
-              <span class="lp-em-danger">{{ inc.reason }}</span>
-              <span v-if="inc.time" class="lp-nowrap">{{ inc.time }}</span>
-              <button
-                type="button"
-                class="lp-duty-remove"
-                aria-label="사고 취소"
-                @click="removeIncident(day, inc.id)"
-              >
-                <Icon name="closePop" :size="14" />
-              </button>
-            </p>
-          </td>
+        <tr v-for="day in days" :key="day.label">
+          <!-- 토·일만 색이 다르다 — th 자체 색 규칙보다 span 이 이기게 안에 감싼다 -->
+          <th scope="row">
+            <span :class="{ 'lp-em-primary': day.dow === 6, 'lp-em-point': day.dow === 0 }">{{ day.label }}</span>
+          </th>
+          <template v-for="shift in shiftColumns" :key="shift.key">
+            <td>
+              <p v-for="inc in day[shift.key].incidents" :key="inc.id" class="lp-duty-line lp-duty-entry">
+                <span class="lp-em-medium" :class="inc.range === '전일' ? 'lp-em-point' : 'lp-em-primary'">{{ inc.range }}</span>
+                <span>{{ inc.name }}</span>
+                <span class="lp-em-warning">{{ inc.reason }}</span>
+                <span v-if="inc.time" class="lp-nowrap">{{ inc.time }}</span>
+                <button
+                  type="button"
+                  class="lp-duty-remove"
+                  aria-label="사고 취소"
+                  @click="removeIncident(day, shift.key, inc.id)"
+                >
+                  <Icon name="deleteCircle" :size="20" />
+                </button>
+              </p>
+            </td>
+            <td>
+              <p v-for="v in day[shift.key].volunteers" :key="v.id" class="lp-duty-line lp-duty-entry">
+                <span class="lp-nowrap">{{ v.time }}</span>
+                <span>{{ v.name }}</span>
+                <button
+                  type="button"
+                  class="lp-duty-remove"
+                  aria-label="자원근무 취소"
+                  @click="removeVolunteer(day, shift.key, v.id)"
+                >
+                  <Icon name="deleteCircle" :size="20" />
+                </button>
+              </p>
+            </td>
+          </template>
         </tr>
       </tbody>
     </table>
@@ -146,7 +121,9 @@ import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
+import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
+import TextSelect from '@/components/custom/select/TextSelect.vue'
 import { Button } from '@/components/custom/button'
 import Icon from '@/components/custom/icon/Icon.vue'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
@@ -154,7 +131,7 @@ import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import DutyApplyDialog from './components/DutyApplyDialog.vue'
 import IncidentApplyDialog, { type IncidentApplyForm } from './components/IncidentApplyDialog.vue'
-import { useDutyStatus } from './composable/PC-LPO-0216'
+import { useDutyStatus, shiftColumns, yearOptions, monthOptions } from './composable/PC-LPO-0216'
 import { useDialog } from '@/composable/dialog/dialog'
 import type { TabulatorGrid } from '@/components/custom/tabulator/index.ts'
 import { Download } from "lucide-vue-next";
@@ -179,13 +156,13 @@ const navItems = [
 
 const {
   department,
+  year,
   month,
-  groups,
+  days,
   applyOpen,
   applyKind,
   applyForm,
   openApply,
-  shiftMonth,
   removeVolunteer,
   removeIncident,
 } = useDutyStatus()
