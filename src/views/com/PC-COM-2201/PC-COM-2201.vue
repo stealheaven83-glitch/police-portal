@@ -259,6 +259,7 @@ const userColumns: TabulatorGridColumn[] = [
     cellType: 'button',
     buttonVariant: 'link',
     buttonSize: 'xxs',
+    buttonClass: 'underline',
     buttonLabel: (row) => String((row as UserRow).userId),
     onButtonClick: (row) => openUserDetail(row as UserRow),
   },

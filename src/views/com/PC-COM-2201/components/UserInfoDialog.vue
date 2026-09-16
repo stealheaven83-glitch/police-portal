@@ -8,7 +8,7 @@
     <!-- 대부분 조회 전용이고 사용여부만 바꿀 수 있다 -->
     <InfoTable :columns="1">
       <InfoField label="사용자 No">
-        <strong :class="styles.detailStrong">{{ detailForm.userNo }}</strong>
+        <strong :class="styles['info-table-txt']">{{ detailForm.userNo }}</strong>
       </InfoField>
       <InfoField label="사용자 ID">{{ detailForm.userId }}</InfoField>
       <InfoField label="성명">{{ detailForm.name }}</InfoField>
