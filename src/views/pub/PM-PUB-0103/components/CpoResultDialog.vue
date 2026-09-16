@@ -139,7 +139,7 @@
                   <RadioGroupItem :value="1" label="위험(1)" />
                 </RadioGroup>
                 <template v-else>
-                  <Stepper v-model="assessment[row.key]" :min="0" :class="styles.detailStepper" :label="row.label" />
+                  <Stepper v-model="assessment[row.key]" :min="0" :label="row.label" class="w-30" />
                   <span :class="styles.assessmentUnit">{{ row.unit }}</span>
                 </template>
               </InfoField>
@@ -155,11 +155,11 @@
 
             <div class="pop-title-lv2"><h3>3) 기타</h3></div>
             <InfoTable :columns="1" popup size="300">
-              <InfoField for="cpo-etc-label" full :class="styles.etcLabelField">
+              <InfoField for="cpo-etc-label" full>
                 <template #label>
                   <Input id="cpo-etc-label" v-model="form.etcLabel" size="sm" aria-label="기타 항목" />
                 </template>
-                <Stepper v-model="form.etcCount" :min="0" :class="styles.detailStepper" label="기타 수량" />
+                <Stepper v-model="form.etcCount" :min="0" label="기타 수량" class="w-30" />
               </InfoField>
             </InfoTable>
 
@@ -175,8 +175,7 @@
                   id="cpo-improvement-date"
                   v-model="form.improvementDate"
                   size="sm"
-                  :class="styles.detailImprovementDate"
-                  input-class="w-full"
+                  input-class="w-50"
                   placeholder="YYYY.MM.DD"
                 />
                 <SelectField
@@ -194,14 +193,12 @@
             <div class="pop-title-sub mb-2"><h2>착안사항</h2></div>
               <TextareaField
                 v-model="form.note"
-                class="w-full"
+                class="w-full mb-2"
                 textarea-class="w-full"
                 :height="72"
                 aria-label="착안사항"
               />
-              <div :class="styles.detailNoteMeta">
-                <Checkbox v-model="form.emailNotify" label="범죄예방진단 결과 우편 통보" />
-              </div>
+              <Checkbox v-model="form.emailNotify" label="범죄예방진단 결과 우편 통보" />
           </ScrollWrapper>
         </LayoutPanel>
       </template>

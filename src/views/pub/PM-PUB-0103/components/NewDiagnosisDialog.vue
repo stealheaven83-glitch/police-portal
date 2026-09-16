@@ -10,7 +10,7 @@
       <InfoTable :columns="2" popup size="120">
         <InfoField label="부서">{{ departmentText }}</InfoField>
         <InfoField label="관리번호">
-          <span :class="styles.cellText">{{ form.managementNo }}</span>
+          {{ form.managementNo }}
           <Button type="button" variant="secondary" size="sm" @click="onOpenSimpleNoticeData">
             간이진단통보자료
           </Button>
@@ -21,15 +21,18 @@
           값만 있는 표 셀(table_2)이라 disabled 인풋 대신 텍스트로 둔다.
         -->
         <InfoField label="유형">{{ typeText }}</InfoField>
-        <InfoField for="add-diagnosis-date" label="진단일자" :class="`${styles.fieldInline} ${styles.dateFieldWidth}`">
-          <DatePicker
-            id="add-diagnosis-date"
-            v-model="form.diagnosisDate"
-            size="sm"
-            class="!space-y-0 flex-1 min-w-0"
-            placeholder="YYYY.MM.DD"
-          />
-          <Button type="button" variant="secondary" size="sm" @click="onOpenPhotoData">사진자료</Button>
+        <InfoField for="add-diagnosis-date" label="진단일자">
+          <!-- 달력과 사진자료가 좁아져도 한 줄에 남도록 줄바꿈 없는 group-gap3(간격 12px)으로 묶는다 -->
+          <div class="group-gap3">
+            <DatePicker
+              id="add-diagnosis-date"
+              v-model="form.diagnosisDate"
+              size="sm"
+              class="!space-y-0"
+              placeholder="YYYY.MM.DD"
+            />
+            <Button type="button" variant="secondary" size="sm" @click="onOpenPhotoData">사진자료</Button>
+          </div>
         </InfoField>
 
         <InfoField label="현금다액업소 여부" full>
