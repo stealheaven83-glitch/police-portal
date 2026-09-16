@@ -5,7 +5,7 @@
     <InfoTable :columns="1" size="90">
       <InfoField>
         <template #label>접수경로<span :class="infoStyles.requiredDot" /></template>
-        <RadioGroup v-model="detail.receiptRoute" class="lp-unit-row" aria-label="접수경로">
+        <RadioGroup v-model="detail.receiptRoute" :class="infoStyles['info-table-radio']" aria-label="접수경로">
           <RadioGroupItem value="report112" label="112신고" />
           <RadioGroupItem value="complaint" label="고소장접수" />
           <RadioGroupItem value="etc" label="기타" />
@@ -107,7 +107,7 @@
       </InfoField>
 
       <InfoField label="표정" full>
-        <RadioGroup v-model="detail.expression" class="lp-unit-row" aria-label="표정">
+        <RadioGroup v-model="detail.expression" :class="infoStyles['info-table-radio']" aria-label="표정">
           <RadioGroupItem value="dark" label="어두움" />
           <RadioGroupItem value="bright" label="밝음" />
           <RadioGroupItem value="none" label="무표정" />
@@ -115,7 +115,7 @@
         </RadioGroup>
       </InfoField>
       <InfoField label="의복" full>
-        <RadioGroup v-model="detail.clothes" class="lp-unit-row" aria-label="의복">
+        <RadioGroup v-model="detail.clothes" :class="infoStyles['info-table-radio']" aria-label="의복">
           <RadioGroupItem value="dirty" label="더러움" />
           <RadioGroupItem value="normal" label="평범함" />
           <RadioGroupItem value="clean" label="깨끗함" />
@@ -123,7 +123,7 @@
         </RadioGroup>
       </InfoField>
       <InfoField label="행동" full>
-        <RadioGroup v-model="detail.behavior" class="lp-unit-row" aria-label="행동">
+        <RadioGroup v-model="detail.behavior" :class="infoStyles['info-table-radio']" aria-label="행동">
           <RadioGroupItem value="natural" label="자연스러움" />
           <RadioGroupItem value="slightly" label="약간자연스러움" />
           <RadioGroupItem value="unnatural" label="부자연스러움" />
@@ -131,7 +131,7 @@
         </RadioGroup>
       </InfoField>
       <InfoField label="장애어부" full>
-        <RadioGroup v-model="detail.disability" class="lp-unit-row" aria-label="장애 여부">
+        <RadioGroup v-model="detail.disability" :class="infoStyles['info-table-radio']" aria-label="장애 여부">
           <RadioGroupItem value="intellectual" label="지적장애" />
           <RadioGroupItem value="physical" label="신체장애" />
           <RadioGroupItem value="both" label="지적+신체장애" />
@@ -202,7 +202,7 @@
     <h3 id="ca-home-heading" class="lp-heading-md lp-section-title">가정환경</h3>
     <InfoTable :columns="2" size="90">
       <InfoField label="청소상태" full>
-        <RadioGroup v-model="detail.cleanliness" class="lp-unit-row" aria-label="청소상태">
+        <RadioGroup v-model="detail.cleanliness" :class="infoStyles['info-table-radio']" aria-label="청소상태">
           <RadioGroupItem value="clean" label="깨끗함" />
           <RadioGroupItem value="normal" label="보통" />
           <RadioGroupItem value="dirty" label="더러움" />
@@ -297,7 +297,7 @@
         </div>
       </InfoField>
       <InfoField label="아동보호전문기관 통보여부">
-        <RadioGroup v-model="detail.agencyNotice" class="lp-unit-row" aria-label="아동보호전문기관 통보여부">
+        <RadioGroup v-model="detail.agencyNotice" :class="infoStyles['info-table-radio']" aria-label="아동보호전문기관 통보여부">
           <RadioGroupItem value="notified" label="통보" />
           <RadioGroupItem value="not-notified" label="미통보" />
         </RadioGroup>

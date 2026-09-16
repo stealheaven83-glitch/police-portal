@@ -2,12 +2,34 @@ import { ref } from 'vue'
 import type { RecommendedKeyword } from '@/components/custom/search/SearchKeywordPanel.vue'
 
 /**
- * 사건대응 시나리오 검색(PM-IRC-0101).
- * 한 화면이 '검색 전'(최근·추천검색어)과 '검색 후'(AI 생성 답변) 두 상태를 갖는다
- * — 시안 프레임 이름이 둘 다 PM-IRC-0101 이다(11708:84256 / 11775:98106).
+ * 사건대응 시나리오 도메인 스토어 — 검색화면(PM-IRC-0101)과 결과화면(PM-IRC-0104)이 함께 쓴다.
+ * 두 화면 어느 폴더에도 속하지 않아 도메인 레벨에 둔다(docs/create/multi-route.md §1).
+ *
+ * ⚠ 시안 프레임 이름은 '검색 후'도 PM-IRC-0101 이다(11708:84256 / 11775:98106).
+ *   `screen-id-map.md`·`plannedRoutes.ts`·작업목록은 결과화면을 **PM-IRC-0104** 로 따로 두고 있어
+ *   IA 표를 따랐다(CLAUDE.md §0). Figma 프레임 이름이 낡은 것으로 본다.
  *
  * AI 답변은 실제로는 서버가 만들어 준다. 여기서는 시안 문구를 그대로 둔 목업이다.
  */
+
+/**
+ * 음성검색 버튼을 눌렀을 때 뜨는 '대기시간 초과' 확인창 문구.
+ * Figma: MO_사건대응시나리오_대기시간 초과 (13323:98196 / 모달 본체 13323:98207).
+ *
+ * - `title` 은 태그를 받는다 — 시안 맨 위 느낌표 아이콘(icon/fill/exclamation)을 여기 넣는다
+ * - `device: 'mobile'` — 이 확인창을 여는 음성검색 버튼 자체가 모바일 폭에서만 보인다
+ *   (police-style.css 의 `@media (max-width: 1000px)`)
+ * - '음식인식' 오타도 시안 그대로 옮겼다 — Figma 가 기준이다(docs/create.md §4)
+ */
+export const voiceWaitTimeoutDialog = {
+  title:
+    '<img src="/portal/asset/images/icon/ico_exclamation_32.svg" alt="" width="32" height="32">대기시간이 초과되었습니다.',
+  description:
+    '대기자가 많아 음식인식이 종료되었습니다. 아래의 [음성인식 시작] 버튼을 선택하여 음성인식을 시작합니다.',
+  btnOk: '음성인식 시작',
+  btnCancel: '취소',
+  device: 'mobile' as const,
+}
 
 /** 답변 본문 한 단락 — 소제목이 있으면 heading, 목록이면 bullets */
 export interface AnswerBlock {
@@ -75,10 +97,9 @@ const MOCK_ANSWER: ScenarioAnswer = {
   ],
 }
 
-export function useIncidentScenarioSearch() {
+function createIncidentScenarioStore() {
+  /** 검색어 — 검색화면에서 넣고 결과화면이 이어받는다 */
   const keyword = ref('')
-  /** 검색을 한 번이라도 실행했는지 — 검색 전/후 화면을 가른다 */
-  const searched = ref(false)
   const answer = ref<ScenarioAnswer>(MOCK_ANSWER)
 
   /** 펼쳐진 참고자료 칸 제목. 한 번에 하나만 펼친다(Accordion type="single") */
@@ -103,7 +124,6 @@ export function useIncidentScenarioSearch() {
 
   return {
     keyword,
-    searched,
     answer,
     openReference,
     recentKeywords,
@@ -112,4 +132,16 @@ export function useIncidentScenarioSearch() {
     clearRecent,
     pushRecent,
   }
+}
+
+/**
+ * 모듈 스코프 싱글턴(docs/create/multi-route.md §2).
+ * `Layout.vue` 가 라우트마다 화면을 통째로 리마운트하므로 `setup()` 안에서 만들면
+ * 검색화면 → 결과화면으로 갈 때 검색어가 리셋된다.
+ */
+let singleton: ReturnType<typeof createIncidentScenarioStore> | null = null
+
+export function useIncidentScenarioStore() {
+  if (!singleton) singleton = createIncidentScenarioStore()
+  return singleton
 }

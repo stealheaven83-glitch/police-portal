@@ -107,7 +107,7 @@
             <InfoTable :columns="1" size="90">
               <InfoField>
                 <template #label>접수경로<span :class="infoStyles.requiredDot" /></template>
-                <RadioGroup v-model="detail.receiptRoute" class="lp-unit-row" aria-label="접수경로">
+                <RadioGroup v-model="detail.receiptRoute" :class="infoStyles['info-table-radio']" aria-label="접수경로">
                   <RadioGroupItem value="report112" label="112신고" />
                   <RadioGroupItem value="complaint" label="고소장접수" />
                   <RadioGroupItem value="etc" label="기타" />

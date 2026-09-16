@@ -2,7 +2,7 @@
   <GenericDialog2 v-model:open="volunteerAddOpen" title="자원 근무자 추가" :size="800">
     <InfoTable :columns="2" popup :size="110">
       <InfoField label="구분">
-        <RadioGroup v-model="volunteerScope" class="lp-icon-row">
+        <RadioGroup v-model="volunteerScope" :class="styles['info-table-radio']">
           <RadioGroupItem value="police" label="경찰" />
           <RadioGroupItem value="etc" label="그외" />
         </RadioGroup>
@@ -73,6 +73,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import styles from '@/components/custom/info-table/InfoTable.module.css'
 import { WorkScheduleKey } from '../composable/useWorkSchedule'
 import {
   volunteerTypeOptions,

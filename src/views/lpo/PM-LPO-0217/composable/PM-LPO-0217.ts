@@ -1,4 +1,4 @@
-import { ref, type InjectionKey } from 'vue'
+import { ref, computed, type InjectionKey } from 'vue'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 
 /** 근무일지(乙) 한 줄 */
@@ -173,6 +173,12 @@ function createMockRows(): WorkLogRow[] {
 export function useWorkLogWrite() {
   const department = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
   const workDate = ref('2026.08.11.')
+  /** 근무일의 요일 표시 — 근무일지(PC-LPO-0202)와 같은 계산. 목업 문자열(yyyy.MM.dd.)에서 구한다 */
+  const weekdayLabel = computed(() => {
+    const [y, m, d] = workDate.value.replace(/\.$/, '').split('.').map(Number)
+    if (!y || !m || !d) return ''
+    return `${['일', '월', '화', '수', '목', '금', '토'][new Date(y, m - 1, d).getDay()]}요일`
+  })
   /** 주 / 야 / 미편성 */
   const shift = ref<'day' | 'night' | 'none'>('day')
   /** 보기(방식): 기본 / 전체 */
@@ -281,6 +287,7 @@ export function useWorkLogWrite() {
   return {
     department,
     workDate,
+    weekdayLabel,
     shift,
     viewMode,
     rows,

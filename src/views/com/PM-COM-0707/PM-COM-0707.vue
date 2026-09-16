@@ -1,7 +1,7 @@
 <template>
   <PageHeader>
     <template #left>
-      <PageTitle :title="spec.title" />
+      <PageTitle title="상시학습자료" />
     </template>
     <template #right>
       <span class="group-gap2">
@@ -13,13 +13,15 @@
 
   <div class="lp-page-scroll">
     <div class="lp-narrow-form">
-      <!-- 시안: 작성자 줄 오른쪽 끝에 '공지' 체크박스가 온다(1003 의 중요공지 토글 줄이 없다) -->
+      <!-- 시안: 작성자 줄 오른쪽 끝에 '공지' 체크박스가 온다 -->
       <div class="lp-row-between">
         <p class="lp-writer-line">
           <b class="lp-writer-line-name">{{ writer }}</b>
           <span class="lp-writer-line-date">{{ writtenAt }}</span>
         </p>
-        <Checkbox v-model="form.pinned" size="lg" label="공지" />
+        <span class="lp-radio-inline">
+          <Checkbox v-model="form.pinned" size="lg" label="공지" />
+        </span>
       </div>
 
       <div class="lp-field">
@@ -110,7 +112,7 @@ import { Checkbox } from '@/components/custom/checkbox'
 import { Button } from '@/components/custom/button'
 import { FileUpload } from '@/components/custom/file-upload'
 import { useDialog } from '@/composable/dialog/dialog'
-import { BOARD_SPECS, boardMenu, CONTENT_MAX_LENGTH, FILE_ACCEPT } from '../composable/board'
+import { boardMenu, CONTENT_MAX_LENGTH, FILE_ACCEPT } from '../composable/board'
 import { useStudyEdit } from './composable/PM-COM-0707'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
@@ -119,11 +121,8 @@ defineOptions({
   name: 'PmCom0707',
 })
 
-/** 게시판 구성은 board.ts 의 스펙 하나로 정해진다 */
-const spec = BOARD_SPECS.study
-
 // LNB: 게시판 > 교육자료 나눔터 > 상시학습자료
-useSideMenuSetup({ ...boardMenu, openIndex: spec.openIndex, activeChild: spec.menuChild })
+useSideMenuSetup({ ...boardMenu, openIndex: 4, activeChild: '상시학습자료' })
 
 const router = useRouter()
 const dialog = useDialog()
@@ -131,8 +130,8 @@ const dialog = useDialog()
 const navItems = [
   { label: '홈', path: '/' },
   { label: '게시판' },
-  ...spec.breadcrumb.slice(0, -1).map((label) => ({ label })),
-  { label: spec.title, path: `/views/com/${spec.listId}` },
+  { label: '교육자료 나눔터' },
+  { label: '상시학습자료', path: '/views/com/PM-COM-0705' },
 ]
 
 const { form, writer, writtenAt, dept, fileCount, canSave, addFiles, removeFile } = useStudyEdit()
@@ -178,7 +177,7 @@ async function onSave() {
 
 useBottomTabSetup({
   value: 'PM-COM-0707',
-  label: `${spec.title} 수정`,
+  label: '상시학습자료 수정',
   path: '/views/com/PM-COM-0707',
   componentName: 'PmCom0707',
   closable: true,

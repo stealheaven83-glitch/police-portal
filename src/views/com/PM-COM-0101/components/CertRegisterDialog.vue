@@ -1,6 +1,6 @@
 <template>
   <GenericDialog2 :open="open" title="공인인증서 등록" :size="560" @update:open="onUpdateOpen">
-    <div :class="styles['dialog-body']">
+    <div class="login-dialog-body">
       <InputField2
         v-model="userId"
         label="아이디"
@@ -13,9 +13,9 @@
         autocomplete="username"
       />
 
-      <div :class="styles['pw-field']">
-        <Label :class="styles['pw-label']" for="cert-password">비밀번호</Label>
-        <div :class="styles['pw-wrap']">
+      <div class="login-pw-field">
+        <Label class="login-pw-label" for="cert-password">비밀번호</Label>
+        <div class="login-pw-wrap">
           <Input
             id="cert-password"
             v-model="password"
@@ -23,9 +23,9 @@
             placeholder="비밀번호를 입력하세요"
             size="md"
             autocomplete="new-password"
-            :class="styles['pw-input']"
+            class="login-pw-input"
           />
-          <div :class="styles['pw-icons']">
+          <div class="login-pw-icons">
             <button
               v-if="password"
               type="button"
@@ -61,7 +61,7 @@
         type="button"
         variant="primary"
         size="md"
-        :class="styles['dialog-submit-btn']"
+        class="login-dialog-submit-btn"
         @click="onRegister"
       >
         공인인증서 등록
@@ -80,7 +80,6 @@ import Input from '@/components/custom/input/Input.vue'
 import { Button } from '@/components/custom/button'
 import iconClear from '@/assets/icon/_delete.svg?url'
 import { useCertRegister } from '../composable/PM-COM-0101'
-import styles from '../style/PM-COM-0101.module.css'
 
 const props = defineProps<{ open: boolean }>()
 const emit = defineEmits<{ (e: 'update:open', value: boolean): void }>()

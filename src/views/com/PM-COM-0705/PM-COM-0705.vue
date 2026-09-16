@@ -1,7 +1,7 @@
 <template>
   <PageHeader>
     <template #left>
-      <PageTitle :title="spec.title" />
+      <PageTitle title="상시학습자료" />
     </template>
     <template #right>
       <span class="group-gap2">
@@ -51,7 +51,7 @@
     select-mode="checkbox"
     height="100%"
     min-height="40rem"
-    :placeholder="spec.emptyText"
+    placeholder="등록된 학습자료가 없습니다"
     show-pagination
     v-model:current-page="currentPage"
     :items-per-page="itemsPerPage"
@@ -80,7 +80,6 @@ import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tab
 import { useDialog } from '@/composable/dialog/dialog'
 import { useStudyList, type StudyRow } from './composable/PM-COM-0705'
 import {
-  BOARD_SPECS,
   boardMenu,
   useBoardStore,
   authorFilterOptions,
@@ -91,14 +90,16 @@ import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 
 defineOptions({ name: 'PmCom0705' })
 
-/** 게시판 구성은 board.ts 의 스펙 하나로 정해진다(제목·브레드크럼·LNB·칸 유무) */
-const spec = BOARD_SPECS.study
-
 // LNB: 게시판 > 교육자료 나눔터 > 상시학습자료
 // (presets.ts 에 게시판 메뉴가 아직 없어 도메인 composable 의 구성을 쓴다 — docs/create.md §3)
-useSideMenuSetup({ ...boardMenu, openIndex: spec.openIndex, activeChild: spec.menuChild })
+useSideMenuSetup({ ...boardMenu, openIndex: 4, activeChild: '상시학습자료' })
 
-const navItems = [{ label: '홈', path: '/' }, { label: '게시판' }, ...spec.breadcrumb.map((label) => ({ label }))]
+const navItems = [
+  { label: '홈', path: '/' },
+  { label: '게시판' },
+  { label: '교육자료 나눔터' },
+  { label: '상시학습자료' },
+]
 
 const router = useRouter()
 const dialog = useDialog()
@@ -120,13 +121,13 @@ const {
   removeRows,
 } = useStudyList()
 
-/** 설계서 4: 고정 공지는 번호 자리에 '공지' 배지가 들어간다.
+/** 고정 공지는 번호 자리에 '공지' 배지가 들어간다.
  *  Tabulator 포매터는 HTML 문자열을 innerHTML 로 넣는 자리라 Vue 컴포넌트 태그를 써도 컴파일되지
  *  않는다 — 대신 Badge 가 쓰는 badgeVariants() 로 같은 클래스 문자열을 받아 <span> 에 입힌다 */
 function noFormatter(cell: any) {
   const value = cell.getValue()
   if (value === '공지') {
-    return `<span class="${badgeVariants({ shape: 'sm', size: 'md', color: 'primary', variant: 'solid' })}">공지</span>`
+    return `<span class="${badgeVariants({ shape: 'sm', color: 'primary' })}">공지</span>`
   }
   return String(value)
 }
@@ -138,7 +139,7 @@ function attachmentFormatter(cell: any) {
   return cell.getValue() ? `<img src="${attachIcon}" alt="첨부파일 있음" width="20" height="20">` : '-'
 }
 
-/** 설계서 4: 제목 뒤에 댓글 수를 point 색으로 '+22' 처럼 붙인다.
+/** 제목 뒤에 댓글 수를 point 색으로 '+22' 처럼 붙인다.
  *  제목은 사용자 입력이라 innerHTML 문자열이 아니라 textContent 로 넣는다 */
 function titleFormatter(cell: any) {
   const row = cell.getData() as StudyRow
@@ -153,7 +154,7 @@ function titleFormatter(cell: any) {
   return wrap
 }
 
-/** 추천수는 이 게시판에 없다(BOARD_SPECS.study.hasRecommend = false) */
+/** 추천수는 이 게시판에 없다 */
 const columns: TabulatorGridColumn[] = [
   { title: '번호', field: 'no', width: 90, hozAlign: 'center', formatter: noFormatter },
   { title: '부서', field: 'dept', width: 200, hozAlign: 'center' },
@@ -168,8 +169,8 @@ const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const selectedCount = ref(0)
 
 /**
- * 설계서 4-2 삭제.
- * 1) 선택한 항목이 없는 경우 — 설계서는 버튼 비활성이지만 PM-COM-1001 과 같이 알림창으로 막는다.
+ * 삭제.
+ * 1) 선택한 항목이 없는 경우 — 버튼 비활성이지만 알림창으로 막는다.
  * 2) 선택이 있으면 Confirm — 되돌릴 수 없는 삭제라 CLAUDE.md §4 의 confirm 예외에 해당한다.
  */
 async function onDeleteSelected() {
@@ -191,21 +192,21 @@ async function onDeleteSelected() {
   await dialog.alert({ title: '삭제되었습니다.', btnCancel: '확인' })
 }
 
-/** 설계서 6: 게시물 작성 가능 계정이면 등록 화면으로 이동 */
+/** 게시물 작성 가능 계정이면 등록 화면으로 이동 */
 function onCreate() {
-  router.push({ name: spec.createId })
+  router.push({ name: 'PM-COM-0708' })
 }
 
-/** 설계서 4: 제목을 누르면 상세로 이동 */
+/** 제목을 누르면 상세로 이동 */
 function onRowClick(_event: unknown, row: { getData: () => { id?: number } }) {
   selectPost(row.getData().id ?? 1)
-  router.push({ name: spec.detailId })
+  router.push({ name: 'PM-COM-0706' })
 }
 
 useBottomTabSetup({
-  value: spec.listId,
-  label: spec.title,
-  path: `/views/com/${spec.listId}`,
+  value: 'PM-COM-0705',
+  label: '상시학습자료',
+  path: '/views/com/PM-COM-0705',
   componentName: 'PmCom0705',
   closable: true,
 })

@@ -326,7 +326,7 @@
           없애고, 표는 FieldTable(회색 헤더·상단선 없음·hover 없음)로 그린다 — 본문에 단독으로
           놓는 TableWrapper 와 다른 자리다.
         -->
-        <InfoField label="순찰차별 관할구역" full class="lp-field-flush" colClass="no-padding">
+        <InfoField label="순찰차별 관할구역" full class="lp-field-flush" value-class="no-padding">
           <FieldTable
             :columns="patrolColumns"
             :items="patrolVehicles"

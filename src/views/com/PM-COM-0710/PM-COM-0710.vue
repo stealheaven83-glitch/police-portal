@@ -1,7 +1,7 @@
 <template>
   <PageHeader>
     <template #left>
-      <PageTitle :title="spec.title" />
+      <PageTitle title="법령 · 지침 · 매뉴얼" />
     </template>
     <template #right>
       <span class="group-gap2">
@@ -13,10 +13,9 @@
 
   <div class="lp-notice-scroll">
     <article class="lp-notice-detail">
-      <!-- 시안: 공지 배지 + 부서만 온다. 이 게시판은 공개상태·카테고리 칸이 없다(board.ts law 스펙) -->
+      <!-- 시안: 공지 배지만 온다. 이 게시판은 부서·공개상태·카테고리 칸이 없다 -->
       <p class="lp-notice-badges">
-        <Badge v-if="spec.hasPinned && notice.pinned" color="primary" variant="solid" size="lg" shape="sm">공지</Badge>
-        <span v-if="spec.hasDept" class="lp-notice-dept">{{ notice.dept }}</span>
+        <Badge v-if="notice.pinned" color="primary" variant="solid" size="lg" shape="sm">공지</Badge>
       </p>
 
       <h2 class="lp-notice-title">{{ notice.title }}</h2>
@@ -28,7 +27,7 @@
       </div>
 
       <!-- 본문 대표 이미지 자리 — Figma 는 회색 박스로만 그려져 있다 -->
-      <div class="lp-notice-thumb" aria-hidden="true"><img src="" :alt="notice.title"></div>
+      <div class="lp-notice-thumb" aria-hidden="true"><img src="/portal/asset/images/img/img_temp.jpg" :alt="notice.title"></div>
 
       <div class="lp-notice-body">
         <p v-for="(line, i) in contentLines" :key="i" class="lp-body-text">{{ line }}</p>
@@ -75,29 +74,22 @@ import { Button } from '@/components/custom/button'
 import { FileUpload } from '@/components/custom/file-upload'
 import { useDialog } from '@/composable/dialog/dialog'
 import CommentThread from '../components/CommentThread.vue'
-import { BOARD_SPECS, boardMenu, useBoardStore } from '../composable/board'
+import { boardMenu, useBoardStore } from '../composable/board'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
-import { useWorkLayoutSetup } from '@/composable/layout/useWorkLayoutSetup'
 
 defineOptions({
   name: 'PmCom0710',
 })
 
-/** 게시판 구성은 board.ts 의 스펙 하나로 정해진다(제목·브레드크럼·LNB·칸 유무) */
-const spec = BOARD_SPECS.law
-
 // LNB: 게시판 > 교육자료 나눔터 > 법령 · 지침 · 매뉴얼
-useSideMenuSetup({ ...boardMenu, openIndex: spec.openIndex, activeChild: spec.menuChild })
-
-// 상세는 본문이 하나의 흐름이라 work-body 째로 스크롤돼야 한다
-useWorkLayoutSetup({ scrollable: true })
+useSideMenuSetup({ ...boardMenu, openIndex: 4, activeChild: '법령 · 지침 · 매뉴얼' })
 
 const navItems = [
   { label: '홈', path: '/' },
   { label: '게시판' },
-  ...spec.breadcrumb.slice(0, -1).map((label) => ({ label })),
-  { label: spec.title, path: `/views/com/${spec.listId}` },
+  { label: '교육자료 나눔터' },
+  { label: '법령 · 지침 · 매뉴얼', path: '/views/com/PM-COM-0709' },
 ]
 
 const router = useRouter()
@@ -131,7 +123,7 @@ function goEdit() {
 
 async function onDelete() {
   const { confirmed } = await dialog.confirm({
-    title: `${spec.title} 삭제`,
+    title: '법령 · 지침 · 매뉴얼 삭제',
     description: '삭제한 게시글은 복구할 수 없습니다. 삭제 하시겠습니까?',
     btnOk: '삭제',
   })
@@ -142,7 +134,7 @@ async function onDelete() {
 
 useBottomTabSetup({
   value: 'PM-COM-0710',
-  label: `${spec.title} 상세`,
+  label: '법령 · 지침 · 매뉴얼 상세',
   path: '/views/com/PM-COM-0710',
   componentName: 'PmCom0710',
   closable: true,

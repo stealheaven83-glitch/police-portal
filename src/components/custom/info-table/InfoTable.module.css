@@ -264,6 +264,26 @@
 .flex-wrap{
   flex-wrap:wrap;
 }
+
+/* 값 영역 안에서 가로로 붙는 묶음 — 연락처 3칸 + 하이픈, 총 병상 수 + 단위(PM-PUB-0414/PC-PUB-0415 폼) */
+.info-table-value-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+/* 연락처 칸 사이 하이픈 */
+.info-table-hyphen {
+  color: var(--Text-body_2);
+}
+
+/* 입력칸 뒤에 붙는 단위 표기("개") */
+.info-table-unit {
+  white-space: nowrap;
+  color: var(--Text-body_1);
+}
+
 .disclaimerStrong {
   font-weight: 700;
   color: var(--Base--point, #d32f2f);

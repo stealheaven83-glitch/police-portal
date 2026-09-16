@@ -260,7 +260,7 @@
                 <InputField2 id="force-target-name" v-model="detail.targetName" size="sm" class="!space-y-0 w-full" input-class="w-full" />
               </InfoField>
               <InfoField label="성별">
-                <RadioGroup v-model="detail.targetGender" class="lp-unit-row" aria-label="성별">
+                <RadioGroup v-model="detail.targetGender" :class="styles['info-table-radio']" aria-label="성별">
                   <RadioGroupItem value="male" label="남" />
                   <RadioGroupItem value="female" label="여" />
                 </RadioGroup>
@@ -311,10 +311,10 @@
               <Checkbox v-model="detail.noSpecial" label="특이사항 없음" />
             </div>
             <InfoTable :columns="1" size="100">
-              <InfoField label="정신상태" class="lp-info-nested" col-class="no-padding">
+              <InfoField label="정신상태" class="lp-info-nested" value-class="no-padding">
                 <InfoTable :columns="1" size="120">
                   <InfoField label="주취">
-                    <RadioGroup v-model="detail.drunk" :disabled="detail.noSpecial" class="lp-field-row" aria-label="주취">
+                    <RadioGroup v-model="detail.drunk" :disabled="detail.noSpecial" :class="styles['info-table-radio']" aria-label="주취">
                       <RadioGroupItem v-for="option in drunkOptions" :key="option.value" :value="option.value" :label="option.label" />
                     </RadioGroup>
                   </InfoField>
@@ -345,10 +345,10 @@
             </InfoTable>
 
             <InfoTable :columns="1" size="100" class="lp-table-gap">
-              <InfoField label="신체상태" class="lp-info-nested" col-class="no-padding">
+              <InfoField label="신체상태" class="lp-info-nested" value-class="no-padding">
                 <InfoTable :columns="1" size="120">
                   <InfoField label="체격">
-                    <RadioGroup v-model="detail.build" :disabled="detail.noSpecial" class="lp-field-row" aria-label="체격">
+                    <RadioGroup v-model="detail.build" :disabled="detail.noSpecial" :class="styles['info-table-radio']" aria-label="체격">
                       <RadioGroupItem v-for="option in buildOptions" :key="option.value" :value="option.value" :label="option.label" />
                     </RadioGroup>
                   </InfoField>
@@ -682,6 +682,7 @@ import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
 import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
 import RequirementDialog from './components/RequirementDialog.vue'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
+import styles from '@/components/custom/info-table/InfoTable.module.css'
 
 import { useDialog } from '@/composable/dialog/dialog'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'

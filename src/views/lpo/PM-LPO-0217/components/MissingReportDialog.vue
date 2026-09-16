@@ -34,7 +34,7 @@
       </InfoField>
       <InfoField label="교대">
         <!-- 시안(12653:91764): 라디오 사이 24 -->
-        <RadioGroup v-model="missingForm.shift" class="group-gap6">
+        <RadioGroup v-model="missingForm.shift" :class="styles['info-table-radio']">
           <RadioGroupItem value="day" label="주" />
           <RadioGroupItem value="night" label="야" />
           <RadioGroupItem value="none" label="미편성" />
@@ -72,6 +72,7 @@ import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
+import styles from '@/components/custom/info-table/InfoTable.module.css'
 import { WorkLogKey } from '../composable/PM-LPO-0217'
 
 const dialog = useDialog()

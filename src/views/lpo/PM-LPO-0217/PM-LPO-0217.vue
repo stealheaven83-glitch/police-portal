@@ -20,45 +20,47 @@
     </template>
   </SearchWrapper>
 
-  <!-- 시안(11969:40065): 조회조건 한 줄, 오른쪽 끝에 인쇄 버튼 -->
-  <div class="lp-row-between">
-    <span class="lp-filter-row">
-      <span class="group-gap3">
-        <span class="lp-label-text">근무일</span>
-        <!-- 시안(11969:40069): 버튼 영역 20×20(삼각형 13.35×8.11), 버튼↔날짜 10 -->
-        <span class="lp-daynav">
-          <!-- 2026-09-11 컴포넌트로 교체: button.lp-icon-btn -> Button variant="icon" -->
-          <Button variant="icon" aria-label="이전 근무일" @click="shiftWorkDate(-1)">
-            <Icon name="arrowDropDown" :size="20" class="lp-icon-prev" />
-          </Button>
-          <span class="group-gap2">
-            <span class="lp-heading-lg">{{ workDate }}</span>
-            <Icon name="calendar" :size="24" />
-          </span>
-          <!-- 2026-09-11 컴포넌트로 교체: button.lp-icon-btn -> Button variant="icon" -->
-          <Button variant="icon" aria-label="다음 근무일" @click="shiftWorkDate(1)">
-            <Icon name="arrowDropDown" :size="20" class="lp-icon-next" />
-          </Button>
-        </span>
-      </span>
-      <span class="lp-divider-v" aria-hidden="true"></span>
-      <span class="group-gap3">
-        <span class="lp-label-text">교대</span>
-        <RadioGroup v-model="shift" class="lp-radio-inline">
-          <RadioGroupItem value="day" label="주" />
-          <RadioGroupItem value="night" label="야" />
-          <RadioGroupItem value="none" label="미편성" />
-        </RadioGroup>
-      </span>
-      <span class="lp-divider-v" aria-hidden="true"></span>
-      <span class="group-gap3">
-        <span class="lp-label-text">보기방식</span>
-        <RadioGroup v-model="viewMode" class="lp-radio-inline">
-          <RadioGroupItem value="basic" label="기본" />
-          <RadioGroupItem value="all" label="전체" />
-        </RadioGroup>
-      </span>
-    </span>
+  <!-- 근무일 줄은 근무일지(PC-LPO-0202)와 같은 형태: .calendar-area + .lp-daynav(테두리 없는 날짜 + 앞뒤 화살표) + 세로선.
+       오른쪽 끝 인쇄 버튼은 .list-actions 직속 — 래퍼의 gap 이 .list-actions 와 같아 겉포장이 필요 없다 -->
+  <div class="list-actions lp-date-actions">
+    <div class="calendar-area">
+      <span class="lp-label-text">근무일</span>
+      <div class="calendar-area-date lp-daynav">
+        <Button variant="icon" aria-label="이전 근무일" @click="shiftWorkDate(-1)">
+          <Icon name="arrowDropDown" :size="20" class="lp-icon-prev" />
+        </Button>
+        <DatePicker
+          v-model="workDate"
+          label="근무일 선택"
+          label-class="sr-only"
+          size="sm"
+          format="yyyy.MM.dd."
+          value-format="yyyy.MM.dd."
+          input-class="lp-date-borderless lp-heading-lg w-40"
+        />
+        <Button variant="icon" aria-label="다음 근무일" @click="shiftWorkDate(1)">
+          <Icon name="arrowDropDown" :size="20" class="lp-icon-next" />
+        </Button>
+      </div>
+      <span class="calendar-area-divider" aria-hidden="true" />
+      <span class="lp-heading-md">{{ weekdayLabel }}</span>
+      <span class="calendar-area-divider" aria-hidden="true" />
+      <span class="lp-label-text">교대</span>
+      <RadioGroup v-model="shift" class="calendar-area-options" aria-label="교대">
+        <RadioGroupItem value="day" label="주" />
+        <RadioGroupItem value="night" label="야" />
+        <RadioGroupItem value="none" label="미편성" />
+      </RadioGroup>
+      <span class="calendar-area-divider" aria-hidden="true" />
+      <span class="lp-label-text">보기방식</span>
+      <RadioGroup v-model="viewMode" class="calendar-area-options" aria-label="보기방식">
+        <RadioGroupItem value="basic" label="기본" />
+        <RadioGroupItem value="all" label="전체" />
+      </RadioGroup>
+      <!-- 조회버튼 임시 (디자인x) -->
+      <Button type="button" variant="primary" size="sm" pl="10" class="ml-2">조회</Button>
+    </div>
+
     <Button type="button" variant="tertiary2" size="sm" @click="onPrint">인쇄</Button>
   </div>
 
@@ -103,6 +105,7 @@ import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
 import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
+import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
 import { Button } from '@/components/custom/button'
 import Icon from '@/components/custom/icon/Icon.vue'
@@ -140,6 +143,7 @@ provide(WorkLogKey, store)
 const {
   department,
   workDate,
+  weekdayLabel,
   shift,
   viewMode,
   rows,

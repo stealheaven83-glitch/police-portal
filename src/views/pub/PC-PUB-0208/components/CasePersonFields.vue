@@ -17,7 +17,7 @@
     </InfoField>
     <InfoField v-if="showNationality" label="국적">
       <div class="lp-unit-row">
-        <RadioGroup v-model="person.nationality" class="lp-unit-row" :aria-label="`${legend} 국적`">
+        <RadioGroup v-model="person.nationality" :class="infoStyles['info-table-radio']" :aria-label="`${legend} 국적`">
           <RadioGroupItem value="kr" label="한국" />
           <RadioGroupItem value="etc" label="기타" />
         </RadioGroup>

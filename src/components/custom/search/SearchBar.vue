@@ -1,3 +1,49 @@
+<template>
+  <div :class="cn('search-wrap', props.class)">
+    <form
+      class="search-bar"
+      :class="{ 'no-bedge': !status, 'lp-has-clear': !!modelValue }"
+      role="search"
+      @submit.prevent="onSubmit"
+    >
+      <h2 class="blind">{{ label }}</h2>
+
+      <div v-if="status" class="status-box">
+        <span class="status-bedge" :class="statusTone">
+          <i class="icon info" aria-hidden="true"></i>
+          <span>{{ status }}</span>
+        </span>
+      </div>
+
+      <div class="search-box">
+        <input
+          ref="inputRef"
+          class="input-search"
+          type="search"
+          name="search_txt"
+          autocomplete="off"
+          :placeholder="placeholder"
+          :aria-label="label"
+          :value="modelValue"
+          @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+        />
+        <button v-if="modelValue" type="button" class="lp-search-clear" @click="onClear">
+          <span class="blind">검색어 지우기</span>
+          <img src="/portal/asset/images/icon/ico_clear_32.svg" alt="" />
+        </button>
+        <button class="btn btn-search" type="submit" aria-label="검색하기"></button>
+      </div>
+
+      <button
+        class="btn btn-voice"
+        type="button"
+        aria-label="음성검색"
+        @click="emit('voice')"
+      ></button>
+    </form>
+  </div>
+</template>
+
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
 import { ref } from "vue"
@@ -40,6 +86,8 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   (e: "update:modelValue", value: string): void
   (e: "search", value: string): void
+  /** 음성검색 버튼 클릭. 버튼은 police-style.css 의 모바일 미디어쿼리에서만 보인다 */
+  (e: "voice"): void
 }>()
 
 const inputRef = ref<HTMLInputElement | null>(null)
@@ -61,44 +109,3 @@ function focus() {
 
 defineExpose({ focus })
 </script>
-
-<template>
-  <div :class="cn('search-wrap', props.class)">
-    <form
-      class="search-bar"
-      :class="{ 'no-bedge': !status, 'lp-has-clear': !!modelValue }"
-      role="search"
-      @submit.prevent="onSubmit"
-    >
-      <h2 class="blind">{{ label }}</h2>
-
-      <div v-if="status" class="status-box">
-        <span class="status-bedge" :class="statusTone">
-          <i class="icon info" aria-hidden="true"></i>
-          <span>{{ status }}</span>
-        </span>
-      </div>
-
-      <div class="search-box">
-        <input
-          ref="inputRef"
-          class="input-search"
-          type="search"
-          name="search_txt"
-          autocomplete="off"
-          :placeholder="placeholder"
-          :aria-label="label"
-          :value="modelValue"
-          @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
-        />
-        <button v-if="modelValue" type="button" class="lp-search-clear" @click="onClear">
-          <span class="blind">검색어 지우기</span>
-          <img src="/portal/asset/images/icon/ico_clear_32.svg" alt="" />
-        </button>
-        <button class="btn btn-search" type="submit" aria-label="검색하기"></button>
-      </div>
-
-      <button class="btn btn-voice" type="button" aria-label="음성검색"></button>
-    </form>
-  </div>
-</template>

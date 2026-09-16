@@ -21,7 +21,7 @@
     <InfoTable :columns="1" size="90">
       <InfoField>
         <template #label>접수경로<span :class="infoStyles.requiredDot" /></template>
-        <RadioGroup v-model="detail.receiptRoute" class="lp-unit-row" aria-label="접수경로">
+        <RadioGroup v-model="detail.receiptRoute" :class="infoStyles['info-table-radio']" aria-label="접수경로">
           <RadioGroupItem value="report112" label="112신고" />
           <RadioGroupItem value="complaint" label="고소장접수" />
           <RadioGroupItem value="etc" label="기타" />
@@ -166,7 +166,7 @@
     <InfoTable :columns="1" size="120">
       <InfoField label="피해자 의사 확인">
         <span class="lp-flex-fill">긴급응급조치를 요청합니까?</span>
-        <RadioGroup v-model="detail.requestUrgent" class="lp-unit-row" aria-label="긴급응급조치 요청 여부">
+        <RadioGroup v-model="detail.requestUrgent" :class="infoStyles['info-table-radio']" aria-label="긴급응급조치 요청 여부">
           <RadioGroupItem value="yes" label="예" />
           <RadioGroupItem value="no" label="아니오" />
         </RadioGroup>

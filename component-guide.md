@@ -144,7 +144,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 > |---|---|
 > | `class` | 칸 전체(라벨+값을 감싸는 바깥) |
 > | `label-class` | **제목(라벨)** — `for` 유무로 `<label>`/`<span>` 이 갈리는데 양쪽 다 붙는다 |
-> | `col-class` | **값(정보) 영역** |
+> | `value-class` | **값(정보) 영역** |
 >
 > ⚠ `InfoTable.module.css` 는 `@layer` 밖이라 **레이어 있는 스타일을 전부 이긴다.**
 > 그 파일이 이미 정한 속성(라벨 폭·테두리·grid 등)은 `police-common`/`override` 의 클래스로
@@ -181,6 +181,28 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | 모바일 하단 시트 | `custom/bottom-sheet/BottomSheet.vue` |
 
 > **일반 저장/삭제에는 `confirm`을 붙이지 않는다.** 알림창(`dialog.alert`)이 기본이다 — CLAUDE.md §4.
+
+### 6-1. 알림창·확인창의 `device` 와 태그 제목 (2026-09-15 추가)
+`useDialog().alert()` · `.confirm()` 의 옵션 두 개. **둘 다 선택이고, 안 주면 지금까지와 똑같다.**
+
+| 옵션 | 값 | 무엇 |
+|---|---|---|
+| `device` | `'responsive'`(기본) / `'pc'` / `'mobile'` | 팝업 폭·제목 크기·본문 글자·버튼 폭을 어느 화면 기준으로 그리나. `'responsive'` 는 **1000px 경계로 자동**(`useResponsive.ts` 의 `BP_MOBILE`·`style.css` 의 `mo:`/`pc:` 와 같은 값) |
+| `title` | 문자열 (**태그 가능**) | `v-html` 이라 태그가 그대로 그려진다. 시안 상단 아이콘은 여기에 `<img>` 로 넣는다 — `.lp-dialog-title img` 가 글자 위 가운데로 놓아 준다 |
+
+```ts
+await dialog.confirm({
+  title: '<img src="/portal/asset/images/icon/ico_exclamation_32.svg" alt="" width="32" height="32">대기시간이 초과되었습니다.',
+  description: '대기자가 많아 …',
+  btnOk: '음성인식 시작',
+  btnCancel: '취소',
+  device: 'mobile',   // 이 팝업을 여는 버튼이 모바일 폭에서만 보인다
+})
+```
+- **`title` 에 사용자 입력을 넣지 않는다.** 화면이 들고 있는 상수 문구 자리다(퍼블 목업).
+- 기기별 치수는 `police-override.css` 의 `.lp-dialog-*` 가 **CSS 변수로만** 들고 있다(§12).
+  미디어쿼리라 JS 폭 감시가 없고 첫 프레임 깜빡임도 없다. 값을 늘릴 땐 토큰만 추가한다.
+- 타입·기본값은 `custom/dialog/dialogDevice.ts`. `GenericDialog2` 는 대상이 아니다.
 
 ---
 
@@ -622,7 +644,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-dialog-head` / `.lp-dialog-head-title` / `.lp-dialog-head-label` | 팝업 본문 위쪽 제목줄(`.lp-row-between` 과 함께). `-label`+`-title` 은 "권한명: 범죄예방대응국" 처럼 **크기·굵기는 같고 색만 다른** 라벨·값 짝(1.9rem/600). 줄 배치는 `.group-gap3`. 페이지 액션바의 `.list-actions-title`/`.list-actions-part`(2rem/700)와는 별개다 | 2204 |
 | `.lp-grid-title` `-label` `-count` `-num` | 그리드 위에 얹는 회색 제목 바(왼쪽 표 이름 + 오른쪽 건수, 숫자만 포인트색). 면이 채워진 한 줄이라 `LayoutPanel` 의 `.lp-pane-title` 과는 별개 | 2207 전체 사용자 팝업 |
 | `.lp-pop-body-pager` | 페이지네이션으로 끝나는 팝업 본문(`.pop-body` 와 함께). `.pop-body` 의 overflow:hidden 이 Pagination 의 -8px 음수 아래여백을 잘라먹는 것을 막는다 | 2207 전체 사용자 팝업 |
-| `.lp-dialog-body` / `.lp-dialog-subtitle` / `.lp-dialog-footer` | 팝업 본문 세로 묶음 / 부제 / 우측 버튼줄 | 0601 |
+| `.lp-dialog-body` / `.lp-dialog-subtitle` / `.lp-dialog-footer` | 팝업 본문 세로 묶음(16) / 부제 / 우측 버튼줄 | 0601, LPO-0303 |
 | `.lp-search-form-gap` | 팝업 안 검색 폼의 행·열 간격 | 0601 |
 | `.lp-search-form` | **`SearchWrapper` 가 #form 슬롯 감싸개에 직접 붙인다(화면에서 걸 필요 없음)** — 상세조회 조회영역 안 라벨의 글자색 `--Text-body_1`(#464C53) · 최소 폭 40px (override) | SearchWrapper 쓰는 전 화면 |
 
@@ -645,6 +667,8 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-ref-column` | 우측 참고자료 칸. **왼쪽 세로 구분선을 이 칸이 그린다**(본문 칸 높이만큼 꽉 차야 해서). 폭 29.2rem + 여백 2.4rem + 선 0.1rem = 31.7rem | IRC-0101 |
 | `.lp-ref-list` / `.lp-ref-desc` / `.lp-ref-link` | 참고자료 아코디언 목록(간격 1.2rem) / 펼쳤을 때 설명(1.5rem) / 그 아래 문서 링크(1.3rem 밑줄) | IRC-0101 |
 | `.lp-ref-item` / `.lp-ref-trigger` / `.lp-ref-body` | **override** — `custom/accordion` 의 카드·트리거·본문 기본 모양(높이·글자·아래선·여백)을 참고자료 시안에 맞게 되돌린다. 아코디언을 카드 안에 얹을 때만 쓴다 | IRC-0101 |
+| `.lp-dialog-pc` / `-mobile` / `-responsive` | **override** — 알림창·확인창(`AlertDialog2`/`ConfirmDialog2`)의 기기별 치수를 **CSS 변수로만** 들고 있다(폭·제목·본문글자·버튼폭). 화면이 직접 붙이지 않는다 — `useDialog` 의 `device` 옵션이 붙인다(§6-1) | `useDialog` |
+| `.lp-dialog-title` / `-desc-box` / `-desc` / `-footer` | **override** — 위 변수를 실제로 읽는 자리. `.lp-dialog-title img` 는 제목에 넣은 아이콘을 글자 위 가운데로 놓는다. **컴포넌트가 붙이므로 화면에서 쓸 일이 없다** | `AlertDialog2`, `ConfirmDialog2` |
 
 #### 메모 목록 카드 · 등록 폼
 
@@ -683,6 +707,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-switch-box` | 라벨 아래 스위치를 입력칸 높이(4.8rem)에 세로 가운데 놓는 상자 — 같은 줄의 md 입력과 라벨·밑선을 맞출 때 | COM-1003, 1004 |
 | `.lp-tab-swiper` `-next` | 카테고리 탭줄이 폭을 넘칠 때(`TabsList scrollable`) 오른쪽 끝에 흰 그라데이션+화살표(Figma `swiper__atomic`)를 얹는 감싸개. 탭줄→검색상자 20 도 여기서 | COM-0601 |
 | `.lp-search-rows` | 검색상자 안 조건 줄을 시안대로 여러 줄로 고정(`.search-area` 를 줄마다, 줄 사이 16). 한 줄에 다 넣고 wrap 에 맡기면 창 폭에 따라 시안과 다르게 접힌다 | COM-0501 |
+| `.lp-voice-search` `-img` `-body` `-text` `-status` | 음성인식 팝업(`GenericDialog2 type="full"`) 본문 — 마이크 150×156 + 인식된 말(32 bold, `--Base-primary`) + 상태 안내(17 가운데)를 세로 가운데에 놓는다. `max-width 31.2rem` 가운데정렬이라 팝업 본문 여백 16과 합쳐 시안의 24가 된다 | IRC-0102, 0103 |
 | `.lp-board-form-actions` | 게시판 등록/수정 폼 하단 버튼줄 — 폼 마지막 블록과 40, 버튼 사이 12(Figma). 메모 폼의 `.lp-form-actions-center`(16/4)와 값이 달라 따로 | COM-1003, 1004, 0403 |
 | `.lp-photo-grid` `-item` `-label` `-box` `-img` `-empty` `-empty-icon` `-empty-label` `-meta` `-actions` | 진단 상세의 취약/개선 상황사진 4칸(112사건 표 아래에 붙는 칸). **`police-style.css` 의 `.photo-box`/`.photo-empty` 는 인사관리 증명사진용 12rem 칸이라 서로 다른 것 — 이름이 비슷해도 섞어 쓰지 않는다** | PUB-0101 |
 | `.lp-stat-field` `.lp-stat-grade` `.lp-stat-value` | 라벨-값 표의 한 칸에 [등급][수치] 두 조각이 들어가는 통계 표. 값 영역 여백을 걷어내고 두 조각 사이에 세로선을 넣는다 | PUB-0101 참고사항 |
