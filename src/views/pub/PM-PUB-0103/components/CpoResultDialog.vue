@@ -112,10 +112,10 @@
             </InfoTable>
 
             <InfoTable :columns="2" popup size="120">
-              <InfoField label="직원수"><Stepper v-model="form.employeeCount" :min="0" label="직원수" /></InfoField>
-              <InfoField label="업소층수"><Stepper v-model="form.floorCount" :min="0" label="업소층수" /></InfoField>
+              <InfoField label="직원수"><InputField2 v-model.number="form.employeeCount" type="number" :clearable="false" size="sm" min="0" aria-label="직원수" class="!space-y-0 flex-1" input-class="w-full" /></InfoField>
+              <InfoField label="업소층수"><InputField2 v-model.number="form.floorCount" type="number" :clearable="false" size="sm" min="0" aria-label="업소층수" class="!space-y-0 flex-1" input-class="w-full" /></InfoField>
 
-              <InfoField label="입주년도"><Stepper v-model="form.moveInYear" :min="0" label="입주년도" /></InfoField>
+              <InfoField label="입주년도"><InputField2 v-model.number="form.moveInYear" type="number" :clearable="false" size="sm" min="0" aria-label="입주년도" class="!space-y-0 flex-1" input-class="w-full" /></InfoField>
               <InfoField label="방범진단">
                 <RadioGroup v-model="form.crimePreventionStatus" :class="infoTableStyles['info-table-radio']">
                   <RadioGroupItem v-for="opt in crimePreventionStatusOptions" :key="opt.value" :value="opt.value" :label="opt.label" />
@@ -127,7 +127,7 @@
                   <RadioGroupItem v-for="opt in previousCrimeDamageOptions" :key="opt.value" :value="opt.value" :label="opt.label" />
                 </RadioGroup>
               </InfoField>
-              <InfoField label="피해 횟수"><Stepper v-model="form.damageCount" :min="0" label="피해 횟수" /></InfoField>
+              <InfoField label="피해 횟수"><InputField2 v-model.number="form.damageCount" type="number" :clearable="false" size="sm" min="0" aria-label="피해 횟수" class="!space-y-0 flex-1" input-class="w-full" /></InfoField>
             </InfoTable>
             <div class="pop-title-sub"><h2>범죄예방진단 항목 및 진단결과</h2></div>
             <div class="pop-title-lv2"><h3>1) 건물특성</h3></div>
@@ -139,7 +139,7 @@
                   <RadioGroupItem :value="1" label="위험(1)" />
                 </RadioGroup>
                 <template v-else>
-                  <Stepper v-model="assessment[row.key]" :min="0" :label="row.label" class="w-30" />
+                  <InputField2 v-model.number="assessment[row.key]" type="number" :clearable="false" size="sm" min="0" :aria-label="row.label" class="!space-y-0" input-class="w-30" />
                   <span :class="styles.assessmentUnit">{{ row.unit }}</span>
                 </template>
               </InfoField>
@@ -148,7 +148,7 @@
             <div class="pop-title-lv2"><h3>2) 추가 항목</h3></div>
             <InfoTable :columns="1" popup size="300">
               <InfoField v-for="row in extraAssessmentRows" :key="row.key" :label="row.label" full>
-                <Stepper v-model="assessment[row.key]" :min="0" :class="styles.detailStepper" :label="row.label" />
+                <InputField2 v-model.number="assessment[row.key]" type="number" :clearable="false" size="sm" min="0" :aria-label="row.label" :class="styles.detailStepper" input-class="w-full" />
                 <span :class="styles.assessmentUnit">{{ row.unit }}</span>
               </InfoField>
             </InfoTable>
@@ -159,7 +159,7 @@
                 <template #label>
                   <Input id="cpo-etc-label" v-model="form.etcLabel" size="sm" aria-label="기타 항목" />
                 </template>
-                <Stepper v-model="form.etcCount" :min="0" label="기타 수량" class="w-30" />
+                <InputField2 v-model.number="form.etcCount" type="number" :clearable="false" size="sm" min="0" aria-label="기타 수량" class="!space-y-0" input-class="w-30" />
               </InfoField>
             </InfoTable>
 
@@ -214,7 +214,6 @@ import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
 import Input from '@/components/custom/input/Input.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
-import Stepper from '@/components/custom/input/Stepper.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'

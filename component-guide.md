@@ -117,6 +117,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | 기간(시작~종료) | `custom/datepicker/DateRangePicker.vue` |
 | 숫자 증감(-/+) | `custom/input/Stepper.vue` |
 | 주소 입력 | `custom/address/AddressInput.vue` — `@search`로 팝업 연결 |
+| 사용자 찾기 팝업(부서 트리 + 사용자 목록에서 한 명 고르기) | `custom/user-find/UserFindDialog.vue` — `v-model:open` + `@select`(계급·성명·소속). 공통 팝업 PC-COM-0701 |
 | 리치 텍스트 본문 | `custom/editor/Editor.vue` (TOAST UI) |
 | 파일 첨부 | `custom/file-upload/FileUpload.vue` |
 
@@ -447,6 +448,7 @@ await dialog.confirm({
 | `tooltip__rich` | `custom/contextual-help/ContextualHelp.vue` |
 | `top_button` | `custom/top-button/TopButton.vue` |
 | `Adress input` | `custom/address/AddressInput.vue` |
+| `공통 > 사용자 찾기`(12875:101668) | `custom/user-find/UserFindDialog.vue` |
 | `file_upload__atomic__pc` | `custom/file-upload/FileUpload.vue` |
 | `pagination bar`, `pagination__pc` | `custom/pagination/Pagination.vue` |
 | `Page Title` | `custom/title/PageTitle.vue` |
@@ -641,6 +643,9 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | 클래스 | 의도 | 쓰는 곳 |
 |---|---|---|
 | `.lp-pane-box` / `.lp-pane` / `.lp-pane-fixed` / `.lp-pane-title` | 테두리 안에서 좌우로 나뉘는 목록 상자(폼 화면 2분할은 `LayoutSplit`) | 2204 |
+| `.lp-pane-title-text` / `.lp-pane-title-count` | `.lp-pane-title` h3 에 `.lp-row-between` 을 더해 **제목 왼쪽 + 건수 오른쪽**으로 펼 때 양쪽을 감싼다(숫자는 `.lp-em-primary`). reset 이 span 에 다시 주는 line-height 1.5 를 제목바 줄 높이로 되돌려 옆 칸 제목바와 높이가 같아진다 | `UserFindDialog` |
+| `.lp-pane-box-fill` | **높이를 고정한 팝업**(`GenericDialog2 :height`)의 `.pop-body` 안에서 `.lp-pane-box` 가 남는 높이를 다 가져간다(스크롤은 칸 안에서만). 상자 높이를 못 박는 `.lp-pane-box-tall` 과는 별개 | `UserFindDialog` |
+| `.lp-pane-fill` | 칸 제목 아래를 **그리드가 다 채우는** 칸 본문(세로 flex, 여백 12/24/24). 안쪽 그리드는 `height="100%" class="flex-1"`. 그리드 높이를 고정하는 `.lp-pane-wrap`(12/12/20) 과는 별개 | `UserFindDialog` |
 | `.lp-selected-bar` | 선택한 항목을 칩으로 늘어놓는 회색 바 | 2204 |
 | `.lp-dialog-head` / `.lp-dialog-head-title` / `.lp-dialog-head-label` | 팝업 본문 위쪽 제목줄(`.lp-row-between` 과 함께). `-label`+`-title` 은 "권한명: 범죄예방대응국" 처럼 **크기·굵기는 같고 색만 다른** 라벨·값 짝(1.9rem/600). 줄 배치는 `.group-gap3`. 페이지 액션바의 `.list-actions-title`/`.list-actions-part`(2rem/700)와는 별개다 | 2204 |
 | `.lp-grid-title` `-label` `-count` `-num` | 그리드 위에 얹는 회색 제목 바(왼쪽 표 이름 + 오른쪽 건수, 숫자만 포인트색). 면이 채워진 한 줄이라 `LayoutPanel` 의 `.lp-pane-title` 과는 별개 | 2207 전체 사용자 팝업 |

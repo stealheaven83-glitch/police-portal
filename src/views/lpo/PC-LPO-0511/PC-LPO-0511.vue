@@ -38,7 +38,7 @@
           v-model="applicant"
           :options="applicantOptions"
           size="sm"
-          trigger-class="w-30"
+          trigger-class="w-50"
         />
         <SelectField
           label="신청구분"

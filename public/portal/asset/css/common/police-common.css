@@ -573,6 +573,47 @@
   color: var(--Text-body_0);
 }
 
+/*
+ * 칸 제목 오른쪽에 건수를 붙일 때 — h3 에 .lp-row-between 을 같이 주고 제목 글자와 건수를
+ * 이 둘로 감싼다(시안 12896:105102 "사용자 정보 …… 총 12건", 숫자는 .lp-em-primary).
+ * span 은 police-style 의 reset 이 line-height 1.5(=25.5px) 를 다시 주므로 제목바 줄 높이
+ * (2.2rem)를 되돌려야 옆 칸의 글자만 있는 제목바와 높이가 같아진다 — 건수 안의 숫자 span 도 같다.
+ */
+.lp-pane-title-text,
+.lp-pane-title-count,
+.lp-pane-title-count > * {
+  line-height: inherit;
+}
+.lp-pane-title-count {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/*
+ * 높이를 고정한 팝업(GenericDialog2 height) 의 .pop-body 안에서 두 칸 상자가 남는 높이를 다
+ * 가져간다 — 검색줄은 제 높이만 쓰고, 스크롤은 팝업이 아니라 각 칸 안에서만 생긴다.
+ * 시안이 상자 높이를 못 박은 .lp-pane-box-tall 과 달리 팝업 높이에서 계산된다.
+ * 쓰는 곳: 공통 사용자 찾기 팝업(custom/user-find, 12875:101668)
+ */
+.lp-pane-box-fill {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+/*
+ * 칸 제목 아래를 그리드가 다 채우는 칸 본문 — .lp-pane-box-fill 안에서 쓴다.
+ * 세로 flex 라 안쪽 그리드에 height="100%" class="flex-1" 을 주면 남는 높이만큼 늘어나고
+ * 행이 넘치면 그리드 안에서 스크롤된다. .lp-pane-wrap(12/12/20) 과 여백이 다르다 — 시안
+ * (12875:103400) 은 위 12, 좌우 24, 아래 24.
+ */
+.lp-pane-fill {
+  display: flex;
+  flex: 1 1 0;
+  min-height: 0;
+  flex-direction: column;
+  padding: 1.2rem 2.4rem 2.4rem;
+}
+
 /* 선택한 항목을 칩으로 늘어놓는 회색 바 */
 .lp-selected-bar {
   display: flex;

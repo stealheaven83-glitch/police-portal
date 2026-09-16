@@ -24,7 +24,8 @@
     </template>
   </GenericDialog2>
 
-  <UserFindDialog />
+  <!-- 공통 사용자 찾기 팝업(PC-LPO-0507) — 고른 사람을 경찰서(과장) 칸에 넣는다 -->
+  <UserFindDialog v-model:open="userFindOpen" @select="onUserSelected" />
 </template>
 
 <script setup lang="ts">
@@ -34,8 +35,8 @@ import { Button } from '@/components/custom/button'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
+import { UserFindDialog, type UserFindUser } from '@/components/custom/user-find'
 import { DispatchSummaryDialogKey, teamLeaderOptions } from '../composable/dialogs'
-import UserFindDialog from './UserFindDialog.vue'
 import { useDialog } from '@/composable/dialog/dialog'
 
 const dialog = useDialog()
@@ -43,6 +44,11 @@ const dialog = useDialog()
 /** 승인관리 팝업(PC-LPO-0506) — 경찰서(과장)는 사용자 찾기(PC-LPO-0507)로 고른다 */
 const store = inject(DispatchSummaryDialogKey)!
 const { approveOpen, approveTeamLeader, approveChief, userFindOpen } = store
+
+/** 사용자 찾기에서 '저장'한 사람 — "계급 성명" 으로 칸을 채운다 */
+function onUserSelected(user: UserFindUser) {
+  approveChief.value = `${user.rank} ${user.name}`
+}
 
 /** 저장하면 지정한 결재자를 화면에 알린다 — 화면이 승인자 줄(출동수당 승인 항목)을 이 사람들로 바꾼다 */
 const emit = defineEmits<{

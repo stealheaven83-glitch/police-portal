@@ -4,7 +4,6 @@ import { FlexRow, FlexCol } from '@/components/custom/flex-grid'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
-import Stepper from '@/components/custom/input/Stepper.vue'
 
 const form = reactive({
   name: '',
@@ -366,7 +365,7 @@ const cellValue = 'flex items-center flex-wrap gap-2 px-3 py-2 bg-white'
                 <FlexRow class="h-full divide-x divide-[var(--Border_gray03)]">
                   <FlexCol :size="{ default: 'content' }" :class="cellLabel">급지</FlexCol>
                   <FlexCol :size="{ default: 'full' }" :class="cellValue">
-                    <Stepper v-model="dept.gradeLevel" :min="1" :max="9" label="급지" class="w-[12rem]" />
+                    <InputField2 v-model.number="dept.gradeLevel" type="number" :clearable="false" size="sm" min="1" max="9" aria-label="급지" class="!space-y-0" input-class="w-[12rem]" />
                     <label class="text-[1.4rem] text-[var(--Text-body_1)]">정원</label>
                     <InputField2 v-model="dept.capacity" size="sm" input-class="w-16" class="!space-y-0" />
                     <span class="text-[1.3rem] text-[var(--Text-body_2)] whitespace-nowrap">
@@ -379,7 +378,7 @@ const cellValue = 'flex items-center flex-wrap gap-2 px-3 py-2 bg-white'
                 <FlexRow class="h-full divide-x divide-[var(--Border_gray03)]">
                   <FlexCol :size="{ default: 'content' }" :class="cellLabel">급지</FlexCol>
                   <FlexCol :size="{ default: 'full' }" :class="cellValue">
-                    <Stepper v-model="dept.gradeLevel" :min="1" :max="9" label="급지" class="w-[12rem]" />
+                    <InputField2 v-model.number="dept.gradeLevel" type="number" :clearable="false" size="sm" min="1" max="9" aria-label="급지" class="!space-y-0" input-class="w-[12rem]" />
                     <label class="text-[1.4rem] text-[var(--Text-body_1)]">정원</label>
                     <InputField2 v-model="dept.capacity" size="sm" input-class="w-16" class="!space-y-0" />
                     <span class="text-[1.3rem] text-[var(--Text-body_2)] whitespace-nowrap">
@@ -406,7 +405,7 @@ const cellValue = 'flex items-center flex-wrap gap-2 px-3 py-2 bg-white'
                 <FlexRow class="h-full divide-x divide-[var(--Border_gray03)]">
                   <FlexCol :size="{ default: 'content' }" :class="cellLabel">급지</FlexCol>
                   <FlexCol :size="{ default: 'full' }" :class="cellValue">
-                    <Stepper v-model="dept.gradeLevel" :min="1" :max="9" label="급지" class="w-[12rem]" />
+                    <InputField2 v-model.number="dept.gradeLevel" type="number" :clearable="false" size="sm" min="1" max="9" aria-label="급지" class="!space-y-0" input-class="w-[12rem]" />
                     <label class="text-[1.4rem] text-[var(--Text-body_1)]">정원</label>
                     <InputField2 v-model="dept.capacity" size="sm" input-class="w-16" class="!space-y-0" />
                     <span class="text-[1.3rem] text-[var(--Text-body_2)] whitespace-nowrap">
@@ -419,7 +418,7 @@ const cellValue = 'flex items-center flex-wrap gap-2 px-3 py-2 bg-white'
                 <FlexRow class="h-full divide-x divide-[var(--Border_gray03)]">
                   <FlexCol :size="{ default: 'content' }" :class="cellLabel">급지</FlexCol>
                   <FlexCol :size="{ default: 'full' }" :class="cellValue">
-                    <Stepper v-model="dept.gradeLevel" :min="1" :max="9" label="급지" class="w-[12rem]" />
+                    <InputField2 v-model.number="dept.gradeLevel" type="number" :clearable="false" size="sm" min="1" max="9" aria-label="급지" class="!space-y-0" input-class="w-[12rem]" />
                     <label class="text-[1.4rem] text-[var(--Text-body_1)]">정원</label>
                     <InputField2 v-model="dept.capacity" size="sm" input-class="w-16" class="!space-y-0" />
                     <span class="text-[1.3rem] text-[var(--Text-body_2)] whitespace-nowrap">
@@ -432,7 +431,7 @@ const cellValue = 'flex items-center flex-wrap gap-2 px-3 py-2 bg-white'
                 <FlexRow class="h-full divide-x divide-[var(--Border_gray03)]">
                   <FlexCol :size="{ default: 'content' }" :class="cellLabel">급지</FlexCol>
                   <FlexCol :size="{ default: 'full' }" :class="cellValue">
-                    <Stepper v-model="dept.gradeLevel" :min="1" :max="9" label="급지" class="w-[12rem]" />
+                    <InputField2 v-model.number="dept.gradeLevel" type="number" :clearable="false" size="sm" min="1" max="9" aria-label="급지" class="!space-y-0" input-class="w-[12rem]" />
                     <label class="text-[1.4rem] text-[var(--Text-body_1)]">정원</label>
                     <InputField2 v-model="dept.capacity" size="sm" input-class="w-16" class="!space-y-0" />
                     <span class="text-[1.3rem] text-[var(--Text-body_2)] whitespace-nowrap">
