@@ -375,7 +375,7 @@
  * 사이 여백(24)은 각 칸의 안쪽 여백(px-6=24)에 더해 준다 → 내용은 24..771 / 868..1176.
  * 컴포넌트가 lg 미만에서 한 칸으로 접히므로 같은 분기점 위에서만 건다.
  */
-@media (min-width: 1024px) {
+@media (min-width: 1600px) {
   .lp-keyword-split {
     gap: 0;
     grid-template-columns: minmax(0, 819fr) minmax(0, 381fr);
@@ -1023,7 +1023,7 @@ tbody .row-total > td:first-child {
  * 미디어쿼리라 JS 폭 감시가 없고, 그래서 첫 프레임 깜빡임이 없다
  * (useResponsive.ts 의 ⚠ 주석 — useBreakpoint 는 첫 렌더가 항상 false 다).
  *
- * 경계 1000px 은 useResponsive.ts 의 BP_MOBILE · style.css 의 mo:/pc: 배리언트와 같은 값이다.
+ * 경계 1600px 은 useResponsive.ts 의 BP_MOBILE · style.css 의 mo:/pc: 배리언트와 같은 값이다.
  * 바꾸려면 세 곳을 같이 바꾼다.
  */
 .lp-dialog-pc,
@@ -1047,7 +1047,7 @@ tbody .row-total > td:first-child {
   --lp-dialog-btn-grow: 1;
   --lp-dialog-btn-w: 100%;
 }
-@media (max-width: 999.98px) {
+@media (max-width: 1599.98px) {
   .lp-dialog-responsive {
     --lp-dialog-max-w: 32rem;
     --lp-dialog-title-size: 1.9rem;
@@ -1120,7 +1120,7 @@ tbody .row-total > td:first-child {
  *   특히 width 는 sizeStyle 의 `calc(100% - 20px)` 를 눌러야 한다 — 가운데 정렬을 푼 뒤라
  *   그 20px 가 반씩 나뉘지 않고 **전부 오른쪽에 몰린다**(PM-PUB-0401 에서 실제로 났다).
  *
- * 경계 1000px 은 useResponsive.ts 의 BP_MOBILE · style.css 의 mo:/pc: 와 같은 값이다.
+ * 경계 1600px 은 useResponsive.ts 의 BP_MOBILE · style.css 의 mo:/pc: 와 같은 값이다.
  */
 
 /* ── ① device:'mobile' — 폭과 무관하게 항상 ───────────────────────────── */
@@ -1186,14 +1186,17 @@ tbody .row-total > td:first-child {
   background: var(--Border_gray02);
 }
 
-/* 두 모양 다 하단 버튼이 폭을 나눠 가진다 */
+/* 두 모양 다 하단 버튼이 폭을 나눠 가진다.
+ * basis 는 0 이어야 균등하다 — auto 면 글자 수만큼 폭이 벌어진다.
+ * 단 border-box 라 테두리·여백만큼 바닥이 깔린다: 테두리 있는 버튼(tertiary 계열)이
+ * 2px 더 넓다. 없애려면 grid(1fr)로 가야 하는데 flex-col-reverse 가 죽어서 보류(2026-09-16). */
 .lp-popup-always.lp-popup-full [data-slot="dialog-footer"] > *,
 .lp-popup-always.lp-popup-bottom [data-slot="dialog-footer"] > * {
-  flex: 1 1 auto;
+  flex: 1 1 0;
 }
 
 /* ── ② device:'responsive' — 모바일 폭에서만. ①과 같은 내용이다 ────────── */
-@media (max-width: 999.98px) {
+@media (max-width: 1599.98px) {
 
   /* 가운데 정렬(top/left 50% + translate)을 푼다. v4 는 transform 이 아니라 translate 속성 */
   .lp-popup-mo.lp-popup-full,
@@ -1259,10 +1262,13 @@ tbody .row-total > td:first-child {
     background: var(--Border_gray02);
   }
 
-  /* 두 모양 다 하단 버튼이 폭을 나눠 가진다 */
+  /* 두 모양 다 하단 버튼이 폭을 나눠 가진다.
+   * basis 는 0 이어야 균등하다 — auto 면 글자 수만큼 폭이 벌어진다.
+   * 단 border-box 라 테두리·여백만큼 바닥이 깔린다: 테두리 있는 버튼(tertiary 계열)이
+   * 2px 더 넓다. 없애려면 grid(1fr)로 가야 하는데 flex-col-reverse 가 죽어서 보류(2026-09-16). */
   .lp-popup-mo.lp-popup-full [data-slot="dialog-footer"] > *,
   .lp-popup-mo.lp-popup-bottom [data-slot="dialog-footer"] > * {
-    flex: 1 1 auto;
+    flex: 1 1 0;
   }
 }
 

@@ -52,7 +52,9 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div :class="cn('grid w-full grid-cols-1 gap-[4rem] lg:grid-cols-2', props.class)">
+  
+  <!-- <div :class="cn('grid w-full grid-cols-1 gap-[4rem] lg:grid-cols-2', props.class)"> -->
+  <div :class="cn(deviceStyle({ pc: 'grid w-full grid-cols-1 gap-[4rem]', mobile: 'grid-cols-1' }, props.device), props.class)">
     <!-- 최근검색어 -->
     <section :class="sectionClass">
       <div class="flex items-center justify-between gap-4">

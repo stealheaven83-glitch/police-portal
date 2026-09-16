@@ -145,7 +145,7 @@ function toggleDepth2(name: string) {
 }
 
 /* 사이드바 폭(31.6rem) 확보가 어려운 좁은 화면에서는 본문 폭을 우선한다. */
-@media (max-width: 82rem) {
+@media (max-width: 1599.98px) {
   .left-menu {
     display: none;
   }

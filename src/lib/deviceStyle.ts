@@ -15,7 +15,7 @@ import { BP_MOBILE } from '@/composable/responsive/useResponsive'
  *
  * // 'pc'          → 'py-[2.2rem] px-0'               모바일 값을 버린다
  * // 'mobile'      → 'px-0 py-[1.5rem] mb-5'          폭과 무관하게 모바일 값이 이긴다
- * // 'responsive'  → 폭이 1000 미만이면 위의 'mobile', 아니면 'pc'
+ * // 'responsive'  → 폭이 1600 미만이면 위의 'mobile', 아니면 'pc'
  * ```
  *
  * ## ⚠ `mo:` 접두사를 쓰지 않는 이유 — 그 방식은 동작하지 않는다
@@ -59,8 +59,8 @@ export interface DeviceStyleInput {
 }
 
 /**
- * 경계는 `style.css` 의 `@custom-variant mo`(= `not all and (min-width:1000px)`)와 같은 구간이다.
- * `max-width: 999.98px` 로 적어야 1000 딱 그 지점이 PC 쪽에 들어간다.
+ * 경계는 `style.css` 의 `@custom-variant mo`(= `not all and (min-width:1600px)`)와 같은 구간이다.
+ * `max-width: 1599.98px` 로 적어야 1600 딱 그 지점이 PC 쪽에 들어간다.
  */
 const MOBILE_MEDIA = `(max-width: ${BP_MOBILE - 0.02}px)`
 
