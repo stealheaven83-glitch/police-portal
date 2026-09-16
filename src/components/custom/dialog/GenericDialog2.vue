@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 
 import closeIcon from '@/assets/icon/icon_popup_x.svg?url'
 import { dialogShapeClass, type DialogDevice, type DialogShape } from './dialogDevice'
+import { deviceStyle } from "@/lib/deviceStyle"
 
 /**
  * UI/UX 공통 가이드 4.3.2 레이어 팝업(Layer Pop-up) 컴포넌트
@@ -79,6 +80,22 @@ const props = withDefaults(
 
 /** 모양·범위는 police-override.css 의 .lp-popup-* 가 들고 있다. type 이 없으면 빈 배열 */
 const shapeClass = computed(() => dialogShapeClass(props.type, props.device))
+
+/**
+ * 닫기(X) 버튼 — 모바일에서 작아진다.
+ *
+ * 템플릿에 인라인으로 못 쓴다: pc 값 안의 [class*=..] 선택자에 따옴표가 있어서
+ * HTML 속성 구분자(") 와 겹쳐 :class 값이 거기서 끊긴다(2026-09-16).
+ */
+const closeClass = computed(() =>
+  deviceStyle(
+    {
+      pc: `focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4`,
+      mobile: 'size-5',
+    },
+    props.device,
+  ),
+)
 
 /** height 를 준 팝업만 높이를 고정한다 — 본문(flex-1)이 남은 높이를 가져간다 */
 const heightStyle = computed(() => {
@@ -217,7 +234,7 @@ function handleCancel() {
         <DialogClose
           v-if="showCloseButton"
           data-slot="dialog-close"
-          class="focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+          :class="closeClass"
           >
             <img :src="closeIcon" alt="Close">
             <span class="sr-only">Close</span>
@@ -229,7 +246,7 @@ function handleCancel() {
         <slot />
       </div>
 
-      <DialogFooter v-if="showFooter" class="mt-4 gap-2 shrink-0">
+      <DialogFooter v-if="showFooter" class="mt-4 gap-2 shrink-0 flex-row">
         <slot name="footer" :confirm="handleConfirm" :cancel="handleCancel">
           <Button v-if="showCancel" variant="outline" @click="handleCancel">
             {{ cancelText }}

@@ -1134,7 +1134,7 @@ tbody .row-total > td:first-child {
   height: 5.6rem;
   margin-bottom: 0;
   padding: 0 1.6rem;
-  border-bottom: 0.1rem solid var(--Border_gray03);
+  border-bottom: 0;
 }
 .lp-popup-always.lp-popup-full .lp-popup-body {
   padding: 1.6rem;
@@ -1204,7 +1204,10 @@ tbody .row-total > td:first-child {
     height: 5.6rem;
     margin-bottom: 0;
     padding: 0 1.6rem;
-    border-bottom: 0.1rem solid var(--Border_gray03);
+    border-bottom: 0;
+  }
+  .lp-popup-mo.lp-popup-full .pop-title h1 {
+    font-size: 1.7rem;
   }
   .lp-popup-mo.lp-popup-full .lp-popup-body {
     padding: 1.6rem;
