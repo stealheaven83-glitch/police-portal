@@ -19,12 +19,13 @@
       </template>
       <template #form>
         <div class="search-area">
-          <SelectField label="근무월" v-model="workYearStr" :options="yearOptions" size="sm" triggerClass="w-25" />
-          <span aria-hidden="true">년</span>
-          <SelectField v-model="workMonthStr" :options="monthOptions" size="sm" triggerClass="w-20" />
-          <span aria-hidden="true">월</span>
-          <SelectField label="신청자" v-model="applicant" :options="applicantOptions" size="sm" triggerClass="w-32" />
-          <SelectField label="신청구분" v-model="applyType" :options="applyTypeOptions" size="sm" triggerClass="w-32" />
+          <!-- 연·월 셀렉트 사이만 12(시안 14071:97951) — 조회조건 사이 36 과 다르다 -->
+          <span class="group-gap3">
+            <SelectField label="근무월" v-model="workYearStr" :options="yearOptions" size="sm" trigger-class="w-30" />
+            <SelectField v-model="workMonthStr" :options="monthOptions" size="sm" trigger-class="w-25" aria-label="근무월의 월" />
+          </span>
+          <SelectField label="신청자" v-model="applicant" :options="applicantOptions" size="sm" trigger-class="w-30" />
+          <SelectField label="신청구분" v-model="applyType" :options="applyTypeOptions" size="sm" trigger-class="w-30" />
         </div>
       </template>
       <template #btns>
@@ -34,15 +35,34 @@
   </div>
 
   <div class="list-actions space-between">
-    <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
-      <Download :size="16" aria-hidden="true" />
-      엑셀다운로드
-    </Button>
-    <div class="group-gap2">
-      <Button type="button" variant="tertiary2" size="sm" @click="approveOpen = true">승인관리</Button>
-      <Button type="button" variant="tertiary2" size="sm" @click="cancelOpen = true">승인취소관리</Button>
-      <Button type="button" variant="tertiary2" size="sm" @click="otherApplyOpen = true">타직원 출동수당 신청</Button>
-      <Button type="button" variant="secondary" size="sm" @click="dispatchInfoOpen = true">출동사건정보</Button>
+    <div class="lp-count-row">
+      <p>요청갯수 : <b class="lp-hit lp-em-strong">{{ requestCount }}</b></p>
+      <Button type="button" variant="tertiary2" size="sm" @click="otherApplyOpen = true">타직원 출동수당 신청목록</Button>
+    </div>
+    <div class="group-gap3">
+      <Button type="button" variant="tertiary" size="sm" @click="onDownloadExcel">
+        <Download :size="16" aria-hidden="true" />
+        엑셀다운로드
+      </Button>
+      <Button type="button" variant="tertiary2" size="sm" padding="16" @click="approveOpen = true">승인관리</Button>
+    </div>
+  </div>
+
+  <!-- 출동수당 승인자 — 시안 13092:99695. '출동수당 승인' 버튼 동작은 미지정(인계) -->
+  <div class="approver-bar">
+    <h2 class="approver-bar-title">출동수당 승인자</h2>
+    <div class="approver-bar-list">
+      <div class="approver-bar-item">
+        <span>{{ approvers.teamLeader.label }}</span>
+        <b class="approver-bar-name">{{ approvers.teamLeader.name }}</b>
+        <Button type="button" variant="secondary" size="xs" padding="12">출동수당 승인</Button>
+      </div>
+      <span class="lp-divider-v approver-bar-divider" aria-hidden="true"></span>
+      <div class="approver-bar-item">
+        <span>{{ approvers.chief.label }}</span>
+        <b class="approver-bar-name">{{ approvers.chief.name }}</b>
+        <span class="approver-bar-status">{{ approvers.chief.status }}</span>
+      </div>
     </div>
   </div>
 
@@ -77,7 +97,13 @@ import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tab
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
-import { useDispatchSummaryMonthly, applicantOptions, applyTypeOptions } from './composable/PC-LPO-0505'
+import {
+  useDispatchSummaryMonthly,
+  yearOptions,
+  monthOptions,
+  applicantOptions,
+  applyTypeOptions,
+} from './composable/PC-LPO-0505'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
 import ApproveManageDialog from './components/ApproveManageDialog.vue'
 import ApproveCancelDialog from './components/ApproveCancelDialog.vue'
@@ -101,13 +127,6 @@ const dialogs = useDispatchSummaryDialogs()
 provide(DispatchSummaryDialogKey, dialogs)
 const { approveOpen, cancelOpen, otherApplyOpen, dispatchInfoOpen } = dialogs
 
-
-const yearOptions = [
-  { label: '2026', value: '2026' },
-  { label: '2025', value: '2025' },
-]
-const monthOptions = Array.from({ length: 12 }, (_, i) => ({ label: String(i + 1), value: String(i + 1) }))
-
 const {
   department,
   advancedSearchOpen,
@@ -117,6 +136,8 @@ const {
   applyType,
   days,
   rows,
+  requestCount,
+  approvers,
 } = useDispatchSummaryMonthly()
 
 const workYearStr = computed({
@@ -128,18 +149,18 @@ const workMonthStr = computed({
   set: (v: string) => (workMonth.value = Number(v)),
 })
 
-/** 근무월이 바뀌면 그 달의 일수만큼 컬럼도 다시 생성된다(28~31일 가변) */
+/** 근무월이 바뀌면 그 달의 일수만큼 컬럼도 다시 생성된다(28~31일 가변). 폭은 시안 12795:88774 */
 const columns = computed<TabulatorGridColumn[]>(() => [
   { title: '번호', field: 'no', width: 60, hozAlign: 'center' },
-  { title: '부서', field: 'dept', hozAlign: 'center' },
-  { title: '팀', field: 'team', width: 70, hozAlign: 'center' },
-  { title: '직급성명', field: 'rankName', hozAlign: 'center' },
+  { title: '부서', field: 'dept', width: 280, hozAlign: 'center' },
+  { title: '팀', field: 'team', width: 60, hozAlign: 'center', headerSort: true },
+  { title: '직급성명', field: 'rankName', width: 100, hozAlign: 'center' },
   { title: '생년월일', field: 'birthDate', width: 110, hozAlign: 'center' },
-  { title: '총 출동건수', field: 'totalCount', width: 90, hozAlign: 'center' },
+  { title: '총 출동건수', field: 'totalCount', width: 80, hozAlign: 'center' },
   {
     title: '계',
     columns: [
-      { title: '범죄명', field: 'category', width: 100, hozAlign: 'center' },
+      { title: '범죄명', field: 'category', width: 90, hozAlign: 'center' },
       { title: '건수', field: 'count', width: 70, hozAlign: 'center' },
     ],
   },

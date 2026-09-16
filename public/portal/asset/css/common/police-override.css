@@ -56,6 +56,23 @@
   background-color: inherit !important;
 }
 
+/*
+ * 단순 체크 표 — 행 hover·체크 행 강조가 없어야 한다(상태는 체크박스만 보여 준다).
+ * 행 hover 는 "고르면 뭔가 일어난다"는 신호라, 고른 뒤 결과(상세)·명령(삭제)이 없는 표엔 주지 않는다.
+ * !important 인 이유는 위 .lp-grid-done-row 와 같다(tabulator-theme.css 가 @layer 밖).
+ * 쓰는 곳: PC-COM-2201(권한목록)
+ */
+.lp-grid-no-highlight .tabulator-row:hover,
+.lp-grid-no-highlight .tabulator-row.tabulator-selectable:hover,
+.lp-grid-no-highlight .tabulator-row.tabulator-selected {
+  background-color: var(--white) !important;
+}
+.lp-grid-no-highlight .tabulator-row:hover .tabulator-cell,
+.lp-grid-no-highlight .tabulator-row.tabulator-selected .tabulator-cell {
+  color: var(--Text-body_0) !important;
+  font-weight: 400 !important;
+}
+
 /* 값이 링크처럼 보여야 하는 셀(사용자ID 등) */
 .lp-grid-link-cell.tabulator-cell {
   text-decoration: underline;

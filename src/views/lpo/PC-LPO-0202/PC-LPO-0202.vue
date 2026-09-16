@@ -68,7 +68,8 @@
     <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
   </div>
 
-  <LayoutSplite class="lp-table-gap" :count="2" :widths="[30, 70]" :min-widths="[22, 40]">
+  <!-- 근무자(30) : 근무표(70) 비율 고정 — 스플릿 바 드래그·더블클릭 최대화 없음 -->
+  <LayoutSplite class="lp-table-gap" :count="2" :widths="[30, 70]" :min-widths="[22, 40]" :resizable="false">
     <template #layout-1>
       <LayoutPanel title="근무자">
         <Tabs v-model="workerTab">

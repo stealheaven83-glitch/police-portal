@@ -340,7 +340,7 @@
  * 행을 flex 로 바꾸는 것은 늘어난 높이만큼 나머지 셀의 세로 구분선도 함께 늘어나게 하려는 것이다
  * (기본값인 inline-block 이면 짧은 셀의 선이 중간에서 끊긴다).
  *
- * 쓰는 곳: PM-LPO-0223
+ * 쓰는 곳: PM-LPO-0223, PC-LPO-0511(신고내용·처리내용)
  */
 .lp-grid-multiline .tabulator-row {
   display: flex;
