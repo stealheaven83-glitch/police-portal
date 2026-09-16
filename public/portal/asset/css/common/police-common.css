@@ -2249,6 +2249,10 @@
   font-weight: 500;
   color: var(--Alert-danger-text);
 }
+/* '2026-08-27 승인' — 직책(body_1)보다 진한 본문색(케이스 13092:100042) */
+.approver-bar-done {
+  color: var(--Text-body_0);
+}
 /* 시안 구분선은 18 — 공통 .lp-divider-v(16) 위에 얹는다 */
 .approver-bar-divider {
   height: 1.8rem;

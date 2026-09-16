@@ -256,6 +256,144 @@
             </div>
           </div>
         </section>
+
+        <!-- ── 목록 위 승인자 줄 (.approver-bar) ─────────────────────────────── -->
+        <div class="flex justify-between items-center pt-6">
+          <div>
+            <h1 class="text-2xl font-bold tracking-tight">목록 위 승인자 줄</h1>
+            <p class="text-muted-foreground text-sm mt-1">
+              버튼 줄과 표 사이에 놓는 <code>.approver-bar</code> 테두리 상자(Figma 13092:99695 · 케이스 13092:100022).
+              왼쪽 제목, 오른쪽에 <code>.approver-bar-item</code>(직책 · 이름 · 상태) 묶음을 <code>.lp-divider-v</code> 로 끊어 놓는다.
+              이름 뒤 상태는 <b>승인일 → 미승인 → 승인 버튼</b> 중 하나만 온다. PC-LPO-0505.
+            </p>
+          </div>
+        </div>
+
+        <!-- A. 이름까지만 -->
+        <section class="space-y-4">
+          <h2 class="text-xl font-semibold border-b pb-2">A. 이름까지만 — 상태 없음</h2>
+          <div class="approver-bar">
+            <h2 class="approver-bar-title">출동수당 승인자</h2>
+            <div class="approver-bar-list">
+              <div class="approver-bar-item">
+                <span>지구대/파출소 (팀장/계장)</span>
+                <b class="approver-bar-name">경정 홍길동</b>
+              </div>
+              <span class="lp-divider-v approver-bar-divider" aria-hidden="true"></span>
+              <div class="approver-bar-item">
+                <span>경찰서(과장)</span>
+                <b class="approver-bar-name">경정 홍길동</b>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- B. 승인 버튼 -->
+        <section class="space-y-4">
+          <h2 class="text-xl font-semibold border-b pb-2">B. 승인 버튼 — 팀장/계장이 승인 전이고 내가 승인권자</h2>
+          <p class="text-sm text-muted-foreground">
+            버튼은 <code>Button variant="secondary" size="xs" padding="12"</code>(시안 32 높이, 폭 107).
+          </p>
+          <div class="approver-bar">
+            <h2 class="approver-bar-title">출동수당 승인자</h2>
+            <div class="approver-bar-list">
+              <div class="approver-bar-item">
+                <span>지구대/파출소 (팀장/계장)</span>
+                <b class="approver-bar-name">경정 홍길동</b>
+                <Button type="button" variant="secondary" size="xs" padding="12">출동수당 승인</Button>
+              </div>
+              <span class="lp-divider-v approver-bar-divider" aria-hidden="true"></span>
+              <div class="approver-bar-item">
+                <span>경찰서(과장)</span>
+                <b class="approver-bar-name">경정 홍길동</b>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- C. 승인일 + 미승인 -->
+        <section class="space-y-4">
+          <h2 class="text-xl font-semibold border-b pb-2">C. 승인일 + 미승인 — 팀장/계장은 끝났고 과장은 아직</h2>
+          <p class="text-sm text-muted-foreground">
+            승인일은 <code>.approver-bar-done</code>(본문색), 미승인은 <code>.approver-bar-status</code>(<code>--Alert-danger-text</code>).
+          </p>
+          <div class="approver-bar">
+            <h2 class="approver-bar-title">출동수당 승인자</h2>
+            <div class="approver-bar-list">
+              <div class="approver-bar-item">
+                <span>지구대/파출소 (팀장/계장)</span>
+                <b class="approver-bar-name">경정 홍길동</b>
+                <span class="approver-bar-done">2026-08-27 승인</span>
+              </div>
+              <span class="lp-divider-v approver-bar-divider" aria-hidden="true"></span>
+              <div class="approver-bar-item">
+                <span>경찰서(과장)</span>
+                <b class="approver-bar-name">경정 홍길동</b>
+                <span class="approver-bar-status">미승인</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- D. 승인 버튼 + 미승인 (본 화면 기본) -->
+        <section class="space-y-4">
+          <h2 class="text-xl font-semibold border-b pb-2">D. 승인 버튼 + 미승인 — PC-LPO-0505 본 화면 시안</h2>
+          <div class="approver-bar">
+            <h2 class="approver-bar-title">출동수당 승인자</h2>
+            <div class="approver-bar-list">
+              <div class="approver-bar-item">
+                <span>지구대/파출소 (팀장/계장)</span>
+                <b class="approver-bar-name">경정 홍길동</b>
+                <Button type="button" variant="secondary" size="xs" padding="12">출동수당 승인</Button>
+              </div>
+              <span class="lp-divider-v approver-bar-divider" aria-hidden="true"></span>
+              <div class="approver-bar-item">
+                <span>경찰서(과장)</span>
+                <b class="approver-bar-name">경정 홍길동</b>
+                <span class="approver-bar-status">미승인</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- E. 승인일 + 승인 버튼 (경찰서 과장 승인 전) -->
+        <section class="space-y-4">
+          <h2 class="text-xl font-semibold border-b pb-2">E. 승인일 + 승인 버튼 — 팀장/계장은 끝났고 과장이 승인권자</h2>
+          <p class="text-sm text-muted-foreground">
+            승인 버튼은 어느 쪽 묶음에도 올 수 있다. 팀장/계장이 먼저 승인하고 나면 과장 쪽에 버튼이 붙는 순서.
+          </p>
+          <div class="approver-bar">
+            <h2 class="approver-bar-title">출동수당 승인자</h2>
+            <div class="approver-bar-list">
+              <div class="approver-bar-item">
+                <span>지구대/파출소 (팀장/계장)</span>
+                <b class="approver-bar-name">경정 홍길동</b>
+                <span class="approver-bar-done">2026-08-27 승인</span>
+              </div>
+              <span class="lp-divider-v approver-bar-divider" aria-hidden="true"></span>
+              <div class="approver-bar-item">
+                <span>경찰서(과장)</span>
+                <b class="approver-bar-name">경정 홍길동</b>
+                <Button type="button" variant="secondary" size="xs" padding="12">출동수당 승인</Button>
+              </div>
+            </div>
+          </div>
+          <pre class="text-xs bg-muted p-3 rounded">&lt;div class="approver-bar"&gt;
+  &lt;h2 class="approver-bar-title"&gt;출동수당 승인자&lt;/h2&gt;
+  &lt;div class="approver-bar-list"&gt;
+    &lt;div class="approver-bar-item"&gt;
+      &lt;span&gt;직책&lt;/span&gt;
+      &lt;b class="approver-bar-name"&gt;이름&lt;/b&gt;
+      &lt;!-- 아래 셋 중 하나만: 승인일 / 미승인 / 승인 버튼 --&gt;
+      &lt;span class="approver-bar-done"&gt;2026-08-27 승인&lt;/span&gt;
+      &lt;span class="approver-bar-status"&gt;미승인&lt;/span&gt;
+      &lt;Button variant="secondary" size="xs" padding="12"&gt;출동수당 승인&lt;/Button&gt;
+    &lt;/div&gt;
+    &lt;span class="lp-divider-v approver-bar-divider" aria-hidden="true"&gt;&lt;/span&gt;
+    &lt;div class="approver-bar-item"&gt;…&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+        </section>
       </div>
     </div>
   </div>

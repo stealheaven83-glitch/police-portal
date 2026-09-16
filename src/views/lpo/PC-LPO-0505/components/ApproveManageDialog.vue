@@ -44,11 +44,18 @@ const dialog = useDialog()
 const store = inject(DispatchSummaryDialogKey)!
 const { approveOpen, approveTeamLeader, approveChief, userFindOpen } = store
 
+/** 저장하면 지정한 결재자를 화면에 알린다 — 화면이 승인자 줄(출동수당 승인 항목)을 이 사람들로 바꾼다 */
+const emit = defineEmits<{
+  (e: 'saved', payload: { teamLeader: string; chief: string }): void
+}>()
+
 async function onSave() {
   if (!approveTeamLeader.value) {
     await dialog.alert({ title: '지구대/파출소 승인자를 선택해 주세요.', btnCancel: '확인' })
     return
   }
+  const teamLeader = teamLeaderOptions.find((o) => o.value === approveTeamLeader.value)?.label ?? ''
+  emit('saved', { teamLeader, chief: approveChief.value })
   await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
   approveOpen.value = false
 }

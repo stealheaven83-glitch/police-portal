@@ -123,10 +123,7 @@ const columns: TabulatorGridColumn[] = [
   { title: '접수일자', field: 'receivedAt', width: 120, hozAlign: 'center' },
   { title: '요청기간', field: 'requestPeriod', width: 200, hozAlign: 'center' },
   { title: '요청시간', field: 'requestTime', width: 100, hozAlign: 'center' },
-<<<<<<< Updated upstream
   { title: '접수구분', field: 'receiptCategory', width: 110, hozAlign: 'center' },
-=======
->>>>>>> Stashed changes
   { title: '주소(지번)', field: 'addressJibun', width: 240, hozAlign: 'left' },
   { title: '주소(도로명)', field: 'addressRoad', width: 220, hozAlign: 'left' },
   { title: '요청건수', field: 'requestCount', width: 100, hozAlign: 'center' },

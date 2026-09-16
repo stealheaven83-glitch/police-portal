@@ -696,7 +696,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-duty-line` | 칸 안 한 줄(flex·wrap·gap 4). 0216 은 `.lp-duty-entry` 를 같이 얹는다 | LPO-0216, 0217 |
 | `.lp-date-select-row` | 목록 위 연·월 텍스트 셀렉트(`TextSelect` 둘) 묶음 — 연 ↔ 월 16px(`group-gap` 에 16 이 없다). 셀렉트 모양은 override 의 `.lp-date-select` | LPO-0216 |
 | `.lp-count-row` | 목록 위 왼쪽의 "요청갯수 : N" 문구 + 버튼 묶음(사이 16, 글자 15/body_1). 숫자는 안쪽 `<b class="lp-hit lp-em-strong">` — 회색 면이 있는 `.lp-grid-title-count` 와 다르다 | LPO-0505 |
-| `.approver-bar` `-title` `-list` `-item` `-name` `-status` `-divider` | 출동수당 승인자 줄 — 표 위 테두리 상자(1px gray02, 모서리 4, 여백 12/20, 아래 20). 오른쪽 묶음 사이 32 에 `.lp-divider-v`(+`-divider` 로 18), 묶음 안 12. `-name` 은 굵은 파랑, `-status`(미승인) 는 `--Alert-danger-text` | LPO-0505 |
+| `.approver-bar` `-title` `-list` `-item` `-name` `-done` `-status` `-divider` | 출동수당 승인자 줄 — 표 위 테두리 상자(1px gray02, 모서리 4, 여백 12/20, 아래 20). 오른쪽 묶음 사이 32 에 `.lp-divider-v`(+`-divider` 로 18), 묶음 안 12. `-name` 은 굵은 파랑, 이름 뒤 상태는 `-done`("2026-08-27 승인", 본문색) / `-status`("미승인", `--Alert-danger-text`) / 승인 `Button size="xs"` 중 하나. **케이스 4개는 `/component/search-area` 맨 아래** | LPO-0505 |
 | `.lp-roster-toolbar` `.lp-roster-title` | 근무자 목록 표(좁은 패널) 위의 제목 + 우측 버튼 줄. 표 자체는 `TabulatorGrid` 로 바뀌었다 | LPO-0202 |
 | `.lp-notes-row` `-label` `-body` | 표 아래 붙는 라벨+입력 한 상자(중요지시사항) | LPO-0202 |
 | `.lp-em-primary` / `.lp-em-danger` / `.lp-em-point` / `.lp-em-warning` | 문장 안 한 낱말만 색으로 강조(굵기는 `<b>` 나 `.lp-em-strong`·`.lp-em-medium` 이). `-warning` 은 글자용 주황 `--Alert-warning-text`(#8A5C00 — 배지용 `--warning` 보다 어둡다): 근무현황 사고 사유 | LPO-0208, 0216, 0217 |

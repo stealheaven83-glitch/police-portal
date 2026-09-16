@@ -48,23 +48,30 @@
     </div>
   </div>
 
-  <!-- 출동수당 승인자 — 시안 13092:99695. '출동수당 승인' 버튼 동작은 미지정(인계) -->
-  <div class="approver-bar">
-    <h2 class="approver-bar-title">출동수당 승인자</h2>
-    <div class="approver-bar-list">
-      <div class="approver-bar-item">
-        <span>{{ approvers.teamLeader.label }}</span>
-        <b class="approver-bar-name">{{ approvers.teamLeader.name }}</b>
-        <Button type="button" variant="secondary" size="xs" padding="12">출동수당 승인</Button>
-      </div>
-      <span class="lp-divider-v approver-bar-divider" aria-hidden="true"></span>
-      <div class="approver-bar-item">
-        <span>{{ approvers.chief.label }}</span>
-        <b class="approver-bar-name">{{ approvers.chief.name }}</b>
-        <span class="approver-bar-status">{{ approvers.chief.status }}</span>
+  <!--
+    출동수당 승인자 — 시안 13092:99695, 케이스는 13092:100022(샘플: /component/search-area).
+    이름 뒤 상태는 승인일 → 미승인 → 승인 버튼 순으로 하나만. '출동수당 승인' 은 onApprove(컨펌 → 알림)
+  -->
+  <!-- ⚠ 임시: 케이스 A~D 를 한꺼번에 보는 v-for 래퍼. 확인 후 래퍼를 지우고 approverCase.approvers → approvers,
+       제목은 '출동수당 승인자' 로 되돌린다(composable 의 approverCases 도 같이 삭제) -->
+  <template v-for="approverCase in approverCases" :key="approverCase.title">
+    <!-- 결재자가 지정돼야 노출된다(기획) — 목업은 지정된 상태로 시작한다(시안 13092:99695) -->
+    <div v-if="approverCase.approvers.length" class="approver-bar">
+      <h2 class="approver-bar-title">출동수당 승인자 ({{ approverCase.title }})</h2>
+      <div class="approver-bar-list">
+        <template v-for="(approver, i) in approverCase.approvers" :key="approver.label">
+          <span v-if="i > 0" class="lp-divider-v approver-bar-divider" aria-hidden="true"></span>
+          <div class="approver-bar-item">
+            <span>{{ approver.label }}</span>
+            <b class="approver-bar-name">{{ approver.name }}</b>
+            <span v-if="approver.approvedAt" class="approver-bar-done">{{ approver.approvedAt }} 승인</span>
+            <span v-else-if="approver.unapproved" class="approver-bar-status">미승인</span>
+            <Button v-else-if="approver.canApprove" type="button" variant="secondary" size="xs" padding="12" @click="onApprove(approverCase.approvers, i)">출동수당 승인</Button>
+          </div>
+        </template>
       </div>
     </div>
-  </div>
+  </template>
 
   <TabulatorGrid
     ref="gridRef"
@@ -77,7 +84,7 @@
     :items-per-page="10"
   />
 
-  <ApproveManageDialog />
+  <ApproveManageDialog @saved="onApproversSaved" />
   <ApproveCancelDialog />
   <OtherApplyDialog />
   <DispatchInfoDialog />
@@ -103,7 +110,9 @@ import {
   monthOptions,
   applicantOptions,
   applyTypeOptions,
+  type Approver,
 } from './composable/PC-LPO-0505'
+import { useDialog } from '@/composable/dialog/dialog'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
 import ApproveManageDialog from './components/ApproveManageDialog.vue'
 import ApproveCancelDialog from './components/ApproveCancelDialog.vue'
@@ -137,8 +146,15 @@ const {
   days,
   rows,
   requestCount,
-  approvers,
+  approverCases, // ⚠ 임시 — 케이스 확인 후 approvers 로 되돌린다
+  assignApprovers,
+  approveDispatchAllowance,
 } = useDispatchSummaryMonthly()
+
+/** 승인관리 팝업에서 결재자를 저장하면 승인자 줄이 그 사람들로 바뀐다(기획 1번) */
+function onApproversSaved({ teamLeader, chief }: { teamLeader: string; chief: string }) {
+  assignApprovers(teamLeader, chief)
+}
 
 const workYearStr = computed({
   get: () => String(workYear.value),
@@ -188,6 +204,24 @@ const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 function onDownloadExcel() {
   const today = new Date().toISOString().slice(0, 10)
   gridRef.value?.download('csv', `출동수당취합_월별_${today}.csv`)
+}
+
+const dialog = useDialog()
+
+/**
+ * 승인자 줄의 '출동수당 승인' — 컨펌 뒤 버튼 자리가 'YYYY-MM-DD HH:mm 승인' 으로 바뀌고(케이스 B → C),
+ * 1차(지구대/파출소)가 끝나면 2차(경찰서 과장)의 '미승인' 이 승인 버튼으로 바뀐다(기획 4·5번, 상태 전이는 composable).
+ */
+async function onApprove(list: Approver[], index: number) {
+  // 사용자 지정: 승인 컨펌창[A13] — CLAUDE.md §4 기본(alert 만)과 다르지만 요청대로 따름
+  const { confirmed } = await dialog.confirm({
+    title: '출동수당 승인 처리를 하겠습니까?',
+    btnOk: '확인',
+    btnCancel: '취소',
+  })
+  if (!confirmed) return
+  approveDispatchAllowance(list, index)
+  await dialog.alert({ title: '승인 되었습니다.', btnCancel: '확인' })
 }
 
 const screenTriggers: ScreenTriggerMap = {

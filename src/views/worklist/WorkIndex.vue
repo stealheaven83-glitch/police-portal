@@ -213,7 +213,7 @@ const worklist = ref([
   { id: 104, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '112신고조회', depth5: '', screenName: '112신고조회 팝업', screenId: 'PC-LPO-0503', path: '', status: '대기' },
   { id: 105, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '출동사건상세', depth5: '', screenName: '출동사건상세 팝업창', screenId: 'PC-LPO-0504', path: '', status: '대기' },
   { id: 106, category: '스마트워크', depth1: '', depth2: '', depth3: '출동수당 취합(월별)', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
-  { id: 107, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '목록', depth5: '', screenName: '출동수당 취합 월별 화면', screenId: 'PC-LPO-0505', path: '', status: '대기' },
+  { id: 107, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '목록', depth5: '', screenName: '출동수당 취합 월별 화면', screenId: 'PC-LPO-0505', path: '/views/lpo/PC-LPO-0505', status: '대기' },
   { id: 108, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '승인관리', depth5: '', screenName: '승인관리 팝업 화면', screenId: 'PC-LPO-0506', path: '', status: '대기' },
   { id: 109, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '사용자찾기', depth5: '', screenName: '사용자 찾기 팝업화면', screenId: 'PC-LPO-0507', path: '', status: '대기' },
   { id: 110, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '승인취소관리', depth5: '', screenName: '승인취소관리 팝업화면', screenId: 'PC-LPO-0508', path: '', status: '대기' },
