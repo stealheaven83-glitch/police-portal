@@ -1,23 +1,11 @@
 <template>
-  <!-- 모바일 앱 헤더 (<768) -->
-  <!-- <header :class="[styles.mHeader, styles.mobileOnly]">
-    <button type="button" :class="styles.mHeaderBtn" aria-label="뒤로" @click="goBack">
-      <Icon name="arrowLeft" :size="24" />
-    </button>
-    <h1 :class="styles.mHeaderTitle">알림</h1>
-    <button type="button" :class="styles.mHeaderBtn" aria-label="메뉴" @click="onMenu">
-      <Icon name="menu" :size="20" />
-    </button>
-  </header> -->
-
-  <!-- PC 헤더 (≥768) -->
-  <PageHeader :class="styles.pcOnly">
+  <PageHeader>
     <template #left>
       <PageTitle title="알림" />
     </template>
     <template #right>
       <span class="group-gap2">
-      <Breadcrumb :items="navItems" />
+        <Breadcrumb :items="navItems" />
         <HelpButton />
       </span>
     </template>
@@ -29,7 +17,7 @@
       type="button"
       variant="tertiary2"
       size="sm"
-      :class="styles.pcOnly"
+      padding="16"
       @click="onDeleteSelected"
     >
       선택 삭제
@@ -37,10 +25,11 @@
   </div>
 
   <!-- PC(≥768) 는 그리드, 모바일은 카드 — TabulatorGrid 가 폭을 보고 고른다.
-       카드 구성(순서·제목)은 columns 의 card* 옵션에 있다 -->
+       카드 구성(순서·제목)은 columns 의 card* 옵션에 있다.
+       긴 알림은 줄바꿈해 전문을 보여주므로 행 높이가 내용만큼 늘어난다(lp-grid-multiline, PM-LPO-0223 과 같은 방식) -->
   <TabulatorGrid
     ref="gridRef"
-    class="flex-1"
+    class="flex-1 lp-grid-multiline"
     :columns="columns"
     :data="displayRows"
     select-mode="checkbox"
@@ -50,50 +39,27 @@
     show-pagination
     :items-per-page="10"
     :row-class="rowClass"
-    :card-class="cardClass"
-    @card-click="onContentClick"
   />
 
-  <!-- 모바일: 하단 고정 삭제 CTA -->
-  <div :class="[styles.cta, styles.mobileOnly]">
-    <Button type="button" variant="tertiary2" class="w-full" @click="onDeleteSelected">삭제</Button>
-  </div>
-
-  <!-- 모바일: 맨 위로 -->
-  <button
-    type="button"
-    :class="[styles.topBtn, styles.mobileOnly]"
-    aria-label="맨 위로"
-    @click="scrollTop"
-  >
-    <Icon name="arrowTop" :size="24" />
-  </button>
-
-  <NotificationDetailDialog v-model:open="detailDialogOpen" :row="detailRow" @delete="onDeleteOne" />
+  <!-- 알림메세지 상세 팝업(PM-LPO-0107) 삭제 — 내용 클릭으로 여는 동작이 없어졌다 -->
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { useDialog } from '@/composable/dialog/dialog'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import { Button } from '@/components/custom/button'
-import Icon from '@/components/custom/icon/Icon.vue'
 import { FilterChipGroup, type FilterChipItem } from '@/components/custom/filter-chip'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
-import { useAutoTrigger, type ScreenTriggerMap } from '@/composables/useAutoTrigger'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
-import NotificationDetailDialog from './components/NotificationDetailDialog.vue'
 import { useNotificationList, type NotificationRow } from './composable/PM-LPO-0106'
-import styles from './style/PM-LPO-0106.module.css'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
 defineOptions({
   name: 'PmLpo0106',
 })
 
-const router = useRouter()
 const dialog = useDialog()
 
 const navItems = [
@@ -103,7 +69,7 @@ const navItems = [
   { label: '알림' },
 ]
 
-const { status, counts, displayRows, findRow, markRead, deleteRows } = useNotificationList()
+const { status, counts, displayRows, deleteRows } = useNotificationList()
 
 /** 상태별 필터 칩 - 알림 개수 표시 + 선택 시 그 상태값으로 목록을 필터링 */
 const statusItems = computed<FilterChipItem[]>(() => [
@@ -112,30 +78,35 @@ const statusItems = computed<FilterChipItem[]>(() => [
   { key: 'read', label: '읽음', count: counts.value.read },
 ])
 
-/** 기획서: 내용은 첫줄 1줄만 표시, 길면 말줄임(css ellipsis) 처리 */
-function contentPreview(row: NotificationRow) {
-  return row.content.split(/\r?\n/)[0]
+const escapeMap: Record<string, string> = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
 }
 
-/** 내용 클릭 시 읽음 처리 + 상세 팝업 (PC-LPO-0701 의 장비관리명 링크 버튼 셀과 동일한 패턴) */
-function onContentClick(row: NotificationRow) {
-  markRead(row.id)
-  detailRow.value = findRow(row.id)
-  detailDialogOpen.value = true
+/** 셀을 HTML 문자열로 그리므로 알림 문구(꺾쇠 등)를 태그로 읽지 않게 막는다 */
+function escapeHtml(text: string): string {
+  return text.replace(/[&<>"']/g, (char) => escapeMap[char])
+}
+
+/** 내용은 링크가 아닌 텍스트 — 알림 문구의 줄바꿈을 그대로 살려 전문을 보여준다 */
+function contentFormatter(cell: any): string {
+  return escapeHtml(String(cell.getValue() ?? '')).replace(/\r?\n/g, '<br>')
 }
 
 const columns: TabulatorGridColumn[] = [
   // card* 옵션은 모바일 카드에서만 쓰인다(표에는 영향 없음)
   { title: '구분', field: 'category', width: 240, hozAlign: 'center', cardHeading: true },
+  // 알림메세지 상세 팝업(PM-LPO-0107) 삭제 — 내용은 클릭하는 링크가 아니라 텍스트다.
+  // 폭을 주지 않아 남는 폭을 전부 가져가고, 이 칸의 높이가 곧 행 높이가 된다(variableHeight)
   {
     title: '내용',
     field: 'content',
     hozAlign: 'left',
-    cellType: 'button',
-    buttonVariant: 'link',
-    buttonSize: 'xxs',
-    buttonLabel: (row) => contentPreview(row as NotificationRow),
-    onButtonClick: (row) => onContentClick(row as NotificationRow),
+    variableHeight: true,
+    formatter: contentFormatter,
     // 카드에서는 상태·일시 다음에 내용 전문이 온다
     cardOrder: 3,
   },
@@ -145,9 +116,6 @@ const columns: TabulatorGridColumn[] = [
 
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 
-const detailDialogOpen = ref(false)
-const detailRow = ref<NotificationRow | null>(null)
-
 /**
  * 읽은 알림은 행 배경을 회색(#E6E8EA)으로 — PC 표.
  * PC-LPO-0304 의 "확인이 끝난 행" 과 같은 의도·같은 색이라 공통 .lp-grid-done-row
@@ -155,11 +123,6 @@ const detailRow = ref<NotificationRow | null>(null)
  */
 function rowClass(row: NotificationRow) {
   return row.read ? 'lp-grid-done-row' : undefined
-}
-
-/** 모바일 카드도 같은 회색 — .lp-grid-done-row 는 .tabulator-row 안에서만 먹어서 카드에는 안 걸린다 */
-function cardClass(row: NotificationRow) {
-  return row.read ? styles.cardRead : ''
 }
 
 /* 선택 상태는 표/카드 어느 쪽이든 TabulatorGrid 가 들고 있다(getSelectedData) */
@@ -171,38 +134,7 @@ async function onDeleteSelected() {
   deleteRows(ids)
 }
 
-async function onDeleteOne(id: number) {
-  const { confirmed } = await dialog.confirm({ title: '삭제 하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
-  if (!confirmed) return
-  deleteRows([id])
-}
-
-/** 모바일 앱 헤더 - 뒤로가기 */
-function goBack() {
-  router.back()
-}
-
-/** 모바일 앱 헤더 - 햄버거 메뉴 (Figma 에 동작 미정의) */
-function onMenu() {}
-
-/** 모바일 - 맨 위로. WorkLayout 의 본문 스크롤 래퍼(.work-body)를 올린다 */
-function scrollTop() {
-  document.querySelector('.work-body')?.scrollTo({ top: 0, behavior: 'smooth' })
-}
-
-/**
- * PM-LPO-0106 : 알림 목록만(팝업 닫힘)
- * PM-LPO-0107 : 알림 목록 + 상세 팝업(detailDialogOpen) 열림
- * URL만으로는 어떤 알림을 열지 알 수 없으므로(useAutoTrigger 의 알려진 한계), 직접 진입 시엔
- * 목록의 첫 번째 항목을 상세로 보여준다.
- */
-const screenTriggers: ScreenTriggerMap = {
-  'PM-LPO-0106': [[detailDialogOpen, false]],
-  'PM-LPO-0107': [[detailDialogOpen, true]],
-}
-useAutoTrigger(screenTriggers)
-
-if (!detailRow.value) detailRow.value = findRow(displayRows.value[0]?.id ?? -1)
+/* 알림메세지 상세 팝업(PM-LPO-0107) 삭제 — 팝업 열기 트리거와 팝업 안 단건 삭제도 함께 뺐다 */
 
 useBottomTabSetup({
   value: 'PM-LPO-0106',
