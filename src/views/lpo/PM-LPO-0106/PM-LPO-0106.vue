@@ -23,7 +23,7 @@
     </template>
   </PageHeader>
 
-  <div :class="styles.listToolbar">
+  <div class="list-actions space-between">
     <FilterChipGroup v-model="status" :items="statusItems" />
     <Button
       type="button"
@@ -56,7 +56,7 @@
 
   <!-- 모바일: 하단 고정 삭제 CTA -->
   <div :class="[styles.cta, styles.mobileOnly]">
-    <Button type="button" variant="tertiary2" :class="styles.ctaBtn" @click="onDeleteSelected">삭제</Button>
+    <Button type="button" variant="tertiary2" class="w-full" @click="onDeleteSelected">삭제</Button>
   </div>
 
   <!-- 모바일: 맨 위로 -->
@@ -134,7 +134,6 @@ const columns: TabulatorGridColumn[] = [
     cellType: 'button',
     buttonVariant: 'link',
     buttonSize: 'xxs',
-    buttonClass: styles.contentBtn,
     buttonLabel: (row) => contentPreview(row as NotificationRow),
     onButtonClick: (row) => onContentClick(row as NotificationRow),
     // 카드에서는 상태·일시 다음에 내용 전문이 온다

@@ -317,7 +317,6 @@
               id="new-diagnosis-etc-label"
               v-model="form.etcLabel"
               size="sm"
-              :class="styles.detailEtcInput"
               aria-label="기타 항목"
             />
           </template>
@@ -357,7 +356,7 @@
       상세(0107)·CPO확인용(0105)과 같은 마크업(.detailNoteMeta)으로 맞춘다.
     -->
     <div class="pop-title-sub mb-2"><h2>착안사항</h2></div>
-      <TextareaField v-model="form.note" :class="styles.detailTextarea" textarea-class="w-full" :height="72" aria-label="착안사항" />
+      <TextareaField v-model="form.note" class="w-full" textarea-class="w-full" :height="72" aria-label="착안사항" />
       <div :class="styles.detailNoteMeta">
         <Checkbox v-model="form.emailNotify" label="범죄예방진단 결과 우편 통보" />
         <!-- 진단 추가(PM-PUB-0106)는 시안대로 같은 줄 오른쪽에 담당 진단자를 표기한다(상세 0107 과 같은 마크업) -->

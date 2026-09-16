@@ -2251,7 +2251,7 @@
 }
 .lp-notice-detail {
   padding-bottom: 3.2rem;
-  margin:0 auto;  
+  margin:0 auto;
   max-width:100rem;
 }
 .lp-notice-badges {
@@ -2349,7 +2349,7 @@
   min-width: 0;
   font-size: 1.3rem;
   color: var(--Text-body_2);
-} 
+}
 .lp-comment-date::before{
   position:absolute;
   left:0;
@@ -3816,4 +3816,11 @@
   .login-form-area {
     padding: 3.2rem 2.4rem 4rem;
   }
+}
+
+/* 팝업 안 2분할 — LayoutSplit 기본 높이(90rem)가 팝업 최대 높이(85dvh)보다 커지면 팝업에도 스크롤이 생겨
+   스크롤 막대가 두 개로 보인다. 컴포넌트가 열어둔 --split-height 를 팝업 높이에 맞춘다(layoutSplit.vue 주석).
+   12rem = 팝업 상하 여백 + 제목 줄. 쓰는 곳: PM-PUB-0105 범죄예방진단결과(CPO확인용) */
+.lp-split-popup {
+  --split-height: calc(85dvh - 12rem);
 }
