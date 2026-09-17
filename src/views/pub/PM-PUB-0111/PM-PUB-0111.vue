@@ -86,10 +86,10 @@
 
         <!-- 소계는 위 입력의 합이라 결과만 보여준다 -->
         <InfoField label="범죄 소계">
-          <span class="readonly-text">{{ crimeSubtotal }}</span>
+          <InputField2 :model-value="crimeSubtotal" type="number" readonly :clearable="false" aria-label="범죄 소계" size="sm" class="!space-y-0 w-full" input-class="w-full" />
         </InfoField>
         <InfoField label="강력범죄 소계">
-          <span class="readonly-text">{{ violentCrimeSubtotal }}</span>
+          <InputField2 :model-value="violentCrimeSubtotal" type="number" readonly :clearable="false" aria-label="강력범죄 소계" size="sm" class="!space-y-0 w-full" input-class="w-full" />
         </InfoField>
       </InfoTable>
     </section>
@@ -104,7 +104,7 @@
           <InputField2 v-model.number="report.code2" type="number" min="0" :clearable="false" aria-label="Code 2" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
         <InfoField label="합계" full>
-          <span class="readonly-text">{{ reportTotal }}</span>
+          <InputField2 :model-value="reportTotal" type="number" readonly :clearable="false" aria-label="112신고 합계" size="sm" class="!space-y-0 w-full" input-class="w-full" />
         </InfoField>
       </InfoTable>
     </section>
@@ -216,7 +216,7 @@
         <InfoField>
         </InfoField>
         <InfoField label="풍속업소 합계" full>
-          <span class="readonly-text">{{ entertainmentTotal }}</span>
+          <InputField2 :model-value="entertainmentTotal" type="number" readonly :clearable="false" aria-label="풍속업소 합계" size="sm" class="!space-y-0 w-full" input-class="w-full" />
         </InfoField>
 
       </InfoTable>

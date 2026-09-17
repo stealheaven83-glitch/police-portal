@@ -232,15 +232,15 @@
             <div class="lp-cert-scroll">
               <table class="lp-cert-table" aria-label="기본 항목 평가">
                 <colgroup>
-                  <col width="160"/>
-                  <col width=""/>
-                  <col width="228"/>
+                  <col width="65"/>
+                  <col width="100"/>
+                  <col/>
                   <col />
                 </colgroup>
                 <thead>
                   <tr>
-                    <th scope="col">분야</th>
-                    <th colspan="2" scope="col">항목</th>
+                    <th colspan="2" scope="col">분야</th>
+                    <th scope="col">항목</th>
                     <th scope="col" class="lp-cert-choice">양호-2점, 보통-1점, 미흡-0점</th>
                   </tr>
                 </thead>
@@ -321,8 +321,8 @@
               </InfoField>
               <InfoField label="총점">
                 <span class="readonly-text">{{ totalScore }}</span>
-                <span v-if="meetsCertStandard" class="lp-cert-pass">＊ 인증기준에 적합합니다.</span>
-                <span v-else class="lp-cert-fail">＊ 인증기준에 부적합합니다.</span>
+                <span v-if="meetsCertStandard" class="lp-cert-pass">＊ 인증기준에 <strong class="lp-em-strong">적합</strong>합니다.</span>
+                <span v-else class="lp-cert-fail">＊ 인증기준에 <strong class="lp-em-strong">부적합</strong>합니다.</span>
               </InfoField>
               <InfoField label="인증여부" for="cert-result">
                 <SelectField
@@ -416,13 +416,13 @@ function certGroupRows(group: (typeof certBasicGroups)[number]) {
 }
 
 const listColumns: TabulatorGridColumn[] = [
-  { title: '번호', field: 'no', width: 70, hozAlign: 'center' },
+  { title: '번호', field: 'no', width: 60, hozAlign: 'center' },
   { title: '부서', field: 'dept', width: 150, hozAlign: 'center' },
   { title: '유형', field: 'facilityType', width: 180, hozAlign: 'center' },
-  { title: '인증주소', field: 'address', width: 220, hozAlign: 'center' },
+  { title: '인증주소', field: 'address', width: 220, hozAlign: 'left' },
   { title: '진단일시', field: 'diagnosedAt', width: 160, hozAlign: 'center' },
-  { title: '인증구분', field: 'certificationType', width: 110, hozAlign: 'center' },
-  { title: '인증일자', field: 'certifiedAt', width: 120, hozAlign: 'center' },
+  { title: '인증구분', field: 'certificationType', width: 80, hozAlign: 'center' },
+  { title: '등록자', field: 'registrant', width: 100, hozAlign: 'center' },
 ]
 
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)

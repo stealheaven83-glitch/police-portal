@@ -20,8 +20,8 @@ export interface CertificationRow {
   diagnosedAt: string
   /** 인증구분 */
   certificationType: string
-  /** 인증일자 */
-  certifiedAt: string
+  /** 등록자 */
+  registrant: string
 }
 
 /** 우측 체크리스트 */
@@ -48,8 +48,11 @@ export interface CertificationChecklist {
 /** 인증구분 — sentinel 은 '' 가 아니라 'all'(CLAUDE.md §8) */
 export const certificationTypeOptions = [
   { label: '전체', value: 'all' },
-  { label: '신규인증', value: 'new' },
+  { label: '인증불가', value: 'unavailable' },
+  { label: '인증', value: 'certified' },
+  { label: '검토중', value: 'reviewing' },
   { label: '재인증', value: 'renew' },
+  { label: '인증취소', value: 'cancelled' },
 ]
 
 /** 체크리스트 형태 — sentinel 은 '' 가 아니라 'all'(CLAUDE.md §5) */
@@ -191,8 +194,8 @@ function createMockRows(): CertificationRow[] {
       facilityType: '초대형쇼핑센터 주차장',
       address: '서울특별시 종로구 종로3길 17',
       diagnosedAt: '2026-06-01 00:00',
-      certificationType: '신규인증',
-      certifiedAt: '2026-06-05',
+      certificationType: '인증불가',
+      registrant: '홍길동',
     },
     {
       rowKey: 'cert-194',
@@ -201,8 +204,8 @@ function createMockRows(): CertificationRow[] {
       facilityType: '초대형쇼핑센터 주차장',
       address: '서울특별시 종로구 종로3길 17',
       diagnosedAt: '2026-06-01 00:00',
-      certificationType: '신규인증',
-      certifiedAt: '2026-06-05',
+      certificationType: '인증',
+      registrant: '홍길동',
     },
     {
       rowKey: 'cert-193',
@@ -211,18 +214,28 @@ function createMockRows(): CertificationRow[] {
       facilityType: '초대형쇼핑센터 주차장',
       address: '서울특별시 종로구 종로3길 17',
       diagnosedAt: '2026-06-01 00:00',
-      certificationType: '재인증',
-      certifiedAt: '2026-06-07',
+      certificationType: '검토중',
+      registrant: '홍길동',
     },
     {
       rowKey: 'cert-192',
-      no: 195,
+      no: 192,
       dept: '서울청 서울종로서',
       facilityType: '초대형쇼핑센터 주차장',
       address: '서울특별시 종로구 종로3길 17',
       diagnosedAt: '2026-06-01 00:00',
-      certificationType: '신규인증',
-      certifiedAt: '2026-06-09',
+      certificationType: '재인증',
+      registrant: '홍길동',
+    },
+    {
+      rowKey: 'cert-191',
+      no: 191,
+      dept: '서울청 서울종로서',
+      facilityType: '초대형쇼핑센터 주차장',
+      address: '서울특별시 종로구 종로3길 17',
+      diagnosedAt: '2026-06-01 00:00',
+      certificationType: '인증취소',
+      registrant: '홍길동',
     },
   ]
 }
@@ -303,8 +316,8 @@ export function useExcellentFacilityCertification() {
       facilityType: '',
       address: '',
       diagnosedAt: '',
-      certificationType: '신규인증',
-      certifiedAt: '',
+      certificationType: '검토중',
+      registrant: '홍길동',
     }
     // 배열은 재할당한다 — splice 제자리 수정은 그리드가 못 잡는다(CLAUDE.md §3)
     allRows.value = [row, ...allRows.value]
