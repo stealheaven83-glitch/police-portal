@@ -1,44 +1,54 @@
 <template>
-  <GenericDialog2 v-model:open="open" title="사진자료" :size="800" show-close-button>
-    <div :class="styles.photoArea">
-      <div v-for="(row, rowIndex) in photoRows" :key="rowIndex" :class="styles.photoRow">
-        <article v-for="photo in row" :key="photo.key" :class="styles.photoCard">
-          <h3>{{ photo.label }}</h3>
-          <div :class="styles.photoPreview">
-            <img v-if="photo.preview" :class="styles.photoImg" :src="photo.preview" :alt="photo.label" />
-            <img v-else :class="styles.noImage" :src="noImageIcon" alt="No Image" />
-          </div>
-          <p :title="photo.fileName">{{ photo.fileName || '일시' }}</p>
-          <input
-            :ref="(element) => setFileInput(photo.key, element)"
-            type="file"
-            accept="image/*"
-            class="sr-only"
-            @change="onFileSelected(photo, $event)"
-          />
-          <div :class="styles.photoCardActions">
-            <Button type="button" variant="tertiary2" size="xs" @click="pickPhoto(photo.key)">
-              사진변경
-            </Button>
-            <Button type="button" variant="tertiary2" size="xs" @click="removePhoto(photo)">
-              삭제
-            </Button>
-          </div>
-        </article>
-      </div>
-    </div>
+  <GenericDialog2 v-model:open="open" title="사진자료" :size="1000" show-close-button>
+    <!-- 사진 묶음 ↔ 조치사항 표 16px 은 .lp-dialog-body 가 준다(InfoTable popup 의 7px 은 빼고) -->
+    <div class="lp-dialog-body">
+      <div class="lp-photo-rows">
+        <ul v-for="(row, rowIndex) in photoRows" :key="rowIndex" class="lp-photo-grid lp-photo-grid-5">
+          <li v-for="photo in row" :key="photo.key" class="lp-photo-item">
+            <span class="lp-photo-label">{{ photo.label }}</span>
 
-    <InfoTable :columns="1" popup :class="styles.photoNote">
-      <InfoField label="범죄예방진단자 조치사항" full>
-        <TextareaField
-          v-model="note"
-          class="w-full"
-          textarea-class="w-full"
-          :height="72"
-          aria-label="범죄예방진단자 조치사항"
-        />
-      </InfoField>
-    </InfoTable>
+            <div class="lp-photo-box">
+              <img v-if="photo.preview" :src="photo.preview" :alt="photo.label" class="lp-photo-img" />
+              <span v-else class="lp-photo-empty" aria-hidden="true">
+                <img :src="photoEmptyIcon" alt="" class="lp-photo-empty-icon" />
+                <img :src="photoEmptyLabel" alt="" class="lp-photo-empty-label" />
+              </span>
+            </div>
+
+            <p class="lp-photo-meta" :title="photo.fileName">{{ photo.fileName || '일시' }}</p>
+
+            <div class="lp-photo-actions">
+              <Button type="button" variant="tertiary2" size="xs" padding="12" @click="pickPhoto(photo.key)">
+                사진변경
+              </Button>
+              <Button type="button" variant="tertiary2" size="xs" padding="12" @click="removePhoto(photo)">
+                삭제
+              </Button>
+            </div>
+
+            <input
+              :ref="(element) => setFileInput(photo.key, element)"
+              type="file"
+              accept="image/*"
+              class="sr-only"
+              @change="onFileSelected(photo, $event)"
+            />
+          </li>
+        </ul>
+      </div>
+
+      <InfoTable :columns="1">
+        <InfoField label="범죄예방진단자 조치사항" full>
+          <TextareaField
+            v-model="note"
+            class="w-full"
+            textarea-class="w-full"
+            :height="72"
+            aria-label="범죄예방진단자 조치사항"
+          />
+        </InfoField>
+      </InfoTable>
+    </div>
 
     <template #footer>
       <Button type="button" variant="tertiary2" size="md" @click="open = false">취소</Button>
@@ -54,10 +64,10 @@ import { InfoTable, InfoField } from '@/components/custom/info-table'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { Button } from '@/components/custom/button'
 import { useDialog } from '@/composable/dialog/dialog'
-import noImageIcon from '@/assets/icon/img_no_image.svg?url'
-import styles from '../style/PM-PUB-0103.module.css'
+import photoEmptyLabel from '@/assets/images/icons/photoEmptyLabel.svg?url'
 
 const dialog = useDialog()
+const photoEmptyIcon = '/portal/asset/images/icon/ico-no-image.svg'
 
 const open = defineModel<boolean>('open', { default: false })
 const note = defineModel<string>('note', { default: '' })

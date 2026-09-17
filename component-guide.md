@@ -721,6 +721,8 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-voice-search` `-img` `-body` `-text` `-status` | 음성인식 팝업(`GenericDialog2 type="full"`) 본문 — 마이크 150×156 + 인식된 말(32 bold, `--Base-primary`) + 상태 안내(17 가운데)를 세로 가운데에 놓는다. `max-width 31.2rem` 가운데정렬이라 팝업 본문 여백 16과 합쳐 시안의 24가 된다 | IRC-0102, 0103 |
 | `.lp-board-form-actions` | 게시판 등록/수정 폼 하단 버튼줄 — 폼 마지막 블록과 40, 버튼 사이 12(Figma). 메모 폼의 `.lp-form-actions-center`(16/4)와 값이 달라 따로 | COM-1003, 1004, 0403 |
 | `.lp-photo-grid` `-item` `-label` `-box` `-img` `-empty` `-empty-icon` `-empty-label` `-meta` `-actions` | 진단 상세의 취약/개선 상황사진 4칸(112사건 표 아래에 붙는 칸). **`police-style.css` 의 `.photo-box`/`.photo-empty` 는 인사관리 증명사진용 12rem 칸이라 서로 다른 것 — 이름이 비슷해도 섞어 쓰지 않는다** | PUB-0101 |
+| `.lp-photo-grid-5` (+ `.lp-photo-rows`) | `.lp-photo-grid` 와 함께 — 5칸, **영역 여백 0·아래선 없음**, 칸이 폭을 나눠 가짐, 일시(파일명) 한 줄 말줄임. 두 줄이면 `.lp-photo-rows` 로 감싼다(줄 사이 20px + 위 선·16px — 제목 아래선 대신) | PUB-0108 사진자료 팝업 |
+| `.lp-photo-grid-spread` | `.lp-photo-grid` 와 함께 — 조회 전용(버튼 없음) 4칸, **영역 여백 0·아래선 없음**, 160px 칸 양 끝 정렬, 위 표와 16px | PUB-0109 간이진단통보자료 팝업 |
 | `.lp-stat-field` `.lp-stat-grade` `.lp-stat-value` | 라벨-값 표의 한 칸에 [등급][수치] 두 조각이 들어가는 통계 표. 값 영역 여백을 걷어내고 두 조각 사이에 세로선을 넣는다 | PUB-0101 참고사항 |
 | `.lp-log-cell` `.lp-log-activity` `.lp-log-tag`(`-danger`/`-primary`/`-success`) `.lp-log-written-at` | 표 한 칸에 [앞머리 표시][본문 여러 줄] + 오른쪽 아래 작성일시가 함께 들어가는 활동내역 칸. 행 높이가 늘어나야 하므로 그리드에 `.lp-grid-multiline` 을 같이 건다 | LPO-0223 |
 | `.lp-workday-row` | 근무일 줄에서 [근무일 선택][요일][주·야]를 **36** 간격으로 끊는 묶음(안쪽 12 묶음은 공통 `.group-gap3`). 사이를 **세로선으로** 끊는 화면은 `.calendar-area`(12 + `-divider`) 쪽이다 | LPO-0301 |
@@ -783,7 +785,11 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-grid-search-cell` | button 셀 라벨 뒤에 돋보기 아이콘을 가상요소로 얹기 | 2204 |
 | `.lp-grid-search-end` | 위 아이콘을 라벨 뒤가 아니라 **칸 오른쪽 끝**에 세우기(`.lp-grid-search-cell` 과 같이 준다) | LPO-0202 |
 | `.lp-table-left` | `TableWrapper` 의 가운데 정렬을 좌측으로 되돌림 | 0601 |
+| `.diagnosis-mail-summary` (+ `> strong`, `p`) | 진단통보 '총평' 상자(왼쪽 라벨 · 세로선 · 본문, 파란 배경). 선 #d7d9dc 는 대응 토큰 없음 — 시안 대조 전 | PUB-0103 진단통보 |
+| `.diagnosis-mail-guide` | 진단통보 결과표 위 13px 안내 문구, 위아래 16px | PUB-0103 진단통보 |
+| `.diagnosis-mail-note` | 진단통보 비고 `InfoTable` 칸 최소 높이 80px | PUB-0103 진단통보 |
 | `.lp-cell-note` | `TableWrapper` **한 칸만** 좌측 정렬 + 줄바꿈 유지 + 위 정렬(여러 줄 글이 들어가는 '내용' 칸). 컬럼 정의의 `cellClass` 로 건다 — 표 전체를 돌리는 `.lp-table-left` 와 다르다 | LPO-0301 |
+| `.lp-cell-multiline` | `TableWrapper` **한 칸만** 좌측 정렬 + 줄바꿈 유지 + 15px 본문색, 세로는 **가운데**(옆 칸 한 줄 값과 높이 중심을 맞춘다). `cellClass` 로 건다. 위 정렬이면 `.lp-cell-note` — 그쪽은 `police-common.css` 의 같은 이름(13px·회색 안내글)이 섞여 들어 글자가 작고 흐리다 | PUB-0109 간이진단통보자료 팝업 |
 | `.lp-table-sticky` (+ `.lp-table-sticky-head2`) | `TableWrapper` 헤더와 합계 줄(`.row-total`)을 고정하고 본문만 스크롤. 높이는 `--lp-table-h`, 합계 줄 위치는 `--lp-thead-h`(2단 헤더면 `-head2` 를 같이) | PUB-0306, PUB-0307(2단 헤더) |
 | `.row-total` (`tbody .row-total > td`) | `TableWrapper` 합계 줄 — 굵은 글씨 + 아래로 [선-간격-선] 두 줄로 데이터 영역과 끊는다. **`lp` 접두사가 없는 건 `tabulator-theme.css` 부터 쓰던 기존 표시자라서** — 같은 뜻의 이름을 새로 만들지 않는다 | PUB-0306, PUB-0307 |
 | `.lp-th-group-start` | `TableWrapper` 2단 헤더에서 **컬럼 그룹이 시작되는 칸**의 왼쪽 세로선. `headClass` 에는 아래 선만 있어 그룹 칸 왼쪽이 빈다. 색은 본문 칸 구분선과 같은 `--Border_gray03` 이라 헤더~본문 세로선이 이어진다 | PUB-0307 |

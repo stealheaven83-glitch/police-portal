@@ -1,8 +1,7 @@
 <template>
   <GenericDialog2 v-model:open="open" title="범죄예방진단 이력보기" :size="800" show-close-button>
-    <div :class="styles.historyTableArea">
+    <div>
       <TableWrapper
-        :class="styles.figmaTable"
         :columns="historyColumns"
         :items="historyItems"
         :show-pagination="false"
@@ -27,7 +26,6 @@ import TableWrapper from '@/components/custom/table/TableWrapper.vue'
 import { NoData } from '@/components/custom/empty'
 import { Button } from '@/components/custom/button'
 import type { CpoDiagnosisRow, CpoHistoryRow } from '../composable/PM-PUB-0103'
-import styles from '../style/PM-PUB-0103.module.css'
 
 const props = defineProps<{ diagnosis?: CpoDiagnosisRow | null; rows: CpoHistoryRow[] }>()
 const open = defineModel<boolean>('open', { default: false })

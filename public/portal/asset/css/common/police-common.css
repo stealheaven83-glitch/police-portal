@@ -2706,6 +2706,44 @@
   flex: 1 1 0;
 }
 
+/*
+ * .lp-photo-grid 와 함께 — 5칸, 영역 여백 없이 칸이 폭을 나눠 갖는다(사진자료 팝업, Figma 11167:130935).
+ * 일시 자리에 파일명이 오므로 한 줄로 자른다. 쓰는 곳: PUB-0108
+ */
+.lp-photo-grid.lp-photo-grid-5 {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  padding: 0;
+  border-bottom: 0;
+}
+
+.lp-photo-grid-5 .lp-photo-meta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* .lp-photo-grid-5 두 줄 묶음 — 줄 사이 20px. 제목에 아래선이 있는 시안이라
+   GenericDialog2 제목 대신 여기서 선과 16px 을 그린다. 쓰는 곳: PUB-0108 */
+.lp-photo-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--Border_gray01);
+}
+
+/*
+ * .lp-photo-grid 와 함께 — 조회 전용(버튼 없음) 사진 줄. 160px 칸을 양 끝으로 벌리고 영역 여백은 없다.
+ * 위 표와 16px 띄운다(Figma 11174:137412). 쓰는 곳: PUB-0109
+ */
+.lp-photo-grid.lp-photo-grid-spread {
+  grid-template-columns: repeat(4, 16rem);
+  justify-content: space-between;
+  margin-top: 1.6rem;
+  padding: 0;
+  border-bottom: 0;
+}
+
 /* ── InfoField 값 칸 안에 들어가는 정적 표(FieldTable) ───────────────────── */
 /* 헤더가 InfoTable 라벨 칸과 같은 회색이라 이어 붙었을 때 한 덩어리로 보인다.
    본문에 단독으로 놓는 표(TableWrapper)와 달리 상단 진한 선·hover 강조가 없다 */
@@ -4005,4 +4043,62 @@ header .header-in .header-container .main-menu .inner .gnb-menu .depth1-list .de
 .lp-notice-text {
   display: block;
   max-width: 81.6rem;
+}
+
+/* 체크박스 왼쪽 + 부가 정보 글자 오른쪽 한 줄("범죄예방진단자 : 홍길동").
+   p 안의 span 은 라벨이라 회색, 나머지는 본문색. 쓰는 곳: PM-PUB-0106, 0107 */
+.lp-check-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.6rem;
+}
+
+.lp-check-meta p {
+  color: var(--Text-body_0);
+  font-size: 1.5rem;
+  white-space: nowrap;
+}
+
+.lp-check-meta p span {
+  color: var(--Text-body_2);
+}
+
+/* ── 범죄예방진단 CPO 연계 팝업(PM-PUB-0103 폴더) ───────────────────────── */
+/* 진단통보(우편 발송) '총평' 상자 — 왼쪽 라벨 | 세로선 | 본문. 쓰는 곳: PUB-0103 진단통보 */
+.diagnosis-mail-summary {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: stretch;
+  margin-top: 1.6rem;
+  padding: 1.6rem 2rem;
+  border-radius: 0.8rem;
+  background: var(--Surface-primary);
+  font-size: 1.4rem;
+  line-height: 1.8;
+}
+
+/* 본문 안 <strong> 은 제외. 선 색 #d7d9dc 는 대응 토큰 없음(옮기기 전 값 유지) */
+.diagnosis-mail-summary > strong {
+  display: flex;
+  align-items: center;
+  padding-right: 1.6rem;
+  border-right: 1px solid #d7d9dc;
+  font-size: 1.7rem;
+}
+
+.diagnosis-mail-summary p {
+  padding-left: 1.6rem;
+}
+
+/* 진단통보 결과표 위 안내 문구 — 위아래 16px(아래 여백은 뒤따르는 결과표 몫). 쓰는 곳: PUB-0103 진단통보 */
+.diagnosis-mail-guide {
+  margin-top: 1.6rem;
+  margin-bottom: 1.6rem;
+  font-size: 1.3rem;
+}
+
+/* 진단통보 비고 표 — 칸 최소 높이 80px. InfoTable 에 건다. 쓰는 곳: PUB-0103 진단통보 */
+.diagnosis-mail-note > * {
+  min-height: 8rem;
 }

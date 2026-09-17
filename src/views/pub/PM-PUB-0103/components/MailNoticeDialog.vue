@@ -8,13 +8,13 @@
       <InfoField label="성명">홍길동</InfoField>
       <InfoField label="일시">2026-08-19</InfoField>
     </InfoTable>
-    <div :class="styles.mailSummary">
+    <div class="diagnosis-mail-summary">
       <strong>총평</strong>
-      <p>범죄예방진단에 응해주셔서 감사합니다. 귀하의 건물에 대한 범죄예방진단 결과는 아래와 같습니다.<br />귀하 건물의 위험도 진단점수는 <strong :class="styles.mailScore">{{ score }}점</strong>이며, 주변 동종건물의 평균 위험도 진단점수 <strong>0점</strong>에 비해 높습니다.</p>
+      <p>범죄예방진단에 응해주셔서 감사합니다. 귀하의 건물에 대한 범죄예방진단 결과는 아래와 같습니다.<br />귀하 건물의 위험도 진단점수는 <strong class="lp-em-primary">{{ score }}점</strong>이며, 주변 동종건물의 평균 위험도 진단점수 <strong>0점</strong>에 비해 높습니다.</p>
     </div>
-    <p :class="styles.resultGuide">* &lt;개별항목&gt; 위험하다고 판단된 세부 내용들입니다.</p>
-    <TableWrapper :class="styles.figmaTable" :columns="resultColumns" :items="resultItems" :show-pagination="false" />
-    <InfoTable :columns="1" popup size="120" :class="styles.mailNoteTable">
+    <p class="diagnosis-mail-guide">* &lt;개별항목&gt; 위험하다고 판단된 세부 내용들입니다.</p>
+    <TableWrapper :columns="resultColumns" :items="resultItems" :show-pagination="false" />
+    <InfoTable :columns="1" popup size="120" class="diagnosis-mail-note">
       <InfoField label="착안사항" full>
         {{ note || '시골 농촌지역으로 파출소 근처에 있어 대체로 위험성이 없는 편임.' }}
       </InfoField>
@@ -34,7 +34,6 @@ import { InfoTable, InfoField } from '@/components/custom/info-table'
 import TableWrapper from '@/components/custom/table/TableWrapper.vue'
 import { Button } from '@/components/custom/button'
 import type { CpoDiagnosisRow } from '../composable/PM-PUB-0103'
-import styles from '../style/PM-PUB-0103.module.css'
 
 const props = defineProps<{
   diagnosis?: CpoDiagnosisRow | null

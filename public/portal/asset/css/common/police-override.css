@@ -421,6 +421,18 @@
   min-width: 0;
 }
 
+/* DepartmentCascadeSelect 를 표 셀(InfoField) 안에 넣을 때 — 셀렉트 셋을 각 132px·간격 12px 로,
+   옆 버튼과 한 줄에 남긴다. 컴포넌트가 각 셀렉트에 w-40, 묶음에 gap-2·flex-wrap 을
+   테일윈드로 먹여서 이 파일이어야 이긴다. 쓰는 곳: PM-PUB-0114 */
+.lp-dept-cell {
+  flex-wrap: nowrap;
+  gap: 1.2rem;
+}
+.lp-dept-cell > * {
+  width: 13.2rem;
+  min-width: 0;
+}
+
 /* ChipGroup 을 폼 폭에 꽉 채운다(Figma Q&A 등록/수정 카테고리 — 칩 넷이 1000px 을 16px 간격으로 나눠 갖는다).
    컴포넌트가 묶음에 gap-2·flex-wrap 을 테일윈드로 먹여서 이 파일이어야 이긴다. .lp-dept-fill 과 값은 같지만 대상이 달라 따로 */
 .lp-chip-fill {
@@ -1001,6 +1013,19 @@ tbody .row-total > td:first-child {
   padding-block: 1.2rem;
   text-align: left;
   vertical-align: top;
+  white-space: pre-line;
+}
+
+/*
+ * 표 한 칸에 여러 줄 글 — 세로 가운데 정렬(옆 칸 한 줄 값과 높이 중심을 맞춘다).
+ * .lp-cell-note 는 위 정렬에 이름이 police-common.css 의 13px·회색 안내글과 겹쳐 따로 둔다.
+ * TableWrapper 가 text-center 를 테일윈드로 먹여 이 파일이다. 쓰는 곳: PUB-0109
+ */
+.lp-cell-multiline {
+  padding-block: 1.2rem;
+  font-size: 1.5rem;
+  color: var(--Text-body_0);
+  text-align: left;
   white-space: pre-line;
 }
 
