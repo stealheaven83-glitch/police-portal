@@ -47,7 +47,7 @@
     <div class="list-actions-txt">
       <p>
         ＊ 출동업무수당 지급대상 자동체크는 매일 오전 08시~12시에 반영됩니다.
-        12시 이후에 확인 후 작성하세요
+        12시 이후에 확인 후 작성하세요.
       </p>
       <p>
         ＊ 출동업무수당 자동체크 된 지급대상 사건과 임의등록 사건 만 표시됩니다.
@@ -179,7 +179,7 @@ function dateTimeFormatter(cell: { getValue: () => unknown }) {
   if (!value) return "";
   const [date, time] = value.split(" ");
   if (!time) return `<span class="lp-cell-datetime">${date}</span>`;
-  return `<span class="lp-cell-datetime">${date}<br />${time}</span>`;
+  return `<span class="lp-cell-datetime">${date} ${time}</span>`;
 }
 
 const columns: TabulatorGridColumn[] = [
@@ -194,25 +194,33 @@ const columns: TabulatorGridColumn[] = [
     title: "타지역관서<br/>(전소속부서)<br/> 실적가져오기",
     field: "otherStationRef",
     hozAlign: "center",
+    width: 130,
+    cellType: "button",
+    buttonVariant: "tertiary",
+    buttonSize: "xs",
+    buttonLabel: "가져오기",
+    buttonClass: "lp-grid-btn-compact",
+    onButtonClick: () => dialog.alert({ title: "실적 가져오기는 개발 연동 예정입니다.", btnCancel: "확인" }),
   },
   { title: "접수번호", field: "receiptNo", hozAlign: "center" },
-  { title: "사건번호", field: "caseNo", hozAlign: "center" },
+  { title: "사건번호", field: "caseNo", hozAlign: "center", width: 200 },
   {
     title: "신고내용",
     field: "reportContent",
     hozAlign: "left",
-    widthGrow: 2,
+    width: 240,
     cellType: "button",
     buttonVariant: "link",
     buttonSize: "xxs",
+    buttonClass: "text-[1.4rem]",
     buttonLabel: (row) => String((row as DispatchAllowanceRow).reportContent),
     onButtonClick: (row) => openDetail(row as DispatchAllowanceRow),
   },
   {
     title: "현장조치내용",
     field: "onSiteAction",
-    hozAlign: "center",
-    widthGrow: 2,
+    hozAlign: "left",
+    width: 240,
   },
   {
     title: "임의등록사유",
