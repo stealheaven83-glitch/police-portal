@@ -80,30 +80,28 @@
           <Button type="button" variant="tertiary" size="sm" @click="onPrint">인쇄</Button>
         </template>
 
-        <ScrollWrapper>
-          <DomesticViolencePanel
-            v-if="activeTab === 'domestic'"
-            :detail="domestic"
-            :score="domesticScore"
-            @print="onPrint"
-            @search-report="onSearchReport"
-            @search-address="onSearchAddress"
-          />
-          <ChildAbusePanel
-            v-else-if="activeTab === 'child'"
-            :detail="child"
-            @print="onPrint"
-            @search-report="onSearchReport"
-            @search-address="onSearchAddress"
-          />
-          <StalkingPanel
-            v-else
-            :detail="stalking"
-            :score="stalkingScore"
-            :risk-label="stalkingRiskLabel"
-            @search-report="onSearchReport"
-          />
-        </ScrollWrapper>
+        <DomesticViolencePanel
+          v-if="activeTab === 'domestic'"
+          :detail="domestic"
+          :score="domesticScore"
+          @print="onPrint"
+          @search-report="onSearchReport"
+          @search-address="onSearchAddress"
+        />
+        <ChildAbusePanel
+          v-else-if="activeTab === 'child'"
+          :detail="child"
+          @print="onPrint"
+          @search-report="onSearchReport"
+          @search-address="onSearchAddress"
+        />
+        <StalkingPanel
+          v-else
+          :detail="stalking"
+          :score="stalkingScore"
+          :risk-label="stalkingRiskLabel"
+          @search-report="onSearchReport"
+        />
       </LayoutPanel>
     </template>
   </LayoutSplit>
@@ -124,7 +122,6 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/custom/tabs'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import LayoutSplit from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
-import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
 import DomesticViolencePanel from './components/DomesticViolencePanel.vue'
 import ChildAbusePanel from './components/ChildAbusePanel.vue'
 import StalkingPanel from './components/StalkingPanel.vue'

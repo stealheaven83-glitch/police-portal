@@ -67,46 +67,11 @@
         :height="144"
       />
 
-      <div class="lp-field">
-        <span class="lp-label-text">첨부파일</span>
-
-        <div class="lp-dropzone" @dragover.prevent @drop.prevent="onDrop">
-          <div class="lp-dropzone-txt">
-            <p>첨부할 파일을 여기에 끌어다 놓거나, 파일 선택 버튼을 직접 선택해주세요.</p>
-            <p class="lp-dropzone-sub">
-              <span>업로드 가능 파일 (jpg, jpeg, png, pdf, mp4)</span>
-              <span>파일용량이 클 경우 시간이 오래 걸릴 수 있습니다.</span>
-            </p>
-          </div>
-          <Button type="button" variant="secondary" size="sm" padding="16" @click="pickFile">파일선택</Button>
-          <input
-            ref="fileInputRef"
-            type="file"
-            multiple
-            :accept="FILE_ACCEPT"
-            hidden
-            @change="onFilePick"
-          >
-        </div>
-
-        <template v-if="fileCount">
-          <p class="lp-file-count lp-file-count-below"><b>{{ fileCount }}개</b></p>
-          <!-- 파일 한 줄 = 공통 FileUpload(Figma file_upload__atomic__pc): 업로드 중이면 스피너, 끝나면 '삭제 ⨯' -->
-          <div class="lp-file-list">
-            <FileUpload
-              v-for="file in form.files"
-              :key="file.id"
-              :file-name="file.name"
-              :uploading="file.uploading"
-              variant="circle"
-              @remove="removeFile(file.id)"
-            />
-          </div>
-        </template>
-      </div>
+      <!-- 첨부파일 — 공통 AttachmentField(드롭존 + 파일선택 + 건수 + 목록). 파일 추가/삭제는 composable 의 addFiles/removeFile 이 맡는다 -->
+      <AttachmentField :files="form.files" :accept="FILE_ACCEPT" @select="addFiles" @remove="removeFile" />
 
       <div class="lp-board-form-actions">
-        <!-- Figma: 버튼 높이 40 = sm (기준 PM-LPO-0102 는 md/48). 제목이 비면 저장은 비활성 -->
+        <!-- Figma: 버튼 높이 40 = sm (기준 PM-LPO-0102 는 md/48). 제목이 비면 저장은 비활성(등록 시안과 같은 규칙) -->
         <Button type="button" variant="tertiary2" size="sm" @click="onCancel">취소</Button>
         <Button type="button" variant="primary" size="sm" :disabled="!canSave" @click="onSave">저장</Button>
       </div>
@@ -115,7 +80,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
@@ -127,18 +91,18 @@ import { DateRangePicker } from '@/components/custom/datepicker'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { Button } from '@/components/custom/button'
-import { FileUpload } from '@/components/custom/file-upload'
+import { AttachmentField } from '@/components/custom/common'
 import { useDialog } from '@/composable/dialog/dialog'
 import { bulletinMenu, CONTENT_MAX_LENGTH, FILE_ACCEPT } from '../composable/notice'
-import { useNoticeCreate } from './composable/PM-COM-0304'
+import { useNoticeEdit } from './composable/PM-COM-0303'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 
 defineOptions({
-  name: 'PmCom0304',
+  name: 'PmCom0303',
 })
 
-// LNB: 게시판 > 공지사항 (PM-COM-0301~1003 과 같은 메뉴 항목)
+// LNB: 게시판 > 공지사항 (PM-COM-0301/1002 와 같은 메뉴 항목)
 useSideMenuSetup({ ...bulletinMenu, activeChild: '공지사항' })
 
 const router = useRouter()
@@ -150,41 +114,23 @@ const navItems = [
   { label: '공지사항', path: '/views/com/PM-COM-0301' },
 ]
 
-const { form, writer, writtenAt, dept, fileCount, canSave, addFiles, removeFile } = useNoticeCreate()
+const { form, writer, writtenAt, dept, canSave, addFiles, removeFile } = useNoticeEdit()
 
-const fileInputRef = ref<HTMLInputElement | null>(null)
-
-function pickFile() {
-  fileInputRef.value?.click()
-}
-
-function onFilePick(e: Event) {
-  const input = e.target as HTMLInputElement
-  if (input.files?.length) addFiles(input.files)
-  input.value = ''
-}
-
-function onDrop(e: DragEvent) {
-  const files = e.dataTransfer?.files
-  if (files?.length) addFiles(files)
-}
-
-/** 등록은 목록의 '작성' 버튼에서 들어오므로 취소하면 목록으로 돌아간다 */
 function onCancel() {
-  router.push({ name: 'PM-COM-0301' })
+  router.push({ name: 'PM-COM-0302' })
 }
 
 /**
- * 사용자 지정(화면 정의서 2-②·③): 컨펌 "입력된 내용을 저장 하시겠습니까?"
+ * 사용자 지정(화면 정의서 2-①·③): 제목이 있으면 컨펌 "수정된 내용을 저장 하시겠습니까?"
  *  - 취소: 컨펌만 닫고 화면 변동 없음
  *  - 확인: 저장 후 목록으로 이동(목록은 라우트 이동으로 다시 그려진다 = 새로고침)
- * 제목이 없는 경우는 버튼 자체가 비활성(Figma)이라 여기까지 오지 않는다.
+ * 제목이 없는 경우는 버튼 자체가 비활성(등록 시안 PM-COM-0304 와 같은 규칙)이라 여기까지 오지 않는다.
  * CLAUDE.md §4 기본(알림창)과 다르지만 요청대로 완료 알림은 띄우지 않는다.
  */
 async function onSave() {
   if (!canSave.value) return
   const { confirmed } = await dialog.confirm({
-    title: '입력된 내용을 저장 하시겠습니까?',
+    title: '수정된 내용을 저장 하시겠습니까?',
     btnOk: '확인',
     btnCancel: '취소',
   })
@@ -193,10 +139,10 @@ async function onSave() {
 }
 
 useBottomTabSetup({
-  value: 'PM-COM-0304',
-  label: '공지사항 등록',
-  path: '/views/com/PM-COM-0304',
-  componentName: 'PmCom0304',
+  value: 'PM-COM-0303',
+  label: '공지사항 수정',
+  path: '/views/com/PM-COM-0303',
+  componentName: 'PmCom0303',
   closable: true,
 })
 </script>

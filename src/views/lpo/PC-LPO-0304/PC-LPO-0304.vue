@@ -30,7 +30,7 @@
   </SearchWrapper>
 
   <TabulatorGrid
-    class="flex-1"
+    class="flex-1 lp-grid-no-hover"
     :columns="columns"
     :data="rows"
     :row-class="rowClass"
@@ -79,7 +79,7 @@ const { department, advancedSearchOpen, year, month, onlyPending, rows } = useMo
 /** '미확인'만 강조색 글씨로 — Figma color/text/point(#b02a30) */
 function pendingFormatter(cell: { getValue: () => string }) {
   const value = cell.getValue() ?? ''
-  return value === '미확인' ? `<span class="lp-cell-point">${value}</span>` : value
+  return value === '미확인' ? `<span class="lp-cell-point font-bold">${value}</span>` : value
 }
 
 /**

@@ -12,7 +12,7 @@
   </PageHeader>
 
   <div class="lp-page-scroll">
-    <!-- Figma 11220:71119 "list": 블록 사이 20 균일(.lp-narrow-form gap) / 라벨→입력 8(.lp-field gap) -->
+    <!-- Figma 11220:71176 "list": 블록 사이 20 균일(.lp-narrow-form gap) / 라벨→입력 8(.lp-field gap) -->
     <div class="lp-narrow-form">
       <!-- 머리줄: 왼쪽 작성자·일시, 오른쪽 공지·비밀글 체크(간격 16, 체크박스 24 + 글자 19) -->
       <div class="lp-row-between">
@@ -50,54 +50,17 @@
         :clearable="false"
       />
 
-      <!-- Figma: 등록 화면은 내용 칸 아래 글자수 카운터(0/100)가 있다 — 수정 화면(0403)과 다름 -->
+      <!-- Figma: 이 화면의 내용 칸에는 글자수 카운터가 없다(공지 등록/수정과 다름) -->
       <TextareaField
         id="qna-content"
         v-model="form.content"
         label="내용"
-        placeholder="내용을 입력해주세요."
-        :maxlength="CONTENT_MAX_LENGTH"
-        show-count
+        placeholder="내용을 입력하세요"
         :height="144"
       />
 
-      <div class="lp-field">
-        <span class="lp-label-text">첨부파일</span>
-
-        <div class="lp-dropzone" @dragover.prevent @drop.prevent="onDrop">
-          <div class="lp-dropzone-txt">
-            <p>첨부할 파일을 여기에 끌어다 놓거나, 파일 선택 버튼을 직접 선택해주세요.</p>
-            <p class="lp-dropzone-sub">
-              <span>업로드 가능 파일 (jpg, jpeg, png, pdf, mp4)</span>
-              <span>파일용량이 클 경우 시간이 오래 걸릴 수 있습니다.</span>
-            </p>
-          </div>
-          <Button type="button" variant="secondary" size="sm" padding="16" @click="pickFile">파일선택</Button>
-          <input
-            ref="fileInputRef"
-            type="file"
-            multiple
-            :accept="FILE_ACCEPT"
-            hidden
-            @change="onFilePick"
-          >
-        </div>
-
-        <template v-if="fileCount">
-          <!-- 드롭존→개수 20(= field gap 8 + 12), 개수→목록 8, 파일 사이 12 -->
-          <p class="lp-file-count lp-file-count-below"><b>{{ fileCount }}개</b></p>
-          <div class="lp-file-list">
-            <FileUpload
-              v-for="file in form.files"
-              :key="file.id"
-              :file-name="file.name"
-              :uploading="file.uploading"
-              variant="circle"
-              @remove="removeFile(file.id)"
-            />
-          </div>
-        </template>
-      </div>
+      <!-- 첨부파일 — 공통 AttachmentField(드롭존 + 파일선택 + 건수 + 목록). 파일 추가/삭제는 composable 의 addFiles/removeFile 이 맡는다 -->
+      <AttachmentField :files="form.files" :accept="FILE_ACCEPT" @select="addFiles" @remove="removeFile" />
 
       <!-- Figma: 버튼 높이 48(md)·폭 120·사이 12, 폼과 40 -->
       <div class="lp-board-form-actions">
@@ -109,7 +72,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
@@ -120,16 +82,16 @@ import { ChipGroup } from '@/components/custom/chip'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { Button } from '@/components/custom/button'
-import { FileUpload } from '@/components/custom/file-upload'
+import { AttachmentField } from '@/components/custom/common'
 import { useDialog } from '@/composable/dialog/dialog'
-import { bulletinMenu, CONTENT_MAX_LENGTH, FILE_ACCEPT } from '../composable/notice'
+import { bulletinMenu, FILE_ACCEPT } from '../composable/notice'
 import { qnaCategoryOptions, type QnaCategory } from '../composable/qna'
-import { useQnaCreate } from './composable/PM-COM-0404'
+import { useQnaEdit } from './composable/PM-COM-0403'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 
 defineOptions({
-  name: 'PmCom0404',
+  name: 'PmCom0403',
 })
 
 // LNB: 게시판 > Q&A
@@ -144,46 +106,29 @@ const navItems = [
   { label: 'Q&A', path: '/views/com/PM-COM-0401' },
 ]
 
-const { form, writer, writtenAt, fileCount, canSave, addFiles, removeFile } = useQnaCreate()
+const { form, writer, writtenAt, canSave, addFiles, removeFile } = useQnaEdit()
 
-/** ChipGroup 은 고른 칩을 다시 누르면 '' 를 보낸다 — 등록은 아직 안 고른 상태가 있으니 그대로 받는다 */
+/** ChipGroup 은 고른 칩을 다시 누르면 '' 를 보낸다 — 수정 화면에서 카테고리는 비울 수 없으니 그 경우만 무시 */
 function onCategoryChange(value: string | string[]) {
-  if (typeof value === 'string') form.category = value as QnaCategory | ''
+  if (typeof value === 'string' && value) form.category = value as QnaCategory
 }
 
-const fileInputRef = ref<HTMLInputElement | null>(null)
-
-function pickFile() {
-  fileInputRef.value?.click()
-}
-
-function onFilePick(e: Event) {
-  const input = e.target as HTMLInputElement
-  if (input.files?.length) addFiles(input.files)
-  input.value = ''
-}
-
-function onDrop(e: DragEvent) {
-  const files = e.dataTransfer?.files
-  if (files?.length) addFiles(files)
-}
-
-/** 등록은 목록의 '작성' 버튼에서 들어오므로 취소하면 목록으로 돌아간다 */
+/** 수정은 상세에서 들어오므로 취소하면 상세(PM-COM-0402)로 돌아간다 */
 function onCancel() {
-  router.push({ name: 'PM-COM-0401' })
+  router.push({ name: 'PM-COM-0402' })
 }
 
 /**
- * 사용자 지정(화면 정의서 2-②·③, 공지사항 등록과 같은 흐름): 컨펌 "입력된 내용을 저장 하시겠습니까?"
+ * 사용자 지정(화면 정의서 2-①·③, 공지사항 수정과 같은 흐름): 제목이 있으면 컨펌 "수정된 내용을 저장 하시겠습니까?"
  *  - 취소: 컨펌만 닫고 화면 변동 없음
  *  - 확인: 저장 후 목록으로 이동(목록은 라우트 이동으로 다시 그려진다 = 새로고침)
- * 제목이 없는 경우는 버튼 자체가 비활성(Figma)이라 여기까지 오지 않는다.
+ * 제목이 없는 경우는 버튼 자체가 비활성이라 여기까지 오지 않는다.
  * CLAUDE.md §4 기본(알림창)과 다르지만 요청대로 완료 알림은 띄우지 않는다.
  */
 async function onSave() {
   if (!canSave.value) return
   const { confirmed } = await dialog.confirm({
-    title: '입력된 내용을 저장 하시겠습니까?',
+    title: '수정된 내용을 저장 하시겠습니까?',
     btnOk: '확인',
     btnCancel: '취소',
   })
@@ -192,10 +137,10 @@ async function onSave() {
 }
 
 useBottomTabSetup({
-  value: 'PM-COM-0404',
-  label: 'Q&A 등록',
-  path: '/views/com/PM-COM-0404',
-  componentName: 'PmCom0404',
+  value: 'PM-COM-0403',
+  label: 'Q&A 수정',
+  path: '/views/com/PM-COM-0403',
+  componentName: 'PmCom0403',
   closable: true,
 })
 </script>

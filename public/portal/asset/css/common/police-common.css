@@ -4059,6 +4059,29 @@ header .header-in .header-container .main-menu .inner .gnb-menu .depth1-list .de
 /* 팝업 안 2분할 — LayoutSplit 기본 높이(90rem)가 팝업 최대 높이(85dvh)보다 커지면 팝업에도 스크롤이 생겨
    스크롤 막대가 두 개로 보인다. 컴포넌트가 열어둔 --split-height 를 팝업 높이에 맞춘다(layoutSplit.vue 주석).
    12rem = 팝업 상하 여백 + 제목 줄. 쓰는 곳: PM-PUB-0105 범죄예방진단결과(CPO확인용) */
+/* 시안 높이가 정해진 팝업 안 분할. 평소엔 시안 값(428)을 쓰고, 창이 짧아 팝업 최대 높이(85dvh)를
+   넘길 때만 그쪽에 맞춰 줄인다 — 넘기면 팝업에도 스크롤이 생겨 막대가 두 겹으로 보인다.
+   쓰는 곳: PC-LPO-0202 근무 사용자 선택 */
+/*
+ * 중요공지사항 값 칸 — 시안 15605:117494. 입력칸이 칸 높이를 꽉 채우고, 저장 버튼만 아래에 붙는다.
+ * 버튼까지 늘어나면 안 되므로 줄 자체는 stretch 로 두고 버튼만 align-self 로 내린다.
+ * 쓰는 곳: PC-LPO-0202 중요공지사항
+ */
+.lp-notes-fill {
+  display: flex;
+  align-items: stretch;
+  gap: 1.2rem;
+  flex: 1;
+  min-height: 0;
+}
+.lp-notes-save {
+  align-self: flex-end;
+}
+
+.lp-split-popup-sm {
+  --split-height: min(42.8rem, 85dvh - 12rem);
+}
+
 .lp-split-popup {
   --split-height: calc(85dvh - 12rem);
 }
@@ -4130,4 +4153,10 @@ header .header-in .header-container .main-menu .inner .gnb-menu .depth1-list .de
 /* 진단통보 비고 표 — 칸 최소 높이 80px. InfoTable 에 건다. 쓰는 곳: PUB-0103 진단통보 */
 .diagnosis-mail-note > * {
   min-height: 8rem;
+}
+
+/*리스트가 있는 팝업은 리스트가 남은 공간을 차지하기 때문에 반드시 해당 클래스를 사용후 감싸준다*/
+.lp-popup-body.fixed-height > .list-wrapper {
+  flex: 1;
+  min-height: 0;
 }

@@ -35,7 +35,7 @@ import { Button } from '@/components/custom/button'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
-import { UserFindDialog, type UserFindUser } from '@/components/custom/user-find'
+import { UserFindDialog, type UserFindUser } from '@/components/custom/common'
 import { DispatchSummaryDialogKey, teamLeaderOptions } from '../composable/dialogs'
 import { useDialog } from '@/composable/dialog/dialog'
 

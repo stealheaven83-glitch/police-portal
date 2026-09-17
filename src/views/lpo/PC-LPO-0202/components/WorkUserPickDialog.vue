@@ -1,10 +1,11 @@
 <template>
   <GenericDialog2 v-model:open="workUserPickOpen" title="근무 사용자 선택" :size="720">
-    <LayoutSplite :count="3">
+    <LayoutSplite :count="3" class="lp-split-popup-sm">
       <template #layout-1>
         <LayoutHeader title="운전자 선택" />
         <TabulatorGrid
           ref="driverGridRef"
+          class="lp-table-gap"
           :columns="driverColumns"
           :data="driverRows"
           height="330px"
@@ -16,6 +17,7 @@
         <LayoutHeader title="근무자" />
         <TabulatorGrid
           ref="workerGridRef"
+          class="lp-table-gap"
           :columns="workerColumns"
           :data="workUserRows"
           height="330px"
@@ -27,6 +29,7 @@
         <LayoutHeader title="자원 근무자" />
         <TabulatorGrid
           ref="volunteerGridRef"
+          class="lp-table-gap"
           :columns="volunteerColumns"
           :data="volunteerUserRows"
           height="330px"

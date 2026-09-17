@@ -39,7 +39,7 @@ export function useDispatchSummaryDialogs() {
 
   /*
    * 사용자 찾기(PC-LPO-0507) — 승인관리의 '조회' 버튼에서 연다.
-   * 팝업 자체는 공통 컴포넌트(custom/user-find)라 열림 여부만 여기 둔다 — 트리·목록 목업은 그 안에 있다.
+   * 팝업 자체는 공통 컴포넌트(custom/common/UserFindDialog)라 열림 여부만 여기 둔다 — 트리·목록 목업은 그 안에 있다.
    */
   const userFindOpen = ref(false)
 
