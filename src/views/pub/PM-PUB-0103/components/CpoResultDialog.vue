@@ -140,7 +140,7 @@
                 </RadioGroup>
                 <template v-else>
                   <InputField2 v-model.number="assessment[row.key]" type="number" :clearable="false" size="sm" min="0" :aria-label="row.label" class="!space-y-0" input-class="w-30" />
-                  <span :class="styles.assessmentUnit">{{ row.unit }}</span>
+                  {{ row.unit }}
                 </template>
               </InfoField>
             </InfoTable>
@@ -148,8 +148,8 @@
             <div class="pop-title-lv2"><h3>2) 추가 항목</h3></div>
             <InfoTable :columns="1" popup size="300">
               <InfoField v-for="row in extraAssessmentRows" :key="row.key" :label="row.label" full>
-                <InputField2 v-model.number="assessment[row.key]" type="number" :clearable="false" size="sm" min="0" :aria-label="row.label" :class="styles.detailStepper" input-class="w-full" />
-                <span :class="styles.assessmentUnit">{{ row.unit }}</span>
+                <InputField2 v-model.number="assessment[row.key]" type="number" :clearable="false" size="sm" min="0" :aria-label="row.label" input-class="w-30" />
+                {{ row.unit }}
               </InfoField>
             </InfoTable>
 
@@ -182,8 +182,7 @@
                   v-model="form.improvementStatus"
                   :options="improvementDoneOptions"
                   size="sm"
-                  trigger-class="w-full"
-                  :class="styles.detailStepper"
+                  trigger-class="w-30"
                   placeholder="선택"
                   aria-label="시설개선 상태"
                 />
@@ -236,7 +235,6 @@ import {
   type CpoDiagnosisRow,
   type NewDiagnosisForm,
 } from '../composable/PM-PUB-0103'
-import styles from '../style/PM-PUB-0103.module.css'
 /** RadioGroup 정렬(.info-table-radio) 같은 InfoTable 관련 공통 클래스는 공용 파일에서 그대로 가져온다 */
 import infoTableStyles from '@/components/custom/info-table/InfoTable.module.css'
 

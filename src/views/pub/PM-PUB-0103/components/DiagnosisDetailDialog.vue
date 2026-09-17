@@ -175,8 +175,8 @@
             <RadioGroupItem :value="1" label="위험(1)" />
           </RadioGroup>
           <template v-else>
-            <InputField2 v-model.number="assessment[row.key]" type="number" :clearable="false" size="sm" min="0" :aria-label="row.label" :class="styles.detailStepper" input-class="w-full" />
-            <span :class="styles.assessmentUnit">{{ row.unit }}</span>
+            <InputField2 v-model.number="assessment[row.key]" type="number" :clearable="false" size="sm" min="0" :aria-label="row.label" class="!space-y-0" input-class="w-30" />
+            {{ row.unit }}
           </template>
         </InfoField>
       </InfoTable>
@@ -184,14 +184,14 @@
       <div class="pop-title-lv2"><h3>2) 추가 항목</h3></div>
       <InfoTable :columns="1" popup size="300">
         <InfoField v-for="row in extraAssessmentRows" :key="row.key" :label="row.label" full>
-          <InputField2 v-model.number="assessment[row.key]" type="number" :clearable="false" size="sm" min="0" :aria-label="row.label" :class="styles.detailStepper" input-class="w-full" />
-          <span :class="styles.assessmentUnit">{{ row.unit }}</span>
+          <InputField2 v-model.number="assessment[row.key]" type="number" :clearable="false" size="sm" min="0" :aria-label="row.label" input-class="w-30" />
+          {{ row.unit }}
         </InfoField>
       </InfoTable>
 
       <div class="pop-title-lv2"><h3>3) 기타</h3></div>
       <InfoTable :columns="1" popup size="300">
-        <InfoField for="diagnosis-detail-etc-label" full :class="styles.etcLabelField">
+        <InfoField for="diagnosis-detail-etc-label" full>
           <template #label>
             <Input
               id="diagnosis-detail-etc-label"
@@ -200,7 +200,7 @@
               aria-label="기타 항목"
             />
           </template>
-          <InputField2 v-model.number="form.etcCount" type="number" :clearable="false" size="sm" min="0" aria-label="기타 수량" :class="styles.detailStepper" input-class="w-full" />
+          <InputField2 v-model.number="form.etcCount" type="number" :clearable="false" size="sm" min="0" aria-label="기타 수량" class="!space-y-0" input-class="w-30" />
         </InfoField>
       </InfoTable>
 
@@ -237,18 +237,23 @@
         :height="80"
         aria-label="착안사항"
       />
-      <div :class="styles.detailNoteMeta">
+      <div class="lp-check-meta">
         <Checkbox v-model="form.emailNotify" label="범죄예방진단 결과 우편 통보" />
         <p><span>범죄예방진단자 :</span> {{ diagnosis?.diagnoser || '홍길동' }} 경사</p>
       </div>
 
     <template #footer>
-      <!-- 시안(11167:128912): 인쇄만 왼쪽 끝, 취소·저장은 오른쪽 -->
-      <Button type="button" variant="tertiary2" size="md" :class="styles.detailPrintButton" @click="emit('print')">
-        인쇄
-      </Button>
-      <Button type="button" variant="tertiary2" size="md" @click="emit('cancel')">취소</Button>
-      <Button type="button" variant="primary" size="md" @click="emit('save')">저장</Button>
+      <!--
+        시안(11167:128912): 인쇄만 왼쪽 끝, 취소·저장은 오른쪽 — 게시판 상세 하단(PM-COM-0302)과 같은 마크업.
+        푸터가 justify-end 인 가로 flex 라 lp-flex-fill 로 줄을 푸터 폭만큼 늘려야 양 끝으로 벌어진다.
+      -->
+      <div class="lp-row-between lp-flex-fill">
+        <Button type="button" variant="tertiary2" size="md" @click="emit('print')">인쇄</Button>
+        <span class="group-gap2">
+          <Button type="button" variant="tertiary2" size="md" @click="emit('cancel')">취소</Button>
+          <Button type="button" variant="primary" size="md" @click="emit('save')">저장</Button>
+        </span>
+      </div>
     </template>
   </GenericDialog2>
 
@@ -281,7 +286,6 @@ import {
   typeOptions,
 } from '../composable/PM-PUB-0103'
 import infoTableStyles from '@/components/custom/info-table/InfoTable.module.css'
-import styles from '../style/PM-PUB-0103.module.css'
 
 interface Props {
   form: NewDiagnosisForm
