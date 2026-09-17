@@ -231,14 +231,7 @@ function handleCancel() {
         <div class="pop-title">
           <DialogTitle as="h1">{{ title }}</DialogTitle>
         </div>
-        <DialogClose
-          v-if="showCloseButton"
-          data-slot="dialog-close"
-          :class="closeClass"
-          >
-            <img :src="closeIcon" alt="Close">
-            <span class="sr-only">Close</span>
-          </DialogClose>
+
       </DialogHeader>
 
       <!-- 본문: 내용이 많으면 내부 스크롤. 스크롤이 생기면 data-scrollable="true" -->
@@ -256,6 +249,14 @@ function handleCancel() {
           </Button>
         </slot>
       </DialogFooter>
+            <DialogClose
+          v-if="showCloseButton"
+          data-slot="dialog-close"
+          :class="closeClass"
+          >
+            <img :src="closeIcon" alt="Close">
+            <span class="sr-only">Close</span>
+          </DialogClose>
     </DialogContent>
   </Dialog>
 </template>

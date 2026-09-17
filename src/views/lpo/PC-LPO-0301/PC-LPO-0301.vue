@@ -292,6 +292,7 @@ import { Button } from '@/components/custom/button'
 import { Icon } from '@/components/custom/icon'
 import HandoverCancelDialog from './components/HandoverCancelDialog.vue'
 import VehicleInspectionDialog from './components/VehicleInspectionDialog.vue'
+import { useAutoTrigger, type ScreenTriggerMap } from '@/composables/useAutoTrigger'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { localPoliceMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
@@ -457,6 +458,17 @@ function today() {
   const day = String(now.getDate()).padStart(2, '0')
   return `${now.getFullYear()}-${month}-${day}`
 }
+
+/*
+ * 화면ID ↔ 팝업 상태 동기화(docs/create/tab-popup.md §4). 작업 목록의 /views/lpo/PC-LPO-0302 가
+ * 차량 일일점검 팝업을 바로 연다. URL 로 열면 어느 차량인지(inspectTarget) 없으므로 저장해도
+ * 목록은 바뀌지 않는다 — 화면 확인용. 인수인계 취소 팝업은 결재 칸을 골라야 열려 맵에 넣지 않는다.
+ */
+const screenTriggers: ScreenTriggerMap = {
+  'PC-LPO-0301': [],
+  'PC-LPO-0302': [[inspectDialogOpen, true]],
+}
+useAutoTrigger(screenTriggers)
 
 useBottomTabSetup({
   value: 'PC-LPO-0301',

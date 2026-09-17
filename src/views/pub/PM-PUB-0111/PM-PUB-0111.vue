@@ -243,6 +243,7 @@ import { useDialog } from '@/composable/dialog/dialog'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { publicSafetyMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
+import { useAutoTrigger, type ScreenTriggerMap } from '@/composables/useAutoTrigger'
 import { useDiagnosisReference, yearOptions, townOptions } from './composable/PM-PUB-0111'
 import UploadDialog from './components/UploadDialog.vue'
 import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
@@ -289,6 +290,17 @@ const uploadOpen = ref(false)
 function onUpload() {
   uploadOpen.value = true
 }
+
+/**
+ * 화면ID ↔ 팝업 상태 동기화(docs/create/tab-popup.md §4).
+ *   PM-PUB-0111 : 참고사항만
+ *   PM-PUB-0112 : 참고사항 + 업로드 팝업 열림 — 주소로 들어오면 팝업이 열린 채로 뜨고, 닫으면 0111 로 돌아간다
+ */
+const screenTriggers: ScreenTriggerMap = {
+  'PM-PUB-0111': [],
+  'PM-PUB-0112': [[uploadOpen, true]],
+}
+useAutoTrigger(screenTriggers)
 
 async function onSave() {
   // 사용자 지정: 저장 전 컨펌창을 먼저 띄운다 (§7 기본은 컨펌 없이 바로 저장)

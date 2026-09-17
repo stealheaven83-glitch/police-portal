@@ -202,6 +202,21 @@ const router = createRouter({
             meta: {
                 layout: 'WorkLayout',
                 title: '인수인계',
+                // PC-LPO-0302(차량 일일점검 팝업)가 같은 컴포넌트를 useAutoTrigger 로 공유한다 —
+                // screenGroup 이 같아야 팝업을 열 때 Layout.vue 의 :key 가 안 바뀐다.
+                screenGroup: 'PC-LPO-0301',
+            }
+        },
+        {
+            // 작업 목록(WorkIndex)의 '차량 일일점검 팝업' 링크 — 0301 화면 위에 팝업을 바로 연다.
+            // URL 로 열면 어느 차량인지 없으므로 저장해도 목록은 안 바뀐다(화면 확인용).
+            path: '/views/lpo/PC-LPO-0302',
+            name: 'PC-LPO-0302',
+            component: () => import('../views/lpo/PC-LPO-0301/PC-LPO-0301.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '차량 일일점검',
+                screenGroup: 'PC-LPO-0301',
             }
         },
         {
@@ -921,8 +936,18 @@ const router = createRouter({
             component: () => import('../views/pub/PM-PUB-0101/PM-PUB-0101.vue'),
             meta: {
                 layout: 'WorkLayout',
-                title: '간이 범죄예방진단'
+                title: '간이 범죄예방진단',
+                // PM-PUB-0102(상세)는 이 컴포넌트 안의 팝업이라 같은 파일을 가리킨다 — 리마운트 방지(Layout.vue)
+                screenGroup: 'PM-PUB-0101'
             }
+        },
+        {
+            // PM-PUB-0101 과 같은 파일 — useAutoTrigger 로 이 주소에 들어오면 간이 범죄예방진단 상세 팝업이
+            // 열린 상태로 보인다. 어느 건인지는 URL 만으로 알 수 없어 첫 건으로 연다(검수용, PC-COM-2205 와 같은 처리)
+            path: '/views/pub/PM-PUB-0102',
+            name: 'PM-PUB-0102',
+            component: () => import('../views/pub/PM-PUB-0101/PM-PUB-0101.vue'),
+            meta: { layout: 'WorkLayout', title: '간이 범죄예방진단 상세', screenGroup: 'PM-PUB-0101' }
         },
         {
             path: '/views/pub/PM-PUB-0103',
@@ -1054,6 +1079,20 @@ const router = createRouter({
             name: 'PM-PUB-0115',
             component: () => import('../views/pub/PM-PUB-0103/PM-PUB-0103.vue'),
             meta: { layout: 'WorkLayout', title: '진단통보(우편 발송)', screenGroup: 'PM-PUB-0103' }
+        },
+
+        /* 참고사항 — 업로드(PM-PUB-0112)는 이 화면 안의 팝업이라 같은 파일을 가리킨다(useAutoTrigger 로 URL 동기화) */
+        {
+            path: '/views/pub/PM-PUB-0111',
+            name: 'PM-PUB-0111',
+            component: () => import('../views/pub/PM-PUB-0111/PM-PUB-0111.vue'),
+            meta: { layout: 'WorkLayout', title: '참고사항', screenGroup: 'PM-PUB-0111' }
+        },
+        {
+            path: '/views/pub/PM-PUB-0112',
+            name: 'PM-PUB-0112',
+            component: () => import('../views/pub/PM-PUB-0111/PM-PUB-0111.vue'),
+            meta: { layout: 'WorkLayout', title: '참고사항 업로드', screenGroup: 'PM-PUB-0111' }
         },
         {
             // 기획서(주취자.pptx)에는 화면ID가 PC-PUB-0409 로 적혀 있으나 screen-id-map.md 기준은 PM-PUB-0409.
