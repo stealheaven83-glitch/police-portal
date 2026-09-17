@@ -121,7 +121,6 @@
           :items-per-page="10"
           @row-selection-changed="onRowSelectionChanged"
           @row-click="onDiagnosisRowClick"
-          @row-dbl-click="onDiagnosisRowDoubleClick"
         />
       </LayoutPanel>
     </template>
@@ -382,12 +381,9 @@ function onCpoResultRowSelect(row: CpoDiagnosisRow) {
   loadDiagnosis(row)
 }
 
-function onDiagnosisRowDoubleClick(_event: Event, row: any) {
-  openDetail(getRowData(row))
-}
-
 /**
- * 사용자 지정: 이력 행의 어느 셀을 눌러도 범죄예방진단 상세 팝업(PM-PUB-0107)이 열린다.
+ * 사용자 지정: 범죄예방진단 상세 팝업(PM-PUB-0107)은 **이력 그리드에서만** 연다 — 이력 행의 어느 셀을
+ * 눌러도 열리고, 좌측 목록의 더블클릭으로는 열지 않는다(2026-09-17 제거).
  * 이력은 좌측에서 고른 건의 것이라 상호명 링크와 같이 그 건(selectedRow)으로 연다.
  * 체크박스 칸은 그리드가 클릭 전파를 막아 여기 안 오고, 상호명 링크 버튼은 자기 핸들러가 열므로 건너뛴다.
  */

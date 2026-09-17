@@ -100,6 +100,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 - **페이지네이션 그리드에 맨 아래 추가**(`addRow(data, false)`)는 보고 있는 페이지에 안 나타난다 — 추가 후 `gridRef.value?.setPage('last')` 로 따라간다(`PC-COM-2401`). 맨 위 추가(`addRow(data, true)`)는 항상 1페이지라 불필요하다.
 - **컬럼이 많아 가로 스크롤이 필요하면** `layout="fitDataFill"` + 각 컬럼에 고정 `width`. 기본 `fitColumns` 는 폭을 컨테이너에 맞춰 나눈다.
 - **한 칸에 여러 줄이 들어가 행 높이가 늘어나야 하면** 그리드에 `class="lp-grid-multiline"` + 늘어나는 컬럼에 `variableHeight: true`(`PM-LPO-0223` 활동내역). 그리드 테마(`src/assets/css/tabulator-theme.css`)가 셀 높이를 4.8rem 으로 고정하고 있어서 이 클래스 없이는 `variableHeight` 만으로 안 늘어난다. 클래스가 그 테마 파일에 있는 것은 `police-override.css`(layer screen)로는 테마(레이어 없음)를 `!important` 없이 못 덮기 때문이다.
+- **행 hover 커서는 기본이 화살표다**(2026-09-17, `tabulator-theme.css` 가 Tabulator 의 `cursor:pointer` 를 끔). 행을 누르면 팝업·다른 화면이 열리는 표만 그리드에 `class="lp-grid-clickable"` 을 줘서 손가락 커서를 켠다.
 - KeepAlive 재활성화 시 그리드가 안 그려지던 버그는 컴포넌트가 `onActivated` → `redraw(true)` 로 처리한다 — 화면에서 신경 쓸 필요 없다.
 - 목록을 갱신할 때는 **배열 재할당**(`CLAUDE.md` §5) — `splice` 는 `:data` watch 가 못 잡는다.
 
@@ -118,7 +119,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | 기간(시작~종료) | `custom/datepicker/DateRangePicker.vue` |
 | 숫자 증감(-/+) | `custom/input/Stepper.vue` |
 | 주소 입력 | `custom/address/AddressInput.vue` — `@search`로 팝업 연결 |
-| 사용자 찾기 팝업(부서 트리 + 사용자 목록에서 한 명 고르기) | `custom/user-find/UserFindDialog.vue` — `v-model:open` + `@select`(계급·성명·소속). 공통 팝업 PC-COM-0701 |
+| 사용자 찾기 팝업(부서 트리 + 사용자 목록에서 한 명 고르기) | `custom/common/UserFindDialog.vue` — `v-model:open` + `@select`(계급·성명·소속). 공통 팝업 PC-COM-0701 |
 | 리치 텍스트 본문 | `custom/editor/Editor.vue` (TOAST UI) |
 | 파일 첨부 | `custom/file-upload/FileUpload.vue` |
 | 첨부파일 **필드 전체**(라벨 + 드롭존 + 파일선택 + 건수 + 목록) | `custom/common/AttachmentField.vue` — `:files` `:accept` `@select`(FileList → composable 의 addFiles) `@remove`(id → removeFile). 게시판 등록/수정 20개 화면이 쓴다. `FileUpload` 는 이 안의 파일 한 줄 |
@@ -451,7 +452,7 @@ await dialog.confirm({
 | `tooltip__rich` | `custom/contextual-help/ContextualHelp.vue` |
 | `top_button` | `custom/top-button/TopButton.vue` |
 | `Adress input` | `custom/address/AddressInput.vue` |
-| `공통 > 사용자 찾기`(12875:101668) | `custom/user-find/UserFindDialog.vue` |
+| `공통 > 사용자 찾기`(12875:101668) | `custom/common/UserFindDialog.vue` |
 | `file_upload__atomic__pc` | `custom/file-upload/FileUpload.vue` |
 | `pagination bar`, `pagination__pc` | `custom/pagination/Pagination.vue` |
 | `Page Title` | `custom/title/PageTitle.vue` |
