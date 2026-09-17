@@ -34,7 +34,7 @@
 
 /* 본문 문단 (1.7rem) */
 .lp-body-text {
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   line-height: 1.5;
   color: var(--Text-body_0);
 }
@@ -2382,15 +2382,15 @@
   font-weight: 700;
 }
 .lp-notice-title {
-  margin-top:1.2rem;
+  margin-top: 2.3rem;
   font-size: 3.2rem;
   font-weight: 700;
   line-height: 1.4;
   color: var(--Text-body_0);
 }
 .lp-notice-meta {
-  margin-top: 3.2rem;
-  padding-bottom:2.4rem;
+  margin-top: 1.6rem;
+  padding-bottom: 1.6rem;
   border-bottom: 0.1rem solid var(--Border_gray02);
 }
 /* 본문 대표 이미지 자리 — Figma 는 회색 박스로만 그려져 있다 */
