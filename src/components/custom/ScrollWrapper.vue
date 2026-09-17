@@ -22,7 +22,8 @@ import { ref } from "vue"
 import { useIsScrollable } from "@/composable/scroll/useIsScrollable"
 
 const props = defineProps<{
-  class?: HTMLAttributes["class"]
+  class?: HTMLAttributes["class"],
+  type?: string
 }>()
 
 const rootRef = ref<HTMLElement | null>(null)
@@ -52,6 +53,6 @@ defineExpose({ isScrollable })
 /* 넓힌 만큼 padding 으로 도로 밀어 넣는다 — 본문 폭은 그대로 두고 스크롤바만 바깥으로 */
 .scroll-wrapper.has-scroll {
   width: calc(100% + 3.6rem);
-  padding-right: 3.6rem;
+  padding-right: 2.2rem;
 }
 </style>

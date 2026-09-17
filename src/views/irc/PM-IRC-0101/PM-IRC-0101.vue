@@ -11,8 +11,7 @@
     </template>
   </PageHeader>
 
-
-  <div class="lp-page-scroll">
+  <ScrollWrapper>
     <SearchBar
       ref="searchBarRef"
       v-model="keyword"
@@ -22,7 +21,6 @@
       @search="onSearch"
       @voice="onVoiceSearch"
     />
-
     <!-- 최근검색어 · 추천검색어 (시안은 반반이 아니라 795:356 + 세로 구분선) -->
     <SearchKeywordPanel
       class="lp-content-panel lp-keyword-split"
@@ -32,7 +30,7 @@
       @remove="removeRecent"
       @clear="clearRecent"
     />
-  </div>
+  </ScrollWrapper>
 
 
   <VoiceSearchDialog v-model:open="voiceDialogOpen" @search="onVoiceConfirm" />
@@ -52,6 +50,8 @@ import { useDialog } from '@/composable/dialog/dialog'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import VoiceSearchDialog from '../components/VoiceSearchDialog.vue'
 import { useIncidentScenarioStore } from '../composable/incidentScenario'
+
+import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
 
 defineOptions({ name: 'PmIrc0101' })
 

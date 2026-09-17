@@ -64,7 +64,8 @@ const props = withDefaults(
      *   'pc'               언제나 가운데 팝업
      * `type` 을 안 주면 이 값은 의미가 없다.
      */
-    device?: DialogDevice
+    device?: DialogDevice,
+    hasList?: boolean
   }>(),
   {
     title: '',
@@ -76,8 +77,11 @@ const props = withDefaults(
     cancelText: '취소',
     persistent: false,
     device: 'responsive',
+    hasList: false
   },
 )
+
+const maxHeight = 800;
 
 /** 모양·범위는 police-override.css 의 .lp-popup-* 가 들고 있다. type 이 없으면 빈 배열 */
 const shapeClass = computed(() => dialogShapeClass(props.type, props.device))
@@ -159,8 +163,8 @@ function handleCancel() {
   <Dialog :open="open" @update:open="handleOpenChange" class="">
     <DialogContent
       :show-close-button="showCloseButton"
-      class="dialog-wrap px-[3.9rem] py-6 gap-0 flex flex-col max-h-200"
-      :class="[sizeClass, shapeClass]"
+      class="dialog-wrap px-[3.9rem] py-6 gap-0 flex flex-col"
+      :class="[`max-h-[${maxHeight}px]`, (hasList ? 'h-200' : ''), sizeClass, shapeClass]"
       :style="[sizeStyle, heightStyle]"
       @pointer-down-outside="(e: Event) => persistent && e.preventDefault()"
       @escape-key-down="(e: Event) => persistent && e.preventDefault()"
@@ -185,7 +189,7 @@ function handleCancel() {
       <div
         ref="bodyRef"
         class="lp-popup-body flex-1 min-h-0 overflow-y-auto"
-        :class="{ 'has-scroll': isScrollable }"
+        :class="{ 'has-scroll': isScrollable, 'fixed-height': hasList }"
         :data-scrollable="isScrollable"
       >
         <slot />
@@ -223,5 +227,10 @@ function handleCancel() {
 .has-scroll{
   padding-right: 1.3rem;
   width: calc(100% + 2.7rem);
+}
+.fixed-height{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 </style>
