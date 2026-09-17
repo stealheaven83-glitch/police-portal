@@ -11,63 +11,65 @@
     </template>
   </PageHeader>
 
-  <div class="lp-page-scroll">
-    <SearchBar
-      ref="searchBarRef"
-      v-model="keyword"
-      class="scenario-search-center"
-      label="사건대응 시나리오 검색어"
-      status="검색 원활"
-      @search="onSearch"
-      @voice="onVoiceSearch"
-    />
-
-    <section class="lp-ai-answer" aria-labelledby="irc-answer-title">
-      <h2 id="irc-answer-title" class="lp-ai-answer-head">
-        <span class="lp-ai-answer-icon" aria-hidden="true">
-          <img src="/portal/asset/images/icon/ico_ai_sparkle.svg" alt="" />
-        </span>
-        AI 생성 답변
-      </h2>
-
-      <div class="lp-ai-answer-body">
-        <div class="lp-answer-main">
-          <p class="lp-body-text">{{ answer.intro }}</p>
-
-          <div v-for="(block, index) in answer.blocks" :key="index" class="lp-answer-block">
-            <h3 v-if="block.heading" class="lp-heading-lg lp-block-title">{{ block.heading }}</h3>
-            <p v-for="text in block.paragraphs" :key="text" class="lp-body-text">
-              {{ text }}
-            </p>
-            <ul v-if="block.bullets?.length" class="lp-bullet-list">
-              <li v-for="text in block.bullets" :key="text">{{ text }}</li>
-            </ul>
+  <ScrollWrapper class="overflow-x-hidden">
+    <div class="lp-page-scroll">
+      <SearchBar
+        ref="searchBarRef"
+        v-model="keyword"
+        class="scenario-search-center"
+        label="사건대응 시나리오 검색어"
+        status="검색 원활"
+        @search="onSearch"
+        @voice="onVoiceSearch"
+      />
+  
+      <section class="lp-ai-answer" aria-labelledby="irc-answer-title">
+        <h2 id="irc-answer-title" class="lp-ai-answer-head">
+          <span class="lp-ai-answer-icon" aria-hidden="true">
+            <img src="/portal/asset/images/icon/ico_ai_sparkle.svg" alt="" />
+          </span>
+          AI 생성 답변
+        </h2>
+  
+        <div class="lp-ai-answer-body">
+          <div class="lp-answer-main">
+            <p class="lp-body-text">{{ answer.intro }}</p>
+  
+            <div v-for="(block, index) in answer.blocks" :key="index" class="lp-answer-block">
+              <h3 v-if="block.heading" class="lp-heading-lg lp-block-title">{{ block.heading }}</h3>
+              <p v-for="text in block.paragraphs" :key="text" class="lp-body-text">
+                {{ text }}
+              </p>
+              <ul v-if="block.bullets?.length" class="lp-bullet-list">
+                <li v-for="text in block.bullets" :key="text">{{ text }}</li>
+              </ul>
+            </div>
+  
+            <p class="lp-answer-note">※ 본 답변은 AI가 생성한 내용입니다.</p>
           </div>
-
-          <p class="lp-answer-note">※ 본 답변은 AI가 생성한 내용입니다.</p>
+  
+          <aside class="lp-ref-column" aria-labelledby="irc-ref-title">
+            <h3 id="irc-ref-title" class="lp-heading-lg">참고자료</h3>
+            <Accordion v-model="openReference" type="single" collapsible class="lp-ref-list">
+              <AccordionItem
+                v-for="ref in answer.references"
+                :key="ref.title"
+                :value="ref.title"
+                class="lp-ref-item"
+              >
+                <AccordionTrigger class="lp-ref-trigger">{{ ref.title }}</AccordionTrigger>
+                <AccordionContent class="lp-ref-body">
+                  <p class="lp-ref-desc">{{ ref.description }}</p>
+                  <!-- 문서 연결은 개발팀이 잇는다 — 시안에 링크 대상이 없다 -->
+                  <a v-if="ref.link" href="#" class="lp-ref-link">{{ ref.link }}</a>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </aside>
         </div>
-
-        <aside class="lp-ref-column" aria-labelledby="irc-ref-title">
-          <h3 id="irc-ref-title" class="lp-heading-lg">참고자료</h3>
-          <Accordion v-model="openReference" type="single" collapsible class="lp-ref-list">
-            <AccordionItem
-              v-for="ref in answer.references"
-              :key="ref.title"
-              :value="ref.title"
-              class="lp-ref-item"
-            >
-              <AccordionTrigger class="lp-ref-trigger">{{ ref.title }}</AccordionTrigger>
-              <AccordionContent class="lp-ref-body">
-                <p class="lp-ref-desc">{{ ref.description }}</p>
-                <!-- 문서 연결은 개발팀이 잇는다 — 시안에 링크 대상이 없다 -->
-                <a v-if="ref.link" href="#" class="lp-ref-link">{{ ref.link }}</a>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </aside>
-      </div>
-    </section>
-  </div>
+      </section>
+    </div>
+  </ScrollWrapper>
 
   <VoiceSearchDialog v-model:open="voiceDialogOpen" @search="onVoiceConfirm" />
 </template>
@@ -91,6 +93,9 @@ import { useDialog } from '@/composable/dialog/dialog'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
 import VoiceSearchDialog from '../components/VoiceSearchDialog.vue'
 import { useIncidentScenarioStore } from '../composable/incidentScenario'
+
+import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
+
 defineOptions({ name: 'PmIrc0104' })
 
 /** LNB 는 검색화면(PM-IRC-0101)과 같은 항목을 켠다 — 메뉴가 하나뿐이다 */

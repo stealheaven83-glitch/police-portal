@@ -8,7 +8,7 @@ import type { Ref } from 'vue'
  * 공통 CSS 도 62.5rem·48rem·36rem·1024px 등을 쓴다. 그래서 이 상수는 **JS 분기용 기준**이지
  * "CSS 와 동기화된 값" 이 아니다.
  *
- * 새로 CSS 를 쓸 때 이 값에 맞추려면 `@media (max-width: 1000px)` 으로 적는다.
+ * 새로 CSS 를 쓸 때 이 값에 맞추려면 `@media (max-width: 1600px)` 으로 적는다.
  * 컴포넌트가 이미 가진 경계는 아래 표와 같고, 화면에서 못 바꾼다(CLAUDE.md §1):
  *
  *   InfoTable    48rem(480) · 62.5rem(625) · 40rem(400)   ← 칸 접힘
@@ -16,14 +16,14 @@ import type { Ref } from 'vue'
  *   layoutPanel  48rem(480)
  *   SideMenu     82rem(820)
  *
- * 반응형 화면을 만들 때는 **페이지 경계(1000)와 컴포넌트 경계가 다르다**는 걸 전제로 잡는다 —
+ * 반응형 화면을 만들 때는 **페이지 경계(1600)와 컴포넌트 경계가 다르다**는 걸 전제로 잡는다 —
  * 그 사이 구간에서 JS 분기와 CSS 분기가 엇갈린다.
  */
-export const BP_MOBILE = 1000
+export const BP_MOBILE = 1600
 
 /**
  * 폭 감시 — 조건이 맞으면 true 가 담기는 boolean Ref 를 돌려준다.
- *   useBreakpoint('<=')        → 1000px 이하일 때 true (max-width, 기본값 BP_MOBILE)
+ *   useBreakpoint('<=')        → 1600px 이하일 때 true (max-width, 기본값 BP_MOBILE)
  *   useBreakpoint('>=', 1024)  → 1024px 이상일 때 true (min-width)
  *
  * 폭이 바뀌면 값이 알아서 갱신된다(resize 리스너를 따로 달 필요 없다).

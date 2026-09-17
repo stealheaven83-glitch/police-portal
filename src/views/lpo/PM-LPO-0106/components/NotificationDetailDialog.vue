@@ -3,7 +3,7 @@
     <InfoTable :columns="1" popup>
       <InfoField label="구분">{{ row?.category }}</InfoField>
       <InfoField label="내용">
-        <span :class="[infoTableStyles['info-table-txt'], 'lp-pre-line']">{{ contentWithBreak }}</span>
+        <span :class="infoTableStyles['info-table-txt']">{{ contentWithBreak }}</span>
       </InfoField>
       <InfoField label="일시">{{ row?.date }}</InfoField>
     </InfoTable>

@@ -61,6 +61,7 @@
       <Download :size="16" aria-hidden="true" />
       엑셀다운로드
     </Button>
+    <Button type="button" variant="primary" size="sm">신규</Button>
   </div>
 
   <TabulatorGrid
@@ -122,16 +123,17 @@ const columns: TabulatorGridColumn[] = [
   { title: '접수일자', field: 'receivedAt', width: 120, hozAlign: 'center' },
   { title: '요청기간', field: 'requestPeriod', width: 200, hozAlign: 'center' },
   { title: '요청시간', field: 'requestTime', width: 100, hozAlign: 'center' },
-  { title: '주소(지번)', field: 'addressJibun', width: 240, hozAlign: 'center' },
-  { title: '주소(도로명)', field: 'addressRoad', width: 220, hozAlign: 'center' },
+  { title: '접수구분', field: 'receiptCategory', width: 110, hozAlign: 'center' },
+  { title: '주소(지번)', field: 'addressJibun', width: 240, hozAlign: 'left' },
+  { title: '주소(도로명)', field: 'addressRoad', width: 220, hozAlign: 'left' },
   { title: '요청건수', field: 'requestCount', width: 100, hozAlign: 'center' },
-  { title: '순찰요청사항', field: 'patrolRequest', width: 180, hozAlign: 'center' },
-  { title: '순찰사유', field: 'patrolReason', width: 180, hozAlign: 'center' },
+  { title: '순찰요청사항', field: 'patrolRequest', width: 180, hozAlign: 'left' },
+  { title: '순찰사유', field: 'patrolReason', width: 180, hozAlign: 'left' },
   { title: '신고건수', field: 'reportCount', width: 100, hozAlign: 'center' },
   { title: '핫스팟', field: 'hotspot', width: 100, hozAlign: 'center' },
-  { title: '경력수요형태', field: 'demandType', width: 140, hozAlign: 'center' },
+  { title: '경력수요형태', field: 'demandType', width: 140, hozAlign: 'left' },
   { title: '경력수요인원', field: 'demandPersonnel', width: 130, hozAlign: 'center' },
-  { title: '이메일', field: 'email', width: 200, hozAlign: 'center' },
+  { title: '이메일', field: 'email', width: 200, hozAlign: 'left' },
   { title: '등록자', field: 'registrant', width: 100, hozAlign: 'center' },
   { title: '등록일', field: 'registeredAt', width: 120, hozAlign: 'center' },
 ]

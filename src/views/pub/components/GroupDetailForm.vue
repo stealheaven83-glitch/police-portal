@@ -5,7 +5,6 @@ import InputField2 from '@/components/custom/input/InputField2.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
-import Stepper from '@/components/custom/input/Stepper.vue'
 import { Button } from '@/components/custom/button'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
@@ -169,17 +168,17 @@ const memberTotal = computed(() => props.form.memberMale + props.form.memberFema
           <span class="lp-nowrap">{{ memberTotal }} 명</span>
           <span class="group-gap3">
             <span>남자</span>
-            <Stepper v-model="form.memberMale" :min="0" label="남자 인원" class="w-[9.2rem]" />
+            <InputField2 v-model.number="form.memberMale" type="number" :clearable="false" size="sm" min="0" aria-label="남자 인원" class="!space-y-0" input-class="w-[9.2rem]" />
           </span>
           <span class="group-gap3">
             <span>여자</span>
-            <Stepper v-model="form.memberFemale" :min="0" label="여자 인원" class="w-[9.2rem]" />
+            <InputField2 v-model.number="form.memberFemale" type="number" :clearable="false" size="sm" min="0" aria-label="여자 인원" class="!space-y-0" input-class="w-[9.2rem]" />
           </span>
         </div>
       </InfoField>
 
       <InfoField label="보험가입인원">
-        <Stepper v-model="form.insuredCount" :min="0" label="보험가입인원" class="w-[17.6rem]" />
+        <InputField2 v-model.number="form.insuredCount" type="number" :clearable="false" size="sm" min="0" aria-label="보험가입인원" class="!space-y-0" input-class="w-[17.6rem]" />
       </InfoField>
       <InfoField label="주소" layout="column" :row-span="2">
         <InputField2
@@ -208,7 +207,7 @@ const memberTotal = computed(() => props.form.memberMale + props.form.memberFema
       </InfoField>
 
       <InfoField label="보유차량수">
-        <Stepper v-model="form.vehicleCount" :min="0" label="보유차량수" class="w-[17.6rem]" />
+        <InputField2 v-model.number="form.vehicleCount" type="number" :clearable="false" size="sm" min="0" aria-label="보유차량수" class="!space-y-0" input-class="w-[17.6rem]" />
       </InfoField>
       <!-- 주소가 두 행을 차지해 비는 칸. 표 테두리를 시안처럼 이어 주기만 하는 자리라 읽어줄 내용이 없다 -->
       <InfoField class="lp-info-blank-cell" aria-hidden="true" />

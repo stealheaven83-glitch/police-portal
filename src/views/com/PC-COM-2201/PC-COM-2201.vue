@@ -12,10 +12,10 @@
     <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
   </div>
 
-  <LayoutSplite :count="3" :widths="[24, 52, 24]">
+  <LayoutSplite :count="3" :widths="[24, 52, 24]"  :resizable="false">
     <!-- ── 부서 ─────────────────────────────── -->
     <template #layout-1>
-      <LayoutPanel title="부서" no-padding>
+      <LayoutPanel title="부서" no-padding >
         <template #actions>
           <Button type="button" variant="tertiary2" size="sm" @click="onDeptRemove" class="min-w-[40px]">삭제</Button>
           <Button type="button" variant="secondary" size="sm" @click="onDeptAdd" class="min-w-[40px]">추가</Button>
@@ -49,7 +49,7 @@
 
     <!-- ── 사용자목록 ───────────────────────── -->
     <template #layout-2>
-      <LayoutPanel title="사용자목록">
+      <LayoutPanel title="사용자목록" >
         <template #actions>
           <div class="group-gap2">
             <SelectField
@@ -97,7 +97,7 @@
 
     <!-- ── 권한목록 ─────────────────────────── -->
     <template #layout-3>
-      <LayoutPanel title="권한목록">
+      <LayoutPanel title="권한목록" >
         <template #actions>
           <InputField2
             v-model="authKeyword"
@@ -116,9 +116,10 @@
         </template>
 
        
+        <!-- 단순 체크 표 — 행 hover·체크 행 강조 없음(lp-grid-no-highlight, police-override.css) -->
         <TabulatorGrid
           ref="authGridRef"
-          class="flex-1"
+          class="flex-1 lp-grid-no-highlight"
           :columns="authColumns"
           :data="auths"
           select-mode="checkbox"
@@ -259,6 +260,7 @@ const userColumns: TabulatorGridColumn[] = [
     cellType: 'button',
     buttonVariant: 'link',
     buttonSize: 'xxs',
+    buttonClass: 'underline',
     buttonLabel: (row) => String((row as UserRow).userId),
     onButtonClick: (row) => openUserDetail(row as UserRow),
   },

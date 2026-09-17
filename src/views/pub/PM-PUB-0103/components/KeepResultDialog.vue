@@ -8,9 +8,9 @@
       <InfoField label="일시">2026-05-01</InfoField>
     </InfoTable>
     <div class="pop-title-sub mb-2"><h2>결과(건축물에 대한 위험성 총평)</h2></div>
-    <TextareaField v-model="result" :class="styles.detailTextarea" textarea-class="w-full" :height="80" />
+    <TextareaField v-model="result" class="w-full" :height="80" />
     <div class="pop-title-sub mb-2"><h2>조치내용</h2></div>
-    <TextareaField v-model="action" :class="styles.detailTextarea" textarea-class="w-full" :height="80" />
+    <TextareaField v-model="action" class="w-full" :height="80" />
     <template #footer>
       <Button type="button" variant="tertiary2" size="md" @click="open = false">취소</Button>
       <Button type="button" variant="primary" size="md" @click="save">저장</Button>
@@ -26,7 +26,6 @@ import { InfoTable, InfoField } from '@/components/custom/info-table'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { Button } from '@/components/custom/button'
 import type { CpoDiagnosisRow } from '../composable/PM-PUB-0103'
-import styles from '../style/PM-PUB-0103.module.css'
 
 const props = defineProps<{ diagnosis?: CpoDiagnosisRow | null }>()
 const open = defineModel<boolean>('open', { default: false })

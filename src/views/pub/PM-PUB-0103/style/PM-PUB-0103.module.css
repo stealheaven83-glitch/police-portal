@@ -1,9 +1,4 @@
 /* -------------------------------------------------------------- 검색영역(CPO 입력 · 관리 목록) */
-/* 날짜 범위의 ~ 구분자 (묶음은 공통 .group-gap2) */
-.dateSeparator {
-  color: var(--Text-body_1);
-}
-
 .mailNoteTable > * {
   min-height: 8rem;
 }
@@ -14,19 +9,12 @@
   width: 100%;
 }
 
-.detailDateField {
-  flex: 0 0 24rem;
-  width: 24rem;
-  min-width: 0;
-}
-
 .detailStepper {
   flex: 0 0 12rem;
   width: 12rem;
 }
 
 /* space-between 은 gap 을 무시한다 */
-.detailAddressField > div:last-child,
 .addressField > div:last-child {
   justify-content: center;
   gap: 0.4rem;
@@ -34,27 +22,9 @@
   padding: 0.4rem 1.6rem;
 }
 
-/* flex:1 이 세로에선 높이를 먹는다 */
-.detailAddressField > div:last-child > * {
-  flex-grow: 0;
-}
-
-.detailAddressExtra {
-  width: 13.6rem;
-}
-
 .detailImprovementDate {
   flex: 0 0 20rem;
   width: 20rem;
-}
-
-.detailEtcInput {
-  width: 100%;
-  background: var(--white);
-}
-
-.detailTextarea {
-  width: 100%;
 }
 
 .detailNoteMeta {
@@ -305,63 +275,9 @@
   font-size: 1.3rem;
 }
 
-.cpoResultLayout {
-  /* 100% 는 auto 로 풀려 3000px 이 된다 */
-  --split-height: calc(85dvh - 12rem);
-}
-
-/* LayoutSplite 는 아래 테두리가 없다 (전체화면용) */
-.cpoResultLayout.cpoResultLayout {
-  border-bottom: 1px solid var(--Border_gray0);
-  border-radius: 1rem;
-}
-
 /* 패널 본문 기본값이 overflow:hidden */
 .cpoResultDetail :global(.layoutPanelBody) {
   overflow-y: auto;
-}
-
-@media (max-width: 62.5rem) {
-  .dateFieldWidth :global(.dp--main) {
-    flex: 1 1 auto;
-    width: auto;
-  }
-
-  .detailDateField {
-    flex-basis: 100%;
-    width: 100%;
-  }
-
-  .addressField {
-    height: auto;
-  }
-
-}
-
-@media (max-width: 40rem) {
-  .departmentSelectGroup {
-    flex-wrap: wrap;
-  }
-
-  .departmentSelectGroup > div,
-  .detailImprovementDate {
-    width: 100%;
-    flex-basis: 100%;
-  }
-
-  .detailNoteMeta {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .photoRow,
-  .noticePhotoGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .mailSummary {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* 여러 줄 값 — 기본 가운데정렬 해제 */
@@ -384,45 +300,10 @@
   width: 100%;
 }
 
-.cpoAddressField > div:last-child {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-rows: repeat(2, max-content);
-  align-content: center;
-  gap: 0.4rem 0.8rem;
-}
-
-.cpoAddressField > div:last-child > span {
-  min-width: 0;
-  font-size: 1.5rem;
-  color: var(--Text-body_0, #1e2124);
-}
-
 /* Pagination 기본 배치가 이 폭에선 17px 겹친다 */
 .cpoResultList :global(.tabulator-host) + div {
   grid-template-columns: max-content minmax(0, auto) max-content;
   column-gap: 0.8rem;
-}
-
-@media (max-width: 90rem) {
-  .cpoResultList :global(.tabulator-host) + div {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    row-gap: 1.2rem;
-  }
-
-  .cpoResultList :global(.tabulator-host) + div > :nth-child(2) {
-    grid-column: 1 / -1;
-    order: 3;
-    justify-self: center;
-  }
-}
-
-/* min-w-25 해제 (시안 76px) */
-.cpoAddressField button {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  align-self: center;
-  min-width: 0;
 }
 
 /* TableCell 기본이 whitespace-nowrap */

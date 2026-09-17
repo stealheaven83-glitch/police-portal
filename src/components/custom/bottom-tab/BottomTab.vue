@@ -124,4 +124,10 @@ function closeTab(tab: BottomTabItem) {
   height: 1.6rem;
   margin-right: 0.4rem;
 }
+
+@media (max-width: 1599.98px) {
+  .bottom-tab {
+    display: none;
+  }
+}
 </style>

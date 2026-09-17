@@ -2,16 +2,17 @@ import { computed, ref } from 'vue'
 import type { DepartmentValue } from '@/components/custom/select/DepartmentCascadeSelect.vue'
 
 /**
- * 출동수당 취합(일별) 한 행 — PC-LPO-0505와 같은 이유로 rowspan 대신 반복 표시한다.
- * 사람 1명당 접수 건수만큼(시안 기준 4행)의 상세 내역이 이어진다.
+ * 출동수당 취합(일별) 한 행 — 사람 1명당 접수 건수만큼(시안 기준 4행)의 상세 내역이 이어진다.
+ * 시안 개정(2026-09-16, 12853:63087)은 번호/부서/팀/직급성명/생년월일/출동건수를 **첫 행에만** 두고
+ * 나머지 행은 비운다(rowspan 처럼 보임). TabulatorGrid 는 셀 병합이 없어 PC-LPO-0505 와 같은 방식이다.
  */
 export interface DailyDispatchAllowanceRow {
-  no: number
-  dept: string
-  team: string
-  rankName: string
-  birthDate: string
-  dispatchCount: number
+  no?: number
+  dept?: string
+  team?: string
+  rankName?: string
+  birthDate?: string
+  dispatchCount?: number
   receivedAt: string
   arrivalTime: string
   crimeName: string
@@ -37,19 +38,7 @@ export const applyTypeOptions = [
 function createPersonRows(no: number): DailyDispatchAllowanceRow[] {
   const base = {
     dept: '서울청 범죄예방대응과 한강경찰서',
-    team: '1팀',
-    rankName: '경위 홍길동',
-    birthDate: '1980-01-01',
-    dispatchCount: 1,
-    receivedAt: '2026-08-01 14:00',
     arrivalTime: '4분 7초',
-    crimeName: '위험방지',
-    receiptNo: '0000000000',
-    caseNo: '400',
-    reportContent: '요구조자와 전화통화가 되어 순38호가 당산철.',
-    processContent: '요구조자 홍익지구대 보호조치 후 보호자(부친)',
-    onSiteAction: '보호조치',
-    manualReason: '출동수당신청',
   }
   const staff = {
     1: {
@@ -58,7 +47,7 @@ function createPersonRows(no: number): DailyDispatchAllowanceRow[] {
       birthDate: '1980-01-01',
       dispatchCount: 4,
       crimeName: '위험방지',
-      reportContent: '요구조자 안전 확인 요청',
+      reportContent: '요구조자와 전화통화가 되어 순38호가 당산철.',
       processContent: '현장 출동 후 보호자에게 인계',
       onSiteAction: '보호조치',
       manualReason: '자동체크',
@@ -88,13 +77,27 @@ function createPersonRows(no: number): DailyDispatchAllowanceRow[] {
   } as const
   const dispatchStaff = staff[no as keyof typeof staff] ?? staff[1]
 
-  return Array.from({ length: dispatchStaff.dispatchCount }, (_, index) => ({
+  /* 사람 단위 칸(번호~출동건수)은 첫 행에만 — 시안 12853:89970(둘째 행)은 이 칸들이 비어 있다 */
+  const person = {
     no,
-    ...base,
-    ...dispatchStaff,
+    dept: base.dept,
+    team: dispatchStaff.team,
+    rankName: dispatchStaff.rankName,
+    birthDate: dispatchStaff.birthDate,
+    dispatchCount: dispatchStaff.dispatchCount,
+  }
+
+  return Array.from({ length: dispatchStaff.dispatchCount }, (_, index) => ({
+    ...(index === 0 ? person : {}),
+    arrivalTime: base.arrivalTime,
+    crimeName: dispatchStaff.crimeName,
+    reportContent: dispatchStaff.reportContent,
+    processContent: dispatchStaff.processContent,
+    onSiteAction: dispatchStaff.onSiteAction,
+    manualReason: dispatchStaff.manualReason,
     receivedAt: `2026-08-${String(index + no).padStart(2, '0')} ${String(9 + index).padStart(2, '0')}:00`,
-    receiptNo: `00000[CODE C2]-${String((no - 1) * 4 + index + 1).padStart(3, '0')}`,
-    caseNo: `00000[CODE C2]-${String(400 + (no - 1) * 4 + index).padStart(3, '0')}`,
+    receiptNo: String((no - 1) * 4 + index + 1).padStart(10, '0'),
+    caseNo: String(400 + (no - 1) * 4 + index),
   }))
 }
 

@@ -117,6 +117,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | 기간(시작~종료) | `custom/datepicker/DateRangePicker.vue` |
 | 숫자 증감(-/+) | `custom/input/Stepper.vue` |
 | 주소 입력 | `custom/address/AddressInput.vue` — `@search`로 팝업 연결 |
+| 사용자 찾기 팝업(부서 트리 + 사용자 목록에서 한 명 고르기) | `custom/user-find/UserFindDialog.vue` — `v-model:open` + `@select`(계급·성명·소속). 공통 팝업 PC-COM-0701 |
 | 리치 텍스트 본문 | `custom/editor/Editor.vue` (TOAST UI) |
 | 파일 첨부 | `custom/file-upload/FileUpload.vue` |
 
@@ -447,6 +448,7 @@ await dialog.confirm({
 | `tooltip__rich` | `custom/contextual-help/ContextualHelp.vue` |
 | `top_button` | `custom/top-button/TopButton.vue` |
 | `Adress input` | `custom/address/AddressInput.vue` |
+| `공통 > 사용자 찾기`(12875:101668) | `custom/user-find/UserFindDialog.vue` |
 | `file_upload__atomic__pc` | `custom/file-upload/FileUpload.vue` |
 | `pagination bar`, `pagination__pc` | `custom/pagination/Pagination.vue` |
 | `Page Title` | `custom/title/PageTitle.vue` |
@@ -641,6 +643,9 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | 클래스 | 의도 | 쓰는 곳 |
 |---|---|---|
 | `.lp-pane-box` / `.lp-pane` / `.lp-pane-fixed` / `.lp-pane-title` | 테두리 안에서 좌우로 나뉘는 목록 상자(폼 화면 2분할은 `LayoutSplit`) | 2204 |
+| `.lp-pane-title-text` / `.lp-pane-title-count` | `.lp-pane-title` h3 에 `.lp-row-between` 을 더해 **제목 왼쪽 + 건수 오른쪽**으로 펼 때 양쪽을 감싼다(숫자는 `.lp-em-primary`). reset 이 span 에 다시 주는 line-height 1.5 를 제목바 줄 높이로 되돌려 옆 칸 제목바와 높이가 같아진다 | `UserFindDialog` |
+| `.lp-pane-box-fill` | **높이를 고정한 팝업**(`GenericDialog2 :height`)의 `.pop-body` 안에서 `.lp-pane-box` 가 남는 높이를 다 가져간다(스크롤은 칸 안에서만). 상자 높이를 못 박는 `.lp-pane-box-tall` 과는 별개 | `UserFindDialog` |
+| `.lp-pane-fill` | 칸 제목 아래를 **그리드가 다 채우는** 칸 본문(세로 flex, 여백 12/24/24). 안쪽 그리드는 `height="100%" class="flex-1"`. 그리드 높이를 고정하는 `.lp-pane-wrap`(12/12/20) 과는 별개 | `UserFindDialog` |
 | `.lp-selected-bar` | 선택한 항목을 칩으로 늘어놓는 회색 바 | 2204 |
 | `.lp-dialog-head` / `.lp-dialog-head-title` / `.lp-dialog-head-label` | 팝업 본문 위쪽 제목줄(`.lp-row-between` 과 함께). `-label`+`-title` 은 "권한명: 범죄예방대응국" 처럼 **크기·굵기는 같고 색만 다른** 라벨·값 짝(1.9rem/600). 줄 배치는 `.group-gap3`. 페이지 액션바의 `.list-actions-title`/`.list-actions-part`(2rem/700)와는 별개다 | 2204 |
 | `.lp-grid-title` `-label` `-count` `-num` | 그리드 위에 얹는 회색 제목 바(왼쪽 표 이름 + 오른쪽 건수, 숫자만 포인트색). 면이 채워진 한 줄이라 `LayoutPanel` 의 `.lp-pane-title` 과는 별개 | 2207 전체 사용자 팝업 |
@@ -695,6 +700,8 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-duty-table` `-col-date` `-col-side` `-group` `-entry` `-remove` `-scroll` | 근무현황 표(일자 × 주간·야간·심야 × 사고자·자원근무자 — 한 칸에 여러 줄이 들어가 Tabulator 를 못 쓴다). `-group` 은 2단 머리글의 그룹 칸(아래 선을 연하게), `-entry` 는 칸 안 한 줄로 **`.lp-duty-line` 위에 얹어** 낱말 사이 6·줄 사이 4 로 바꾼다(`.lp-duty-line` 자체는 LPO-0217 도 써서 값을 안 건드린다). `-scroll` 은 표를 감싸는 래퍼 — 남은 높이를 채워 **머리글(thead)은 붙여 두고 본문만 스크롤**(`.lp-page-scroll` 은 페이지 본문, `.lp-table-sticky` 는 TableWrapper 전용이라 따로 있다) | LPO-0216 |
 | `.lp-duty-line` | 칸 안 한 줄(flex·wrap·gap 4). 0216 은 `.lp-duty-entry` 를 같이 얹는다 | LPO-0216, 0217 |
 | `.lp-date-select-row` | 목록 위 연·월 텍스트 셀렉트(`TextSelect` 둘) 묶음 — 연 ↔ 월 16px(`group-gap` 에 16 이 없다). 셀렉트 모양은 override 의 `.lp-date-select` | LPO-0216 |
+| `.lp-count-row` | 목록 위 왼쪽의 "요청갯수 : N" 문구 + 버튼 묶음(사이 16, 글자 15/body_1). 숫자는 안쪽 `<b class="lp-hit lp-em-strong">` — 회색 면이 있는 `.lp-grid-title-count` 와 다르다 | LPO-0505 |
+| `.approver-bar` `-title` `-list` `-item` `-name` `-done` `-status` `-divider` | 출동수당 승인자 줄 — 표 위 테두리 상자(1px gray02, 모서리 4, 여백 12/20, 아래 20). 오른쪽 묶음 사이 32 에 `.lp-divider-v`(+`-divider` 로 18), 묶음 안 12. `-name` 은 굵은 파랑, 이름 뒤 상태는 `-done`("2026-08-27 승인", 본문색) / `-status`("미승인", `--Alert-danger-text`) / 승인 `Button size="xs"` 중 하나. **케이스 4개는 `/component/search-area` 맨 아래** | LPO-0505 |
 | `.lp-roster-toolbar` `.lp-roster-title` | 근무자 목록 표(좁은 패널) 위의 제목 + 우측 버튼 줄. 표 자체는 `TabulatorGrid` 로 바뀌었다 | LPO-0202 |
 | `.lp-notes-row` `-label` `-body` | 표 아래 붙는 라벨+입력 한 상자(중요지시사항) | LPO-0202 |
 | `.lp-em-primary` / `.lp-em-danger` / `.lp-em-point` / `.lp-em-warning` | 문장 안 한 낱말만 색으로 강조(굵기는 `<b>` 나 `.lp-em-strong`·`.lp-em-medium` 이). `-warning` 은 글자용 주황 `--Alert-warning-text`(#8A5C00 — 배지용 `--warning` 보다 어둡다): 근무현황 사고 사유 | LPO-0208, 0216, 0217 |
@@ -769,6 +776,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-grid-active-row` | Tabulator 행 배경 — "지금 오른쪽 상세에 떠 있는 행". 체크박스 다중선택(`.tabulator-selected`)과 별개 개념 | 2204, 0801, STT-0103 |
 | `.lp-grid-link-cell` | 값이 링크처럼 보여야 하는 셀(밑줄) | 2204 |
 | `.lp-grid-group-line` | **그리드에 건다** — 2단 그룹 머리(`.tabulator-col-group`)의 왼쪽 경계선. `tabulator-theme.css` 가 머리줄의 세로선을 모두 지워서 그룹이 시작되는 자리에서 본문 선이 끊긴다. **그 한 줄만** 잇는다 — 머리줄의 다른 칸 경계는 선이 없는 것이 기본이다. 본문 선과 1px 어긋나지 않게 `border-left` 가 아니라 바깥쪽 `box-shadow` 로 긋는다. 테마가 `@layer` 밖이라 `!important` 필요 | PUB-0404 |
+| `.lp-grid-no-highlight` | Tabulator 그리드 루트에 — **단순 체크 표**라 행 hover·체크 행(`.tabulator-selected`) 강조를 모두 끈다(상태는 체크박스만). 고른 뒤 상세·삭제 같은 결과가 있는 표에는 쓰지 않는다. `tabulator-theme.css` 가 레이어 밖이라 `!important` | COM-2201(권한목록) |
 | `.lp-grid-done-row` | Tabulator 행 배경 — "확인이 끝난 행"(미확인 없음) 회색. Figma `color/surface/gray-subtle`(#e6e8ea) = `--Border_gray03`. 미확인이 남은 행은 배경 없음이 기본이라 클래스를 안 붙인다. 선택/상세 강조(`.lp-grid-active-row`)와 별개. **레이어 밖인 `tabulator-theme.css` 의 행 배경을 덮어야 해서 `!important` 필요** | LPO-0304, PM-LPO-0106(읽은 알림) |
 | `.lp-perm-menu-grid` | Tabulator 가 JS 로 넣는 그룹헤더 높이(빈 서브헤더 줄 접기, `!important` 필요) | 2204 |
 | `.lp-grid-depth-cell` | 2depth 메뉴 칸 회색 배경 | 2204 |

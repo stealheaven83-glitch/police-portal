@@ -1,14 +1,15 @@
 <template>
   <GenericDialog2 v-model:open="otherApplyOpen" title="타직원 출동수당 신청" :size="1320">
-    <div class="lp-pane-box">
-      <section class="lp-pane" aria-labelledby="apply-receipt-heading">
+    <!-- PC-LPO-0510 과 같은 구조 — 상자 높이를 고정하고 각 칸 안에서 스크롤한다 -->
+    <div class="lp-pane-box lp-pane-box-tall">
+      <section class="lp-pane lp-pane-list" aria-labelledby="apply-receipt-heading">
         <h3 id="apply-receipt-heading" class="lp-pane-title">접수내용</h3>
-        <div class="lp-pane-wrap">
+        <div class="lp-pane-wrap detail-scroll">
           <TabulatorGrid
             ref="gridRef"
             :columns="columns"
             :data="receiptRows"
-            height="400px"
+            height="100%"
             placeholder="접수내용이 없습니다"
             @row-click="onRowClick"
             @table-built="onTableBuilt"
@@ -18,7 +19,7 @@
 
       <section class="lp-pane" aria-labelledby="apply-code-heading">
         <h3 id="apply-code-heading" class="lp-pane-title">접수코드 : C1</h3>
-        <div class="lp-pane-wrap">
+        <div class="lp-pane-wrap detail-scroll">
           <DispatchInfoPanel :units="dispatchUnits" />
         </div>
       </section>

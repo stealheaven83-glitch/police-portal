@@ -573,6 +573,47 @@
   color: var(--Text-body_0);
 }
 
+/*
+ * 칸 제목 오른쪽에 건수를 붙일 때 — h3 에 .lp-row-between 을 같이 주고 제목 글자와 건수를
+ * 이 둘로 감싼다(시안 12896:105102 "사용자 정보 …… 총 12건", 숫자는 .lp-em-primary).
+ * span 은 police-style 의 reset 이 line-height 1.5(=25.5px) 를 다시 주므로 제목바 줄 높이
+ * (2.2rem)를 되돌려야 옆 칸의 글자만 있는 제목바와 높이가 같아진다 — 건수 안의 숫자 span 도 같다.
+ */
+.lp-pane-title-text,
+.lp-pane-title-count,
+.lp-pane-title-count > * {
+  line-height: inherit;
+}
+.lp-pane-title-count {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/*
+ * 높이를 고정한 팝업(GenericDialog2 height) 의 .pop-body 안에서 두 칸 상자가 남는 높이를 다
+ * 가져간다 — 검색줄은 제 높이만 쓰고, 스크롤은 팝업이 아니라 각 칸 안에서만 생긴다.
+ * 시안이 상자 높이를 못 박은 .lp-pane-box-tall 과 달리 팝업 높이에서 계산된다.
+ * 쓰는 곳: 공통 사용자 찾기 팝업(custom/user-find, 12875:101668)
+ */
+.lp-pane-box-fill {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+/*
+ * 칸 제목 아래를 그리드가 다 채우는 칸 본문 — .lp-pane-box-fill 안에서 쓴다.
+ * 세로 flex 라 안쪽 그리드에 height="100%" class="flex-1" 을 주면 남는 높이만큼 늘어나고
+ * 행이 넘치면 그리드 안에서 스크롤된다. .lp-pane-wrap(12/12/20) 과 여백이 다르다 — 시안
+ * (12875:103400) 은 위 12, 좌우 24, 아래 24.
+ */
+.lp-pane-fill {
+  display: flex;
+  flex: 1 1 0;
+  min-height: 0;
+  flex-direction: column;
+  padding: 1.2rem 2.4rem 2.4rem;
+}
+
 /* 선택한 항목을 칩으로 늘어놓는 회색 바 */
 .lp-selected-bar {
   display: flex;
@@ -961,14 +1002,19 @@
   }
 }
 
-@media (max-width:102.4rem){
-.lp-ai-answer-body{
-  flex-direction:column;
-}
-.lp-page-scroll{
-  overflow:inherit;
-  width: 100%;
-}
+@media (max-width:1599.98px){
+  .lp-ai-answer-body{
+    flex-direction:column;
+  }
+  .lp-ai-answer-body .lp-ref-column{
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .lp-page-scroll{
+    overflow:inherit;
+    width: 100%;
+  }
 }
 /* ══ 메모 목록 카드 ═══════════════════════════════════════════ */
 
@@ -991,6 +1037,16 @@
   display: flex;
   align-items: center;
   gap: 1.6rem;
+}
+
+/* 목록 위 왼쪽의 '요청갯수 : N' 문구 + 버튼 묶음(시안 13069:97750 — 사이 16, 글자 15/body_1).
+   숫자만 파랗게는 안쪽 <b class="lp-hit"> 가 한다 */
+.lp-count-row {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  font-size: 1.5rem;
+  color: var(--Text-body_1);
 }
 
 /* 카드 최소 46rem, 남는 폭은 균등 분배(≈3열 @1564px) */
@@ -2207,6 +2263,56 @@
   border: 0;
   cursor: pointer;
 }
+
+/* ── 출동수당 승인자 줄(취합 목록 위 테두리 상자) ───────────────────────────
+   시안 13092:99695 — 1px gray-light 테두리, 모서리 4, 여백 12/20(높이 56), 표까지 20.
+   왼쪽 제목, 오른쪽에 [직책 · 이름 · 승인 버튼] | [직책 · 이름 · 상태] */
+.approver-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  padding: 1.2rem 2rem;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  border: 1px solid var(--Border_gray02);
+  border-radius: 0.4rem;
+}
+.approver-bar-title {
+  font-weight: 700;
+  color: var(--Text-body_0);
+}
+/* 승인자 묶음들 — 묶음 사이 32, 그 사이에 세로 구분선 */
+.approver-bar-list {
+  display: flex;
+  align-items: center;
+  gap: 3.2rem;
+}
+/* 한 묶음: 직책 · 이름 · 버튼/상태 — 사이 12 */
+.approver-bar-item {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  color: var(--Text-body_1);
+}
+.approver-bar-name {
+  font-weight: 700;
+  color: var(--Base-primary);
+}
+/* 미승인 — 시안 text/danger(#BD2C0F). 아이콘용 --danger 보다 어둡다 */
+.approver-bar-status {
+  font-weight: 500;
+  color: var(--Alert-danger-text);
+}
+/* '2026-08-27 승인' — 직책(body_1)보다 진한 본문색(케이스 13092:100042) */
+.approver-bar-done {
+  color: var(--Text-body_0);
+}
+/* 시안 구분선은 18 — 공통 .lp-divider-v(16) 위에 얹는다 */
+.approver-bar-divider {
+  height: 1.8rem;
+}
 /* 표 본문만 스크롤 — 표를 이 래퍼로 감싸면 남은 높이를 채우고 넘치는 본문이 안에서 스크롤되며
    머리글 2단은 thead 째로 위에 붙는다. .lp-page-scroll 과 선언이 겹치지만 의도가 다르다
    (페이지 본문 ↔ 표 본문 + 머리글 고정).
@@ -2261,7 +2367,7 @@
 }
 .lp-notice-detail {
   padding-bottom: 3.2rem;
-  margin:0 auto;  
+  margin:0 auto;
   max-width:100rem;
 }
 .lp-notice-badges {
@@ -2359,7 +2465,7 @@
   min-width: 0;
   font-size: 1.3rem;
   color: var(--Text-body_2);
-} 
+}
 .lp-comment-date::before{
   position:absolute;
   left:0;
@@ -3113,9 +3219,12 @@
   border-left: 0.1rem solid var(--Border_gray03);
 }
 
-/* 두 칸 상자 높이 고정 — 오른쪽 상세가 길어도 팝업이 안 늘어나고 칸 안에서 스크롤된다 */
+/* 두 칸 상자 높이 고정 — 오른쪽 상세가 길어도 팝업이 안 늘어나고 칸 안에서 스크롤된다.
+   화면이 낮으면 팝업 최대 높이(85dvh)에서 제목·여백·하단 버튼(약 18rem)을 뺀 만큼으로 줄여,
+   팝업에도 스크롤이 생겨 두 겹으로 보이는 걸 막는다(.lp-split-in-popup 과 같은 이유).
+   쓰는 곳: PC-LPO-0509 타직원 출동수당 신청, PC-LPO-0510 출동사건정보 */
 .lp-pane-box-tall {
-  height: 62.8rem;
+  height: min(62.8rem, calc(85dvh - 18rem));
 }
 /* 목록 칸 폭 고정 — 옆 칸이 남는 폭을 가져간다. .lp-pane 과 함께 쓴다 */
 .lp-pane-list {
@@ -3125,7 +3234,7 @@
 /* ══ 전체메뉴(사이트맵) ═══════════════════════════════════════
    Figma PC_SiteMap(10531:28348) + 모바일 와이어프레임. Menu.vue 한 파일이 둘 다 그린다.
    Tabs 컴포넌트 루트에 붙는 것(-tabs-root · -tabs · -panel)은 police-override.css 에 있다.
-   모바일 경계 1000 은 useResponsive.ts 의 BP_MOBILE 과 같은 값이어야 한다 */
+   모바일 경계 1600 은 useResponsive.ts 의 BP_MOBILE 과 같은 값이어야 한다 */
 
 .sitemap {
   min-height: 100vh;
@@ -3861,7 +3970,6 @@
 }
 
 /* ══ 포털 헤더 GNB ════════════════════════════════════════════ */
-
 /*
  * 1depth 메뉴의 hover / pressed. Figma main_menu_bar__atomic__pc (317:46423) 의
  * State=hover(317:46427) · State=pressed(317:46430) 값이다.
@@ -3880,4 +3988,10 @@ header .header-in .header-container .main-menu .inner .gnb-menu .depth1-list .de
 header .header-in .header-container .main-menu .inner .gnb-menu .depth1-list .depth1-item .depth1-text:not(.active):active {
   background: #d6e0eb;
   color: var(--Text-body_0);
+}
+/* 팝업 안 2분할 — LayoutSplit 기본 높이(90rem)가 팝업 최대 높이(85dvh)보다 커지면 팝업에도 스크롤이 생겨
+   스크롤 막대가 두 개로 보인다. 컴포넌트가 열어둔 --split-height 를 팝업 높이에 맞춘다(layoutSplit.vue 주석).
+   12rem = 팝업 상하 여백 + 제목 줄. 쓰는 곳: PM-PUB-0105 범죄예방진단결과(CPO확인용) */
+.lp-split-popup {
+  --split-height: calc(85dvh - 12rem);
 }

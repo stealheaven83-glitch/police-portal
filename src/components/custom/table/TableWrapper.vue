@@ -142,8 +142,8 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   itemsPerPage: 10,
   itemsPerPageOptions: () => [
-    { label: '10개씩 보기', value: '10' },
-    { label: '20개씩 보기', value: '20' },
+    { label: '10건', value: '10' },
+    { label: '20건', value: '20' },
   ],
   showPagination: true,
   caption: '',

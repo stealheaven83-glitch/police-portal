@@ -18,12 +18,20 @@ const props = withDefaults(defineProps<Props>(), {
   device: "responsive",
 })
 
-/** 제목 크기 — 시안 PC 24 / 모바일 17 */
+/**
+ * 제목 크기 — 시안 PC 24 / 모바일 17, 줄간격 1.5.
+ *
+ * 줄간격은 `text-[...]/[1.5]` 로 글자크기와 **한 덩어리로** 적는다. 따로 `leading-[1.5]` 를
+ * 쓰면 tailwind-merge 가 `text-*`(font-size)와 충돌 그룹으로 보고 **뒤에 오는 쪽만 남겨서**
+ * 조용히 지워진다(`text-*` 가 `text-lg/7` 처럼 줄간격도 정할 수 있기 때문이다).
+ * 실제로 이 파일에서 `leading-[1.5]` 가 계속 지워지고 있었고, body 상속값 1.5 와 같아
+ * 화면이 안 바뀌는 바람에 드러나지 않았다(2026-09-16).
+ */
 const titleClass = computed(() =>
   deviceStyle(
     {
-      pc: "leading-[1.5] text-[2.4rem] text-[var(--Text-body_0)] font-bold",
-      mobile: "text-[1.7rem]",
+      pc: "text-[2.4rem]/[1.5] text-[var(--Text-body_0)] font-bold",
+      mobile: "text-[1.7rem]/[1.5]",
     },
     props.device,
   ),

@@ -16,7 +16,7 @@
       <SelectField v-model="timeStart" label="시작 시간" :options="hourOptions" size="sm" triggerClass="w-25" />
       <div class="group-gap2">
         <span class="lp-label-text">간격(분)</span>
-        <Stepper v-model="timeInterval" :min="10" :step="10" label="간격(분)" class="w-25" />
+        <InputField2 v-model.number="timeInterval" type="number" :clearable="false" size="sm" min="10" step="10" aria-label="간격(분)" class="!space-y-0" input-class="w-25" />
       </div>
       <InputField2 v-model="countText" label="생성개수" size="sm" inputClass="w-20" />
     </div>
@@ -47,7 +47,6 @@ import { computed, inject, ref } from 'vue'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { Button } from '@/components/custom/button'
 import InputField2 from '@/components/custom/input/InputField2.vue'
-import Stepper from '@/components/custom/input/Stepper.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { WorkScheduleKey } from '../composable/useWorkSchedule'

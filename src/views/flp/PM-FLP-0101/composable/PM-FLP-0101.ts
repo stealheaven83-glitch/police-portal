@@ -14,6 +14,9 @@ export interface SelectOption {
 /** 접수구분 */
 export type ReceiptType = 'internal' | 'external' | 'crime-analysis'
 
+const RECEIPT_CATEGORIES = ['순찰신문고', 'Pre-CAS', '순찰추천', '직접등록'] as const
+type ReceiptCategory = (typeof RECEIPT_CATEGORIES)[number]
+
 /** 요청관리 목록 한 행 */
 export interface RequestRow {
   /** 관리번호 */
@@ -25,6 +28,7 @@ export interface RequestRow {
   requestPeriodFrom: string
   requestPeriodTo: string
   requestTime: string
+  receiptCategory: ReceiptCategory
   addressJibun: string
   addressRoad: string
   requestCount: number
@@ -100,6 +104,7 @@ function buildMockRows(): RequestRow[] {
       requestPeriodFrom: from,
       requestPeriodTo: to,
       requestTime: `${pad(index % 24)}~${pad((index % 24) + 3)}`,
+      receiptCategory: RECEIPT_CATEGORIES[Math.floor(Math.random() * RECEIPT_CATEGORIES.length)]!,
       addressJibun: `부산광역시 ${district} 4가 ${(index % 90) + 1}-${(index % 20) + 1}`,
       addressRoad: `부산광역시 ${district.split(' ')[0]} ${ROADS[index % ROADS.length]} ${(index % 400) + 1}`,
       requestCount: (index % 5) + 1,
@@ -177,6 +182,7 @@ export function useRequestManage() {
       requestPeriodFrom: today,
       requestPeriodTo: today,
       requestTime: `${pad(now.getHours())}~${pad(now.getHours() + 1)}`,
+      receiptCategory: '직접등록',
       addressJibun: '',
       addressRoad: '',
       requestCount: 0,

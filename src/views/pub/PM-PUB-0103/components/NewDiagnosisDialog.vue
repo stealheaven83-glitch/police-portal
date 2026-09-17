@@ -10,7 +10,7 @@
       <InfoTable :columns="2" popup size="120">
         <InfoField label="부서">{{ departmentText }}</InfoField>
         <InfoField label="관리번호">
-          <span :class="styles.cellText">{{ form.managementNo }}</span>
+          {{ form.managementNo }}
           <Button type="button" variant="secondary" size="sm" @click="onOpenSimpleNoticeData">
             간이진단통보자료
           </Button>
@@ -21,15 +21,18 @@
           값만 있는 표 셀(table_2)이라 disabled 인풋 대신 텍스트로 둔다.
         -->
         <InfoField label="유형">{{ typeText }}</InfoField>
-        <InfoField for="add-diagnosis-date" label="진단일자" :class="`${styles.fieldInline} ${styles.dateFieldWidth}`">
-          <DatePicker
-            id="add-diagnosis-date"
-            v-model="form.diagnosisDate"
-            size="sm"
-            class="!space-y-0 flex-1 min-w-0"
-            placeholder="YYYY.MM.DD"
-          />
-          <Button type="button" variant="secondary" size="sm" @click="onOpenPhotoData">사진자료</Button>
+        <InfoField for="add-diagnosis-date" label="진단일자">
+          <!-- 달력과 사진자료가 좁아져도 한 줄에 남도록 줄바꿈 없는 group-gap3(간격 12px)으로 묶는다 -->
+          <div class="group-gap3">
+            <DatePicker
+              id="add-diagnosis-date"
+              v-model="form.diagnosisDate"
+              size="sm"
+              class="!space-y-0"
+              placeholder="YYYY.MM.DD"
+            />
+            <Button type="button" variant="secondary" size="sm" @click="onOpenPhotoData">사진자료</Button>
+          </div>
         </InfoField>
 
         <InfoField label="현금다액업소 여부" full>
@@ -179,14 +182,14 @@
         </InfoField>
 
         <InfoField label="직원수">
-          <Stepper v-model="form.employeeCount" :min="0" label="직원수" />
+          <InputField2 v-model.number="form.employeeCount" type="number" :clearable="false" size="sm" min="0" aria-label="직원수" class="!space-y-0 flex-1" input-class="w-full" />
         </InfoField>
         <InfoField label="업소층수">
-          <Stepper v-model="form.floorCount" :min="0" label="업소층수" />
+          <InputField2 v-model.number="form.floorCount" type="number" :clearable="false" size="sm" min="0" aria-label="업소층수" class="!space-y-0 flex-1" input-class="w-full" />
         </InfoField>
 
         <InfoField label="입주년도">
-          <Stepper v-model="form.moveInYear" :min="0" label="입주년도" />
+          <InputField2 v-model.number="form.moveInYear" type="number" :clearable="false" size="sm" min="0" aria-label="입주년도" class="!space-y-0 flex-1" input-class="w-full" />
         </InfoField>
         <InfoField label="방범진단">
           <RadioGroup v-model="form.crimePreventionStatus" :class="infoTableStyles['info-table-radio']">
@@ -200,7 +203,7 @@
           </RadioGroup>
         </InfoField>
         <InfoField label="피해 횟수">
-          <Stepper v-model="form.damageCount" :min="0" label="피해 횟수" />
+          <InputField2 v-model.number="form.damageCount" type="number" :clearable="false" size="sm" min="0" aria-label="피해 횟수" class="!space-y-0 flex-1" input-class="w-full" />
         </InfoField>
       </InfoTable>
     </template>
@@ -254,14 +257,14 @@
             <InputField2 id="new-diagnosis-contact" v-model="form.contact" size="sm" class="!space-y-0 flex-1" />
         </InfoField>
         <InfoField label="거주 가구수">
-            <Stepper v-model="form.householdCount" :min="0" label="거주 가구수" />
+            <InputField2 v-model.number="form.householdCount" type="number" :clearable="false" size="sm" min="0" aria-label="거주 가구수" class="!space-y-0 flex-1" input-class="w-full" />
         </InfoField>
 
         <InfoField label="층수">
-            <Stepper v-model="form.floorCount" :min="0" label="층수" />
+            <InputField2 v-model.number="form.floorCount" type="number" :clearable="false" size="sm" min="0" aria-label="층수" class="!space-y-0 flex-1" input-class="w-full" />
         </InfoField>
         <InfoField label="입주년도">
-            <Stepper v-model="form.moveInYear" :min="0" label="입주년도" />
+            <InputField2 v-model.number="form.moveInYear" type="number" :clearable="false" size="sm" min="0" aria-label="입주년도" class="!space-y-0 flex-1" input-class="w-full" />
         </InfoField>
 
         <InfoField label="방범진단">
@@ -276,7 +279,7 @@
         </InfoField>
 
         <InfoField label="피해 횟수">
-            <Stepper v-model="form.damageCount" :min="0" label="피해 횟수" />
+            <InputField2 v-model.number="form.damageCount" type="number" :clearable="false" size="sm" min="0" aria-label="피해 횟수" class="!space-y-0 flex-1" input-class="w-full" />
         </InfoField>
         <InfoField>
             <template #label><span class="sr-only">추가 정보</span></template>
@@ -295,7 +298,7 @@
               <RadioGroupItem :value="1" label="위험(1)" />
             </RadioGroup>
             <template v-else>
-              <Stepper v-model="assessment[row.key]" :min="0" :class="styles.detailStepper" :label="row.label" />
+              <InputField2 v-model.number="assessment[row.key]" type="number" :clearable="false" size="sm" min="0" :aria-label="row.label" :class="styles.detailStepper" input-class="w-full" />
               <span :class="styles.assessmentUnit">{{ row.unit }}</span>
             </template>
           </InfoField>
@@ -304,7 +307,7 @@
       <div class="pop-title-lv2"><h3>2) 추가 항목</h3></div>
       <InfoTable :columns="1" popup size="300">
         <InfoField v-for="row in extraAssessmentRows" :key="row.key" :label="row.label" full>
-          <Stepper v-model="assessment[row.key]" :min="0" :class="styles.detailStepper" :label="row.label" />
+          <InputField2 v-model.number="assessment[row.key]" type="number" :clearable="false" size="sm" min="0" :aria-label="row.label" :class="styles.detailStepper" input-class="w-full" />
           <span :class="styles.assessmentUnit">{{ row.unit }}</span>
         </InfoField>
       </InfoTable>
@@ -317,11 +320,10 @@
               id="new-diagnosis-etc-label"
               v-model="form.etcLabel"
               size="sm"
-              :class="styles.detailEtcInput"
               aria-label="기타 항목"
             />
           </template>
-          <Stepper v-model="form.etcCount" :min="0" :class="styles.detailStepper" label="기타 수량" />
+          <InputField2 v-model.number="form.etcCount" type="number" :clearable="false" size="sm" min="0" aria-label="기타 수량" :class="styles.detailStepper" input-class="w-full" />
         </InfoField>
       </InfoTable>
 
@@ -357,7 +359,7 @@
       상세(0107)·CPO확인용(0105)과 같은 마크업(.detailNoteMeta)으로 맞춘다.
     -->
     <div class="pop-title-sub mb-2"><h2>착안사항</h2></div>
-      <TextareaField v-model="form.note" :class="styles.detailTextarea" textarea-class="w-full" :height="72" aria-label="착안사항" />
+      <TextareaField v-model="form.note" class="w-full" textarea-class="w-full" :height="72" aria-label="착안사항" />
       <div :class="styles.detailNoteMeta">
         <Checkbox v-model="form.emailNotify" label="범죄예방진단 결과 우편 통보" />
         <!-- 진단 추가(PM-PUB-0106)는 시안대로 같은 줄 오른쪽에 담당 진단자를 표기한다(상세 0107 과 같은 마크업) -->
@@ -379,7 +381,6 @@ import { Button } from '@/components/custom/button'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
 import Input from '@/components/custom/input/Input.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
-import Stepper from '@/components/custom/input/Stepper.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import DatePicker from '@/components/custom/datepicker/DatePicker.vue'

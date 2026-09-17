@@ -32,7 +32,7 @@
       <InfoField label="범죄예방진단자 조치사항" full>
         <TextareaField
           v-model="note"
-          :class="styles.detailTextarea"
+          class="w-full"
           textarea-class="w-full"
           :height="72"
           aria-label="범죄예방진단자 조치사항"

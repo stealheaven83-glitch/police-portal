@@ -14,7 +14,7 @@
 
       <InfoField>
         <template #label>기타보유수량<span :class="styles.requiredDot" /></template>
-        <Stepper v-model="etcDetail.stock" :min="0" label="보유수량" />
+        <InputField2 v-model.number="etcDetail.stock" type="number" :clearable="false" size="sm" min="0" aria-label="기타보유수량" class="!space-y-0 flex-1" input-class="w-full" />
       </InfoField>
       
       <InfoField />
@@ -39,7 +39,6 @@ import { Button } from '@/components/custom/button'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
-import Stepper from '@/components/custom/input/Stepper.vue'
 import { EquipmentListKey } from '../composable/PC-LPO-0701'
 import styles from '@/components/custom/info-table/InfoTable.module.css'
 
