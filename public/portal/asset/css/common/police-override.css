@@ -55,6 +55,15 @@
 .tabulator-row.lp-grid-done-row .tabulator-cell.tabulator-frozen {
   background-color: inherit !important;
 }
+/*
+ * 카드 목록판 — 좁은 폭에서 표가 카드로 바뀌어도 같은 색으로 구분된다.
+ * TabulatorGrid 가 rowClass 를 카드 <li> 에도 붙여 주므로 화면에서 따로 할 일이 없다.
+ * !important 인 이유: 카드 배경(.tabulator-card)은 TabulatorGrid 의 <style scoped> 에 있고
+ * 그건 @layer 밖이라 layer(screen) 인 이 파일로는 특정도로 못 이긴다.
+ */
+.tabulator-card.lp-grid-done-row {
+  background-color: var(--Border_gray03) !important;
+}
 
 /*
  * 단순 체크 표 — 행 hover·체크 행 강조가 없어야 한다(상태는 체크박스만 보여 준다).

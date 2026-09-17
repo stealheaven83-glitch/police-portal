@@ -139,7 +139,7 @@
         -->
         <TabulatorGrid
           ref="historyGridRef"
-          class="flex-1"
+          class="flex-1 lp-grid-multiline"
           :columns="historyColumns"
           v-model:data="historyRows"
           select-mode="checkbox"
@@ -320,23 +320,13 @@ const {
 const listGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const historyGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 
-/**
- * 좌측 현황 그리드 컬럼.
- * 번호/총점처럼 짧은 값은 layout="fitColumns" 가 남는 폭을 나눠 갖게 그대로 둔다.
- * 주소는 다른 값보다 길어, widthGrow(비례 배분) 대신 widthShrink:0 을 줘서 폭이 부족해도
- * 이 컬럼만은 줄어들지 않고 항상 전체 텍스트가 보이게 한다(대신 공간이 부족하면 그리드에
- * 가로 스크롤이 생긴다).
- */
+/** 좌측 범죄예방진단 현황 그리드 컬럼 */
 const listColumns: TabulatorGridColumn[] = [
   { title: '번호', field: 'no', width: 70, hozAlign: 'center' },
   { title: '부서', field: 'dept', hozAlign: 'center' },
-  { title: '유형', field: 'type', hozAlign: 'center' },
   { title: '상호명', field: 'bizName', hozAlign: 'center' },
-  { title: '총점', field: 'score', width: 70, hozAlign: 'center' },
-  { title: '진단자', field: 'diagnoser', hozAlign: 'center' },
   { title: '기본주소', field: 'baseAddress', widthGrow: 2, hozAlign: 'left' },
   { title: '상세주소', field: 'detailAddress', widthGrow: 2, hozAlign: 'left' },
-  { title: '현금다액업소', field: 'cashIntensive', width: 110, hozAlign: 'center' },
 ]
 
 const historyColumns: TabulatorGridColumn[] = [
@@ -351,7 +341,7 @@ const historyColumns: TabulatorGridColumn[] = [
     buttonLabel: (row) => String((row as CpoHistoryRow).bizName),
     onButtonClick: () => openDetail(selectedRow.value),
   },
-  { title: '주소', field: 'address', widthGrow: 2, hozAlign: 'left' },
+  { title: '주소', field: 'address', width: 180, hozAlign: 'left', variableHeight: true },
   { title: '우편희망', field: 'mailRequested', hozAlign: 'center' },
   { title: '우편상태', field: 'mailStatus', hozAlign: 'center' },
   { title: '진단자', field: 'diagnoser', hozAlign: 'center' },
