@@ -1407,3 +1407,34 @@ input[autocomplete="off"]::-webkit-credentials-auto-fill-button {
   visibility: hidden;
   pointer-events: none;
 }
+
+/*
+ * 분할 안에 분할을 중첩할 때 — LayoutSplite(pane) 안의 두 번째 LayoutSplite 에 준다.
+ * 컴포넌트가 노출한 변수(--split-height/-border/-radius)를 덮어 pane 높이를 꽉 채우고,
+ * 바깥 분할의 테두리와 겹치는 자기 테두리·모서리를 없앤다. 쓰는 곳: PC-LPO-0202 근무지정표 | 중요공지사항
+ */
+.lp-split-nested {
+  --split-height: 100%;
+  --split-height-stacked: 100%;
+  --split-border: 0;
+  --split-radius: 0;
+}
+
+/*
+ * TextareaField 가 부모(LayoutPanel 본문·분할 pane)의 남는 높이를 다 채우게 한다 — 분할 구분선을
+ * 끌어 pane 높이가 바뀌면 textarea 도 같이 늘고 준다. TextareaField 는 래퍼 div 두 겹(space-y-1.5 · relative)
+ * 안에 textarea(height:100%)를 두는데 래퍼들이 auto 높이라 100% 가 풀리지 않아, 래퍼를 전부 flex 열로
+ * 만들어 높이를 내려보낸다. 쓰는 곳: PC-LPO-0202 중요공지사항
+ */
+.lp-textarea-fill,
+.lp-textarea-fill > div,
+.lp-textarea-fill > div > div {
+  display: flex;
+  flex: 1 1 0;
+  min-height: 0;
+  flex-direction: column;
+}
+.lp-textarea-fill textarea {
+  flex: 1 1 0;
+  min-height: 0;
+}

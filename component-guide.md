@@ -42,6 +42,7 @@ CLAUDE.md §1(재사용 원칙)의 실행 편. §1은 "찾아봐라"까지 말�
 | 제목줄 좌우 배치(제목 + 우측 버튼) | `custom/title/PageHeader.vue` | 30개 화면. `bordered` 기본 true |
 | 영역(섹션) 제목 | `custom/content-layout/layoutHeader.vue` | h1 아래 단계 |
 | 2분할 레이아웃(목록+상세) | `custom/content-layout/layoutSplit.vue` | 9개 화면 |
+| 위아래 분할(높이를 드래그로 조절) | 같은 `layoutSplit.vue` 에 `horizontal` prop — `widths` 가 높이(%)로 쓰인다. 다른 분할의 pane 안에 넣으면 `.lp-split-nested`(§12-3) 를 같이 준다 | LPO-0202 |
 | 분할 안의 패널(제목+내용) | `custom/content-layout/layoutPanel.vue` | `title` 필수, 접근성 이름 겸함 |
 | 자유 배치(2단 분할·툴바 등) | `custom/flex-grid/FlexRow.vue` + `FlexCol.vue` | **라벨-값 폼에는 쓰지 않는다 → §4** |
 | 상단 이동 버튼 | `custom/top-button/TopButton.vue` | |
@@ -778,6 +779,8 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 |---|---|---|
 | `.lp-grid-active-row` | Tabulator 행 배경 — "지금 오른쪽 상세에 떠 있는 행". 체크박스 다중선택(`.tabulator-selected`)과 별개 개념 | 2204, 0801, STT-0103 |
 | `.lp-grid-link-cell` | 값이 링크처럼 보여야 하는 셀(밑줄) | 2204 |
+| `.lp-split-nested` | **분할 안의 분할**(`LayoutSplite` pane 안에 둔 두 번째 `LayoutSplite`)에 — 컴포넌트 변수 `--split-height/-border/-radius` 를 덮어 pane 을 꽉 채우고 바깥 테두리와 겹치는 자기 테두리를 없앤다 | LPO-0202 근무지정표 | 중요공지사항 |
+| `.lp-textarea-fill` | `TextareaField` 에 — 래퍼 두 겹을 세로 flex 로 만들어 부모(LayoutPanel 본문·분할 pane)의 남는 높이를 textarea 가 다 채운다. 분할 구분선을 끌면 같이 늘고 준다 | LPO-0202 중요공지사항 |
 | `.lp-grid-group-line` | **그리드에 건다** — 2단 그룹 머리(`.tabulator-col-group`)의 왼쪽 경계선. `tabulator-theme.css` 가 머리줄의 세로선을 모두 지워서 그룹이 시작되는 자리에서 본문 선이 끊긴다. **그 한 줄만** 잇는다 — 머리줄의 다른 칸 경계는 선이 없는 것이 기본이다. 본문 선과 1px 어긋나지 않게 `border-left` 가 아니라 바깥쪽 `box-shadow` 로 긋는다. 테마가 `@layer` 밖이라 `!important` 필요 | PUB-0404 |
 | `.lp-grid-no-highlight` | Tabulator 그리드 루트에 — **단순 체크 표**라 행 hover·체크 행(`.tabulator-selected`) 강조를 모두 끈다(상태는 체크박스만). 고른 뒤 상세·삭제 같은 결과가 있는 표에는 쓰지 않는다. `tabulator-theme.css` 가 레이어 밖이라 `!important` | COM-2201(권한목록) |
 | `.lp-grid-done-row` | Tabulator 행 배경 — "확인이 끝난 행"(미확인 없음) 회색. Figma `color/surface/gray-subtle`(#e6e8ea) = `--Border_gray03`. 미확인이 남은 행은 배경 없음이 기본이라 클래스를 안 붙인다. 선택/상세 강조(`.lp-grid-active-row`)와 별개. **레이어 밖인 `tabulator-theme.css` 의 행 배경을 덮어야 해서 `!important` 필요** | LPO-0304, PM-LPO-0106(읽은 알림) |

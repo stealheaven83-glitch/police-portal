@@ -149,34 +149,42 @@
     </template>
 
     <template #layout-2>
-      <LayoutPanel title="근무지정표">
-        <template #actions>
-          <Button type="button" variant="tertiary" size="sm" @click="onLoadSchedule">근무지정표 불러오기</Button>
-          <Button type="button" variant="tertiary" size="sm" @click="onLoadWorkType">근무형태 불러오기</Button>
+      <!--
+        시안(13404:130871)은 오른쪽을 다시 위아래로 나눈다 — 근무지정표 430 / 핸들 6 / 중요공지사항 232 (668 기준 ≈ 65:35).
+        가로 구분선을 드래그해 두 패널 높이를 조절한다(사용자 지정). 중첩 분할이라 .lp-split-nested 로 pane 을 꽉 채운다.
+      -->
+      <LayoutSplite class="lp-split-nested" :count="2" horizontal :widths="[65, 35]" :min-widths="[30, 20]">
+        <template #layout-1>
+          <LayoutPanel title="근무지정표">
+            <template #actions>
+              <Button type="button" variant="tertiary" size="sm" @click="onLoadSchedule">근무지정표 불러오기</Button>
+              <Button type="button" variant="tertiary" size="sm" @click="onLoadWorkType">근무형태 불러오기</Button>
+            </template>
+
+            <TabulatorGrid
+              ref="incidentGridRef"
+              class="flex-1"
+              :columns="scheduleColumns"
+              :data="scheduleRows"
+              height="100%"
+              min-height="20rem"
+              placeholder="등록된 근무지정표가 없습니다."
+              @row-click="onScheduleCellClick"
+            />
+          </LayoutPanel>
         </template>
 
-        <TabulatorGrid
-          ref="incidentGridRef"
-          class="flex-1"
-          :columns="scheduleColumns"
-          :data="scheduleRows"
-          height="100%"
-          min-height="30rem"
-          placeholder="등록된 근무지정표가 없습니다."
-          @row-click="onScheduleCellClick"
-        />
-
-        <div class="lp-notes-row">
-          <span id="important-notes-label" class="lp-notes-label">중요지시사항</span>
-          <div class="lp-notes-body">
-            <TextareaField
-              v-model="importantNotes"
-              :height="72"
-              aria-labelledby="important-notes-label"
-            />
-          </div>
-        </div>
-      </LayoutPanel>
+        <template #layout-2>
+          <LayoutPanel title="중요공지사항">
+            <template #actions>
+              <Button type="button" variant="primary" size="sm" @click="onSaveImportantNotes">저장</Button>
+            </template>
+            <!-- 사용자 지정: 시안은 120 고정이지만 분할 구분선을 끌면 pane 높이를 따라 늘고 줄게 한다(.lp-textarea-fill).
+                 안쪽 여백 24 는 LayoutPanel 이 준다 -->
+            <TextareaField v-model="importantNotes" aria-label="중요공지사항" class="lp-textarea-fill" />
+          </LayoutPanel>
+        </template>
+      </LayoutSplite>
     </template>
   </LayoutSplite>
 
@@ -368,6 +376,14 @@ function onPrint() {
 
 async function onSave() {
   await dialog.alert({ title: '저장되었습니다.', btnCancel: '확인' })
+}
+
+/** 중요공지사항 패널의 저장 — 시안(13404:130871) 제목줄의 저장 버튼. 저장 자체는 개발팀 연동 */
+async function onSaveImportantNotes() {
+  // 사용자 지정: 저장 전 컨펌창을 먼저 띄운다 — CLAUDE.md §4 기본(alert 만)과 다르지만 요청대로 따름
+  const { confirmed } = await dialog.confirm({ title: '저장 하시겠습니까?', btnOk: '확인', btnCancel: '취소' })
+  if (!confirmed) return
+  await dialog.alert({ title: '저장 되었습니다.', btnCancel: '확인' })
 }
 
 

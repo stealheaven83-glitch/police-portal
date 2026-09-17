@@ -273,12 +273,40 @@
 }
 
 /* 페이지 본문이 넘칠 때 이 영역만 세로 스크롤.
-   상세 패널 안쪽 스크롤은 police-style.css 의 .detail-scroll 을 쓴다(의도가 다름). */
+   상세 패널 안쪽 스크롤은 police-style.css 의 .detail-scroll 을 쓴다(의도가 다름).
+ *
+ * 스크롤바 모양 — Figma scroll-bar(13312:105608). 모든 화면이 같은 컴포넌트를 x=1902 에
+ * 같은 크기로 쓴다(한 페이지에서 140번 반복). 트랙 #F4F5F6 모서리 44 / 막대 #BACBDE 모서리 12.
+ *
+ * 폭 두 줄이 한 쌍이다.
+ *   width  : 스크롤바를 본문 바깥(work-body 의 pr-10 = 40px 여백)으로 밀어낸다.
+ *            초과폭 32 = 본문↔트랙 간격 26 + 스크롤바 6.
+ *   padding: 넓힌 만큼 본문을 도로 밀어 넣는다. 없으면 본문 상자가 같이 넓어져 스크롤바에 붙는다
+ *            (스크롤바가 이미 6px 를 먹으므로 32 가 아니라 26).
+ *   검산: 컨테이너 끝 1912 − 스크롤바 6 − 여백 26 = 본문 끝 1880 (시안 13312:105507)
+ *
+ * Firefox 는 세밀한 제어가 안 되므로 scrollbar-color 로 두 색만 맞춘다.
+ */
 .lp-page-scroll {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  width: calc(100% + 30px);
+  width: calc(100% + 3.2rem);
+  padding-right: 2.6rem;
+  scrollbar-width: thin;
+  scrollbar-color: #bacbde var(--Background-gray01);
+}
+.lp-page-scroll::-webkit-scrollbar {
+  width: 0.6rem;
+  height: 0.6rem;
+}
+.lp-page-scroll::-webkit-scrollbar-track {
+  background: var(--Background-gray01);
+  border-radius: 4.4rem;
+}
+.lp-page-scroll::-webkit-scrollbar-thumb {
+  background: #bacbde;
+  border-radius: 1.2rem;
 }
 
 /* ══ 아이콘 버튼 ══════════════════════════════════════════════ */
@@ -1011,9 +1039,10 @@
     padding-left: 0;
   }
 
-  .lp-page-scroll{
-    overflow:inherit;
+  .lp-page-scroll {
+    overflow: inherit;
     width: 100%;
+    padding-right: 0;
   }
 }
 /* ══ 메모 목록 카드 ═══════════════════════════════════════════ */

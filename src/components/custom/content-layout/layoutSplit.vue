@@ -4,7 +4,7 @@
     ref="rootRef"
     class="default-theme splitLayout"
     :class="cn(defaultClass, !props.resizable && 'splitpanes--fixed', props.class)"
-    :horizontal="isStacked"
+    :horizontal="isHorizontal"
     :maximize-panes="props.resizable && !isStacked"
   >
     <slot>
@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, type HTMLAttributes } from 'vue'
+import { computed, ref, type HTMLAttributes } from 'vue'
 import { useMediaQuery, useElementSize } from '@vueuse/core'
 import { cn } from '@/lib/utils'
 import { Splitpanes, Pane } from 'splitpanes'
@@ -49,8 +49,14 @@ interface Props {
   maxWidths?: (number | undefined)[]
   /** false면 스플리터 드래그/더블클릭 최대화가 막혀 모든 pane 사이즈가 고정됩니다 */
   resizable?: boolean
+  /**
+   * true 면 화면 폭과 무관하게 pane 을 위아래로 쌓고 구분선을 상하로 드래그해 높이를 조절합니다.
+   * 이때 widths / minWidths / minWidthsPx / maxWidths 는 그대로 높이(%·px) 로 쓰입니다.
+   * 다른 분할의 pane 안에 넣을 때는 `.lp-split-nested`(police-override.css) 를 함께 줘서 테두리·높이를 pane 에 맞춥니다.
+   */
+  horizontal?: boolean
 }
-const props = withDefaults(defineProps<Props>(), { count: 1, resizable: true })
+const props = withDefaults(defineProps<Props>(), { count: 1, resizable: true, horizontal: false })
 
 /*
  * 좁은 화면에서는 pane 을 좌우로 두면 각 pane 이 글자 몇 자 폭밖에 안 남는다.
@@ -59,19 +65,27 @@ const props = withDefaults(defineProps<Props>(), { count: 1, resizable: true })
  */
 const isStacked = useMediaQuery('(max-width: 82rem)')
 
-/** 쌓인 상태에서는 가로 비율이 의미가 없어 pane 을 균등 높이로 나눈다 */
-const paneSize = (i: number) => (isStacked.value ? undefined : props.widths?.[i - 1])
+/** 위아래 배치 — 호출부가 horizontal 로 고정했거나, 좁은 화면이라 자동으로 쌓인 경우 */
+const isHorizontal = computed(() => props.horizontal || isStacked.value)
 
-/** px 최소폭을 % 로 환산할 기준 — splitpanes 루트 요소의 실제 폭 */
+/**
+ * 좁은 화면 때문에 쌓인 상태에서는 가로 비율이 의미가 없어 pane 을 균등 높이로 나눈다.
+ * 호출부가 horizontal 로 고정한 분할은 처음부터 높이 비율이므로 widths 를 그대로 쓴다.
+ */
+const useGivenSizes = computed(() => props.horizontal || !isStacked.value)
+const paneSize = (i: number) => (useGivenSizes.value ? props.widths?.[i - 1] : undefined)
+
+/** px 최소값을 % 로 환산할 기준 — splitpanes 루트 요소의 실제 폭(위아래 배치면 높이) */
 const rootRef = ref<InstanceType<typeof Splitpanes> | null>(null)
-const { width: rootWidth } = useElementSize(rootRef)
+const { width: rootWidth, height: rootHeight } = useElementSize(rootRef)
+const rootExtent = computed(() => (isHorizontal.value ? rootHeight.value : rootWidth.value))
 
 // minWidths/minWidthsPx 를 안 넘긴 기존 사용처는 첫 번째 pane 20% 제한을 그대로 유지합니다.
 const minSizeOf = (i: number) => {
-  if (isStacked.value) return undefined
+  if (!useGivenSizes.value) return undefined
   const px = props.minWidthsPx?.[i - 1]
   // 폭을 아직 못 쟀을 때(0)는 % 로 넘어간다 — 0 으로 나누면 Infinity 가 되어 pane 이 잠긴다
-  if (typeof px === 'number' && rootWidth.value > 0) return (px / rootWidth.value) * 100
+  if (typeof px === 'number' && rootExtent.value > 0) return (px / rootExtent.value) * 100
   const hasAnyMin = props.minWidths || props.minWidthsPx
   return props.minWidths?.[i - 1] ?? (hasAnyMin ? undefined : (i === 1 ? 20 : undefined))
 }
@@ -88,12 +102,15 @@ const minSizeOf = (i: number) => {
  *
  *   .tightSplit { --split-margin-top: 0; --split-height: 110rem; }
  *   <LayoutSplite :class="styles.tightSplit" />
+ *
+ * 테두리·모서리도 변수다 — 다른 분할의 pane 안에 중첩할 때 바깥 테두리와 겹치지 않게
+ * 호출부가 0 으로 덮는다(.lp-split-nested, police-override.css).
  */
 .splitLayout {
   height: var(--split-height, 90rem);
-  border: 1px solid var(--Border_gray0);
+  border: var(--split-border, 1px solid var(--Border_gray0));
   /* border-bottom: 0; */
-  border-radius: 1rem;
+  border-radius: var(--split-radius, 1rem);
   overflow: hidden;
 }
 
@@ -113,8 +130,9 @@ const minSizeOf = (i: number) => {
   border: 1px solid var(--Border_gray0);
 }
 
-/* 사이즈 조절 비활성화: 구분선은 그대로 두고 드래그만 막습니다 */
-.splitpanes--fixed :deep(.splitpanes__splitter) {
+/* 사이즈 조절 비활성화: 구분선은 그대로 두고 드래그만 막습니다.
+   자식 결합자(>)여야 pane 안에 중첩한 분할의 구분선까지 같이 잠기지 않는다 */
+.splitpanes--fixed > :deep(.splitpanes__splitter) {
   pointer-events: none;
   cursor: default;
 }
