@@ -48,10 +48,10 @@
               <ul class="depth1-list">
                 <li v-for="(depth1, i) in portalMenu" :key="depth1.title" class="depth1-item">
                   <a
-                    href=""
+                    :href="depth1.path ?? ''"
                     class="depth1-text"
                     :class="{ active: i === activeDepth1 }"
-                    @click.prevent="activeDepth1 = i"
+                    @click.prevent="onDepth1Click(i)"
                   >
                     {{ depth1.title }}
                   </a>
@@ -104,7 +104,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { useSideMenuStore } from '@/stores/menu/useSideMenu'
 import { portalMenu, portalMyInfo } from './portalMenu'
 
 withDefaults(
@@ -115,6 +117,27 @@ withDefaults(
   { showBanner: true },
 )
 
-/** 원본 마크업에서 첫 번째 depth1 에 active 가 걸려 있던 것을 상태로 옮김 */
+const router = useRouter()
+const sideMenuStore = useSideMenuStore()
+
+/**
+ * GNB 활성 표시는 지금 떠 있는 LNB 의 제목(= 구획 이름)을 따라간다 — 화면이 useSideMenuSetup 으로
+ * LNB 를 갈아끼울 때마다 같이 바뀐다. LNB 가 없는 화면(포털 등)에서는 마지막 값을 유지한다.
+ */
 const activeDepth1 = ref(0)
+const sectionIndex = computed(() => portalMenu.findIndex((depth1) => depth1.title === sideMenuStore.title))
+watch(
+  sectionIndex,
+  (index) => {
+    if (index !== -1) activeDepth1.value = index
+  },
+  { immediate: true },
+)
+
+/** GNB 를 누르면 그 구획의 첫 화면(portalMenu depth1.path)으로 간다. path 가 없으면 표시만 바꾼다 */
+function onDepth1Click(index: number) {
+  activeDepth1.value = index
+  const path = portalMenu[index]?.path
+  if (path) router.push(path)
+}
 </script>

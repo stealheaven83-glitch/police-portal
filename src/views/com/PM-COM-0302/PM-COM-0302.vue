@@ -92,8 +92,7 @@ defineOptions({
 // LNB: 게시판 > 공지사항
 useSideMenuSetup({ ...bulletinMenu, activeChild: '공지사항' })
 
-// 공지 상세는 본문이 하나의 흐름이라 work-body 째로 스크롤돼야 한다
-useWorkLayoutSetup({ scrollable: true })
+
 
 const navItems = [
   { label: '홈', path: '/' },

@@ -189,7 +189,7 @@ const listColumns: TabulatorGridColumn[] = [
   { title: '유형', field: 'type', hozAlign: 'center' },
   { title: '상호명', field: 'bizName', hozAlign: 'center' },
   { title: '진단자', field: 'diagnoser', hozAlign: 'center' },
-  { title: '주소', field: 'address', widthGrow: 3 },
+  { title: '주소', field: 'address', widthGrow: 3, hozAlign: 'left' },
   {
     title: '현금다액업소',
     field: 'cashIntensive',
@@ -213,8 +213,8 @@ const historyColumns: TabulatorGridColumn[] = [
     onButtonClick: (row) => openDetail(row as DiagnosisHistoryRow),
   },
   { title: '진단사유', field: 'reason', hozAlign: 'center' },
-  { title: '주소', field: 'address', widthGrow: 2 },
-  { title: '진단자', field: 'diagnoser', hozAlign: 'center' },
+  { title: '주소', field: 'address', widthGrow: 2, },
+  { title: '진단자', field: 'diagnoser', hozAlign: 'left' },
 ]
 
 /**
