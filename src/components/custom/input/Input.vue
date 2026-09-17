@@ -31,9 +31,16 @@ const setSizeClass = (size:string = 'lg') => {
 </script>
 
 <template>
+  <!--
+    autocomplete="off" 기본값 — 사파리가 이 칸을 연락처로 추측해 오른쪽 끝에 자동완성 버튼
+    (::-webkit-contacts-auto-fill-button)을 그리는 것을 막는다. 그 버튼은 InputField2 가
+    같은 자리에 얹는 지우기·달력 아이콘과 겹친다.
+    호출부에서 autocomplete 를 넘기면 fallthrough 로 그쪽이 이긴다(로그인 등).
+  -->
   <input
     v-model="modelValue"
     data-slot="input"
+    autocomplete="off"
     :class="cn(
       'border border-[var(--Border_input01)] font-normal w-full pl-4 bg-white',
       'focus-visible:border-[var(--Border_primary)] focus-visible:border-2 focus-visible:outline-0',
