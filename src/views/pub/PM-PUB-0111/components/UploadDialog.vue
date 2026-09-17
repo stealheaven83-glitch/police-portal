@@ -5,8 +5,9 @@
       <div class="lp-dropzone-txt">
         <p>첨부할 파일을 여기에 끌어다 놓거나, 파일 선택 버튼을 직접 선택해주세요.</p>
         <p class="lp-dropzone-sub">
-          <span>최대 {{ UPLOAD_MAX_FILES }}개 파일 (jpg, jpeg, png, pdf, mp4)</span>
-          <span>파일당 최대 000MB</span>
+          <span>엑셀파일만 가능</span>
+          <span>파일 크기: 10MB 이하</span>
+          <span>파일 개수: 1개</span>
         </p>
       </div>
       <Button type="button" variant="secondary" size="sm" padding="16" @click="pickFile">파일선택</Button>
