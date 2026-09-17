@@ -117,7 +117,7 @@ const worklist = ref([
   { id: 8, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '', depth5: '음성인식 종료 팝업', screenName: '음성인식 종료 팝업창', screenId: 'MO-LPO-0105', path: '', status: '대기' },
   { id: 9, category: '스마트워크', depth1: '', depth2: '', depth3: '알림', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
   { id: 10, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '목록', depth5: '', screenName: '알림메시지 목록 화면', screenId: 'PM-LPO-0106', path: '/views/lpo/PM-LPO-0106', status: '완료' },
-  { id: 11, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '알림상세', depth5: '', screenName: '알림메세지 상세 팝업', screenId: 'PM-LPO-0107', path: '/views/lpo/PM-LPO-0107', status: '완료' },
+  { id: 11, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '알림상세', depth5: '', screenName: '알림메세지 상세 팝업', screenId: 'PM-LPO-0107', path: '', status: '' },
   { id: 12, category: '스마트워크', depth1: '', depth2: '', depth3: '근무일정조회', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
   { id: 13, category: '스마트워크', depth1: '', depth2: '', depth3: '', depth4: '목록', depth5: '', screenName: '근무일정 목록 화면', screenId: 'PM-LPO-0108', path: '/views/lpo/PM-LPO-0108', status: '완료' },
   { id: 14, category: '스마트워크', depth1: '', depth2: '', depth3: '출동수동', depth4: '', depth5: '', screenName: '', screenId: '', path: '', status: '대기' },
