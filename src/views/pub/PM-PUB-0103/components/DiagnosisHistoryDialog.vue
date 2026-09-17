@@ -21,7 +21,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import TableWrapper from '@/components/custom/table/TableWrapper.vue'
 import { NoData } from '@/components/custom/empty'
@@ -29,7 +28,7 @@ import { Button } from '@/components/custom/button'
 import type { CpoDiagnosisRow, CpoHistoryRow } from '../composable/PM-PUB-0103'
 import styles from '../style/PM-PUB-0103.module.css'
 
-const props = defineProps<{ diagnosis?: CpoDiagnosisRow | null; rows: CpoHistoryRow[] }>()
+defineProps<{ diagnosis?: CpoDiagnosisRow | null; rows: CpoHistoryRow[] }>()
 const open = defineModel<boolean>('open', { default: false })
 
 /* 시안(11174-138294): 상호명 / 진단일자 / 진단자 / 부서 네 칸을 180px 씩 균등 분할한다.
@@ -41,8 +40,10 @@ const historyColumns = [
   { key: 'dept', label: '부서' },
 ]
 
-/** 부서는 이력 행이 아니라 선택된 진단 건에서 온다 */
-const historyItems = computed(() =>
-  props.rows.map((row) => ({ ...row, dept: props.diagnosis?.dept ?? '-' })),
-)
+/** 이력보기 팝업 확인용 목업 데이터 */
+const historyItems = [
+  { bizName: '고해성사', diagnosedAt: '2026-06-16', diagnoser: '홍길동', dept: '경남청 거창서' },
+  { bizName: '고해성사', diagnosedAt: '2026-05-21', diagnoser: '홍길동', dept: '경남청 거창서' },
+  { bizName: '고해성사', diagnosedAt: '2026-04-08', diagnoser: '홍길동', dept: '경남청 거창서' },
+]
 </script>
