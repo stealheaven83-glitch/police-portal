@@ -4,7 +4,7 @@ import { cva } from "class-variance-authority"
 export { default as Checkbox } from "./Checkbox.vue"
 
 export const checkboxVariants = cva(
-  "peer shrink-0 self-start rounded-[4px] border border-[#58616A] shadow-xs transition-colors outline-none " +
+  "peer shrink-0 self-start rounded-[4px] border border-[#58616A] bg-[var(--white)] shadow-xs transition-colors outline-none " +
   "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] " +
   "disabled:cursor-not-allowed disabled:bg-[#CDD1D5] disabled:border-[#B1B8BE] disabled:text-[#8A949E] " +
   "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
