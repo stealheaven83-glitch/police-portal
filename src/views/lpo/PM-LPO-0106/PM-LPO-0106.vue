@@ -91,9 +91,13 @@ function escapeHtml(text: string): string {
   return text.replace(/[&<>"']/g, (char) => escapeMap[char])
 }
 
-/** 내용은 링크가 아닌 텍스트 — 알림 문구의 줄바꿈을 그대로 살려 전문을 보여준다 */
+/**
+ * 내용은 링크가 아닌 텍스트 — 알림 문구의 줄바꿈을 그대로 살려 전문을 보여준다.
+ * 시안 기준 816px 에서 줄을 접어야 해서 .lp-notice-text 로 감싼다(police-common.css).
+ */
 function contentFormatter(cell: any): string {
-  return escapeHtml(String(cell.getValue() ?? '')).replace(/\r?\n/g, '<br>')
+  const text = escapeHtml(String(cell.getValue() ?? '')).replace(/\r?\n/g, '<br>')
+  return `<span class="lp-notice-text">${text}</span>`
 }
 
 const columns: TabulatorGridColumn[] = [

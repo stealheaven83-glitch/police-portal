@@ -3995,3 +3995,14 @@ header .header-in .header-container .main-menu .inner .gnb-menu .depth1-list .de
 .lp-split-popup {
   --split-height: calc(85dvh - 12rem);
 }
+
+/*
+ * 알림 목록(PM-LPO-0106)의 "내용" 칸 글자 — 시안 폭 816px 에서 줄을 접는다.
+ * 그 칸은 폭을 안 줘서 남는 폭을 다 가져가므로(variableHeight 로 행 높이를 결정),
+ * 넓은 화면에서는 한 줄이 너무 길어진다. 글자 쪽에만 상한을 두어 칸 폭은 건드리지 않는다.
+ * 포매터가 HTML 문자열로 감싸 넣는다.
+ */
+.lp-notice-text {
+  display: block;
+  max-width: 81.6rem;
+}
