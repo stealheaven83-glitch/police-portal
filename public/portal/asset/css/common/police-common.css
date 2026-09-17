@@ -4154,3 +4154,9 @@ header .header-in .header-container .main-menu .inner .gnb-menu .depth1-list .de
 .diagnosis-mail-note > * {
   min-height: 8rem;
 }
+
+/*리스트가 있는 팝업은 리스트가 남은 공간을 차지하기 때문에 반드시 해당 클래스를 사용후 감싸준다*/
+.lp-popup-body.fixed-height > .list-wrapper {
+  flex: 1;
+  min-height: 0;
+}
