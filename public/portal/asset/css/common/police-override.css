@@ -1025,19 +1025,6 @@ tbody .row-total > td:first-child {
   white-space: pre-line;
 }
 
-/*
- * 표 한 칸에 여러 줄 글 — 세로 가운데 정렬(옆 칸 한 줄 값과 높이 중심을 맞춘다).
- * .lp-cell-note 는 위 정렬에 이름이 police-common.css 의 13px·회색 안내글과 겹쳐 따로 둔다.
- * TableWrapper 가 text-center 를 테일윈드로 먹여 이 파일이다. 쓰는 곳: PUB-0109
- */
-.lp-cell-multiline {
-  padding-block: 1.2rem;
-  font-size: 1.5rem;
-  color: var(--Text-body_0);
-  text-align: left;
-  white-space: pre-line;
-}
-
 /* 상세조회(SearchWrapper 의 #form 슬롯) 안 라벨 — 글자색 #464C53(--Text-body_1), 최소 폭 40px.
    최소 폭은 라벨이 짧아도 입력칸 시작선이 들쭉날쭉하지 않게 잡아 주는 것이다.
    Label 에 색을 테일윈드(label-class)로 먹이는 화면이 있어 common 에 쓰면 지므로 이 파일이다

@@ -790,7 +790,6 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.diagnosis-mail-guide` | 진단통보 결과표 위 13px 안내 문구, 위아래 16px | PUB-0103 진단통보 |
 | `.diagnosis-mail-note` | 진단통보 비고 `InfoTable` 칸 최소 높이 80px | PUB-0103 진단통보 |
 | `.lp-cell-note` | `TableWrapper` **한 칸만** 좌측 정렬 + 줄바꿈 유지 + 위 정렬(여러 줄 글이 들어가는 '내용' 칸). 컬럼 정의의 `cellClass` 로 건다 — 표 전체를 돌리는 `.lp-table-left` 와 다르다 | LPO-0301 |
-| `.lp-cell-multiline` | `TableWrapper` **한 칸만** 좌측 정렬 + 줄바꿈 유지 + 15px 본문색, 세로는 **가운데**(옆 칸 한 줄 값과 높이 중심을 맞춘다). `cellClass` 로 건다. 위 정렬이면 `.lp-cell-note` — 그쪽은 `police-common.css` 의 같은 이름(13px·회색 안내글)이 섞여 들어 글자가 작고 흐리다 | PUB-0109 간이진단통보자료 팝업 |
 | `.lp-table-sticky` (+ `.lp-table-sticky-head2`) | `TableWrapper` 헤더와 합계 줄(`.row-total`)을 고정하고 본문만 스크롤. 높이는 `--lp-table-h`, 합계 줄 위치는 `--lp-thead-h`(2단 헤더면 `-head2` 를 같이) | PUB-0306, PUB-0307(2단 헤더) |
 | `.row-total` (`tbody .row-total > td`) | `TableWrapper` 합계 줄 — 굵은 글씨 + 아래로 [선-간격-선] 두 줄로 데이터 영역과 끊는다. **`lp` 접두사가 없는 건 `tabulator-theme.css` 부터 쓰던 기존 표시자라서** — 같은 뜻의 이름을 새로 만들지 않는다 | PUB-0306, PUB-0307 |
 | `.lp-th-group-start` | `TableWrapper` 2단 헤더에서 **컬럼 그룹이 시작되는 칸**의 왼쪽 세로선. `headClass` 에는 아래 선만 있어 그룹 칸 왼쪽이 빈다. 색은 본문 칸 구분선과 같은 `--Border_gray03` 이라 헤더~본문 세로선이 이어진다 | PUB-0307 |
