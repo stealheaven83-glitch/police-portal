@@ -42,7 +42,7 @@
 
   <!-- 활동내역이 여러 줄이라 행 높이가 내용만큼 늘어난다(lp-grid-multiline, tabulator-theme.css) -->
   <TabulatorGrid
-    class="flex-1 lp-grid-multiline"
+    class="flex-1 lp-grid-multiline lp-grid-no-hover"
     :columns="columns"
     :data="rows"
     height="100%"
