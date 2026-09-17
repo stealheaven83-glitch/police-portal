@@ -71,12 +71,9 @@ export const localPoliceMenu: SideMenuConfig = {
     { name: "관내현황", path: "/views/lpo/PC-LPO-0601" },
     { name: "장비관리", path: "/views/lpo/PC-LPO-0701" },
     { name: "인사관리", path: "/views/lpo/PC-LPO-0801" },
-<<<<<<< Updated upstream
     // 화면 폴더가 아직 없다 — plannedRoutes 에 등록돼 있어 "준비중" 화면이 뜬다
     { name: "지역경찰 기초정보 관리", path: "/views/lpo/PC-LPO-0901" },
-=======
-    { name: "지역경찰 기초정보 관리" },
->>>>>>> Stashed changes
+
   ],
 };
 
