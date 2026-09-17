@@ -2,7 +2,7 @@
   <GenericDialog2
     v-model:open="open"
     title="임의등록"
-    :size="1000"
+    :size="800"
     :show-close-button="true"
   >
     <InfoTable :columns="2" popup>
@@ -44,7 +44,12 @@
       <InfoField label="근무일자">2026-08-06</InfoField>
       <InfoField label="사건종별">보호조치</InfoField>
       <InfoField label="접수일시">2026-08-08 14:00</InfoField>
-      <InfoField label="도착일시">
+      <!-- 시안(15197:135771): 접수일시 오른쪽 칸은 비어 있다(표 골격만 유지) -->
+      <InfoField>
+        <template #label><span class="sr-only">빈 항목</span></template>
+        <span class="sr-only">입력 항목 없음</span>
+      </InfoField>
+      <InfoField label="도착일시" full>
         <span class="group-gap3">
           <DatePicker
             id="manual-arrived-at"
@@ -59,12 +64,12 @@
             placeholder="선택"
             size="sm"
             class="!space-y-0"
-            trigger-class="w-28"
+            trigger-class="w-25"
             aria-label="도착시간 선택"
           />
         </span>
       </InfoField>
-      <InfoField label="신고내용" full value-class="readonly-text">
+      <InfoField label="신고내용" full layout="column">
           장충동 빠리바게트 앞쪽<br> 50대 남자분이 도로가에 쓰러져 잇다면서//
           119도 불럿다면서 장충동 빠리바게트 앞쪽<br/> 50대 남자분이 도로가에
           쓰러져 잇다면서// 119도 불럿다면서
@@ -168,7 +173,7 @@ import {
 } from "../composable/PC-LPO-0501";
 import { Checkbox } from "@/components/custom/checkbox";
 import styles from "@/components/custom/info-table/InfoTable.module.css";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useDialog } from "@/composable/dialog/dialog";
 defineOptions({ name: "ManualRegisterDialog" });
 
@@ -189,7 +194,13 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: "save"): void;
+  /** 112사건조회 체크 — 112사건조회 팝업(PC-LPO-0503)을 연다(기획서 1) */
+  (e: "open-112"): void;
 }>();
+
+watch(is112Search, (checked) => {
+  if (checked) emit("open-112");
+});
 
 const dialog = useDialog();
 
