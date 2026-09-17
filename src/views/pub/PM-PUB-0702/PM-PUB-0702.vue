@@ -67,253 +67,251 @@
           <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
         </template>
 
-        <ScrollWrapper>
-          <section class="lp-section" aria-labelledby="video-approval-heading">
-            <div class="lp-row-between lp-row-bottom lp-section-title">
-              <h3 id="video-approval-heading" class="lp-heading-md">결재선</h3>
-              <Button type="button" variant="secondary" size="xs" @click="onSaveApprovalLine">결재선 저장</Button>
-            </div>
+        <section class="lp-section" aria-labelledby="video-approval-heading">
+          <div class="lp-row-between lp-row-bottom lp-section-title">
+            <h3 id="video-approval-heading" class="lp-heading-md">결재선</h3>
+            <Button type="button" variant="secondary" size="xs" @click="onSaveApprovalLine">결재선 저장</Button>
+          </div>
 
-            <TableWrapper
-              v-for="(line, lineIndex) in approvalLines"
-              :key="lineIndex"
-              class="lp-approval-table"
-              :class="{ 'lp-table-gap': lineIndex > 0 }"
-              :columns="approvalColumns"
-              :items="approvalItems"
-              :selectable="false"
-              :show-pagination="false"
-              caption="결재선 — 기안자와 차수별 결재자"
-            >
-              <template v-for="step in line" :key="step.role" #[`cell-${step.role}`]>
-                <div class="lp-approval-cell">
-                  <div class="lp-approval-person">
-                    <SelectField
-                      v-if="step.selectable"
-                      v-model="nextApprover"
-                      :label="step.role"
-                      label-class="sr-only"
-                      :options="approverOptions"
-                      size="sm"
-                      trigger-class="w-full"
-                      class="!space-y-0 lp-approval-pick"
-                      placeholder="선택"
-                    />
-                    <span v-else>{{ step.person }}</span>
-                  </div>
-
-                  <div class="lp-approval-status">
-                    <template v-if="step.action === 'none'">
-                      <span :class="statusClass(step.status)">{{ step.status }}</span>
-                    </template>
-                    <template v-else-if="step.action === 'withdraw'">
-                      <span :class="statusClass(step.status)">{{ step.status }}</span>
-                      <Button type="button" variant="tertiary" size="xs" padding="8" @click="onWithdraw(lineIndex, step)">
-                        결재회수
-                      </Button>
-                    </template>
-                    <template v-else>
-                      <span class="lp-approval-decide">
-                        <Button type="button" variant="tertiary2" size="xs" padding="8" class="flex-1" @click="onReject(lineIndex, step)">
-                          반려
-                        </Button>
-                        <Button type="button" variant="tertiary" size="xs" padding="8" class="flex-1" @click="onApprove(lineIndex, step)">
-                          결재
-                        </Button>
-                      </span>
-                    </template>
-                  </div>
+          <TableWrapper
+            v-for="(line, lineIndex) in approvalLines"
+            :key="lineIndex"
+            class="lp-approval-table"
+            :class="{ 'lp-table-gap': lineIndex > 0 }"
+            :columns="approvalColumns"
+            :items="approvalItems"
+            :selectable="false"
+            :show-pagination="false"
+            caption="결재선 — 기안자와 차수별 결재자"
+          >
+            <template v-for="step in line" :key="step.role" #[`cell-${step.role}`]>
+              <div class="lp-approval-cell">
+                <div class="lp-approval-person">
+                  <SelectField
+                    v-if="step.selectable"
+                    v-model="nextApprover"
+                    :label="step.role"
+                    label-class="sr-only"
+                    :options="approverOptions"
+                    size="sm"
+                    trigger-class="w-full"
+                    class="!space-y-0 lp-approval-pick"
+                    placeholder="선택"
+                  />
+                  <span v-else>{{ step.person }}</span>
                 </div>
-              </template>
-            </TableWrapper>
-          </section>
 
-          <section class="lp-section" aria-labelledby="video-user-heading">
-            <div class="lp-row-between lp-section-title">
-              <h3 id="video-user-heading" class="lp-heading-md">사용자 정보</h3>
-              <p class="form-note lp-note-dark">＊ 사용자는 1명으로 제한합니다.</p>
-            </div>
+                <div class="lp-approval-status">
+                  <template v-if="step.action === 'none'">
+                    <span :class="statusClass(step.status)">{{ step.status }}</span>
+                  </template>
+                  <template v-else-if="step.action === 'withdraw'">
+                    <span :class="statusClass(step.status)">{{ step.status }}</span>
+                    <Button type="button" variant="tertiary" size="xs" padding="8" @click="onWithdraw(lineIndex, step)">
+                      결재회수
+                    </Button>
+                  </template>
+                  <template v-else>
+                    <span class="lp-approval-decide">
+                      <Button type="button" variant="tertiary2" size="xs" padding="8" class="flex-1" @click="onReject(lineIndex, step)">
+                        반려
+                      </Button>
+                      <Button type="button" variant="tertiary" size="xs" padding="8" class="flex-1" @click="onApprove(lineIndex, step)">
+                        결재
+                      </Button>
+                    </span>
+                  </template>
+                </div>
+              </div>
+            </template>
+          </TableWrapper>
+        </section>
 
-            <TableWrapper
-              :columns="userColumns"
-              :items="reportUsers"
-              :selectable="false"
-              :show-pagination="false"
-              caption="보고서를 작성한 사용자"
-            >
-              <template #cell-manage>
-                <Button type="button" variant="tertiary" size="xs" padding="10" @click="onEditUser">수정</Button>
-              </template>
-            </TableWrapper>
-          </section>
+        <section class="lp-section" aria-labelledby="video-user-heading">
+          <div class="lp-row-between lp-section-title">
+            <h3 id="video-user-heading" class="lp-heading-md">사용자 정보</h3>
+            <p class="form-note lp-note-dark">＊ 사용자는 1명으로 제한합니다.</p>
+          </div>
 
-          <section class="lp-section" aria-labelledby="video-device-heading">
-            <h3 id="video-device-heading" class="lp-heading-md lp-section-title">촬영 장비</h3>
-            <div class="lp-form-box lp-form-box-wide">
-              <RadioGroup v-model="detail.device" class="lp-choice-row" aria-label="촬영 장비">
-                <RadioGroupItem value="work" label="업무용 휴대폰 (PDA, 폴리폰)" />
-                <RadioGroupItem value="personal" label="개인 휴대폰" />
+          <TableWrapper
+            :columns="userColumns"
+            :items="reportUsers"
+            :selectable="false"
+            :show-pagination="false"
+            caption="보고서를 작성한 사용자"
+          >
+            <template #cell-manage>
+              <Button type="button" variant="tertiary" size="xs" padding="10" @click="onEditUser">수정</Button>
+            </template>
+          </TableWrapper>
+        </section>
+
+        <section class="lp-section" aria-labelledby="video-device-heading">
+          <h3 id="video-device-heading" class="lp-heading-md lp-section-title">촬영 장비</h3>
+          <div class="lp-form-box lp-form-box-wide">
+            <RadioGroup v-model="detail.device" class="lp-choice-row" aria-label="촬영 장비">
+              <RadioGroupItem value="work" label="업무용 휴대폰 (PDA, 폴리폰)" />
+              <RadioGroupItem value="personal" label="개인 휴대폰" />
+            </RadioGroup>
+            <div class="lp-choice-input">
+              <RadioGroup v-model="detail.device" aria-label="촬영 장비 기타">
+                <RadioGroupItem value="etc" label="기타" />
               </RadioGroup>
-              <div class="lp-choice-input">
-                <RadioGroup v-model="detail.device" aria-label="촬영 장비 기타">
-                  <RadioGroupItem value="etc" label="기타" />
+              <InputField2
+                v-model="detail.deviceEtc"
+                size="sm"
+                aria-label="촬영 장비 기타 입력"
+                :disabled="detail.device !== 'etc'"
+                class="!space-y-0"
+                input-class="w-85"
+              />
+            </div>
+            <TextareaField
+              v-model="detail.deviceReason"
+              label="사용 사유"
+              label-class="lp-text-dark"
+              class="w-full !space-y-0"
+              textarea-class="w-full"
+              :height="80"
+              placeholder="예) 바디캠을 등록한 사용자가 아니며(또는 등록前이며), 범죄 진압 및 수사를 위해 증거보전이 필요하다고 판단하여 촬영함"
+            />
+          </div>
+        </section>
+
+        <section class="lp-section" aria-labelledby="video-notice-heading">
+          <h3 id="video-notice-heading" class="lp-heading-md lp-section-title">고지 여부</h3>
+          <div class="lp-form-box lp-form-box-wide">
+            <div class="lp-choice-row">
+              <RadioGroup v-model="detail.notice" aria-label="고지 여부">
+                <RadioGroupItem value="notified" label="촬영여부 등 표시 (고지)" />
+              </RadioGroup>
+              <span class="lp-choice-input">
+                <RadioGroup v-model="detail.notice" aria-label="미고지 사유">
+                  <RadioGroupItem value="not-notified" label="미표시 (미고지) - 사유" />
                 </RadioGroup>
                 <InputField2
-                  v-model="detail.deviceEtc"
+                  v-model="detail.noticeReason"
                   size="sm"
-                  aria-label="촬영 장비 기타 입력"
-                  :disabled="detail.device !== 'etc'"
+                  aria-label="미고지 사유 입력"
+                  :disabled="detail.notice !== 'not-notified'"
                   class="!space-y-0"
                   input-class="w-85"
                 />
-              </div>
-              <TextareaField
-                v-model="detail.deviceReason"
-                label="사용 사유"
-                label-class="lp-text-dark"
-                class="w-full !space-y-0"
-                textarea-class="w-full"
-                :height="80"
-                placeholder="예) 바디캠을 등록한 사용자가 아니며(또는 등록前이며), 범죄 진압 및 수사를 위해 증거보전이 필요하다고 판단하여 촬영함"
-              />
+              </span>
             </div>
-          </section>
+          </div>
+        </section>
 
-          <section class="lp-section" aria-labelledby="video-notice-heading">
-            <h3 id="video-notice-heading" class="lp-heading-md lp-section-title">고지 여부</h3>
+        <section class="lp-section" aria-labelledby="video-outline-heading">
+          <h3 id="video-outline-heading" class="lp-heading-md lp-section-title">촬영 개요</h3>
+
+          <div class="lp-subsection">
+            <h4 class="lp-heading-sm lp-section-title">1. 촬영 경위</h4>
             <div class="lp-form-box lp-form-box-wide">
               <div class="lp-choice-row">
-                <RadioGroup v-model="detail.notice" aria-label="고지 여부">
-                  <RadioGroupItem value="notified" label="촬영여부 등 표시 (고지)" />
+                <RadioGroup v-model="detail.origin" class="lp-choice-row" aria-label="촬영 경위">
+                  <RadioGroupItem value="report112" label="112신고" />
+                  <RadioGroupItem value="patrol" label="순찰 중 자체 인지" />
                 </RadioGroup>
                 <span class="lp-choice-input">
-                  <RadioGroup v-model="detail.notice" aria-label="미고지 사유">
-                    <RadioGroupItem value="not-notified" label="미표시 (미고지) - 사유" />
+                  <RadioGroup v-model="detail.origin" aria-label="촬영 경위 기타">
+                    <RadioGroupItem value="etc" label="기타" />
                   </RadioGroup>
                   <InputField2
-                    v-model="detail.noticeReason"
+                    v-model="detail.originEtc"
                     size="sm"
-                    aria-label="미고지 사유 입력"
-                    :disabled="detail.notice !== 'not-notified'"
+                    aria-label="촬영 경위 기타 입력"
+                    :disabled="detail.origin !== 'etc'"
                     class="!space-y-0"
                     input-class="w-85"
                   />
                 </span>
               </div>
             </div>
-          </section>
+          </div>
 
-          <section class="lp-section" aria-labelledby="video-outline-heading">
-            <h3 id="video-outline-heading" class="lp-heading-md lp-section-title">촬영 개요</h3>
+          <div class="lp-subsection">
+            <h4 class="lp-heading-sm lp-section-title">2. 촬영 일시</h4>
+            <div class="lp-form-box lp-form-box-wide">
+              <div class="lp-choice-row">
+                <DatePicker
+                  v-model="detail.startDate"
+                  label="시작일시"
+                  size="sm"
+                  label-position="left"
+                  class="!space-y-0"
+                  input-class="w-40"
+                />
+                <InputField2
+                  v-model="detail.startTime"
+                  label="시간"
+                  size="sm"
+                  label-position="left"
+                  placeholder="예) 12:00"
+                  class="!space-y-0"
+                  input-class="w-30"
+                />
+              </div>
+              <div class="lp-choice-row">
+                <DatePicker
+                  v-model="detail.endDate"
+                  label="종료일시"
+                  size="sm"
+                  label-position="left"
+                  class="!space-y-0"
+                  input-class="w-40"
+                />
+                <InputField2
+                  v-model="detail.endTime"
+                  label="시간"
+                  size="sm"
+                  label-position="left"
+                  placeholder="예) 12:00"
+                  class="!space-y-0"
+                  input-class="w-30"
+                />
+              </div>
+            </div>
+          </div>
 
-            <div class="lp-subsection">
-              <h4 class="lp-heading-sm lp-section-title">1. 촬영 경위</h4>
-              <div class="lp-form-box lp-form-box-wide">
-                <div class="lp-choice-row">
-                  <RadioGroup v-model="detail.origin" class="lp-choice-row" aria-label="촬영 경위">
-                    <RadioGroupItem value="report112" label="112신고" />
-                    <RadioGroupItem value="patrol" label="순찰 중 자체 인지" />
+          <div class="lp-subsection">
+            <h4 class="lp-heading-sm lp-section-title">3. 촬영 장소</h4>
+            <div class="lp-form-box lp-form-box-wide">
+              <div class="lp-choice-row">
+                <span class="lp-paren-group">
+                  <Checkbox v-model="detail.indoor" label="실내" />
+                  <span class="lp-paren" aria-hidden="true">(</span>
+                  <RadioGroup
+                    v-model="detail.indoorType"
+                    :disabled="!detail.indoor"
+                    class="lp-radio-inline"
+                    aria-label="실내 세부 장소"
+                  >
+                    <RadioGroupItem value="home" label="가정내" />
+                    <RadioGroupItem value="facility" label="식당 · 백화점 · 역사 · 사무실 등" />
+                    <RadioGroupItem value="transport" label="운송수단 내" />
                   </RadioGroup>
-                  <span class="lp-choice-input">
-                    <RadioGroup v-model="detail.origin" aria-label="촬영 경위 기타">
-                      <RadioGroupItem value="etc" label="기타" />
-                    </RadioGroup>
-                    <InputField2
-                      v-model="detail.originEtc"
-                      size="sm"
-                      aria-label="촬영 경위 기타 입력"
-                      :disabled="detail.origin !== 'etc'"
-                      class="!space-y-0"
-                      input-class="w-85"
-                    />
-                  </span>
-                </div>
+                  <span class="lp-paren" aria-hidden="true">)</span>
+                </span>
+                <Checkbox v-model="detail.outdoor" label="실외" />
               </div>
             </div>
+          </div>
+        </section>
 
-            <div class="lp-subsection">
-              <h4 class="lp-heading-sm lp-section-title">2. 촬영 일시</h4>
-              <div class="lp-form-box lp-form-box-wide">
-                <div class="lp-choice-row">
-                  <DatePicker
-                    v-model="detail.startDate"
-                    label="시작일시"
-                    size="sm"
-                    label-position="left"
-                    class="!space-y-0"
-                    input-class="w-40"
-                  />
-                  <InputField2
-                    v-model="detail.startTime"
-                    label="시간"
-                    size="sm"
-                    label-position="left"
-                    placeholder="예) 12:00"
-                    class="!space-y-0"
-                    input-class="w-30"
-                  />
-                </div>
-                <div class="lp-choice-row">
-                  <DatePicker
-                    v-model="detail.endDate"
-                    label="종료일시"
-                    size="sm"
-                    label-position="left"
-                    class="!space-y-0"
-                    input-class="w-40"
-                  />
-                  <InputField2
-                    v-model="detail.endTime"
-                    label="시간"
-                    size="sm"
-                    label-position="left"
-                    placeholder="예) 12:00"
-                    class="!space-y-0"
-                    input-class="w-30"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="lp-subsection">
-              <h4 class="lp-heading-sm lp-section-title">3. 촬영 장소</h4>
-              <div class="lp-form-box lp-form-box-wide">
-                <div class="lp-choice-row">
-                  <span class="lp-paren-group">
-                    <Checkbox v-model="detail.indoor" label="실내" />
-                    <span class="lp-paren" aria-hidden="true">(</span>
-                    <RadioGroup
-                      v-model="detail.indoorType"
-                      :disabled="!detail.indoor"
-                      class="lp-radio-inline"
-                      aria-label="실내 세부 장소"
-                    >
-                      <RadioGroupItem value="home" label="가정내" />
-                      <RadioGroupItem value="facility" label="식당 · 백화점 · 역사 · 사무실 등" />
-                      <RadioGroupItem value="transport" label="운송수단 내" />
-                    </RadioGroup>
-                    <span class="lp-paren" aria-hidden="true">)</span>
-                  </span>
-                  <Checkbox v-model="detail.outdoor" label="실외" />
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section class="lp-section" aria-labelledby="video-note-heading">
-            <h3 id="video-note-heading" class="lp-heading-md lp-section-title">참고사항</h3>
-            <TextareaField
-              v-model="detail.note"
-              aria-label="참고사항"
-              class="w-full !space-y-0"
-              textarea-class="w-full"
-              :height="144"
-              :maxlength="NOTE_MAX"
-              placeholder="촬영한 영상 등은 '개인영상정보 등록 대장'(양식4)에 등록 등 기재&#10;사건 개요 등은 112신고처리표, 근무일지, 발생보고 참고 등 기재"
-            />
-            <p class="lp-char-count"><b>{{ detail.note.length }}</b>/{{ NOTE_MAX }}</p>
-          </section>
-        </ScrollWrapper>
+        <section class="lp-section" aria-labelledby="video-note-heading">
+          <h3 id="video-note-heading" class="lp-heading-md lp-section-title">참고사항</h3>
+          <TextareaField
+            v-model="detail.note"
+            aria-label="참고사항"
+            class="w-full !space-y-0"
+            textarea-class="w-full"
+            :height="144"
+            :maxlength="NOTE_MAX"
+            placeholder="촬영한 영상 등은 '개인영상정보 등록 대장'(양식4)에 등록 등 기재&#10;사건 개요 등은 112신고처리표, 근무일지, 발생보고 참고 등 기재"
+          />
+          <p class="lp-char-count"><b>{{ detail.note.length }}</b>/{{ NOTE_MAX }}</p>
+        </section>
       </LayoutPanel>
     </template>
   </LayoutSplit>
@@ -339,7 +337,6 @@ import TableWrapper from '@/components/custom/table/TableWrapper.vue'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import LayoutSplit from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
-import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
 import { useDialog } from '@/composable/dialog/dialog'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { publicSafetyMenu } from '@/composable/menu/sidemenu/presets'

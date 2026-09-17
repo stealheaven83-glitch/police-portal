@@ -13,15 +13,20 @@
         <slot name="actions" />
       </template>
     </LayoutHeader>
-    <div class="layoutPanelBody" :class="{ 'no-padding': noPadding }">
+    <div
+      ref="bodyRef"
+      class="layoutPanelBody"
+      :class="{ 'no-padding': noPadding, 'has-scroll': isScrollable }"
+    >
       <slot />
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { useId } from 'vue'
+import { ref, useId } from 'vue'
 import LayoutHeader from './layoutHeader.vue'
+import { useIsScrollable } from '@/composable/scroll/useIsScrollable'
 
 interface Props {
   /** 패널 제목. section 의 접근성 이름으로도 쓰인다 */
@@ -36,6 +41,10 @@ withDefaults(defineProps<Props>(), {
   as: 'h2',
   noPadding: false,
 })
+
+const bodyRef = ref<HTMLElement | null>(null)
+const isScrollable = useIsScrollable(bodyRef);
+
 
 /** section 이 제목을 가리키게 할 id. 같은 화면에 패널이 여러 개여도 겹치지 않는다 */
 const titleId = useId()
@@ -60,12 +69,16 @@ const titleId = useId()
   min-height: 0;
   flex-direction: column;
   overflow: hidden;
+  overflow-y: auto;
   padding: 2rem;
 }
 
 /* 호출부가 :no-padding 으로 켠다. 기본은 위 padding 그대로 */
 .layoutPanelBody.no-padding {
   padding: 0;
+}
+.layoutPanelBody.has-scroll {
+  padding-right: 1rem;
 }
 
 @media (max-width: 48rem) {

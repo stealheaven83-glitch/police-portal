@@ -77,267 +77,265 @@
           </Button>
         </template>
 
-        <ScrollWrapper>
-          <section class="lp-section" aria-labelledby="cert-general-heading">
-            <h3 id="cert-general-heading" class="form-title">일반현황</h3>
-            <InfoTable :columns="2" size="120">
-              <!-- 주소는 시안에서 오른쪽 두 칸(시설물명 · 이용/규모)에 걸쳐 있다 -->
-              <InfoField label="주소" :row-span="2">
-                <span class="readonly-text">{{ checklist.address }}</span>
-              </InfoField>
-              <InfoField label="시설물명" for="cert-facility-name">
-                <InputField2
-                  id="cert-facility-name"
-                  v-model="checklist.facilityName"
-                  size="sm"
-                  class="!space-y-0 flex-1"
-                  input-class="w-full"
-                />
-              </InfoField>
-              <InfoField label="이용 · 규모" for="cert-usage-scale">
-                <InputField2
-                  id="cert-usage-scale"
-                  v-model="checklist.usageScale"
-                  size="sm"
-                  class="!space-y-0 flex-1"
-                  input-class="w-full"
-                />
-              </InfoField>
+        <section class="lp-section" aria-labelledby="cert-general-heading">
+          <h3 id="cert-general-heading" class="form-title">일반현황</h3>
+          <InfoTable :columns="2" size="120">
+            <!-- 주소는 시안에서 오른쪽 두 칸(시설물명 · 이용/규모)에 걸쳐 있다 -->
+            <InfoField label="주소" :row-span="2">
+              <span class="readonly-text">{{ checklist.address }}</span>
+            </InfoField>
+            <InfoField label="시설물명" for="cert-facility-name">
+              <InputField2
+                id="cert-facility-name"
+                v-model="checklist.facilityName"
+                size="sm"
+                class="!space-y-0 flex-1"
+                input-class="w-full"
+              />
+            </InfoField>
+            <InfoField label="이용 · 규모" for="cert-usage-scale">
+              <InputField2
+                id="cert-usage-scale"
+                v-model="checklist.usageScale"
+                size="sm"
+                class="!space-y-0 flex-1"
+                input-class="w-full"
+              />
+            </InfoField>
 
-              <InfoField label="체크리스트 형태" for="cert-checklist-type">
-                <SelectField
-                  id="cert-checklist-type"
-                  v-model="checklist.checklistType"
-                  :options="checklistTypeOptions"
-                  size="sm"
-                  trigger-class="w-full"
-                  class="!space-y-0 flex-1"
-                />
-              </InfoField>
-              <InfoField label="사용승인일" for="cert-approval-date">
-                <DatePicker
-                  id="cert-approval-date"
-                  v-model="checklist.approvalDate"
-                  size="sm"
-                  class="flex-1"
-                  input-class="w-full"
-                />
-              </InfoField>
-            </InfoTable>
-          </section>
+            <InfoField label="체크리스트 형태" for="cert-checklist-type">
+              <SelectField
+                id="cert-checklist-type"
+                v-model="checklist.checklistType"
+                :options="checklistTypeOptions"
+                size="sm"
+                trigger-class="w-full"
+                class="!space-y-0 flex-1"
+              />
+            </InfoField>
+            <InfoField label="사용승인일" for="cert-approval-date">
+              <DatePicker
+                id="cert-approval-date"
+                v-model="checklist.approvalDate"
+                size="sm"
+                class="flex-1"
+                input-class="w-full"
+              />
+            </InfoField>
+          </InfoTable>
+        </section>
 
-          <section class="lp-section" aria-labelledby="cert-owner-heading">
-            <h3 id="cert-owner-heading" class="form-title">시설주 정보</h3>
-            <InfoTable :columns="2" size="100">
-              <InfoField label="성명" for="cert-owner-name">
-                <InputField2
-                  id="cert-owner-name"
-                  v-model="checklist.ownerName"
-                  size="sm"
-                  class="!space-y-0 flex-1"
-                  input-class="w-full"
-                />
-              </InfoField>
-              <InfoField label="연락처" for="cert-owner-phone">
-                <InputField2
-                  id="cert-owner-phone"
-                  v-model="checklist.ownerPhone"
-                  size="sm"
-                  type="tel"
-                  class="!space-y-0 flex-1"
-                  input-class="w-full"
-                />
-              </InfoField>
-            </InfoTable>
-          </section>
+        <section class="lp-section" aria-labelledby="cert-owner-heading">
+          <h3 id="cert-owner-heading" class="form-title">시설주 정보</h3>
+          <InfoTable :columns="2" size="100">
+            <InfoField label="성명" for="cert-owner-name">
+              <InputField2
+                id="cert-owner-name"
+                v-model="checklist.ownerName"
+                size="sm"
+                class="!space-y-0 flex-1"
+                input-class="w-full"
+              />
+            </InfoField>
+            <InfoField label="연락처" for="cert-owner-phone">
+              <InputField2
+                id="cert-owner-phone"
+                v-model="checklist.ownerPhone"
+                size="sm"
+                type="tel"
+                class="!space-y-0 flex-1"
+                input-class="w-full"
+              />
+            </InfoField>
+          </InfoTable>
+        </section>
 
-          <section class="lp-section" aria-labelledby="cert-crime-heading">
-            <h3 id="cert-crime-heading" class="form-title">범죄발생 현황</h3>
-            <InfoTable :columns="2" size="100">
-              <InfoField label="피해여부">
-                <RadioGroup
-                  v-model="checklist.damaged"
-                  :class="infoStyles['info-table-radio']"
-                >
-                  <RadioGroupItem value="yes" label="있음" />
-                  <RadioGroupItem value="no" label="없음" />
-                </RadioGroup>
-              </InfoField>
-              <InfoField label="피해횟수" for="cert-damage-count">
-                <InputField2
-                  id="cert-damage-count"
-                  v-model="checklist.damageCount"
-                  size="sm"
-                  type="number"
-                  min="0"
-                  class="!space-y-0 flex-1"
-                  input-class="w-full"
-                />
-              </InfoField>
-            </InfoTable>
-          </section>
+        <section class="lp-section" aria-labelledby="cert-crime-heading">
+          <h3 id="cert-crime-heading" class="form-title">범죄발생 현황</h3>
+          <InfoTable :columns="2" size="100">
+            <InfoField label="피해여부">
+              <RadioGroup
+                v-model="checklist.damaged"
+                :class="infoStyles['info-table-radio']"
+              >
+                <RadioGroupItem value="yes" label="있음" />
+                <RadioGroupItem value="no" label="없음" />
+              </RadioGroup>
+            </InfoField>
+            <InfoField label="피해횟수" for="cert-damage-count">
+              <InputField2
+                id="cert-damage-count"
+                v-model="checklist.damageCount"
+                size="sm"
+                type="number"
+                min="0"
+                class="!space-y-0 flex-1"
+                input-class="w-full"
+              />
+            </InfoField>
+          </InfoTable>
+        </section>
 
-          <section class="lp-section" aria-labelledby="cert-standard-heading">
-            <h3 id="cert-standard-heading" class="form-title">인증기준표</h3>
-            <!-- ① 배점 요약 — 시안이 정한 고정 기준이라 입력이 없다 -->
-            <div class="lp-cert-scroll">
-              <table class="lp-cert-table" aria-label="평가분야별 항목수와 배점">
-                <colgroup>
-                  <col width="100"/>
-                  <col width="122"/>
-                  <col width="80"/>
-                  <col width="100"/>
-                  <col />
-                </colgroup>
-                <thead>
-                  <tr>
-                    <th colspan="2" scope="col">평가분야</th>
-                    <th scope="col">항목수</th>
-                    <th scope="col">배점</th>
-                    <th scope="col">비고</th>
+        <section class="lp-section" aria-labelledby="cert-standard-heading">
+          <h3 id="cert-standard-heading" class="form-title">인증기준표</h3>
+          <!-- ① 배점 요약 — 시안이 정한 고정 기준이라 입력이 없다 -->
+          <div class="lp-cert-scroll">
+            <table class="lp-cert-table" aria-label="평가분야별 항목수와 배점">
+              <colgroup>
+                <col width="100"/>
+                <col width="122"/>
+                <col width="80"/>
+                <col width="100"/>
+                <col />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th colspan="2" scope="col">평가분야</th>
+                  <th scope="col">항목수</th>
+                  <th scope="col">배점</th>
+                  <th scope="col">비고</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template v-for="(group, gi) in certScoreGroups" :key="group.field">
+                  <tr v-for="(item, ii) in group.items" :key="item.label">
+                    <th v-if="ii === 0" :rowspan="group.items.length" scope="rowgroup">{{ group.field }}</th>
+                    <td>{{ item.label }}</td>
+                    <td>{{ item.count }}</td>
+                    <!-- 배점은 기본항목 전체를, 비고는 가점·합계까지 세로로 묶는다 -->
+                    <td v-if="gi === 0 && ii === 0" :rowspan="certBasicRowCount">34점</td>
+                    <td v-if="gi === 0 && ii === 0" :rowspan="certBasicRowCount + 2" class="lp-cert-note">
+                      <p
+                        v-for="(line, li) in certScoreNote"
+                        :key="li"
+                        :class="line.strong ? 'lp-cert-note-strong' : undefined"
+                      >{{ line.text }}</p>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  <template v-for="(group, gi) in certScoreGroups" :key="group.field">
-                    <tr v-for="(item, ii) in group.items" :key="item.label">
-                      <th v-if="ii === 0" :rowspan="group.items.length" scope="rowgroup">{{ group.field }}</th>
-                      <td>{{ item.label }}</td>
-                      <td>{{ item.count }}</td>
-                      <!-- 배점은 기본항목 전체를, 비고는 가점·합계까지 세로로 묶는다 -->
-                      <td v-if="gi === 0 && ii === 0" :rowspan="certBasicRowCount">34점</td>
-                      <td v-if="gi === 0 && ii === 0" :rowspan="certBasicRowCount + 2" class="lp-cert-note">
-                        <p
-                          v-for="(line, li) in certScoreNote"
-                          :key="li"
-                          :class="line.strong ? 'lp-cert-note-strong' : undefined"
-                        >{{ line.text }}</p>
+                </template>
+                <tr>
+                  <th colspan="2" scope="row">가점 항목</th>
+                  <td>6</td>
+                  <td>6점</td>
+                </tr>
+                <tr class="lp-cert-total">
+                  <th colspan="2" scope="row">합계</th>
+                  <td>23</td>
+                  <td class="border-right">40점</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ② 기본 항목 -->
+          <div class="lp-cert-scroll">
+            <table class="lp-cert-table" aria-label="기본 항목 평가">
+              <colgroup>
+                <col width="65"/>
+                <col width="100"/>
+                <col/>
+                <col />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th colspan="2" scope="col">분야</th>
+                  <th scope="col">항목</th>
+                  <th scope="col" class="lp-cert-choice">양호-2점, 보통-1점, 미흡-0점</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template v-for="group in certBasicGroups" :key="group.field">
+                  <template v-for="(entry, li) in group.labels" :key="entry.label">
+                    <tr v-for="(question, qi) in entry.questions" :key="question.key">
+                      <th
+                        v-if="li === 0 && qi === 0"
+                        :rowspan="certGroupRows(group)"
+                        scope="rowgroup"
+                      >{{ group.field }}</th>
+                      <th v-if="qi === 0" :rowspan="entry.questions.length" scope="row">{{ entry.label }}</th>
+                      <td class="lp-cert-question">
+                        <ol :start="question.no"><li>{{ question.text }}</li></ol>
+                      </td>
+                      <td>
+                        <RadioGroup
+                          v-model="checklist.basicScores[question.key]"
+                          :class="infoStyles['info-table-radio']"
+                        >
+                          <RadioGroupItem value="good" label="양호" />
+                          <RadioGroupItem value="fair" label="보통" />
+                          <RadioGroupItem value="poor" label="미흡" />
+                        </RadioGroup>
                       </td>
                     </tr>
                   </template>
-                  <tr>
-                    <th colspan="2" scope="row">가점 항목</th>
-                    <td>6</td>
-                    <td>6점</td>
-                  </tr>
-                  <tr class="lp-cert-total">
-                    <th colspan="2" scope="row">합계</th>
-                    <td>23</td>
-                    <td class="border-right">40점</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+                </template>
+              </tbody>
+            </table>
+          </div>
 
-            <!-- ② 기본 항목 -->
-            <div class="lp-cert-scroll">
-              <table class="lp-cert-table" aria-label="기본 항목 평가">
-                <colgroup>
-                  <col width="65"/>
-                  <col width="100"/>
-                  <col/>
-                  <col />
-                </colgroup>
-                <thead>
-                  <tr>
-                    <th colspan="2" scope="col">분야</th>
-                    <th scope="col">항목</th>
-                    <th scope="col" class="lp-cert-choice">양호-2점, 보통-1점, 미흡-0점</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <template v-for="group in certBasicGroups" :key="group.field">
-                    <template v-for="(entry, li) in group.labels" :key="entry.label">
-                      <tr v-for="(question, qi) in entry.questions" :key="question.key">
-                        <th
-                          v-if="li === 0 && qi === 0"
-                          :rowspan="certGroupRows(group)"
-                          scope="rowgroup"
-                        >{{ group.field }}</th>
-                        <th v-if="qi === 0" :rowspan="entry.questions.length" scope="row">{{ entry.label }}</th>
-                        <td class="lp-cert-question">
-                          <ol :start="question.no"><li>{{ question.text }}</li></ol>
-                        </td>
-                        <td>
-                          <RadioGroup
-                            v-model="checklist.basicScores[question.key]"
-                            :class="infoStyles['info-table-radio']"
-                          >
-                            <RadioGroupItem value="good" label="양호" />
-                            <RadioGroupItem value="fair" label="보통" />
-                            <RadioGroupItem value="poor" label="미흡" />
-                          </RadioGroup>
-                        </td>
-                      </tr>
-                    </template>
-                  </template>
-                </tbody>
-              </table>
-            </div>
+          <!-- ③ 가점 항목 — 분야가 '가점' 하나뿐이라 항목 라벨 열이 없다 -->
+          <div class="lp-cert-scroll">
+            <table class="lp-cert-table" aria-label="가점 항목 평가">
+              <colgroup>
+                <col width="60"/>
+                <col width=""/>
+                <col width="180"/>
 
-            <!-- ③ 가점 항목 — 분야가 '가점' 하나뿐이라 항목 라벨 열이 없다 -->
-            <div class="lp-cert-scroll">
-              <table class="lp-cert-table" aria-label="가점 항목 평가">
-                <colgroup>
-                  <col width="60"/>
-                  <col width=""/>
-                  <col width="180"/>
+              </colgroup>
+              <thead>
+                <tr>
+                  <th scope="col">분야</th>
+                  <th scope="col">항목</th>
+                  <th scope="col" class="lp-cert-choice">양호-1점, 미흡-0점</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(item, index) in certBonusItems" :key="item.key">
+                  <th v-if="index === 0" :rowspan="certBonusItems.length" scope="rowgroup">가점</th>
+                  <td class="lp-cert-question">
+                    <ol :start="item.no"><li>{{ item.text }}</li></ol>
+                  </td>
+                  <td>
+                    <RadioGroup
+                      v-model="checklist.bonusScores[item.key]"
+                      :class="infoStyles['info-table-radio']"
+                    >
+                      <RadioGroupItem value="good" label="양호" />
+                      <RadioGroupItem value="poor" label="미흡" />
+                    </RadioGroup>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-                </colgroup>
-                <thead>
-                  <tr>
-                    <th scope="col">분야</th>
-                    <th scope="col">항목</th>
-                    <th scope="col" class="lp-cert-choice">양호-1점, 미흡-0점</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(item, index) in certBonusItems" :key="item.key">
-                    <th v-if="index === 0" :rowspan="certBonusItems.length" scope="rowgroup">가점</th>
-                    <td class="lp-cert-question">
-                      <ol :start="item.no"><li>{{ item.text }}</li></ol>
-                    </td>
-                    <td>
-                      <RadioGroup
-                        v-model="checklist.bonusScores[item.key]"
-                        :class="infoStyles['info-table-radio']"
-                      >
-                        <RadioGroupItem value="good" label="양호" />
-                        <RadioGroupItem value="poor" label="미흡" />
-                      </RadioGroup>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <!-- ④ 메모 · 총점 · 인증여부 -->
-            <InfoTable :columns="1" size="120" class="lp-table-gap">
-              <InfoField label="메모" for="cert-memo">
-                <Textarea
-                  id="cert-memo"
-                  v-model="checklist.memo"
-                  class="w-full"
-                />
-              </InfoField>
-              <InfoField label="총점">
-                <span class="readonly-text">{{ totalScore }}</span>
-                <span v-if="meetsCertStandard" class="lp-cert-pass">＊ 인증기준에 <strong class="lp-em-strong">적합</strong>합니다.</span>
-                <span v-else class="lp-cert-fail">＊ 인증기준에 <strong class="lp-em-strong">부적합</strong>합니다.</span>
-              </InfoField>
-              <InfoField label="인증여부" for="cert-result">
-                <SelectField
-                  id="cert-result"
-                  v-model="checklist.certified"
-                  :options="certResultOptions"
-                  placeholder="선택"
-                  size="sm"
-                  trigger-class="w-44"
-                  class="!space-y-0"
-                />
-              </InfoField>
-            </InfoTable>
-          </section>
-        </ScrollWrapper>
+          <!-- ④ 메모 · 총점 · 인증여부 -->
+          <InfoTable :columns="1" size="120" class="lp-table-gap">
+            <InfoField label="메모" for="cert-memo">
+              <Textarea
+                id="cert-memo"
+                v-model="checklist.memo"
+                class="w-full"
+              />
+            </InfoField>
+            <InfoField label="총점">
+              <span class="readonly-text">{{ totalScore }}</span>
+              <span v-if="meetsCertStandard" class="lp-cert-pass">＊ 인증기준에 <strong class="lp-em-strong">적합</strong>합니다.</span>
+              <span v-else class="lp-cert-fail">＊ 인증기준에 <strong class="lp-em-strong">부적합</strong>합니다.</span>
+            </InfoField>
+            <InfoField label="인증여부" for="cert-result">
+              <SelectField
+                id="cert-result"
+                v-model="checklist.certified"
+                :options="certResultOptions"
+                placeholder="선택"
+                size="sm"
+                trigger-class="w-44"
+                class="!space-y-0"
+              />
+            </InfoField>
+          </InfoTable>
+        </section>
       </LayoutPanel>
     </template>
   </LayoutSplit>
@@ -363,7 +361,6 @@ import { InfoTable, InfoField } from '@/components/custom/info-table'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import LayoutSplit from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
-import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { publicSafetyMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'

@@ -96,560 +96,558 @@
           <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
         </template>
 
-        <ScrollWrapper>
-          <!-- 시안 13685:117683 — 초록 안내 박스(체크 아이콘 + 제목 + 3줄) -->
-          <Alert state="success" title="보고서 작성 요령">
-            <ol class="lp-guide-list">
-              <li>보고서는 대상자별로 작성합니다.</li>
-              <li>해당 항목에 중복사항이 있으면 모두 체크합니다.</li>
-              <li>권총 사격(경고 또는 실제 사격)이나 전자충격기(전극침)는 발사가 불발에 그치더라도 보고서를 작성합니다.</li>
-            </ol>
-          </Alert>
+        <!-- 시안 13685:117683 — 초록 안내 박스(체크 아이콘 + 제목 + 3줄) -->
+        <Alert state="success" title="보고서 작성 요령">
+          <ol class="lp-guide-list">
+            <li>보고서는 대상자별로 작성합니다.</li>
+            <li>해당 항목에 중복사항이 있으면 모두 체크합니다.</li>
+            <li>권총 사격(경고 또는 실제 사격)이나 전자충격기(전극침)는 발사가 불발에 그치더라도 보고서를 작성합니다.</li>
+          </ol>
+        </Alert>
 
-          <section class="lp-section" aria-labelledby="force-approval-heading">
-            <div class="lp-row-between lp-section-title">
-              <h3 id="force-approval-heading" class="lp-heading-md">결재선</h3>
-              <Button type="button" variant="tertiary" size="sm" @click="onSelectApprovalLine">결재선 선택</Button>
-            </div>
-            <p class="form-note lp-note-gap">* 결재선 선택 버튼을 클릭하여 결재자를 선택합니다.</p>
+        <section class="lp-section" aria-labelledby="force-approval-heading">
+          <div class="lp-row-between lp-section-title">
+            <h3 id="force-approval-heading" class="lp-heading-md">결재선</h3>
+            <Button type="button" variant="tertiary" size="sm" @click="onSelectApprovalLine">결재선 선택</Button>
+          </div>
+          <p class="form-note lp-note-gap">* 결재선 선택 버튼을 클릭하여 결재자를 선택합니다.</p>
 
-            <TableWrapper
-              :columns="approvalColumns"
-              :items="approvalItems"
-              :selectable="false"
-              caption="결재선 — 기안자와 차수별 결재자"
-            >
-              <template v-for="step in approvalLine" :key="step.role" #[`cell-${step.role}`]="{ item }">
-                <SelectField
-                  v-if="item.kind === 'person' && step.selectable"
-                  v-model="nextApprover"
-                  :label="step.role"
-                  label-class="sr-only"
-                  :options="approverOptions"
-                  size="sm"
-                  trigger-class="w-full"
-                  class="!space-y-0"
-                  placeholder="선택"
-                />
-                <span v-else-if="item.kind === 'person'">{{ step.person }}</span>
+          <TableWrapper
+            :columns="approvalColumns"
+            :items="approvalItems"
+            :selectable="false"
+            caption="결재선 — 기안자와 차수별 결재자"
+          >
+            <template v-for="step in approvalLine" :key="step.role" #[`cell-${step.role}`]="{ item }">
+              <SelectField
+                v-if="item.kind === 'person' && step.selectable"
+                v-model="nextApprover"
+                :label="step.role"
+                label-class="sr-only"
+                :options="approverOptions"
+                size="sm"
+                trigger-class="w-full"
+                class="!space-y-0"
+                placeholder="선택"
+              />
+              <span v-else-if="item.kind === 'person'">{{ step.person }}</span>
 
-                <span v-else-if="step.action === 'none'" :class="statusClass(step.status)">
-                  {{ step.status }}
-                </span>
-                <span v-else-if="step.action === 'withdraw'" class="lp-unit-row">
-                  <span :class="statusClass(step.status)">{{ step.status }}</span>
-                  <Button type="button" variant="tertiary" size="xs" padding="8" @click="onWithdraw(step)">
-                    결재회수
-                  </Button>
-                </span>
-                <span v-else class="lp-unit-row">
-                  <Button type="button" variant="tertiary" size="xs" padding="8" @click="onReject(step)">반려</Button>
-                  <Button type="button" variant="tertiary" size="xs" padding="8" @click="onApprove(step)">결재</Button>
-                </span>
-              </template>
-            </TableWrapper>
-          </section>
+              <span v-else-if="step.action === 'none'" :class="statusClass(step.status)">
+                {{ step.status }}
+              </span>
+              <span v-else-if="step.action === 'withdraw'" class="lp-unit-row">
+                <span :class="statusClass(step.status)">{{ step.status }}</span>
+                <Button type="button" variant="tertiary" size="xs" padding="8" @click="onWithdraw(step)">
+                  결재회수
+                </Button>
+              </span>
+              <span v-else class="lp-unit-row">
+                <Button type="button" variant="tertiary" size="xs" padding="8" @click="onReject(step)">반려</Button>
+                <Button type="button" variant="tertiary" size="xs" padding="8" @click="onApprove(step)">결재</Button>
+              </span>
+            </template>
+          </TableWrapper>
+        </section>
 
-          <section class="lp-section" aria-labelledby="force-use-heading">
-            <h3 id="force-use-heading" class="lp-heading-md lp-section-title">사용 물리력</h3>
-            <div class="lp-form-box">
-              <!--
-                총기류는 체크했을 때만 일련번호·개수를 적는다(기획서 13-3-1).
-                라벨-입력이 한 줄에 세 쌍이라 InfoTable 이 아니라 줄 단위로 늘어놓는다.
-              -->
-              <div v-for="gun in gunForceOptions" :key="gun.id" class="lp-field-row">
-                <Checkbox v-model="detail.forces[gun.id]" :label="gun.label" class="w-50" />
+        <section class="lp-section" aria-labelledby="force-use-heading">
+          <h3 id="force-use-heading" class="lp-heading-md lp-section-title">사용 물리력</h3>
+          <div class="lp-form-box">
+            <!--
+              총기류는 체크했을 때만 일련번호·개수를 적는다(기획서 13-3-1).
+              라벨-입력이 한 줄에 세 쌍이라 InfoTable 이 아니라 줄 단위로 늘어놓는다.
+            -->
+            <div v-for="gun in gunForceOptions" :key="gun.id" class="lp-field-row">
+              <Checkbox v-model="detail.forces[gun.id]" :label="gun.label" class="w-50" />
+              <InputField2
+                v-model="detail.gunSerial[gun.id]"
+                :label="`${gun.label} 총기 일련번호`"
+                size="sm"
+                :disabled="!detail.forces[gun.id]"
+                class="!space-y-0"
+                input-class="w-40"
+              />
+              <span class="lp-unit-row">
                 <InputField2
-                  v-model="detail.gunSerial[gun.id]"
-                  :label="`${gun.label} 총기 일련번호`"
+                  v-model="detail.gunCount[gun.id]"
+                  :label="`${gun.label} 사용 개수`"
                   size="sm"
                   :disabled="!detail.forces[gun.id]"
                   class="!space-y-0"
-                  input-class="w-40"
+                  input-class="w-20"
                 />
-                <span class="lp-unit-row">
-                  <InputField2
-                    v-model="detail.gunCount[gun.id]"
-                    :label="`${gun.label} 사용 개수`"
-                    size="sm"
-                    :disabled="!detail.forces[gun.id]"
-                    class="!space-y-0"
-                    input-class="w-20"
-                  />
-                  <span class="lp-unit-text">{{ gun.unit }}</span>
-                </span>
-              </div>
-
-              <div class="lp-field-row">
-                <Checkbox v-for="force in forceOptions" :key="force.id" v-model="detail.forces[force.id]" :label="force.label" />
-              </div>
-
-              <div class="lp-field-row">
-                <Checkbox v-model="detail.forceEtc" label="기타" />
-                <InputField2
-                  v-model="detail.forceEtcText"
-                  label="사용 물리력 기타"
-                  label-class="sr-only"
-                  size="sm"
-                  :disabled="!detail.forceEtc"
-                  class="!space-y-0 flex-1"
-                  input-class="w-full"
-                />
-              </div>
-            </div>
-          </section>
-
-          <section class="lp-section" aria-labelledby="force-damage-heading">
-            <h3 id="force-damage-heading" class="lp-heading-md lp-section-title">피해 상황</h3>
-            <div class="lp-form-box">
-              <div class="lp-field-row">
-                <Checkbox v-for="damage in damageOptions" :key="damage.id" v-model="detail.damages[damage.id]" :label="damage.label" />
-              </div>
-              <div class="lp-field-row">
-                <Checkbox v-model="detail.damageEtc" label="기타" />
-                <InputField2
-                  v-model="detail.damageEtcText"
-                  label="피해 상황 기타"
-                  label-class="sr-only"
-                  size="sm"
-                  :disabled="!detail.damageEtc"
-                  class="!space-y-0 flex-1"
-                  input-class="w-full"
-                />
-              </div>
-            </div>
-          </section>
-
-          <section class="lp-section" aria-labelledby="force-user-heading">
-            <div class="lp-row-between lp-section-title">
-              <h3 id="force-user-heading" class="lp-heading-md">사용자 정보</h3>
-              <p class="form-note">* 사용자는 최대 4명 선택 가능합니다.</p>
+                <span class="lp-unit-text">{{ gun.unit }}</span>
+              </span>
             </div>
 
-            <TableWrapper
-              :columns="userColumns"
-              :items="userRows"
-              :selectable="false"
-              caption="물리력을 사용한 사람"
-            >
-              <!-- 빈 자리는 더하기, 등록된 사람은 빼기 (기획서 13-5-1·5-2) -->
-              <template #cell-manage="{ item }">
-                <Button
-                  v-if="item.name"
-                  type="button"
-                  variant="tertiary"
-                  size="xs"
-                  padding="10"
-                  @click="removeReportUser(item.no)"
-                >
-                  －<span class="sr-only">{{ item.no }}번 사용자 빼기</span>
-                </Button>
-                <Button v-else type="button" variant="tertiary" size="xs" padding="10" @click="onAddUser">
-                  ＋<span class="sr-only">사용자 추가</span>
-                </Button>
-              </template>
-            </TableWrapper>
-          </section>
-
-          <section class="lp-section" aria-labelledby="force-target-heading">
-            <h3 id="force-target-heading" class="lp-heading-md lp-section-title">대상자 정보</h3>
-
-            <h4 class="lp-label-text lp-section-title">1. 기본 정보</h4>
-            <InfoTable :columns="2" size="100">
-              <InfoField label="성명" for="force-target-name">
-                <InputField2 id="force-target-name" v-model="detail.targetName" size="sm" class="!space-y-0 w-full" input-class="w-full" />
-              </InfoField>
-              <InfoField label="성별">
-                <RadioGroup v-model="detail.targetGender" :class="styles['info-table-radio']" aria-label="성별">
-                  <RadioGroupItem value="male" label="남" />
-                  <RadioGroupItem value="female" label="여" />
-                </RadioGroup>
-              </InfoField>
-              <InfoField label="생년월일" for="force-target-birth">
-                <DatePicker id="force-target-birth" v-model="detail.targetBirth" size="sm" input-class="w-full" class="w-full" />
-              </InfoField>
-              <InfoField label="나이" for="force-target-age">
-                <!-- 기획서 14-2-2 — 숫자로 입력한다 -->
-                <InputField2 id="force-target-age" v-model="detail.targetAge" size="sm" inputmode="numeric" class="!space-y-0 w-full" input-class="w-full" />
-              </InfoField>
-              <InfoField label="연락처" for="force-target-phone" full>
-                <InputField2 id="force-target-phone" v-model="detail.targetPhone" size="sm" inputmode="numeric" class="!space-y-0 w-full" input-class="w-full" />
-              </InfoField>
-              <InfoField label="주소" full>
-                <!-- 기획서 14-2-3 — 주소 검색 팝업은 연동 대상이라 버튼만 둔다 -->
-                <div class="lp-field lp-flex-fill">
-                  <InputField2
-                    v-model="detail.targetAddress"
-                    label="주소"
-                    label-class="sr-only"
-                    size="sm"
-                    readonly
-                    placeholder="주소검색"
-                    class="!space-y-0 w-full"
-                    input-class="w-full"
-                    :icon="searchIcon"
-                    icon-label="주소 검색"
-                    search
-                    @icon-click="onSearchAddress"
-                  />
-                  <InputField2
-                    v-model="detail.targetAddressDetail"
-                    label="상세주소"
-                    label-class="sr-only"
-                    size="sm"
-                    placeholder="상세주소"
-                    class="!space-y-0 w-full"
-                    input-class="w-full"
-                  />
-                </div>
-              </InfoField>
-            </InfoTable>
-
-            <div class="lp-row-between lp-section-title lp-table-gap">
-              <h4 class="lp-label-text">2. 정신/신체 상태</h4>
-              <!-- 기획서 14-3-1 — 켜면 아래 항목을 전부 잠근다 -->
-              <Checkbox v-model="detail.noSpecial" label="특이사항 없음" />
+            <div class="lp-field-row">
+              <Checkbox v-for="force in forceOptions" :key="force.id" v-model="detail.forces[force.id]" :label="force.label" />
             </div>
-            <InfoTable :columns="1" size="100">
-              <InfoField label="정신상태" class="lp-info-nested" value-class="no-padding">
-                <InfoTable :columns="1" size="120">
-                  <InfoField label="주취">
-                    <RadioGroup v-model="detail.drunk" :disabled="detail.noSpecial" :class="styles['info-table-radio']" aria-label="주취">
-                      <RadioGroupItem v-for="option in drunkOptions" :key="option.value" :value="option.value" :label="option.label" />
-                    </RadioGroup>
-                  </InfoField>
-                  <InfoField label="정신질환">
-                    <div class="lp-field-row">
-                      <Checkbox
-                        v-for="option in mentalIllnessOptions"
-                        :key="option.id"
-                        v-model="detail.mentalIllness[option.id]"
-                        :label="option.label"
-                        :disabled="detail.noSpecial"
-                      />
-                    </div>
-                  </InfoField>
-                  <InfoField label="중독">
-                    <div class="lp-field-row">
-                      <Checkbox
-                        v-for="option in addictionOptions"
-                        :key="option.id"
-                        v-model="detail.addiction[option.id]"
-                        :label="option.label"
-                        :disabled="detail.noSpecial"
-                      />
-                    </div>
-                  </InfoField>
-                </InfoTable>
-              </InfoField>
-            </InfoTable>
 
-            <InfoTable :columns="1" size="100" class="lp-table-gap">
-              <InfoField label="신체상태" class="lp-info-nested" value-class="no-padding">
-                <InfoTable :columns="1" size="120">
-                  <InfoField label="체격">
-                    <RadioGroup v-model="detail.build" :disabled="detail.noSpecial" :class="styles['info-table-radio']" aria-label="체격">
-                      <RadioGroupItem v-for="option in buildOptions" :key="option.value" :value="option.value" :label="option.label" />
-                    </RadioGroup>
-                  </InfoField>
-                  <InfoField label="장애">
-                    <div class="lp-field-row">
-                      <Checkbox
-                        v-for="option in disabilityOptions"
-                        :key="option.id"
-                        v-model="detail.disability[option.id]"
-                        :label="option.label"
-                        :disabled="detail.noSpecial"
-                      />
-                    </div>
-                  </InfoField>
-                  <InfoField label="기왕증">
-                    <div class="lp-field-row">
-                      <Checkbox
-                        v-for="option in medicalHistoryOptions"
-                        :key="option.id"
-                        v-model="detail.medicalHistory[option.id]"
-                        :label="option.label"
-                        :disabled="detail.noSpecial"
-                      />
-                    </div>
-                  </InfoField>
-                </InfoTable>
-              </InfoField>
-            </InfoTable>
+            <div class="lp-field-row">
+              <Checkbox v-model="detail.forceEtc" label="기타" />
+              <InputField2
+                v-model="detail.forceEtcText"
+                label="사용 물리력 기타"
+                label-class="sr-only"
+                size="sm"
+                :disabled="!detail.forceEtc"
+                class="!space-y-0 flex-1"
+                input-class="w-full"
+              />
+            </div>
+          </div>
+        </section>
 
-            <h4 class="lp-label-text lp-section-title lp-table-gap">3. 흉기 휴대</h4>
-            <div class="lp-form-box">
-              <RadioGroup v-model="detail.hasWeapon" class="lp-field-row" aria-label="흉기 휴대">
-                <RadioGroupItem value="yes" label="흉기 있음" />
-                <RadioGroupItem value="no" label="흉기 없음" />
+        <section class="lp-section" aria-labelledby="force-damage-heading">
+          <h3 id="force-damage-heading" class="lp-heading-md lp-section-title">피해 상황</h3>
+          <div class="lp-form-box">
+            <div class="lp-field-row">
+              <Checkbox v-for="damage in damageOptions" :key="damage.id" v-model="detail.damages[damage.id]" :label="damage.label" />
+            </div>
+            <div class="lp-field-row">
+              <Checkbox v-model="detail.damageEtc" label="기타" />
+              <InputField2
+                v-model="detail.damageEtcText"
+                label="피해 상황 기타"
+                label-class="sr-only"
+                size="sm"
+                :disabled="!detail.damageEtc"
+                class="!space-y-0 flex-1"
+                input-class="w-full"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section class="lp-section" aria-labelledby="force-user-heading">
+          <div class="lp-row-between lp-section-title">
+            <h3 id="force-user-heading" class="lp-heading-md">사용자 정보</h3>
+            <p class="form-note">* 사용자는 최대 4명 선택 가능합니다.</p>
+          </div>
+
+          <TableWrapper
+            :columns="userColumns"
+            :items="userRows"
+            :selectable="false"
+            caption="물리력을 사용한 사람"
+          >
+            <!-- 빈 자리는 더하기, 등록된 사람은 빼기 (기획서 13-5-1·5-2) -->
+            <template #cell-manage="{ item }">
+              <Button
+                v-if="item.name"
+                type="button"
+                variant="tertiary"
+                size="xs"
+                padding="10"
+                @click="removeReportUser(item.no)"
+              >
+                －<span class="sr-only">{{ item.no }}번 사용자 빼기</span>
+              </Button>
+              <Button v-else type="button" variant="tertiary" size="xs" padding="10" @click="onAddUser">
+                ＋<span class="sr-only">사용자 추가</span>
+              </Button>
+            </template>
+          </TableWrapper>
+        </section>
+
+        <section class="lp-section" aria-labelledby="force-target-heading">
+          <h3 id="force-target-heading" class="lp-heading-md lp-section-title">대상자 정보</h3>
+
+          <h4 class="lp-label-text lp-section-title">1. 기본 정보</h4>
+          <InfoTable :columns="2" size="100">
+            <InfoField label="성명" for="force-target-name">
+              <InputField2 id="force-target-name" v-model="detail.targetName" size="sm" class="!space-y-0 w-full" input-class="w-full" />
+            </InfoField>
+            <InfoField label="성별">
+              <RadioGroup v-model="detail.targetGender" :class="styles['info-table-radio']" aria-label="성별">
+                <RadioGroupItem value="male" label="남" />
+                <RadioGroupItem value="female" label="여" />
               </RadioGroup>
-
-              <!-- 기획서 15-1-2 — '흉기 있음' 일 때만 종류를 고를 수 있다 -->
-              <div class="lp-field-row">
-                <Checkbox
-                  v-for="option in weaponOptions"
-                  :key="option.id"
-                  v-model="detail.weapons[option.id]"
-                  :label="option.label"
-                  :disabled="detail.hasWeapon !== 'yes'"
-                />
-              </div>
-              <div class="lp-field-row">
-                <Checkbox v-model="detail.weaponEtc" label="기타" :disabled="detail.hasWeapon !== 'yes'" />
+            </InfoField>
+            <InfoField label="생년월일" for="force-target-birth">
+              <DatePicker id="force-target-birth" v-model="detail.targetBirth" size="sm" input-class="w-full" class="w-full" />
+            </InfoField>
+            <InfoField label="나이" for="force-target-age">
+              <!-- 기획서 14-2-2 — 숫자로 입력한다 -->
+              <InputField2 id="force-target-age" v-model="detail.targetAge" size="sm" inputmode="numeric" class="!space-y-0 w-full" input-class="w-full" />
+            </InfoField>
+            <InfoField label="연락처" for="force-target-phone" full>
+              <InputField2 id="force-target-phone" v-model="detail.targetPhone" size="sm" inputmode="numeric" class="!space-y-0 w-full" input-class="w-full" />
+            </InfoField>
+            <InfoField label="주소" full>
+              <!-- 기획서 14-2-3 — 주소 검색 팝업은 연동 대상이라 버튼만 둔다 -->
+              <div class="lp-field lp-flex-fill">
                 <InputField2
-                  v-model="detail.weaponEtcText"
-                  label="흉기 종류 기타"
+                  v-model="detail.targetAddress"
+                  label="주소"
                   label-class="sr-only"
                   size="sm"
-                  :disabled="detail.hasWeapon !== 'yes' || !detail.weaponEtc"
-                  class="!space-y-0 flex-1"
+                  readonly
+                  placeholder="주소검색"
+                  class="!space-y-0 w-full"
+                  input-class="w-full"
+                  :icon="searchIcon"
+                  icon-label="주소 검색"
+                  search
+                  @icon-click="onSearchAddress"
+                />
+                <InputField2
+                  v-model="detail.targetAddressDetail"
+                  label="상세주소"
+                  label-class="sr-only"
+                  size="sm"
+                  placeholder="상세주소"
+                  class="!space-y-0 w-full"
                   input-class="w-full"
                 />
               </div>
+            </InfoField>
+          </InfoTable>
 
-              <!-- 기획서 15-1-3 — 기타 소지 물건은 흉기 유무와 관계없이 입력한다 -->
-              <div class="lp-field-row">
-                <span class="lp-dot-item">기타 소지 물건</span>
-                <InputField2
-                  v-model="detail.weaponOther"
-                  label="기타 소지 물건"
-                  label-class="sr-only"
-                  size="sm"
-                  class="!space-y-0 flex-1"
-                  input-class="w-full"
-                />
-              </div>
+          <div class="lp-row-between lp-section-title lp-table-gap">
+            <h4 class="lp-label-text">2. 정신/신체 상태</h4>
+            <!-- 기획서 14-3-1 — 켜면 아래 항목을 전부 잠근다 -->
+            <Checkbox v-model="detail.noSpecial" label="특이사항 없음" />
+          </div>
+          <InfoTable :columns="1" size="100">
+            <InfoField label="정신상태" class="lp-info-nested" value-class="no-padding">
+              <InfoTable :columns="1" size="120">
+                <InfoField label="주취">
+                  <RadioGroup v-model="detail.drunk" :disabled="detail.noSpecial" :class="styles['info-table-radio']" aria-label="주취">
+                    <RadioGroupItem v-for="option in drunkOptions" :key="option.value" :value="option.value" :label="option.label" />
+                  </RadioGroup>
+                </InfoField>
+                <InfoField label="정신질환">
+                  <div class="lp-field-row">
+                    <Checkbox
+                      v-for="option in mentalIllnessOptions"
+                      :key="option.id"
+                      v-model="detail.mentalIllness[option.id]"
+                      :label="option.label"
+                      :disabled="detail.noSpecial"
+                    />
+                  </div>
+                </InfoField>
+                <InfoField label="중독">
+                  <div class="lp-field-row">
+                    <Checkbox
+                      v-for="option in addictionOptions"
+                      :key="option.id"
+                      v-model="detail.addiction[option.id]"
+                      :label="option.label"
+                      :disabled="detail.noSpecial"
+                    />
+                  </div>
+                </InfoField>
+              </InfoTable>
+            </InfoField>
+          </InfoTable>
+
+          <InfoTable :columns="1" size="100" class="lp-table-gap">
+            <InfoField label="신체상태" class="lp-info-nested" value-class="no-padding">
+              <InfoTable :columns="1" size="120">
+                <InfoField label="체격">
+                  <RadioGroup v-model="detail.build" :disabled="detail.noSpecial" :class="styles['info-table-radio']" aria-label="체격">
+                    <RadioGroupItem v-for="option in buildOptions" :key="option.value" :value="option.value" :label="option.label" />
+                  </RadioGroup>
+                </InfoField>
+                <InfoField label="장애">
+                  <div class="lp-field-row">
+                    <Checkbox
+                      v-for="option in disabilityOptions"
+                      :key="option.id"
+                      v-model="detail.disability[option.id]"
+                      :label="option.label"
+                      :disabled="detail.noSpecial"
+                    />
+                  </div>
+                </InfoField>
+                <InfoField label="기왕증">
+                  <div class="lp-field-row">
+                    <Checkbox
+                      v-for="option in medicalHistoryOptions"
+                      :key="option.id"
+                      v-model="detail.medicalHistory[option.id]"
+                      :label="option.label"
+                      :disabled="detail.noSpecial"
+                    />
+                  </div>
+                </InfoField>
+              </InfoTable>
+            </InfoField>
+          </InfoTable>
+
+          <h4 class="lp-label-text lp-section-title lp-table-gap">3. 흉기 휴대</h4>
+          <div class="lp-form-box">
+            <RadioGroup v-model="detail.hasWeapon" class="lp-field-row" aria-label="흉기 휴대">
+              <RadioGroupItem value="yes" label="흉기 있음" />
+              <RadioGroupItem value="no" label="흉기 없음" />
+            </RadioGroup>
+
+            <!-- 기획서 15-1-2 — '흉기 있음' 일 때만 종류를 고를 수 있다 -->
+            <div class="lp-field-row">
+              <Checkbox
+                v-for="option in weaponOptions"
+                :key="option.id"
+                v-model="detail.weapons[option.id]"
+                :label="option.label"
+                :disabled="detail.hasWeapon !== 'yes'"
+              />
             </div>
-          </section>
-
-          <section class="lp-section" aria-labelledby="force-scene-heading">
-            <h3 id="force-scene-heading" class="lp-heading-md lp-section-title">현장 상황</h3>
-            <div class="lp-form-box">
-              <div class="lp-field-row">
-                <Checkbox v-for="option in sceneOptions" :key="option.id" v-model="detail.scenes[option.id]" :label="option.label" />
-              </div>
-              <div class="lp-field-row">
-                <Checkbox v-model="detail.sceneEtc" label="기타" />
-                <InputField2
-                  v-model="detail.sceneEtcText"
-                  label="현장 상황 기타"
-                  label-class="sr-only"
-                  size="sm"
-                  :disabled="!detail.sceneEtc"
-                  class="!space-y-0 flex-1"
-                  input-class="w-full"
-                />
-              </div>
-            </div>
-          </section>
-
-          <section class="lp-section" aria-labelledby="force-detail-heading">
-            <h3 id="force-detail-heading" class="lp-heading-md lp-section-title">상황 (상세)</h3>
-
-            <h4 class="lp-label-text lp-section-title">1. 대상자 행위</h4>
-            <div class="lp-form-box">
-              <div class="lp-field-row">
-                <Checkbox v-for="option in behaviorOptions" :key="option.id" v-model="detail.behaviors[option.id]" :label="option.label" />
-              </div>
-              <div class="lp-field-row">
-                <Checkbox v-model="detail.behaviorEtc" label="기타" />
-                <InputField2
-                  v-model="detail.behaviorEtcText"
-                  label="대상자 행위 기타"
-                  label-class="sr-only"
-                  size="sm"
-                  :disabled="!detail.behaviorEtc"
-                  class="!space-y-0 flex-1"
-                  input-class="w-full"
-                />
-              </div>
+            <div class="lp-field-row">
+              <Checkbox v-model="detail.weaponEtc" label="기타" :disabled="detail.hasWeapon !== 'yes'" />
+              <InputField2
+                v-model="detail.weaponEtcText"
+                label="흉기 종류 기타"
+                label-class="sr-only"
+                size="sm"
+                :disabled="detail.hasWeapon !== 'yes' || !detail.weaponEtc"
+                class="!space-y-0 flex-1"
+                input-class="w-full"
+              />
             </div>
 
-            <h4 class="lp-label-text lp-section-title lp-table-gap">2. 도주 상황</h4>
-            <div class="lp-form-box">
-              <div class="lp-field-row">
-                <Checkbox v-for="option in escapeOptions" :key="option.id" v-model="detail.escapes[option.id]" :label="option.label" />
-              </div>
-              <div class="lp-field-row">
-                <Checkbox v-model="detail.escapeEtc" label="기타" />
+            <!-- 기획서 15-1-3 — 기타 소지 물건은 흉기 유무와 관계없이 입력한다 -->
+            <div class="lp-field-row">
+              <span class="lp-dot-item">기타 소지 물건</span>
+              <InputField2
+                v-model="detail.weaponOther"
+                label="기타 소지 물건"
+                label-class="sr-only"
+                size="sm"
+                class="!space-y-0 flex-1"
+                input-class="w-full"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section class="lp-section" aria-labelledby="force-scene-heading">
+          <h3 id="force-scene-heading" class="lp-heading-md lp-section-title">현장 상황</h3>
+          <div class="lp-form-box">
+            <div class="lp-field-row">
+              <Checkbox v-for="option in sceneOptions" :key="option.id" v-model="detail.scenes[option.id]" :label="option.label" />
+            </div>
+            <div class="lp-field-row">
+              <Checkbox v-model="detail.sceneEtc" label="기타" />
+              <InputField2
+                v-model="detail.sceneEtcText"
+                label="현장 상황 기타"
+                label-class="sr-only"
+                size="sm"
+                :disabled="!detail.sceneEtc"
+                class="!space-y-0 flex-1"
+                input-class="w-full"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section class="lp-section" aria-labelledby="force-detail-heading">
+          <h3 id="force-detail-heading" class="lp-heading-md lp-section-title">상황 (상세)</h3>
+
+          <h4 class="lp-label-text lp-section-title">1. 대상자 행위</h4>
+          <div class="lp-form-box">
+            <div class="lp-field-row">
+              <Checkbox v-for="option in behaviorOptions" :key="option.id" v-model="detail.behaviors[option.id]" :label="option.label" />
+            </div>
+            <div class="lp-field-row">
+              <Checkbox v-model="detail.behaviorEtc" label="기타" />
+              <InputField2
+                v-model="detail.behaviorEtcText"
+                label="대상자 행위 기타"
+                label-class="sr-only"
+                size="sm"
+                :disabled="!detail.behaviorEtc"
+                class="!space-y-0 flex-1"
+                input-class="w-full"
+              />
+            </div>
+          </div>
+
+          <h4 class="lp-label-text lp-section-title lp-table-gap">2. 도주 상황</h4>
+          <div class="lp-form-box">
+            <div class="lp-field-row">
+              <Checkbox v-for="option in escapeOptions" :key="option.id" v-model="detail.escapes[option.id]" :label="option.label" />
+            </div>
+            <div class="lp-field-row">
+              <Checkbox v-model="detail.escapeEtc" label="기타" />
+              <InputField2
+                v-model="detail.escapeEtcText"
+                label="도주 상황 기타"
+                label-class="sr-only"
+                size="sm"
+                :disabled="!detail.escapeEtc"
+                class="!space-y-0 flex-1"
+                input-class="w-full"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section class="lp-section" aria-labelledby="force-when-heading">
+          <h3 id="force-when-heading" class="lp-heading-md lp-section-title">사용일시</h3>
+          <div class="lp-form-box">
+            <!-- 기획서 16-2 — 주간·야간·심야는 택 1 이고, 날짜·시간은 그와 무관하게 적는다 -->
+            <div class="lp-field-row">
+              <RadioGroup v-model="detail.timeZone" class="lp-field-row" aria-label="사용 시간대">
+                <RadioGroupItem v-for="option in timeZoneOptions" :key="option.value" :value="option.value" :label="option.label" />
+              </RadioGroup>
+              <DatePicker
+                v-model="detail.usedDate"
+                label="날짜"
+                size="sm"
+                input-class="w-40"
+              />
+              <InputField2
+                v-model="detail.usedTime"
+                label="시간"
+                size="sm"
+                placeholder="예) 12:00"
+                class="!space-y-0"
+                input-class="w-30"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section class="lp-section" aria-labelledby="force-place-heading">
+          <h3 id="force-place-heading" class="lp-heading-md lp-section-title">사용 장소</h3>
+          <div class="lp-form-box">
+            <div class="lp-field-row">
+              <Checkbox v-for="option in placeOptions" :key="option.id" v-model="detail.places[option.id]" :label="option.label" />
+            </div>
+            <div class="lp-field-row">
+              <Checkbox v-model="detail.placeEtc" label="기타" />
+              <InputField2
+                v-model="detail.placeEtcText"
+                label="사용 장소 기타"
+                label-class="sr-only"
+                size="sm"
+                :disabled="!detail.placeEtc"
+                class="!space-y-0 flex-1"
+                input-class="w-full"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section class="lp-section" aria-labelledby="force-body-heading">
+          <h3 id="force-body-heading" class="lp-heading-md lp-section-title">사용 신체 부위</h3>
+          <!-- 시안(13724:121520)은 '기존 이미지 사용' 자리표시다 — 이미지가 오면 그때 넣는다 -->
+          <div class="lp-placeholder-box">기존 이미지 사용</div>
+        </section>
+
+        <section class="lp-section" aria-labelledby="force-warning-heading">
+          <h3 id="force-warning-heading" class="lp-heading-md lp-section-title">경고</h3>
+          <div class="lp-form-box">
+            <div class="lp-field-row">
+              <RadioGroup v-model="detail.warning" class="lp-field-row" aria-label="경고 여부">
+                <RadioGroupItem value="none" label="없음" />
+                <RadioGroupItem value="yes" label="있음" />
+              </RadioGroup>
+              <!-- 기획서 17-1 — '없음' 이면 아래 항목을 잠근다 -->
+              <Checkbox v-model="detail.warnings.verbal" label="구두경고" :disabled="detail.warning !== 'yes'" />
+              <span class="lp-unit-row">
                 <InputField2
-                  v-model="detail.escapeEtcText"
-                  label="도주 상황 기타"
+                  v-model="detail.warningVerbalCount"
+                  label="구두경고 횟수"
                   label-class="sr-only"
                   size="sm"
-                  :disabled="!detail.escapeEtc"
-                  class="!space-y-0 flex-1"
-                  input-class="w-full"
-                />
-              </div>
-            </div>
-          </section>
-
-          <section class="lp-section" aria-labelledby="force-when-heading">
-            <h3 id="force-when-heading" class="lp-heading-md lp-section-title">사용일시</h3>
-            <div class="lp-form-box">
-              <!-- 기획서 16-2 — 주간·야간·심야는 택 1 이고, 날짜·시간은 그와 무관하게 적는다 -->
-              <div class="lp-field-row">
-                <RadioGroup v-model="detail.timeZone" class="lp-field-row" aria-label="사용 시간대">
-                  <RadioGroupItem v-for="option in timeZoneOptions" :key="option.value" :value="option.value" :label="option.label" />
-                </RadioGroup>
-                <DatePicker
-                  v-model="detail.usedDate"
-                  label="날짜"
-                  size="sm"
-                  input-class="w-40"
-                />
-                <InputField2
-                  v-model="detail.usedTime"
-                  label="시간"
-                  size="sm"
-                  placeholder="예) 12:00"
+                  inputmode="numeric"
+                  :disabled="detail.warning !== 'yes' || !detail.warnings.verbal"
                   class="!space-y-0"
-                  input-class="w-30"
+                  input-class="w-20"
                 />
-              </div>
+                <span class="lp-unit-text">회</span>
+              </span>
+              <Checkbox v-model="detail.warnings.blank" label="공포탄" :disabled="detail.warning !== 'yes'" />
+              <Checkbox v-model="detail.warnings.live" label="실탄 경고사격" :disabled="detail.warning !== 'yes'" />
             </div>
-          </section>
+          </div>
+        </section>
 
-          <section class="lp-section" aria-labelledby="force-place-heading">
-            <h3 id="force-place-heading" class="lp-heading-md lp-section-title">사용 장소</h3>
-            <div class="lp-form-box">
-              <div class="lp-field-row">
-                <Checkbox v-for="option in placeOptions" :key="option.id" v-model="detail.places[option.id]" :label="option.label" />
-              </div>
-              <div class="lp-field-row">
-                <Checkbox v-model="detail.placeEtc" label="기타" />
+        <section class="lp-section" aria-labelledby="force-witness-heading">
+          <div class="lp-row-between lp-section-title">
+            <h3 id="force-witness-heading" class="lp-heading-md">목격자</h3>
+            <p class="form-note">* 목격자가 있는 경우 목격자 수를 숫자로만 입력하며 인적사항을 작성합니다.</p>
+          </div>
+          <div class="lp-form-box">
+            <div class="lp-field-row">
+              <RadioGroup v-model="detail.witness" class="lp-field-row" aria-label="목격자 여부">
+                <RadioGroupItem value="none" label="없음" />
+                <RadioGroupItem value="yes" label="있음" />
+              </RadioGroup>
+              <span class="lp-unit-row">
                 <InputField2
-                  v-model="detail.placeEtcText"
-                  label="사용 장소 기타"
+                  v-model="detail.witnessCount"
+                  label="목격자 수"
                   label-class="sr-only"
                   size="sm"
-                  :disabled="!detail.placeEtc"
-                  class="!space-y-0 flex-1"
-                  input-class="w-full"
-                />
-              </div>
-            </div>
-          </section>
-
-          <section class="lp-section" aria-labelledby="force-body-heading">
-            <h3 id="force-body-heading" class="lp-heading-md lp-section-title">사용 신체 부위</h3>
-            <!-- 시안(13724:121520)은 '기존 이미지 사용' 자리표시다 — 이미지가 오면 그때 넣는다 -->
-            <div class="lp-placeholder-box">기존 이미지 사용</div>
-          </section>
-
-          <section class="lp-section" aria-labelledby="force-warning-heading">
-            <h3 id="force-warning-heading" class="lp-heading-md lp-section-title">경고</h3>
-            <div class="lp-form-box">
-              <div class="lp-field-row">
-                <RadioGroup v-model="detail.warning" class="lp-field-row" aria-label="경고 여부">
-                  <RadioGroupItem value="none" label="없음" />
-                  <RadioGroupItem value="yes" label="있음" />
-                </RadioGroup>
-                <!-- 기획서 17-1 — '없음' 이면 아래 항목을 잠근다 -->
-                <Checkbox v-model="detail.warnings.verbal" label="구두경고" :disabled="detail.warning !== 'yes'" />
-                <span class="lp-unit-row">
-                  <InputField2
-                    v-model="detail.warningVerbalCount"
-                    label="구두경고 횟수"
-                    label-class="sr-only"
-                    size="sm"
-                    inputmode="numeric"
-                    :disabled="detail.warning !== 'yes' || !detail.warnings.verbal"
-                    class="!space-y-0"
-                    input-class="w-20"
-                  />
-                  <span class="lp-unit-text">회</span>
-                </span>
-                <Checkbox v-model="detail.warnings.blank" label="공포탄" :disabled="detail.warning !== 'yes'" />
-                <Checkbox v-model="detail.warnings.live" label="실탄 경고사격" :disabled="detail.warning !== 'yes'" />
-              </div>
-            </div>
-          </section>
-
-          <section class="lp-section" aria-labelledby="force-witness-heading">
-            <div class="lp-row-between lp-section-title">
-              <h3 id="force-witness-heading" class="lp-heading-md">목격자</h3>
-              <p class="form-note">* 목격자가 있는 경우 목격자 수를 숫자로만 입력하며 인적사항을 작성합니다.</p>
-            </div>
-            <div class="lp-form-box">
-              <div class="lp-field-row">
-                <RadioGroup v-model="detail.witness" class="lp-field-row" aria-label="목격자 여부">
-                  <RadioGroupItem value="none" label="없음" />
-                  <RadioGroupItem value="yes" label="있음" />
-                </RadioGroup>
-                <span class="lp-unit-row">
-                  <InputField2
-                    v-model="detail.witnessCount"
-                    label="목격자 수"
-                    label-class="sr-only"
-                    size="sm"
-                    inputmode="numeric"
-                    :disabled="detail.witness !== 'yes'"
-                    class="!space-y-0"
-                    input-class="w-20"
-                  />
-                  <span class="lp-unit-text">명</span>
-                </span>
-                <InputField2
-                  v-model="detail.witnessInfo"
-                  label="인적사항"
-                  size="sm"
+                  inputmode="numeric"
                   :disabled="detail.witness !== 'yes'"
-                  class="!space-y-0 flex-1"
-                  input-class="w-full"
+                  class="!space-y-0"
+                  input-class="w-20"
                 />
-              </div>
+                <span class="lp-unit-text">명</span>
+              </span>
+              <InputField2
+                v-model="detail.witnessInfo"
+                label="인적사항"
+                size="sm"
+                :disabled="detail.witness !== 'yes'"
+                class="!space-y-0 flex-1"
+                input-class="w-full"
+              />
             </div>
-          </section>
+          </div>
+        </section>
 
-          <section class="lp-section" aria-labelledby="force-reason-heading">
-            <div class="lp-row-between lp-section-title">
-              <h3 id="force-reason-heading" class="lp-heading-md">사용 경위 (사용자 의견)</h3>
-              <p class="form-note">* 입력 가능한 글자수는 최대 4000자 입니다.</p>
-            </div>
-            <TextareaField
-              v-model="detail.reason"
-              aria-label="사용 경위"
-              class="w-full !space-y-0"
-              textarea-class="w-full"
-              :height="160"
-              :maxlength="4000"
-              show-count
-              :placeholder="reasonPlaceholder"
-            />
-          </section>
+        <section class="lp-section" aria-labelledby="force-reason-heading">
+          <div class="lp-row-between lp-section-title">
+            <h3 id="force-reason-heading" class="lp-heading-md">사용 경위 (사용자 의견)</h3>
+            <p class="form-note">* 입력 가능한 글자수는 최대 4000자 입니다.</p>
+          </div>
+          <TextareaField
+            v-model="detail.reason"
+            aria-label="사용 경위"
+            class="w-full !space-y-0"
+            textarea-class="w-full"
+            :height="160"
+            :maxlength="4000"
+            show-count
+            :placeholder="reasonPlaceholder"
+          />
+        </section>
 
-          <section class="lp-section" aria-labelledby="force-followup-heading">
-            <div class="lp-row-between lp-section-title">
-              <h3 id="force-followup-heading" class="lp-heading-md">사후조치</h3>
-              <p class="form-note">* 입력 가능한 글자수는 최대 3000자 입니다.</p>
-            </div>
-            <TextareaField
-              v-model="detail.followUp"
-              aria-label="사후조치"
-              class="w-full !space-y-0"
-              textarea-class="w-full"
-              :height="140"
-              :maxlength="3000"
-              show-count
-              :placeholder="followUpPlaceholder"
-            />
-          </section>
+        <section class="lp-section" aria-labelledby="force-followup-heading">
+          <div class="lp-row-between lp-section-title">
+            <h3 id="force-followup-heading" class="lp-heading-md">사후조치</h3>
+            <p class="form-note">* 입력 가능한 글자수는 최대 3000자 입니다.</p>
+          </div>
+          <TextareaField
+            v-model="detail.followUp"
+            aria-label="사후조치"
+            class="w-full !space-y-0"
+            textarea-class="w-full"
+            :height="140"
+            :maxlength="3000"
+            show-count
+            :placeholder="followUpPlaceholder"
+          />
+        </section>
 
-          <section class="lp-section" aria-labelledby="force-note-heading">
-            <h3 id="force-note-heading" class="lp-heading-md lp-section-title">참고사항</h3>
-            <TextareaField
-              v-model="detail.note"
-              aria-label="참고사항"
-              class="w-full !space-y-0"
-              textarea-class="w-full"
-              :height="120"
-              :placeholder="notePlaceholder"
-            />
-          </section>
-        </ScrollWrapper>
+        <section class="lp-section" aria-labelledby="force-note-heading">
+          <h3 id="force-note-heading" class="lp-heading-md lp-section-title">참고사항</h3>
+          <TextareaField
+            v-model="detail.note"
+            aria-label="참고사항"
+            class="w-full !space-y-0"
+            textarea-class="w-full"
+            :height="120"
+            :placeholder="notePlaceholder"
+          />
+        </section>
       </LayoutPanel>
     </template>
   </LayoutSplit>
@@ -679,7 +677,6 @@ import { InfoTable, InfoField } from '@/components/custom/info-table'
 import TableWrapper from '@/components/custom/table/TableWrapper.vue'
 import LayoutSplit from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
-import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
 import RequirementDialog from './components/RequirementDialog.vue'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import styles from '@/components/custom/info-table/InfoTable.module.css'
