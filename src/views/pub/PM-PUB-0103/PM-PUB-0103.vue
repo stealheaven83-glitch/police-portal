@@ -147,6 +147,7 @@
           min-height="40rem"
           placeholder="좌측 목록에서 진단 건을 선택해 주세요"
           @table-built="markHistoryGridReady"
+          @row-click="onHistoryRowClick"
         />
       </LayoutPanel>
     </template>
@@ -383,6 +384,16 @@ function onCpoResultRowSelect(row: CpoDiagnosisRow) {
 
 function onDiagnosisRowDoubleClick(_event: Event, row: any) {
   openDetail(getRowData(row))
+}
+
+/**
+ * 사용자 지정: 이력 행의 어느 셀을 눌러도 범죄예방진단 상세 팝업(PM-PUB-0107)이 열린다.
+ * 이력은 좌측에서 고른 건의 것이라 상호명 링크와 같이 그 건(selectedRow)으로 연다.
+ * 체크박스 칸은 그리드가 클릭 전파를 막아 여기 안 오고, 상호명 링크 버튼은 자기 핸들러가 열므로 건너뛴다.
+ */
+function onHistoryRowClick(event: Event, _row: any) {
+  if ((event.target as HTMLElement | null)?.closest('button, a, input')) return
+  openDetail(selectedRow.value)
 }
 
 function printDetail() {

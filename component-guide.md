@@ -121,6 +121,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | 사용자 찾기 팝업(부서 트리 + 사용자 목록에서 한 명 고르기) | `custom/user-find/UserFindDialog.vue` — `v-model:open` + `@select`(계급·성명·소속). 공통 팝업 PC-COM-0701 |
 | 리치 텍스트 본문 | `custom/editor/Editor.vue` (TOAST UI) |
 | 파일 첨부 | `custom/file-upload/FileUpload.vue` |
+| 첨부파일 **필드 전체**(라벨 + 드롭존 + 파일선택 + 건수 + 목록) | `custom/common/AttachmentField.vue` — `:files` `:accept` `@select`(FileList → composable 의 addFiles) `@remove`(id → removeFile). 게시판 등록/수정 20개 화면이 쓴다. `FileUpload` 는 이 안의 파일 한 줄 |
 
 스타일은 `custom/info-table/InfoTable.module.css`가 공통이다 — 화면에서 다시 만들지 않는다.
 

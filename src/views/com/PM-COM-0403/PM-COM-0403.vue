@@ -59,43 +59,8 @@
         :height="144"
       />
 
-      <div class="lp-field">
-        <span class="lp-label-text">첨부파일</span>
-
-        <div class="lp-dropzone" @dragover.prevent @drop.prevent="onDrop">
-          <div class="lp-dropzone-txt">
-            <p>첨부할 파일을 여기에 끌어다 놓거나, 파일 선택 버튼을 직접 선택해주세요.</p>
-            <p class="lp-dropzone-sub">
-              <span>업로드 가능 파일 (jpg, jpeg, png, pdf, mp4)</span>
-              <span>파일용량이 클 경우 시간이 오래 걸릴 수 있습니다.</span>
-            </p>
-          </div>
-          <Button type="button" variant="secondary" size="sm" padding="16" @click="pickFile">파일선택</Button>
-          <input
-            ref="fileInputRef"
-            type="file"
-            multiple
-            :accept="FILE_ACCEPT"
-            hidden
-            @change="onFilePick"
-          >
-        </div>
-
-        <template v-if="fileCount">
-          <!-- 드롭존→개수 20(= field gap 8 + 12), 개수→목록 8, 파일 사이 12 -->
-          <p class="lp-file-count lp-file-count-below"><b>{{ fileCount }}개</b></p>
-          <div class="lp-file-list">
-            <FileUpload
-              v-for="file in form.files"
-              :key="file.id"
-              :file-name="file.name"
-              :uploading="file.uploading"
-              variant="circle"
-              @remove="removeFile(file.id)"
-            />
-          </div>
-        </template>
-      </div>
+      <!-- 첨부파일 — 공통 AttachmentField(드롭존 + 파일선택 + 건수 + 목록). 파일 추가/삭제는 composable 의 addFiles/removeFile 이 맡는다 -->
+      <AttachmentField :files="form.files" :accept="FILE_ACCEPT" @select="addFiles" @remove="removeFile" />
 
       <!-- Figma: 버튼 높이 48(md)·폭 120·사이 12, 폼과 40 -->
       <div class="lp-board-form-actions">
@@ -107,7 +72,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
@@ -118,7 +82,7 @@ import { ChipGroup } from '@/components/custom/chip'
 import InputField2 from '@/components/custom/input/InputField2.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { Button } from '@/components/custom/button'
-import { FileUpload } from '@/components/custom/file-upload'
+import { AttachmentField } from '@/components/custom/common'
 import { useDialog } from '@/composable/dialog/dialog'
 import { bulletinMenu, FILE_ACCEPT } from '../composable/notice'
 import { qnaCategoryOptions, type QnaCategory } from '../composable/qna'
@@ -142,28 +106,11 @@ const navItems = [
   { label: 'Q&A', path: '/views/com/PM-COM-0401' },
 ]
 
-const { form, writer, writtenAt, fileCount, canSave, addFiles, removeFile } = useQnaEdit()
+const { form, writer, writtenAt, canSave, addFiles, removeFile } = useQnaEdit()
 
 /** ChipGroup 은 고른 칩을 다시 누르면 '' 를 보낸다 — 수정 화면에서 카테고리는 비울 수 없으니 그 경우만 무시 */
 function onCategoryChange(value: string | string[]) {
   if (typeof value === 'string' && value) form.category = value as QnaCategory
-}
-
-const fileInputRef = ref<HTMLInputElement | null>(null)
-
-function pickFile() {
-  fileInputRef.value?.click()
-}
-
-function onFilePick(e: Event) {
-  const input = e.target as HTMLInputElement
-  if (input.files?.length) addFiles(input.files)
-  input.value = ''
-}
-
-function onDrop(e: DragEvent) {
-  const files = e.dataTransfer?.files
-  if (files?.length) addFiles(files)
 }
 
 /** 수정은 상세에서 들어오므로 취소하면 상세(PM-COM-0402)로 돌아간다 */

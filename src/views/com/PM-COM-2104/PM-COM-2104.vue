@@ -45,43 +45,8 @@
         :height="144"
       />
 
-      <div class="lp-field">
-        <span class="lp-label-text">첨부파일</span>
-
-        <div class="lp-dropzone" @dragover.prevent @drop.prevent="onDrop">
-          <div class="lp-dropzone-txt">
-            <p>첨부할 파일을 여기에 끌어다 놓거나, 파일 선택 버튼을 직접 선택해주세요.</p>
-            <p class="lp-dropzone-sub">
-              <span>업로드 가능 파일 (jpg, jpeg, png, pdf, mp4)</span>
-              <span>파일용량이 클 경우 시간이 오래 걸릴 수 있습니다.</span>
-            </p>
-          </div>
-          <Button type="button" variant="secondary" size="sm" padding="16" @click="pickFile">파일선택</Button>
-          <input
-            ref="fileInputRef"
-            type="file"
-            multiple
-            :accept="FILE_ACCEPT"
-            hidden
-            @change="onFilePick"
-          >
-        </div>
-
-        <template v-if="fileCount">
-          <p class="lp-file-count lp-file-count-below"><b>{{ fileCount }}개</b></p>
-          <!-- 파일 한 줄 = 공통 FileUpload(Figma file_upload__atomic__pc): 업로드 중이면 스피너, 끝나면 '삭제 ⨯' -->
-          <div class="lp-file-list">
-            <FileUpload
-              v-for="file in form.files"
-              :key="file.id"
-              :file-name="file.name"
-              :uploading="file.uploading"
-              variant="circle"
-              @remove="removeFile(file.id)"
-            />
-          </div>
-        </template>
-      </div>
+      <!-- 첨부파일 — 공통 AttachmentField(드롭존 + 파일선택 + 건수 + 목록). 파일 추가/삭제는 composable 의 addFiles/removeFile 이 맡는다 -->
+      <AttachmentField :files="form.files" :accept="FILE_ACCEPT" @select="addFiles" @remove="removeFile" />
 
       <div class="lp-board-form-actions">
         <!-- 제목이 비면 저장은 비활성 -->
@@ -93,7 +58,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
@@ -103,7 +67,7 @@ import InputField2 from '@/components/custom/input/InputField2.vue'
 import TextareaField from '@/components/custom/textarea/TextareaField.vue'
 import { Checkbox } from '@/components/custom/checkbox'
 import { Button } from '@/components/custom/button'
-import { FileUpload } from '@/components/custom/file-upload'
+import { AttachmentField } from '@/components/custom/common'
 import { useDialog } from '@/composable/dialog/dialog'
 import { boardMenu, CONTENT_MAX_LENGTH, FILE_ACCEPT } from '../composable/board'
 import { useProposalCreate } from './composable/PM-COM-2104'
@@ -127,24 +91,7 @@ const navItems = [
   { label: '정책 제안 및 건의사항', path: '/views/com/PM-COM-2101' },
 ]
 
-const { form, writer, writtenAt, secret, fileCount, canSave, addFiles, removeFile } = useProposalCreate()
-
-const fileInputRef = ref<HTMLInputElement | null>(null)
-
-function pickFile() {
-  fileInputRef.value?.click()
-}
-
-function onFilePick(e: Event) {
-  const input = e.target as HTMLInputElement
-  if (input.files?.length) addFiles(input.files)
-  input.value = ''
-}
-
-function onDrop(e: DragEvent) {
-  const files = e.dataTransfer?.files
-  if (files?.length) addFiles(files)
-}
+const { form, writer, writtenAt, secret, canSave, addFiles, removeFile } = useProposalCreate()
 
 /** 등록은 목록의 '작성' 버튼에서 들어오므로 취소하면 목록으로 돌아간다 */
 function onCancel() {
