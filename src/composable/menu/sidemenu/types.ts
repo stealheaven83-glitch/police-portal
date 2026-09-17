@@ -28,3 +28,4 @@ export type SideMenuPresetKey =
   | 'menuTabSample'
   | 'flexiblePatrol'
   | 'statistics'
+  | 'board'

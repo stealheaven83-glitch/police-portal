@@ -1,15 +1,13 @@
 <template>
-  <GenericDialog2 v-model:open="open" title="범죄예방진단 상세" :size="800" show-close-button>
+  <GenericDialog2 v-model:open="open" title="범죄예방진단 상세" :size="1000" show-close-button>
     <div class="pop-title-sub"><h2>범죄예방진단 카드</h2></div>
       <InfoTable :columns="2" popup size="120">
         <InfoField label="부서">{{ departmentLabel }}</InfoField>
         <InfoField label="관리번호">{{ managementNo }}</InfoField>
         <InfoField label="유형">{{ diagnosis?.type || typeLabel }}</InfoField>
-        <InfoField label=""><span aria-hidden="true"></span></InfoField>
         <InfoField
           for="diagnosis-detail-date"
           label="진단일자"
-          full
         >
           <div class="group-gap3">
             <DatePicker
@@ -17,10 +15,10 @@
               v-model="form.diagnosisDate"
               size="sm"
               class="!space-y-0"
-              input-class="w-60"
+              input-class="w-55"
               placeholder="YYYY.MM.DD"
             />
-            <Button type="button" variant="secondary" size="sm" @click="emit('open-photo')">
+            <Button type="button" variant="secondary" padding="16" size="sm" @click="emit('open-photo')">
               사진자료
             </Button>
           </div>
@@ -164,7 +162,7 @@
       </InfoTable>
     <div class="pop-title-sub"><h2>범죄예방진단 항목 및 진단결과</h2></div>
       <div class="pop-title-lv2"><h3>1) 건물특성</h3></div>
-      <InfoTable :columns="1" popup size="220">
+      <InfoTable :columns="1" popup size="300">
         <InfoField v-for="row in buildingAssessmentRows" :key="row.key" :label="row.label" full>
           <RadioGroup
             v-if="row.type === 'radio'"
@@ -212,37 +210,37 @@
         <span class="lp-score-unit">점</span>
       </div>
     <div class="pop-title-sub"><h2>시설개선(예정) 일정</h2></div>
-    <InfoTable :columns="1" popup size="160">
-      <InfoField for="diagnosis-detail-improvement-date" label="시설개선(예정) 일자" full>
-        <DatePicker
-          id="diagnosis-detail-improvement-date"
-          v-model="form.improvementDate"
-          size="sm"
-          input-class="w-50"
-          placeholder="YYYY.MM.DD"
-        />
-        <SelectField
-          v-model="form.improvementStatus"
-          :options="improvementStatusOptions"
-          size="sm"
-          trigger-class="w-30"
-          placeholder="선택"
-          aria-label="시설개선 상태"
-        />
-      </InfoField>
-    </InfoTable>
+      <InfoTable :columns="1" popup size="300">
+        <InfoField for="diagnosis-detail-improvement-date" label="시설개선(예정) 일자" full>
+          <DatePicker
+            id="diagnosis-detail-improvement-date"
+            v-model="form.improvementDate"
+            size="sm"
+            input-class="w-50"
+            placeholder="YYYY.MM.DD"
+          />
+          <SelectField
+            v-model="form.improvementStatus"
+            :options="improvementStatusOptions"
+            size="sm"
+            trigger-class="w-30"
+            placeholder="선택"
+            aria-label="시설개선 상태"
+          />
+        </InfoField>
+      </InfoTable>
     <div class="pop-title-sub mb-2"><h2>착안사항</h2></div>
-    <TextareaField
-      v-model="form.note"
-      class="w-full mb-2"
-      textarea-class="w-full"
-      :height="72"
-      aria-label="착안사항"
-    />
-    <div class="lp-check-meta">
-      <Checkbox v-model="form.emailNotify" label="범죄예방진단 결과 우편 통보" />
-      <p><span>범죄예방진단자 :</span> {{ diagnosis?.diagnoser || '홍길동' }} 경사</p>
-    </div>
+      <TextareaField
+        v-model="form.note"
+        class="w-full"
+        textarea-class="w-full"
+        :height="80"
+        aria-label="착안사항"
+      />
+      <div class="lp-check-meta">
+        <Checkbox v-model="form.emailNotify" label="범죄예방진단 결과 우편 통보" />
+        <p><span>범죄예방진단자 :</span> {{ diagnosis?.diagnoser || '홍길동' }} 경사</p>
+      </div>
 
     <template #footer>
       <!--

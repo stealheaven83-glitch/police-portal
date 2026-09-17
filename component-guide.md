@@ -233,6 +233,7 @@ await dialog.confirm({
 | 알림 점 / 숫자 | `custom/badge/BadgeDot.vue` / `BadgeNumber.vue` |
 | 키워드(누르거나 지울 수 있음) | `custom/tag/Tag.vue` + `TagList.vue` |
 | 제목·설명·태그를 묶은 카드 | `custom/card/Card.vue` |
+| 카드를 세로로 쌓는 목록 | `custom/card-list/CardList.vue` — 목록(간격·0건)만 맡고 한 장은 슬롯. `<Card as="li">` 를 넣거나 직접 짠 `<li>` 를 넣는다 |
 | 접었다 펴는 여러 항목 | `custom/accordion/` |
 | 접었다 펴는 한 덩어리("더보기") | `custom/disclosure/Disclosure.vue` |
 | 아이콘 | **Figma 것을 `icons.ts` 에 등록해 `<Icon name="…" />`** — 없을 때만 `lucide-vue-next` (`docs/create.md` §4) |

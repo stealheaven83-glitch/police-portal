@@ -86,10 +86,10 @@
 
         <!-- 소계는 위 입력의 합이라 결과만 보여준다 -->
         <InfoField label="범죄 소계">
-          <span class="readonly-text">{{ crimeSubtotal }}</span>
+          <InputField2 :model-value="crimeSubtotal" type="number" readonly :clearable="false" aria-label="범죄 소계" size="sm" class="!space-y-0 w-full" input-class="w-full" />
         </InfoField>
         <InfoField label="강력범죄 소계">
-          <span class="readonly-text">{{ violentCrimeSubtotal }}</span>
+          <InputField2 :model-value="violentCrimeSubtotal" type="number" readonly :clearable="false" aria-label="강력범죄 소계" size="sm" class="!space-y-0 w-full" input-class="w-full" />
         </InfoField>
       </InfoTable>
     </section>
@@ -104,7 +104,7 @@
           <InputField2 v-model.number="report.code2" type="number" min="0" :clearable="false" aria-label="Code 2" size="sm" class="!space-y-0" input-class="w-40" />
         </InfoField>
         <InfoField label="합계" full>
-          <span class="readonly-text">{{ reportTotal }}</span>
+          <InputField2 :model-value="reportTotal" type="number" readonly :clearable="false" aria-label="112신고 합계" size="sm" class="!space-y-0 w-full" input-class="w-full" />
         </InfoField>
       </InfoTable>
     </section>
@@ -216,7 +216,7 @@
         <InfoField>
         </InfoField>
         <InfoField label="풍속업소 합계" full>
-          <span class="readonly-text">{{ entertainmentTotal }}</span>
+          <InputField2 :model-value="entertainmentTotal" type="number" readonly :clearable="false" aria-label="풍속업소 합계" size="sm" class="!space-y-0 w-full" input-class="w-full" />
         </InfoField>
 
       </InfoTable>
@@ -243,6 +243,7 @@ import { useDialog } from '@/composable/dialog/dialog'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { publicSafetyMenu } from '@/composable/menu/sidemenu/presets'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
+import { useAutoTrigger, type ScreenTriggerMap } from '@/composables/useAutoTrigger'
 import { useDiagnosisReference, yearOptions, townOptions } from './composable/PM-PUB-0111'
 import UploadDialog from './components/UploadDialog.vue'
 import ScrollWrapper from '@/components/custom/ScrollWrapper.vue'
@@ -289,6 +290,17 @@ const uploadOpen = ref(false)
 function onUpload() {
   uploadOpen.value = true
 }
+
+/**
+ * 화면ID ↔ 팝업 상태 동기화(docs/create/tab-popup.md §4).
+ *   PM-PUB-0111 : 참고사항만
+ *   PM-PUB-0112 : 참고사항 + 업로드 팝업 열림 — 주소로 들어오면 팝업이 열린 채로 뜨고, 닫으면 0111 로 돌아간다
+ */
+const screenTriggers: ScreenTriggerMap = {
+  'PM-PUB-0111': [],
+  'PM-PUB-0112': [[uploadOpen, true]],
+}
+useAutoTrigger(screenTriggers)
 
 async function onSave() {
   // 사용자 지정: 저장 전 컨펌창을 먼저 띄운다 (§7 기본은 컨펌 없이 바로 저장)

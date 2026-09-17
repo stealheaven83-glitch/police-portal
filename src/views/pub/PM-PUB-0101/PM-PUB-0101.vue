@@ -124,7 +124,7 @@
 </template>
 
 <script setup lang="ts">
-import { provide, ref } from 'vue'
+import { computed, provide, ref } from 'vue'
 import { Download } from 'lucide-vue-next'
 import PageHeader from '@/components/custom/title/PageHeader.vue'
 import PageTitle from '@/components/custom/title/PageTitle.vue'
@@ -142,6 +142,7 @@ import DiagnosisDetailDialog from './components/DiagnosisDetailDialog.vue'
 import { useDiagnosisDetail } from './composable/PM-PUB-0102'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'
 import { useBottomTabSetup } from '@/composable/tab/useBottomTabSetup'
+import { useAutoTrigger, type ScreenTriggerMap } from '@/composables/useAutoTrigger'
 import {
   useDiagnosisList,
   typeOptions,
@@ -173,8 +174,34 @@ const navItems = [
 const store = { ...useDiagnosisList(), ...useDiagnosisDetail() }
 provide(DiagnosisListKey, store)
 
-const { advancedSearchOpen, searchForm, rows, historyRows, selectRow, search, openNew, openDetail } =
+const { advancedSearchOpen, searchForm, rows, historyRows, selectRow, search, openNew, openDetail, detailOpen, closeDetail } =
   store
+
+/**
+ * 화면ID ↔ 상세 팝업 동기화(docs/create/tab-popup.md §4).
+ *   PM-PUB-0101 : 목록만
+ *   PM-PUB-0102 : 목록 + 간이 범죄예방진단 상세 팝업 열림
+ * 상세는 이력 행을 골라야 여는 팝업이라 URL 만으로는 어느 건인지 알 수 없다 — 주소로 들어오면
+ * 첫 건을 골라 그 이력 첫 줄로 연다(검수용, PC-COM-2205 와 같은 처리). 버튼으로 열면 주소만 0102 로 바뀐다.
+ */
+const detailDialogOpen = computed({
+  get: () => detailOpen.value,
+  set: (open: boolean) => {
+    if (!open) {
+      closeDetail()
+      return
+    }
+    if (detailOpen.value) return
+    if (!historyRows.value.length) selectRow(rows.value[0] ?? null)
+    const first = historyRows.value[0]
+    if (first) openDetail(first)
+  },
+})
+const screenTriggers: ScreenTriggerMap = {
+  'PM-PUB-0101': [],
+  'PM-PUB-0102': [[detailDialogOpen, true]],
+}
+useAutoTrigger(screenTriggers)
 
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 
@@ -189,7 +216,7 @@ const listColumns: TabulatorGridColumn[] = [
   { title: '유형', field: 'type', hozAlign: 'center' },
   { title: '상호명', field: 'bizName', hozAlign: 'center' },
   { title: '진단자', field: 'diagnoser', hozAlign: 'center' },
-  { title: '주소', field: 'address', widthGrow: 3 },
+  { title: '주소', field: 'address', widthGrow: 3, hozAlign: 'left' },
   {
     title: '현금다액업소',
     field: 'cashIntensive',
@@ -213,8 +240,8 @@ const historyColumns: TabulatorGridColumn[] = [
     onButtonClick: (row) => openDetail(row as DiagnosisHistoryRow),
   },
   { title: '진단사유', field: 'reason', hozAlign: 'center' },
-  { title: '주소', field: 'address', widthGrow: 2 },
-  { title: '진단자', field: 'diagnoser', hozAlign: 'center' },
+  { title: '주소', field: 'address', widthGrow: 2, },
+  { title: '진단자', field: 'diagnoser', hozAlign: 'left' },
 ]
 
 /**

@@ -28,6 +28,7 @@ import { Checkbox } from '@/components/custom/checkbox'
 import { Pagination } from '@/components/custom/pagination'
 import { Button } from '@/components/custom/button'
 import { Switch } from '@/components/custom/switch'
+import { BP_MOBILE } from '@/composable/responsive/useResponsive'
 import { Badge } from '@/components/custom/badge'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import Input from '@/components/custom/input/Input.vue'
@@ -180,7 +181,11 @@ interface Props {
    */
   cardOnMobile?: boolean
 
-  /** 이 폭(px) 이상이면 PC 로 보고 표를, 미만이면 카드 목록을 그린다 */
+  /**
+   * 이 폭(px) 이상이면 PC 로 보고 표를, 미만이면 카드 목록을 그린다.
+   * 기본값은 페이지 경계와 같다(useResponsive.ts 의 BP_MOBILE) — 페이지는 모바일인데
+   * 표만 PC 로 남는 구간이 생기지 않게 한다.
+   */
   pcSize?: number;
 }
 
@@ -218,7 +223,7 @@ const props = withDefaults(defineProps<Props>(), {
   cardListClass: undefined,
   cardClass: undefined,
   cardOnMobile: true,
-  pcSize: 768
+  pcSize: BP_MOBILE
 })
 
 const emit = defineEmits<{
@@ -1771,7 +1776,8 @@ defineExpose({
 .tabulator-card {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  /* 간격 12px — Figma card(12738:50267) */
+  gap: 1.2rem;
   padding: 1.6rem;
   border: 1px solid var(--Border_gray02);
   border-radius: var(--Radius-medium3);
@@ -1795,17 +1801,21 @@ defineExpose({
 .tabulator-card-body {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 1.2rem;
   margin: 0;
 }
+/* 한 줄 = Figma card li: 라벨 13px 좌 / 값 15px 우, 사이 24px, 세로 가운데 */
 .tabulator-card-row {
   display: flex;
+  align-items: center;
   gap: 2.4rem;
   font-size: 1.5rem;
   line-height: 1.5;
 }
 .tabulator-card-row dt {
   flex-shrink: 0;
+  font-size: 1.3rem;
+  line-height: 1.3;
   color: var(--Text-body_1);
 }
 .tabulator-card-row dd {

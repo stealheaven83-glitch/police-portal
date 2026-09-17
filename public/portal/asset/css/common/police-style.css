@@ -883,6 +883,8 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 0.8rem 1rem;
   color: var(--white);
+  position: relative;
+  height: 7.9rem;
 }
 .rowgroup.service .service-col.result .card a span {
   display: block;
@@ -890,8 +892,10 @@ header .header-in .header-container .main-menu .inner .my-info a:after {
   font-size: 1.7rem;
 }
 .rowgroup.service .service-col.result .card a span.value {
-  margin-top: 0.2rem;
   text-align: right;
+  position: absolute;
+  bottom: 1.2rem;
+  right: 1.6rem;
 }
 .rowgroup.service .service-col.result .icon03 {
   position: absolute;
