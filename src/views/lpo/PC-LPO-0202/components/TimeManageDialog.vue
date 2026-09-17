@@ -12,13 +12,13 @@
     </p>
 
     <div class="time-gray-box">
-      <InputField2 v-model="timeShiftNo" label="교대번호" size="sm" inputClass="w-20" />
+      <InputField2 v-model="timeShiftNo" label="교대번호" :clearable="false" size="sm" inputClass="w-20" />
       <SelectField v-model="timeStart" label="시작 시간" :options="hourOptions" size="sm" triggerClass="w-25" />
       <div class="group-gap2">
         <span class="lp-label-text">간격(분)</span>
         <InputField2 v-model.number="timeInterval" type="number" :clearable="false" size="sm" min="10" step="10" aria-label="간격(분)" class="!space-y-0" input-class="w-25" />
       </div>
-      <InputField2 v-model="countText" label="생성개수" size="sm" inputClass="w-20" />
+      <InputField2 v-model="countText" label="생성개수" :clearable="false" size="sm" inputClass="w-20" />
     </div>
 
     <TabulatorGrid

@@ -50,6 +50,7 @@
       class="lp-table-gap"
       :columns="columns"
       :data="filteredCandidates"
+      :row-class="rowClass"
       height="260px"
       select-mode="checkbox"
       placeholder="조회된 근무자가 없습니다"
@@ -108,6 +109,15 @@ const { onTableBuilt } = useDialogGridRedraw(gridRef)
 const filteredCandidates = computed(() =>
   volunteerCandidates.value.filter((c) => !volunteerKeyword.value || c.name.includes(volunteerKeyword.value)),
 )
+
+/**
+ * 해당 지구대/파출소 직원 행은 글자를 파란색으로 — 표 위 안내문의 "파란색"이 이것이다.
+ * 시안 11710:114865 에서 그 행만 부서·계급·성명이 color/text/primary(#0054A6) 이고
+ * 배경과 굵기는 다른 행과 같다.
+ */
+function rowClass(row: VolunteerCandidate) {
+  return row.own ? 'lp-grid-own-row' : undefined
+}
 
 const columns: TabulatorGridColumn[] = [
   { title: '부서', field: 'dept', hozAlign: 'center', minWidth: 260, widthGrow: 4 },

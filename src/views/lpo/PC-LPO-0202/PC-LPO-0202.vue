@@ -55,8 +55,6 @@
         <RadioGroupItem value="day" label="주" />
         <RadioGroupItem value="night" label="야" />
       </RadioGroup>
-      <!-- 조회버튼 임시 (디자인x) -->
-       <Button type="button" variant="primary" size="sm" pl="10" class="ml-2">조회</Button>
     </div>
 
     <!-- 오른쪽 버튼은 .list-actions 직속이다 — 래퍼의 gap 이 .list-actions 와 같아 겉포장이 필요 없다 -->
@@ -74,9 +72,9 @@
       <LayoutPanel title="근무자">
         <Tabs v-model="workerTab">
           <TabsList variant="fill" tone="primary" size="sm">
-            <TabsTrigger value="regular">일반근무자</TabsTrigger>
-            <TabsTrigger value="volunteer">자원근무자</TabsTrigger>
-            <TabsTrigger value="incident">사고자</TabsTrigger>
+            <TabsTrigger value="regular">일반근무자 ({{ tabCount(regularWorkers) }})</TabsTrigger>
+            <TabsTrigger value="volunteer">자원근무자 ({{ tabCount(volunteerWorkers) }})</TabsTrigger>
+            <TabsTrigger value="incident">사고자 ({{ tabCount(incidentWorkers) }})</TabsTrigger>
           </TabsList>
 
           <!-- 일반근무자 — 조(순번)만 화면에서 고칠 수 있고 나머지는 인사정보 그대로다 -->
@@ -176,12 +174,14 @@
 
         <template #layout-2>
           <LayoutPanel title="중요공지사항">
-            <template #actions>
-              <Button type="button" variant="primary" size="sm" @click="onSaveImportantNotes">저장</Button>
-            </template>
-            <!-- 사용자 지정: 시안은 120 고정이지만 분할 구분선을 끌면 pane 높이를 따라 늘고 줄게 한다(.lp-textarea-fill).
-                 안쪽 여백 24 는 LayoutPanel 이 준다 -->
-            <TextareaField v-model="importantNotes" aria-label="중요공지사항" class="lp-textarea-fill" />
+            <!--
+              시안 15605:117494 — 저장은 패널 제목줄이 아니라 값 칸 안, 입력칸 오른쪽에 아래 정렬이다
+              (입력칸 flex 1 + 간격 12 + 버튼 100x40). 입력칸은 칸 높이를 꽉 채운다.
+            -->
+            <div class="lp-notes-fill">
+              <TextareaField v-model="importantNotes" aria-label="중요공지사항" class="lp-textarea-fill" />
+              <Button type="button" variant="primary" size="sm" class="lp-notes-save" @click="onSaveImportantNotes">저장</Button>
+            </div>
           </LayoutPanel>
         </template>
       </LayoutSplite>
@@ -260,6 +260,11 @@ const navItems = [
   { label: '근무일지(甲)' },
   { label: '근무지정표작성' },
 ]
+
+/** 탭 라벨의 인원수 — 시안(13404:130929)이 "자원근무자 (00)" 처럼 두 자리로 채운다 */
+function tabCount(rows: unknown[]) {
+  return String(rows.length).padStart(2, '0')
+}
 
 const workSchedule = useWorkSchedule()
 provide(WorkScheduleKey, workSchedule)

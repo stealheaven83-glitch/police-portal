@@ -1486,3 +1486,17 @@ input[autocomplete="off"]::-webkit-credentials-auto-fill-button {
 *::-webkit-scrollbar-corner {
   background: transparent;
 }
+/*
+ * "해당 지구대/파출소 직원" 행 — 글자만 파란색(시안 11710:114865, color/text/primary).
+ * 배경과 글자 굵기는 다른 행과 같다. 배경까지 바꾸는 .lp-grid-active-row(상세에 떠 있는 행)나
+ * .lp-grid-done-row(확인 끝난 행)와는 의도가 다르다.
+ *
+ * tabulator-theme.css 는 컴포넌트가 import 하는 파일이라 @layer 밖이고, 그 파일의
+ * .tabulator-row .tabulator-cell { color: var(--Text-body_0) } 는 레이어로는 못 덮는다.
+ * 그래서 특이도를 올리고 !important 를 쓴다(CLAUDE.md §2 의 Tabulator 예외).
+ *
+ * 쓰는 곳: PC-LPO-0202 자원 근무자 추가 팝업
+ */
+.tabulator-row.lp-grid-own-row .tabulator-cell {
+  color: var(--Base-primary) !important;
+}
