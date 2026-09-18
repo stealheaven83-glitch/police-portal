@@ -58,7 +58,6 @@
         <RadioGroupItem value="all" label="전체" />
       </RadioGroup>
       <!-- 조회버튼 임시 (디자인x) -->
-      <Button type="button" variant="primary" size="sm" pl="10" class="ml-2">조회</Button>
     </div>
 
     <Button type="button" variant="tertiary2" size="sm" @click="onPrint">인쇄</Button>

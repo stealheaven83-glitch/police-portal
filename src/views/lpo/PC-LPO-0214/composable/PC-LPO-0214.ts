@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import type { DepartmentValue } from "@/components/custom/select/DepartmentCascadeSelect.vue";
 
 /** 교대 형태 한 줄 */
@@ -48,6 +48,18 @@ export const groupOptions = Array.from({ length: 5 }, (_, i) => ({
   value: String(i + 1),
 }));
 
+/**
+ * 조 수를 고르면 같이 채워지는 교대·일 주기 — 사용자 지정 동작(조 셀렉트 → 교대·일 주기 값 채움).
+ * Figma 에 대응표가 없어 목업값이다: 일 주기 = 조 수, 교대는 basicCycleOptions 의 조합을 따랐다.
+ */
+export const groupCycleDefaults: Record<string, { shift: string; cycle: string }> = {
+  "1": { shift: "1", cycle: "1" },
+  "2": { shift: "1", cycle: "2" },
+  "3": { shift: "2", cycle: "3" },
+  "4": { shift: "2", cycle: "4" },
+  "5": { shift: "3", cycle: "5" },
+};
+
 /** 미리 정의된 기본 주기 — Figma 에 목록이 없어 자리만 만들어 둔다 */
 export const basicCycleOptions = [
   { label: "5조 3교대", value: "5-3" },
@@ -63,13 +75,22 @@ export function useBasicCycle() {
     level3: "all",
   });
 
-  const groupCount = ref("1");
-  const shiftCount = ref(1);
-  const dayCycle = ref(1);
+  /** 조·교대·일 주기는 처음에 비어 있다(사용자 지정) — 조를 고르면 watch 가 나머지를 채운다 */
+  const groupCount = ref("");
+  const shiftCount = ref("");
+  const dayCycle = ref("");
   const effectiveDate = ref("");
   const basicCycle = ref("");
   /** '기본주기 없음'을 누르면 기본 주기 선택이 잠긴다 */
   const noBasicCycle = ref(false);
+
+  /** 조 셀렉트를 고르면 교대·일 주기가 대응값으로 채워진다(groupCycleDefaults) */
+  watch(groupCount, (value) => {
+    const preset = groupCycleDefaults[value];
+    if (!preset) return;
+    shiftCount.value = preset.shift;
+    dayCycle.value = preset.cycle;
+  });
 
   const shiftFormRows = ref<ShiftFormRow[]>([
     {
@@ -169,9 +190,9 @@ export function useBasicCycle() {
 
   /** 신규 — 입력값을 비운다 */
   function resetAll() {
-    groupCount.value = "1";
-    shiftCount.value = 1;
-    dayCycle.value = 1;
+    groupCount.value = "";
+    shiftCount.value = "";
+    dayCycle.value = "";
     effectiveDate.value = "";
     basicCycle.value = "";
     noBasicCycle.value = false;

@@ -1,7 +1,7 @@
 <template>
   <PageHeader>
     <template #left>
-      <PageTitle title="근무현황" />
+      <PageTitle title="사고자/자원근무자 월별" />
     </template>
     <template #right>
       <span class="group-gap2">

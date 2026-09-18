@@ -27,6 +27,7 @@
     <div class="lp-row-between lp-table-gap">
       <span class="lp-filter-row lp-filter-row-tight">
         <span class="group-gap2">
+<<<<<<< Updated upstream
           <SelectField
             v-model="groupCount"
             :options="groupOptions"
@@ -34,6 +35,9 @@
             trigger-class="w-20"
             aria-label="조"
           />
+=======
+          <SelectField v-model="groupCount" :options="groupOptions" size="sm" trigger-class="w-20" aria-label="조" />
+>>>>>>> Stashed changes
           <span class="lp-label-text">조</span>
         </span>
         <span class="group-gap2">
@@ -135,6 +139,7 @@ import {
   groupOptions,
   hourOptions,
   shiftKindOptions,
+  groupOptions,
   basicCycleOptions,
   type ShiftFormRow,
   type TeamPlanRow,

@@ -3827,6 +3827,8 @@
   background: var(--white);
 }
 
+
+
 /* 좌측 브랜드 패널 */
 .login-brand {
   position: relative;
@@ -4007,7 +4009,9 @@
   width: 2rem;
   height: 2rem;
 }
-
+.login-notice.mo{
+  display:none;
+}
 @media (max-width: 48rem) {
   .login-page {
     padding: 0;
@@ -4027,12 +4031,46 @@
     padding: 3.2rem 2.4rem;
   }
 
+  .login-notice{
+    display:none;
+  }
+  .login-notice.mo{
+    display:block;
+    margin-top: 9.6rem;
+    background:transparent;
+    color:var(--Text-body_1);
+    border:1px solid var( --Border_gray0);
+    padding:1.2rem 2rem;
+  }
+   .login-notice.mo .login-notice-list{
+    margin-top:1.2rem;
+   }
+   .login-notice.mo .login-notice-list li::before{
+    background:#464C53
+   }
+   .login-form-title{
+    margin-bottom: 3.2rem;
+   }
   .login-brand-inner {
     max-width: 40rem;
   }
-
+  .login-brand-inner .login-logo{
+    width:8rem;
+  }  
+.login-notice-title{
+    color:var(--Text-body_1);
+ }
+ .login-notice-list li{
+  color:var(--Text-body_1);
+ }
   .login-form-area {
     padding: 3.2rem 2.4rem 4rem;
+  }
+  .login-form-title{
+    font-size:2.2rem;
+  }
+  .login-cert-section{
+    display:none;
   }
 }
 
@@ -4196,4 +4234,55 @@ header .header-in .header-container .main-menu .inner .gnb-menu .depth1-list .de
 .lp-popup-body.fixed-height > .list-wrapper {
   flex: 1;
   min-height: 0;
+}
+
+/*
+ * 개인실적조회 탭 카드의 [건수][건] 조각(시안 15116:131562). 숫자는 파랑 bold, '건'은 regular 이고
+ * 사이 2. 활성 탭에서는 둘 다 트리거 글자색(흰색)·bold 를 따른다. 칸 자체는 override 의 .perf-tab.
+ * 쓰는 곳: PC-LPO-0111
+ */
+.perf-tab-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+.perf-tab-num {
+  color: var(--Base-primary);
+}
+.perf-tab-unit {
+  font-weight: 400;
+}
+.perf-tab[data-state='active'] .perf-tab-num,
+.perf-tab[data-state='active'] .perf-tab-unit {
+  color: inherit;
+  font-weight: 700;
+}
+
+/*
+ * 간이 범죄예방진단 상세 "3) 예방 자료" 제목 줄 — 제목은 왼쪽, 척도 방향 안내는 오른쪽(시안 15074:129621).
+ * .pop-title-lv2(원본) 와 같이 쓴다. 표 자체(.prevention-*)는 override 쪽에 있다.
+ * 쓰는 곳: PM-PUB-0101 상세 팝업
+ */
+.prevention-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+}
+/* 척도 방향 안내 '← 매우 그렇다 / 매우 그렇지 않다 →' — 13px/600/primary, 척도 10칸(.prevention-scale 44rem)과 같은 폭으로 양끝 정렬 */
+.prevention-guide {
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: space-between;
+  width: 44rem;
+  max-width: 100%;
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--Base-primary);
+  white-space: nowrap;
+}
+.prevention-servey{
+  color:var(--Base-primary);
 }

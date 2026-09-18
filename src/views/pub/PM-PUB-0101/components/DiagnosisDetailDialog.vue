@@ -120,39 +120,51 @@
       </InfoField>
     </InfoTable>
     
-    <div class="pop-title-lv2"><h3>3) 예방 자료</h3></div>
+    <!-- 제목 오른쪽의 척도 방향 안내(시안 15074:129621) — 척도 10칸 폭(44rem) 위에 양끝으로 놓인다 -->
+    <div class="pop-title-lv2 prevention-title">
+      <h3>3) 예방 자료</h3>
+      <p class="prevention-guide">
+        <span class="prevention-servey"><span aria-hidden="true">← </span>매우 그렇다</span>
+        <span class="prevention-servey">매우 그렇지 않다<span aria-hidden="true"> →</span></span>
+      </p>
+    </div>
     <!--
       시안(Figma 11047:64736) 기준. 척도가 [숫자줄 / 선택줄] 2단이고 섹션마다 표가 따로라
       라벨-값 한 줄인 InfoTable 로는 안 나온다 — 이 표만 따로 짠다.
       각 표의 첫 줄은 척도 안내(숫자만, 선택 없음)라 라디오를 두지 않는다.
+      문항 줄의 칸은 시안 check_list 처럼 [숫자 / 라디오]가 한 칸(44×72)이다 — 마우스를 올린 칸과
+      고른 값의 칸만 연파랑(시안: 7을 고른 줄은 7 칸이 파랗다). 열 전체를 칠하지 않는다.
     -->
     <div class="prevention-scroll">
       <div v-for="section in surveySections" :key="section.id" class="prevention-table">
+        <!-- 섹션 머리줄 — 숫자만 연한 회색으로, 선택칸 없이 한 칸 72 높이(시안 11047:64740 check_list) -->
         <div class="prevention-row">
           <p class="prevention-head">{{ section.title }}</p>
-          <div class="prevention-scale">
-            <div class="prevention-nums">
-              <span v-for="score in surveyScale" :key="score" class="prevention-num">{{ score }}</span>
-            </div>
-            <div class="prevention-blank"></div>
+          <div class="prevention-scale prevention-nums">
+            <span v-for="score in surveyScale" :key="score" class="prevention-num prevention-num-head">{{ score }}</span>
           </div>
         </div>
 
         <div v-for="question in section.questions" :key="question.id" class="prevention-row">
           <p class="prevention-question">{{ question.text }}</p>
           <div class="prevention-scale">
-            <!-- 숫자는 아래 라디오의 sr-only 라벨로도 읽히므로 여기서는 중복해 읽지 않는다 -->
-            <div class="prevention-nums" aria-hidden="true">
-              <span v-for="score in surveyScale" :key="score" class="prevention-num">{{ score }}</span>
-            </div>
             <RadioGroup
               class="prevention-choices"
               :model-value="detailForm.survey[question.id]?.toString()"
               :aria-label="question.text"
               @update:model-value="(value) => onSurveyChange(question.id, value)"
             >
-              <span v-for="score in surveyScale" :key="score" class="prevention-choice">
-                <RadioGroupItem :value="String(score)" :label="`${score}점`" label-class="sr-only" />
+              <!-- 숫자는 라디오의 sr-only 라벨로 읽히므로 칸의 숫자는 읽지 않는다 -->
+              <span
+                v-for="score in surveyScale"
+                :key="score"
+                class="prevention-cell"
+                :class="{ 'prevention-cell-selected': detailForm.survey[question.id] === score }"
+              >
+                <span class="prevention-num" aria-hidden="true">{{ score }}</span>
+                <span class="prevention-choice">
+                  <RadioGroupItem :value="String(score)" :label="`${score}점`" label-class="sr-only" />
+                </span>
               </span>
             </RadioGroup>
           </div>
@@ -366,6 +378,7 @@ async function onAddressSearch() {
 function onSurveyChange(questionId: string, value: unknown) {
   detailForm.survey[questionId] = Number(value)
 }
+
 
 /** blob 미리보기 URL 이 남지 않게 정리한다 */
 onBeforeUnmount(store.revokePhotoUrls)

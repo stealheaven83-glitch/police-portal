@@ -54,6 +54,17 @@
           </Button>
         </form>
 
+        <div class="login-notice mo">
+          <div class="login-notice-header">
+            <img src="/portal/asset/images/icon/icon_info.svg" alt="" />
+            <p class="login-notice-title">안내사항</p>
+          </div>
+          <ul class="login-notice-list">
+            <li>아이디와 비밀번호는 [공조 조회 시스템]에서 찾을 수 있습니다.</li>
+            <li>로그인 5회 실패 시 계정이 잠기게 됩니다. 잠금 해제는 관리자에게 문의 바랍니다.</li>
+          </ul>
+        </div>
+
         <div class="login-cert-section">
           <p class="login-cert-title">행정전자서명 로그인</p>
           <ButtonGroup :items="certButtons" class="gap-3 max-md:flex-col" />

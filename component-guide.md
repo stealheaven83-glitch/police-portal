@@ -822,6 +822,8 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-log-cell` `.lp-log-activity` `.lp-log-tag`(`-danger`/`-primary`/`-success`) `.lp-log-written-at` | 표 한 칸에 [앞머리 표시][본문 여러 줄] + 오른쪽 아래 작성일시가 함께 들어가는 활동내역 칸. 행 높이가 늘어나야 하므로 그리드에 `.lp-grid-multiline` 을 같이 건다 | LPO-0223 |
 | `.lp-workday-row` | 근무일 줄에서 [근무일 선택][요일][주·야]를 **36** 간격으로 끊는 묶음(안쪽 12 묶음은 공통 `.group-gap3`). 사이를 **세로선으로** 끊는 화면은 `.calendar-area`(12 + `-divider`) 쪽이다 | LPO-0301 |
 | `.lp-mark-note-sm` | `.lp-mark-note` 와 **함께** — 같은 `＊` 안내 문구인데 글자만 한 단계 작은 것(13px) | LPO-0301 |
+| `.perf-tab-count` `.perf-tab-num` `.perf-tab-unit` | 개인실적조회 탭 카드의 **[건수][건] 조각**(Figma `tab_2`) — 숫자는 파랑(`--Base-primary`) bold, `건` 은 regular, 사이 2. 활성 탭(`[data-state=active]`)에서는 둘 다 흰색 bold 로 트리거를 따른다. 칸 자체(그리드·높이·정렬)는 override 의 `.perf-tab` | LPO-0111 |
+| `.prevention-title` `.prevention-guide` | 간이 범죄예방진단 상세의 **"3) 예방 자료" 제목 줄**(`.pop-title-lv2` 와 함께) — 제목 왼쪽, `← 매우 그렇다 / 매우 그렇지 않다 →` 척도 안내 오른쪽(13px/600/primary). 안내는 척도 10칸(`.prevention-scale` 44rem)과 같은 폭이라 1·10 칸 위에 맞는다. 표 자체 `.prevention-*` 는 override 에 있다(미등재) | PUB-0101 상세 팝업 |
 | `.lp-approval-label` | 결재 표 **첫 칸의 라벨 줄**('직급 / 성명', '보고일 / 승인일시'). 높이를 맞추려고 `.lp-approval-person`/`-status` 를 그대로 쓰고 글자만 라벨(13px/400)로 되돌린다 | LPO-0301 |
 | `.lp-equip-grid` `.lp-equip-card` `-card-head` `-card-body` `.lp-equip-name` `.lp-equip-count` | 장비 현황 카드 묶음(최소 28rem, 넓으면 5열) / 테두리 상자 + 회색 머리줄 카드 / 장비명 + 수량 한 줄. 제목·설명·태그가 있는 `Card` 와 달리 [분류][이름][수] 세 조각뿐이다 | LPO-0301 |
 
@@ -901,6 +903,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-dept-fill` | `DepartmentCascadeSelect` 에 걸어 셀렉트 셋이 폼 폭을 16px 간격으로 나눠 갖게 한다(컴포넌트 기본은 각 160px·gap 8) | COM-1003, 1004 |
 | `.lp-cell-datetime` | Tabulator 셀의 `white-space: nowrap`(라이브러리 기본)을 풀어 일시를 날짜/시간 두 줄로 끊는다. 행 높이 4.8rem 고정에 맞춰 `line-height: 1.3` | LPO-0501 |
 | `.lp-date-select` | **`TextSelect size="xlarge"` 에 건다** — 목록 위 연·월 텍스트 셀렉트(Figma `date_selectbox`, 19px/600·좌우 여백 0·화살표 20). xlarge 기본(700·px-2)과 굵기·여백만 달라 그 둘만 덮고, TextSelect 가 자기 화살표까지 숨기는 문제(`.lp-cal-toolbar` 와 같은 사정)로 마지막 svg 를 되살린다 | LPO-0216 |
+| `.perf-tabs` `.perf-tab-list` `.perf-tab` (+ `> span`) `.perf-tab-panel` | **`Tabs variant="fill"` 에 건다** — 개인실적조회의 실적 구분 탭(Figma `tab_2` 15116:131562, 4열 2줄 · 칸 382×58 · 사이 12). fill 의 테두리·둥근 6·활성 남색은 그대로 두고 칸만 덮는다: 목록을 4열 그리드(`auto-fit, minmax(36rem)`)로, 트리거 높이 44→58(위아래 16)·가운데→양끝 정렬·15→17px, 슬롯을 감싸는 `.truncate` span 을 flex 로 되돌려 [이름][건수]를 양끝에. `-panel` 은 `TabsContent` mt-2 → 20. 건수 조각은 common 의 `.perf-tab-count` | LPO-0111 |
 
 ---
 
