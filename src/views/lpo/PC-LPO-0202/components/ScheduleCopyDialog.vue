@@ -1,7 +1,7 @@
 <template>
   <GenericDialog2 v-model:open="scheduleCopyOpen" title="근무 지정표 복사" :size="560">
     <div class="search-area">
-      <DatePicker v-model="scheduleCopyDate" label="복사할 날짜" size="sm" inputClass="w-160" />
+      <DatePicker v-model="scheduleCopyDate" label="복사할 날짜" size="sm" input-class="w-40" />
     </div>
 
     <template #footer>
