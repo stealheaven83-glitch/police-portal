@@ -1,5 +1,5 @@
 <template>
-  <GenericDialog2 v-model:open="handlerOpen" title="처리자 관리" :size="800">
+  <GenericDialog2 v-model:open="handlerOpen" title="처리자 추가" :size="800">
     <div class="lp-pane-box">
       <section class="lp-pane" aria-labelledby="companion-list-heading">
         <h3 id="companion-list-heading" class="lp-pane-title">동행 근무자 목록</h3>

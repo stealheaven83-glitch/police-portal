@@ -70,10 +70,9 @@
     <span class="group-gap3">
       <!-- 기획서 6~10: 112누락정보 · 새로고침 · 신규 · 저장 · 삭제 -->
       <Button type="button" variant="tertiary2" size="sm" @click="missingOpen = true">112누락정보</Button>
-      <Button type="button" variant="tertiary2" size="sm" @click="onRefresh">새로고침</Button>
+      <Button type="button" variant="tertiary2" size="sm" @click="onDelete">삭제</Button>
       <Button type="button" variant="secondary" size="sm" @click="addRow">추가</Button>
       <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
-      <Button type="button" variant="tertiary2" size="sm" @click="onDelete">삭제</Button>
     </span>
   </div>
 

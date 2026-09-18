@@ -1503,6 +1503,13 @@ input[autocomplete="off"]::-webkit-credentials-auto-fill-button {
   --split-border: 0;
   --split-radius: 0;
 }
+/* 안쪽 pane 은 splitpanes 가 block 이라 flex-1 짜리 그리드(TabulatorGrid 루트)가 높이를 못 받는다 —
+   pane 을 세로 flex 로 만들어 LayoutPanel 본문과 같은 방식으로 자식이 남는 높이를 채우게 한다 */
+.lp-split-nested > .splitpanes__pane {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
 
 /*
  * TextareaField 가 부모(LayoutPanel 본문·분할 pane)의 남는 높이를 다 채우게 한다 — 분할 구분선을
@@ -1620,4 +1627,11 @@ input[autocomplete="off"]::-webkit-credentials-auto-fill-button {
 /* 탭 아래 목록 영역 — 컴포넌트 mt-2(8) 를 시안 20 으로 */
 .perf-tab-panel {
   margin-top: 2rem;
+}
+
+
+/*팝업 인포테이블 서브문구 */
+.form-note{
+  color:var(--Text-body_0);
+  font-size: 1.3rem;
 }

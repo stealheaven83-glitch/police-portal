@@ -799,6 +799,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.approver-bar` `-title` `-list` `-item` `-name` `-done` `-status` `-divider` | 출동수당 승인자 줄 — 표 위 테두리 상자(1px gray02, 모서리 4, 여백 12/20, 아래 20). 오른쪽 묶음 사이 32 에 `.lp-divider-v`(+`-divider` 로 18), 묶음 안 12. `-name` 은 굵은 파랑, 이름 뒤 상태는 `-done`("2026-08-27 승인", 본문색) / `-status`("미승인", `--Alert-danger-text`) / 승인 `Button size="xs"` 중 하나. **케이스 4개는 `/component/search-area` 맨 아래** | LPO-0505 |
 | `.lp-roster-toolbar` `.lp-roster-title` | 근무자 목록 표(좁은 패널) 위의 제목 + 우측 버튼 줄. 표 자체는 `TabulatorGrid` 로 바뀌었다 | LPO-0202 |
 | `.lp-notes-row` `-label` `-body` | 표 아래 붙는 라벨+입력 한 상자(중요지시사항) | LPO-0202 |
+| `.lp-notes-row-fill` | `.lp-notes-row` 와 **함께** — 분할 pane 안에 둘 때 상자가 pane 높이를 채우고(위 여백 1.6rem 은 그대로) 입력칸을 세로로 늘린다(`TextareaField` 에 override 의 `.lp-textarea-fill` 을 같이 준다). 구분선을 끌면 표와 중요지시사항 높이가 같이 바뀐다 | LPO-0202 |
 | `.lp-em-primary` / `.lp-em-danger` / `.lp-em-point` / `.lp-em-warning` | 문장 안 한 낱말만 색으로 강조(굵기는 `<b>` 나 `.lp-em-strong`·`.lp-em-medium` 이). `-warning` 은 글자용 주황 `--Alert-warning-text`(#8A5C00 — 배지용 `--warning` 보다 어둡다): 근무현황 사고 사유 | LPO-0208, 0216, 0217 |
 | `.lp-em-medium` | 낱말 하나만 500 으로(시안 Medium). 600 은 `.lp-em-strong` — 근무현황 사고자 줄의 전일·부분 | LPO-0216 |
 | `.lp-field-inline` | 라벨 아래 입력+버튼이 한 줄로 붙는 칸(부서명 + 부서 검색) | COM-1003, 1004 |
