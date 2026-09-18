@@ -13,8 +13,8 @@
 
   <SearchWrapper>
     <template #form>
-      <div class="group-gap2" role="group" aria-label="기간검색">
-        <DatePicker v-model="dateFrom" label="기간검색" size="sm" input-class="w-40" />
+      <div class="group-gap2" role="group" aria-label="검색기간">
+        <DatePicker v-model="dateFrom" label="검색기간" size="sm" input-class="w-40" />
         <span aria-hidden="true">~</span>
         <DatePicker v-model="dateTo" size="sm" input-class="w-40" />
       </div>
@@ -107,7 +107,7 @@ const columns: TabulatorGridColumn[] = [
 
 const gridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 
-/** 기간검색으로 목업 목록을 거른다 (실제 조회는 인계 대상) */
+/** 검색기간으로 목업 목록을 거른다 (실제 조회는 인계 대상) */
 function onSearch() {
   search()
 }

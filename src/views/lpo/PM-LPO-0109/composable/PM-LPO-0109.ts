@@ -48,7 +48,7 @@ export const elementColumns = [
   { key: 'responders', label: '출동자' },
 ]
 
-/** 시안 기준 총 195건. 접수일시는 7/1 부터 하루씩 늘려 기간검색이 실제로 걸러지게 한다 */
+/** 시안 기준 총 195건. 접수일시는 7/1 부터 하루씩 늘려 검색기간이 실제로 걸러지게 한다 */
 function createMockRows(): DispatchAllowanceRow[] {
   const TOTAL = 195
   return Array.from({ length: TOTAL }, (_, index) => ({

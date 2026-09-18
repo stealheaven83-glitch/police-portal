@@ -25,6 +25,9 @@ import Datepicker from '@/components/custom/datepicker/DatePicker.vue'
 import '@vuepic/vue-datepicker/dist/main.css'
 import '@/components/custom/datepicker/DatePicker.css'
 import { Checkbox } from '@/components/custom/checkbox'
+// 좁은 폭 카드 뷰. 목록(<ul>·간격·0건)은 CardList, 한 장의 껍데기는 Card 가 맡는다
+import { CardList } from '@/components/custom/card-list'
+import { Card } from '@/components/custom/card'
 import { Pagination } from '@/components/custom/pagination'
 import { Button } from '@/components/custom/button'
 import { Switch } from '@/components/custom/switch'
@@ -162,8 +165,8 @@ interface Props {
   tableOptions?: Record<string, any>
 
   /**
-   * 좁은 폭(pcSize 미만)에서 표 대신 카드 목록을 그릴 때, 그 <ul> 에 붙일 클래스.
-   * 카드 목록은 #card 슬롯을 넘긴 화면에서만 동작한다.
+   * 좁은 폭(pcSize 미만)에서 표 대신 카드 목록을 그릴 때, 그 목록(CardList 의 <ul>)에 붙일 클래스.
+   * 카드 목록은 화면이 아무것도 안 해도 그려진다 — #card 슬롯은 한 장의 생김새를 덮을 때만 쓴다.
    */
   cardListClass?: string
 
@@ -1697,7 +1700,19 @@ defineExpose({
       좁은 폭: 표 대신 카드 목록. columns 의 title/field 로 자동 구성한다.
       화면이 #card 슬롯을 주면 그 마크업이 대신 쓰인다(<li> 째로 넘긴다).
     -->
-    <ul v-else class="tabulator-card-list" :class="cardListClass">
+    <CardList
+      v-else
+      class="tabulator-card-list"
+      :class="cardListClass"
+      :empty="!data.length"
+    >
+      <!-- 0건. 화면이 #card-empty 를 주면 그게 쓰인다 -->
+      <template #empty>
+        <slot name="card-empty">
+          <li class="tabulator-card-empty">{{ placeholder }}</li>
+        </slot>
+      </template>
+
       <template v-for="(row, index) in data" :key="(row as any)?.id ?? index">
         <slot
           name="card"
@@ -1706,40 +1721,44 @@ defineExpose({
           :selected="isCardSelected(row)"
           :toggle="() => toggleCardSelect(row)"
         >
-          <li
+          <!--
+            카드 한 장은 공통 Card 를 쓴다(껍데기: 여백·간격·테두리·모서리).
+            안쪽은 표에서 온 라벨-값 줄이라 Card 의 정해진 슬롯으로는 표현되지 않는다 → #custom.
+          -->
+          <Card
+            as="li"
             class="tabulator-card"
             :class="[rowClass?.(row), cardClass?.(row), isCardSelected(row) && 'is-selected']"
             @click="$emit('card-click', row)"
           >
-            <div class="tabulator-card-head">
-              <Checkbox
-                v-if="cardSelectable"
-                :model-value="isCardSelected(row)"
-                @update:model-value="() => toggleCardSelect(row)"
-                @click.stop
-              />
-              <span v-if="cardTitleColumn" class="tabulator-card-title">
-                {{ row[cardTitleColumn.field as string] }}
-              </span>
-            </div>
-            <dl class="tabulator-card-body">
-              <div
-                v-for="col in cardFields"
-                :key="col.field"
-                class="tabulator-card-row"
-                :class="{ 'is-no-label': col.cardHideTitle || !col.title }"
-              >
-                <dt v-if="!col.cardHideTitle && col.title">{{ col.title }}</dt>
-                <dd>{{ row[col.field as string] ?? '-' }}</dd>
+            <template #custom>
+              <div class="tabulator-card-head">
+                <Checkbox
+                  v-if="cardSelectable"
+                  :model-value="isCardSelected(row)"
+                  @update:model-value="() => toggleCardSelect(row)"
+                  @click.stop
+                />
+                <span v-if="cardTitleColumn" class="tabulator-card-title">
+                  {{ row[cardTitleColumn.field as string] }}
+                </span>
               </div>
-            </dl>
-          </li>
+              <dl class="tabulator-card-body">
+                <div
+                  v-for="col in cardFields"
+                  :key="col.field"
+                  class="tabulator-card-row"
+                  :class="{ 'is-no-label': col.cardHideTitle || !col.title }"
+                >
+                  <dt v-if="!col.cardHideTitle && col.title">{{ col.title }}</dt>
+                  <dd>{{ row[col.field as string] ?? '-' }}</dd>
+                </div>
+              </dl>
+            </template>
+          </Card>
         </slot>
       </template>
-      <slot v-if="!data.length" name="card-empty">
-        <li class="tabulator-card-empty">{{ placeholder }}</li>
-      </slot>
-    </ul>
+    </CardList>
 
     <!-- 시안(메모 검색결과없음)에서는 0건일 때 페이지네이션 바가 통째로 사라진다 -->
     <Pagination
@@ -1766,22 +1785,18 @@ defineExpose({
 }
 
 
-/* ── 좁은 폭 카드 목록 ── */
+/* ── 좁은 폭 카드 목록 ──
+ * 껍데기(세로 쌓기·간격 1.6rem / 여백 1.6rem·간격 1.2rem·테두리·모서리)는 CardList·Card 가
+ * 갖고 있다 — 여기에 값을 다시 적지 않는다. 남는 건 표에서 온 카드에만 필요한 것뿐이다.
+ */
 .tabulator-card-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1.6rem;
   overflow-y: auto;
 }
 .tabulator-card {
-  display: flex;
-  flex-direction: column;
-  /* 간격 12px — Figma card(12738:50267) */
-  gap: 1.2rem;
-  padding: 1.6rem;
-  border: 1px solid var(--Border_gray02);
-  border-radius: var(--Radius-medium3);
-  background: var(--Base-white, #fff);
+  /* Card 는 items-start 라 자식이 내용 폭으로 줄어든다. 라벨-값 줄은 한 줄을 다 써야 한다 */
+  align-items: stretch;
+  /* Card(vertical) 의 min-w-[24rem] 은 좁은 패널 안에서 넘친다 */
+  min-width: 0;
 }
 .tabulator-card.is-selected {
   border: 2px solid var(--Base-primary);

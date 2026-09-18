@@ -15,7 +15,7 @@
     <template #form>
       <div class="search-area">
         <div class="group-gap2">
-          <DatePicker v-model="dateFrom" label="기간검색" size="sm" inputClass="w-40" />
+          <DatePicker v-model="dateFrom" label="검색기간" size="sm" inputClass="w-40" />
           <span aria-hidden="true">~</span>
           <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
         </div>
