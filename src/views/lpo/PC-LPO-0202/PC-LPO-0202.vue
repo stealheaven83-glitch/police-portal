@@ -148,8 +148,17 @@
     <template #layout-2>
       <LayoutPanel title="근무지정표">
         <template #actions>
-          <Button type="button" variant="tertiary" size="sm" @click="onLoadSchedule">근무지정표 불러오기</Button>
-          <Button type="button" variant="tertiary" size="sm" @click="onLoadWorkType">근무형태 불러오기</Button>
+          <!-- 두 버튼은 대상일자를 먼저 고르는 트리거다 — 기획서 A35(날짜 선택 → 컨펌창) -->
+          <DatePicker v-model="workDate" format="yyyy.MM.dd." value-format="yyyy.MM.dd.">
+            <template #trigger>
+              <Button type="button" variant="tertiary2" size="sm">근무지정표 불러오기</Button>
+            </template>
+          </DatePicker>
+          <DatePicker v-model="workDate" format="yyyy.MM.dd." value-format="yyyy.MM.dd.">
+            <template #trigger>
+              <Button type="button" variant="tertiary2" size="sm">근무형태 불러오기</Button>
+            </template>
+          </DatePicker>
         </template>
 
         <TabulatorGrid
@@ -360,14 +369,6 @@ async function resetScheduleGrid() {
     row.type === 'variable' ? { ...row, cells: row.cells.map((): string[] => []) } : row,
   )
   await dialog.alert({ title: '甲지가 초기화되었습니다.', btnCancel: '확인' })
-}
-
-async function onLoadSchedule() {
-  await dialog.alert({ title: '근무지정표를 불러왔습니다.', btnCancel: '확인' })
-}
-
-async function onLoadWorkType() {
-  await dialog.alert({ title: '근무형태를 불러왔습니다.', btnCancel: '확인' })
 }
 
 function onPrint() {

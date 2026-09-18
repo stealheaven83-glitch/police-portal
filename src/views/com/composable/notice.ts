@@ -19,13 +19,13 @@ export const bulletinMenu: SideMenuConfig = {
   openIndex: 0,
   activeChild: '공지사항',
   items: [
-    { name: '공지사항', path: '/views/com/PM-COM-0301' },
+    { name: '공지사항', path: '/views/com/PM-COM-1001' },
     { name: 'Q&A' },
     // Figma LNB(11015:105117) 기준 하위 3개. 지역경찰 시책 목록은 사용자 지정 ID PM-COM-0501
     {
       name: '우수사례',
       children: [
-        { name: '지역경찰 시책', path: '/views/com/PM-COM-0501' },
+        { name: '지역경찰 시책', path: '/views/com/PM-COM-1201' },
         { name: '현장조치', path: '/views/com/PM-COM-0601' },
         { name: '범죄예방진단' },
       ],

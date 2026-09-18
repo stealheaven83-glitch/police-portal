@@ -116,6 +116,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | 여러 줄 입력 | `custom/textarea/TextareaField.vue` |
 | 셀렉트 | `custom/select/SelectField.vue` (37개 화면) |
 | 날짜 하나 | `custom/datepicker/DatePicker.vue` (27개 화면) |
+| 버튼을 눌러 날짜 선택 | `DatePicker` 의 `#trigger` 슬롯에 `Button` 배치 — `PC-LPO-0202` 불러오기 버튼 참고 |
 | 기간(시작~종료) | `custom/datepicker/DateRangePicker.vue` |
 | 숫자 증감(-/+) | `custom/input/Stepper.vue` |
 | 주소 입력 | `custom/address/AddressInput.vue` — `@search`로 팝업 연결 |
@@ -125,6 +126,24 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | 첨부파일 **필드 전체**(라벨 + 드롭존 + 파일선택 + 건수 + 목록) | `custom/common/AttachmentField.vue` — `:files` `:accept` `@select`(FileList → composable 의 addFiles) `@remove`(id → removeFile). 게시판 등록/수정 20개 화면이 쓴다. `FileUpload` 는 이 안의 파일 한 줄 |
 
 스타일은 `custom/info-table/InfoTable.module.css`가 공통이다 — 화면에서 다시 만들지 않는다.
+
+### DatePicker — 버튼으로 달력 열기
+
+`PC-LPO-0202`의 **근무지정표 불러오기 / 근무형태 불러오기**는 아래처럼 `#trigger` 슬롯을 쓴다.
+버튼을 누르면 알림창 대신 달력이 열리고, 날짜를 고른 뒤 **선택**을 누르면 `workDate`에 반영된다.
+**취소**하면 기존 날짜를 유지한다. 근무일 옆 요일은 해당 화면의 `weekdayLabel` computed가 계산한다.
+실제 근무지정표·근무형태 데이터 조회는 연결되어 있지 않으며, 공통 DatePicker는 날짜 선택만 담당한다.
+
+```vue
+<DatePicker v-model="workDate" format="yyyy.MM.dd." value-format="yyyy.MM.dd.">
+  <template #trigger>
+    <Button type="button" variant="tertiary2" size="sm">근무지정표 불러오기</Button>
+  </template>
+</DatePicker>
+```
+
+버튼에 별도의 달력 열기 `@click`은 필요 없다. `#trigger`가 있으면 버튼 너비에 맞추며,
+슬롯을 생략한 기존 화면은 그대로 날짜 입력창을 사용한다.
 
 > **라벨-값 폼은 반드시 `InfoTable`+`InfoField`로 만든다. `FlexRow`/`FlexCol`로 만들지 않는다.**
 > 한때 `FlexCol`에 `type="title"/"value"`가 있어서 같은 표를 두 가지 방법으로 만들 수 있었고,

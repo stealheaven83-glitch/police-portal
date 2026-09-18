@@ -324,9 +324,13 @@ const historyGridRef = ref<InstanceType<typeof TabulatorGrid> | null>(null)
 const listColumns: TabulatorGridColumn[] = [
   { title: '번호', field: 'no', width: 70, hozAlign: 'center' },
   { title: '부서', field: 'dept', hozAlign: 'center' },
+  { title: '유형', field: 'type', hozAlign: 'center' },
   { title: '상호명', field: 'bizName', hozAlign: 'center' },
+  { title: '총점', field: 'score', width: 70, hozAlign: 'center' },
+  { title: '진단자', field: 'diagnoser', hozAlign: 'center' },
   { title: '기본주소', field: 'baseAddress', widthGrow: 2, hozAlign: 'left' },
   { title: '상세주소', field: 'detailAddress', widthGrow: 2, hozAlign: 'left' },
+  { title: '현금다액업소', field: 'cashIntensive', width: 110, hozAlign: 'center' },
 ]
 
 const historyColumns: TabulatorGridColumn[] = [
