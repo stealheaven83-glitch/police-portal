@@ -158,7 +158,7 @@ Figma 에는 동작이 안 그려져 있다. **사용자가 지정하지 않은 
 잘못 가져다 쓴다(3단계 누락).
 
 **0단계 — 쓰기로 한 컴포넌트가 `*.module.css` 를 부르면 거기부터 본다.** 스타일을 놓는 자리가
-공통 세 파일만은 아니다. 지금 둘 있다 — `InfoTable.module.css`(43개, 화면 33곳이 직접 import) ·
+공통 세 파일만은 아니다. 지금 둘 있다 — `InfoTable.module.css`(클래스 37개, 화면 40곳이 직접 import) ·
 `FlexGrid.module.css`. **`css-find.cjs` 는 이 파일들을 안 훑는다**(세 파일 고정). 그리고 module.css
 는 `@layer` 밖이라 `police-override.css` 로도 **못 덮는다** — 값만 다르면 새 클래스를 만들지 말고
 컴포넌트가 노출한 CSS 변수(`--info-label-w`·`--flex-col-min-w`)를 클래스로 재정의한다.

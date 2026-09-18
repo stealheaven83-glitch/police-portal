@@ -11,7 +11,7 @@ import type { Ref } from 'vue'
  * 새로 CSS 를 쓸 때 이 값에 맞추려면 `@media (max-width: 1600px)` 으로 적는다.
  * 컴포넌트가 이미 가진 경계는 아래 표와 같고, 화면에서 못 바꾼다(CLAUDE.md §1):
  *
- *   InfoTable    48rem(480) · 62.5rem(625) · 40rem(400)   ← 칸 접힘
+ *   InfoTable    1600 ← 칸 접힘·라벨 위로(경계 같음) / 48rem(768) ← 툴바만
  *   layoutSplit  82rem(820)                                ← 분할 해제
  *   layoutPanel  48rem(480)
  *   SideMenu     82rem(820)

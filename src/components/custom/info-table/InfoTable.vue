@@ -13,16 +13,18 @@ import styles from './InfoTable.module.css'
 defineOptions({ inheritAttrs: false })
 
 interface Props {
+  /** 한 행에 라벨+값 쌍을 몇 개 둘지(1~4). **PC(폭 1600 이상) 기준이다** — 모바일은 `moColumns` */
   columns?: 1 | 2 | 3 | 4
   /**
-   * 모바일(폭 1600 미만)에서의 열 수. PC 는 `columns` 로 2단이어도 `mo-columns="1"` 을 주면
-   * 모바일에서 한 줄에 한 칸씩 선다.
+   * 모바일(폭 1600 미만)에서의 열 수. **기본 1** — PC 가 2단이어도 모바일에서는 한 줄에 한 칸이다.
+   * 1600 은 앱의 유일한 경계라(`style.css` 의 `mo:`, SideMenu·BottomTab·TabulatorGrid 와 같다)
+   * 그 아래에서는 페이지 전체가 이미 모바일 모드다.
    *
-   * 안 주면 기존 동작 그대로다 — 1000px 미만에서만 1단으로 접힌다. 즉 1600~1000 구간은
-   * 페이지가 모바일인데 표만 2단으로 남는데, 그게 싫은 표에서 이걸 준다.
-   * 칸 안에서 라벨을 값 위로 올리는 건 `InfoField` 의 `mo="col"` 이다(다른 축).
+   * 모바일에서도 2~4 단이어야 하는 표만 값을 준다(`:mo-columns="2"`).
+   * 칸 안에서 라벨을 값 위로 올리는 건 `InfoField` 의 `mo="col"` 이다 — 다른 축이고,
+   * 그쪽은 **기본이 꺼져 있어 칸마다 직접 준다**.
    */
-  moColumns?: 1 | 2 | 3
+  moColumns?: 1 | 2 | 3 | 4
   /** 팝업(다이얼로그) 안에 놓일 때 위쪽 여백을 준다 */
   popup?: boolean
   /**
@@ -36,6 +38,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   columns: 2,
+  moColumns: 1,
   popup: false,
   size: undefined,
 })
@@ -47,18 +50,17 @@ const COLUMN_CLASS = {
   4: styles.cols4,
 } as const
 
+/** 모바일 열 수 — 미디어쿼리 안에서만 값이 있는 클래스라 PC 에서는 아무 일도 하지 않는다 */
 const MO_COLUMN_CLASS = {
   1: styles['grid-mo-cols1'],
   2: styles['grid-mo-cols2'],
   3: styles['grid-mo-cols3'],
+  4: styles['grid-mo-cols4'],
 } as const
 
 const columnsClass = computed(() => COLUMN_CLASS[props.columns] ?? styles.cols2)
 
-/** 안 주면 undefined — 아무 클래스도 안 붙어 기존 동작(1000px 에서 1단)이 그대로다 */
-const moColumnsClass = computed(() =>
-  props.moColumns ? MO_COLUMN_CLASS[props.moColumns] : undefined,
-)
+const moColumnsClass = computed(() => MO_COLUMN_CLASS[props.moColumns] ?? MO_COLUMN_CLASS[1])
 
 /**
  * 라벨 열 폭은 InfoField(.field)가 var(--info-label-w) 로 읽는다.

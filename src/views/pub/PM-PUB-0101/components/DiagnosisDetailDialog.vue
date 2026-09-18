@@ -1,9 +1,11 @@
 <template>
   <GenericDialog2
     v-model:open="detailOpen"
-    title="간소화 상세"
+    title="간이 범죄예방진단 상세"
     :size="800"
     :show-close-button="true"
+    device="responsive"
+    type="full"
   >
     <!-- ── 진단 카드 ─────────────────────────────── -->
     <div class="pop-title-sub"><h2>간이 범죄예방진단 카드({{ detailTypeLabel }})</h2></div>
