@@ -36,7 +36,11 @@ interface Props {
   maxlength?: number | string
   /** 글자수 카운터 표시 여부 */
   showCount?: boolean
-  /** 입력값 지우기(X) 버튼 표시 여부 */
+  /**
+   * 입력값 지우기(X) 버튼을 **둘지** 여부(기본 true).
+   * 둔다고 늘 보이는 건 아니다 — 값이 있고 **포커스가 이 필드 안에 있을 때만** 보인다.
+   * 아예 안 쓸 필드는 `:clearable="false"`.
+   */
   clearable?: boolean
   /** 비활성화 */
   disabled?: boolean
@@ -111,6 +115,28 @@ function clear() {
   modelValue.value = ''
 }
 
+/**
+ * 지우기(X) 버튼은 **포커스가 이 필드 안에 있을 때만** 보인다(2026-09-18).
+ * focus/blur 가 아니라 focusin/focusout 을 쓴다 — 버블링되므로 자식인 <Input> 의 포커스를
+ * 래퍼에서 한 번에 받는다.
+ */
+const fieldWrapRef = ref<HTMLElement | null>(null)
+const isFocused = ref(false)
+
+function onFocusIn() {
+  isFocused.value = true
+}
+
+/**
+ * 입력창에서 지우기 버튼으로 Tab 이동하는 사이에 꺼지면 버튼이 눈앞에서 사라진다.
+ * 옮겨 갈 곳(relatedTarget)이 아직 이 필드 안이면 포커스가 나간 게 아니다.
+ */
+function onFocusOut(e: FocusEvent) {
+  const next = e.relatedTarget as Node | null
+  if (next && fieldWrapRef.value?.contains(next)) return
+  isFocused.value = false
+}
+
 /** 아이콘 영역(X버튼 + 아이콘) 실측 폭만큼 입력창 오른쪽 여백 확보 */
 const iconAreaRef = ref<HTMLElement | null>(null)
 const { width: iconAreaWidth } = useElementSize(iconAreaRef)
@@ -165,7 +191,7 @@ const borderStyleCss = computed(() => {
       <slot name="input" :id="fieldId" :invalid="isInvalid" :class="labelPosition === 'left' ? 'flex-1' : undefined">
         <!-- <div> -->
         <div :class="labelPosition === 'left' ? 'flex-1' : undefined">
-          <div class="relative">
+          <div ref="fieldWrapRef" class="relative" @focusin="onFocusIn" @focusout="onFocusOut">
             <Input
               :id="fieldId"
               v-model="modelValue"
@@ -185,12 +211,20 @@ const borderStyleCss = computed(() => {
               class="flex items-center absolute top-1/2 -translate-y-1/2 gap-2"
               :class="size === 'lg' ? 'right-4' : 'right-3'"
             >
+              <!--
+                포커스가 나가면 visibility 로만 감춘다(v-if 로 빼지 않는다) — DOM 에서 빠지면
+                아래 useElementSize 가 잰 아이콘 영역 폭이 달라져 입력 글자가 좌우로 움찔한다.
+                visibility:hidden 이라 감춰진 동안은 tab 순서·접근성 트리에서도 빠진다.
+                @mousedown.prevent 가 없으면 누르는 순간 입력창이 blur → 버튼이 감춰져 click 이
+                아예 발생하지 않는다.
+              -->
               <button
                 v-if="clearable && modelValue"
                 type="button"
                 class="flex flex-shrink"
-                :class="size === 'lg' ? 'size-6' : 'size-5'"
+                :class="[size === 'lg' ? 'size-6' : 'size-5', { invisible: !isFocused }]"
                 aria-label="입력값 지우기"
+                @mousedown.prevent
                 @click="clear"
               >
                 <img :src="iconClear" alt="" class="size-full" />
