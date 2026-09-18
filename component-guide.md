@@ -122,6 +122,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | 숫자 증감(-/+) | `custom/input/Stepper.vue` |
 | 주소 입력 | `custom/address/AddressInput.vue` — `@search`로 팝업 연결 |
 | 사용자 찾기 팝업(부서 트리 + 사용자 목록에서 한 명 고르기) | `custom/common/UserFindDialog.vue` — `v-model:open` + `@select`(계급·성명·소속). 공통 팝업 PC-COM-0701 |
+| 112신고 사건 찾기 팝업(조회 + 사건목록/사건상세 2분할에서 한 건 고르기) | `custom/common/Case112Dialog.vue` — `v-model:open` + `@assign`(고른 행·상세). 목록·상세 목업은 컴포넌트가 들고 있다(연동 시 `case112.ts` 교체). 공통 팝업 PC-LPO-0503. 접수번호 한 줄만 찾는 화면 전용 팝업은 PUB-0201·0202 의 `Report112Dialog` |
 | 리치 텍스트 본문 | `custom/editor/Editor.vue` (TOAST UI) |
 | 파일 첨부 | `custom/file-upload/FileUpload.vue` |
 | 첨부파일 **필드 전체**(라벨 + 드롭존 + 파일선택 + 건수 + 목록) | `custom/common/AttachmentField.vue` — `:files` `:accept` `@select`(FileList → composable 의 addFiles) `@remove`(id → removeFile). 게시판 등록/수정 20개 화면이 쓴다. `FileUpload` 는 이 안의 파일 한 줄 |
@@ -514,6 +515,7 @@ await dialog.confirm({
 | `top_button` | `custom/top-button/TopButton.vue` |
 | `Adress input` | `custom/address/AddressInput.vue` |
 | `공통 > 사용자 찾기`(12875:101668) | `custom/common/UserFindDialog.vue` |
+| `112사건조회` 팝업(15203:139960) | `custom/common/Case112Dialog.vue` |
 | `file_upload__atomic__pc` | `custom/file-upload/FileUpload.vue` |
 | `pagination bar`, `pagination__pc` | `custom/pagination/Pagination.vue` |
 | `Page Title` | `custom/title/PageTitle.vue` |
@@ -694,6 +696,8 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-score-box` | 설문 합계 점수 줄(가운데 정렬 회색 띠) | PUB-0201 |
 | `.lp-status-done` | 결재선 등에서 '완료' 상태만 색으로 구분 | PUB-0702 |
 | `.lp-search-flush` | **`SearchWrapper` 에 건다** — `#form`·`#btns` 줄의 상하 여백(py-5)을 없앤다. 조회조건 한 줄만 있고 `no-background` 라 띄울 면이 없는 화면용. 좌우 여백과 아래 간격은 그대로 (override) | PUB-0401, PUB-0404 |
+| `.lp-popup-panel` | **팝업 안 `LayoutPanel` 에 건다** — 제목줄을 화면 본문용(60·좌우 24·19px)에서 시안 팝업용(48·좌우 20·17px)으로 줄인다. `LayoutHeader` 가 테일윈드로 먹여 이 파일이다 | `Case112Dialog` |
+| `.lp-popup-panel-body` (+ `-tight`) | 그 패널 본문 안쪽 칸 — 여백 16, `-tight` 는 12. **`LayoutPanel` 에 `no-padding` 을 같이 준다**: 본문 기본 여백 20 은 scoped(레이어 밖)라 못 덮어서, 여백을 이 칸이 대신 낸다. 첫 구역 제목의 위 여백 8 도 여기서 없앤다 | `Case112Dialog` |
 
 #### 아이콘 버튼
 
@@ -711,6 +715,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-pane-title-text` / `.lp-pane-title-count` | `.lp-pane-title` h3 에 `.lp-row-between` 을 더해 **제목 왼쪽 + 건수 오른쪽**으로 펼 때 양쪽을 감싼다(숫자는 `.lp-em-primary`). reset 이 span 에 다시 주는 line-height 1.5 를 제목바 줄 높이로 되돌려 옆 칸 제목바와 높이가 같아진다 | `UserFindDialog` |
 | `.lp-pane-box-fill` | **높이를 고정한 팝업**(`GenericDialog2 :height`)의 `.pop-body` 안에서 `.lp-pane-box` 가 남는 높이를 다 가져간다(스크롤은 칸 안에서만). 상자 높이를 못 박는 `.lp-pane-box-tall` 과는 별개 | `UserFindDialog` |
 | `.lp-pane-fill` | 칸 제목 아래를 **그리드가 다 채우는** 칸 본문(세로 flex, 여백 12/24/24). 안쪽 그리드는 `height="100%" class="flex-1"`. 그리드 높이를 고정하는 `.lp-pane-wrap`(12/12/20) 과는 별개 | `UserFindDialog` |
+| `.lp-popup-split-fill` (+ `.lp-split-fill`) | **높이를 고정한 팝업**(`GenericDialog2 :height`) 본문을 [검색줄 + 분할]로 세로 배치하고, 그 안 `LayoutSplite` 가 남는 높이를 가져간다(`--split-height:100%`). 높이가 내용에 따라 정해지는 팝업에는 쓰지 않는다 — 서로를 기준 삼아 납작해진다. 팝업 전체 높이를 쓰는 `.lp-split-popup` 과는 별개 | `Case112Dialog` |
 | `.lp-selected-bar` | 선택한 항목을 칩으로 늘어놓는 회색 바 | 2204 |
 | `.lp-dialog-head` / `.lp-dialog-head-title` / `.lp-dialog-head-label` | 팝업 본문 위쪽 제목줄(`.lp-row-between` 과 함께). `-label`+`-title` 은 "권한명: 범죄예방대응국" 처럼 **크기·굵기는 같고 색만 다른** 라벨·값 짝(1.9rem/600). 줄 배치는 `.group-gap3`. 페이지 액션바의 `.list-actions-title`/`.list-actions-part`(2rem/700)와는 별개다 | 2204 |
 | `.lp-grid-title` `-label` `-count` `-num` | 그리드 위에 얹는 회색 제목 바(왼쪽 표 이름 + 오른쪽 건수, 숫자만 포인트색). 면이 채워진 한 줄이라 `LayoutPanel` 의 `.lp-pane-title` 과는 별개 | 2207 전체 사용자 팝업 |

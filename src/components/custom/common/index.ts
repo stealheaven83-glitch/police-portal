@@ -30,3 +30,12 @@ export interface AttachedFile {
  */
 export { default as UserFindDialog } from './UserFindDialog.vue'
 export type { UserFindDeptNode, UserFindUser } from './UserFindDialog.vue'
+
+/* ── 112사건조회 팝업 ──────────────────────────────────────────── */
+/**
+ * 112사건조회 팝업 — 전 화면 공용. v-model:open 으로 열고 @assign 으로 고른 사건을 받는다.
+ * 목록·상세는 이 컴포넌트가 목업으로 들고 있다(연동 시 case112.ts 만 교체).
+ * Figma: 8mQz91txveSEKO0ky7Ck6V / 15203:139960 (PC-LPO-0503)
+ */
+export { default as Case112Dialog } from './Case112Dialog.vue'
+export type { Case112Row, Case112Detail, DispatchElementRow } from './case112'
