@@ -12,11 +12,13 @@
       PC-LPO-0701 등 다른 화면과 같은 tabulator-theme.css 를 그대로 물려받아
       테두리·hover·선택행 색상·체크박스 등 표 스타일이 동일해진다.
     -->
+    <!-- 팝업 전체가 600px 이 되도록 잡은 값 — 그리드 밖(제목·안내문·여백·버튼줄)이 193px 이라
+         600 - 193 = 407. 팝업에 height 를 직접 주지 않고 그리드 높이로 맞춘다 -->
     <TabulatorGrid
       ref="gridRef"
       :columns="columns"
       :data="workerCandidates"
-      height="260px"
+      height="407px"
       selectable
       select-column-title="추가여부"
       placeholder="조회된 근무자가 없습니다"

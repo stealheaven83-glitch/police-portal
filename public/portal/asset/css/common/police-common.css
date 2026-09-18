@@ -2977,10 +2977,20 @@
   color: var(--Text-body_1);
   background: var(--Background-gray01);
 }
+/* 시안 15605:117496 — 값 칸(높이 200, 여백 세로 4 가로 12)에 입력칸과 저장 버튼이 한 줄로 들어가고
+   버튼은 아래 정렬이다. 입력칸 높이는 화면에서 :height 로 준다 */
 .lp-notes-body {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.2rem;
   flex: 1;
   min-width: 0;
-  padding: 0.8rem;
+  padding: 0.4rem 1.2rem;
+}
+/* 입력칸이 남는 폭을 차지한다 — TextareaField 래퍼가 기본 폭을 갖지 않아 명시한다 */
+.lp-notes-input {
+  flex: 1;
+  min-width: 0;
 }
 
 /* 여러 줄 값 — 줄바꿈을 그대로 보여준다 (출동사건정보 팝업의 신고내용 등).
@@ -4062,21 +4072,6 @@ header .header-in .header-container .main-menu .inner .gnb-menu .depth1-list .de
 /* 시안 높이가 정해진 팝업 안 분할. 평소엔 시안 값(428)을 쓰고, 창이 짧아 팝업 최대 높이(85dvh)를
    넘길 때만 그쪽에 맞춰 줄인다 — 넘기면 팝업에도 스크롤이 생겨 막대가 두 겹으로 보인다.
    쓰는 곳: PC-LPO-0202 근무 사용자 선택 */
-/*
- * 중요공지사항 값 칸 — 시안 15605:117494. 입력칸이 칸 높이를 꽉 채우고, 저장 버튼만 아래에 붙는다.
- * 버튼까지 늘어나면 안 되므로 줄 자체는 stretch 로 두고 버튼만 align-self 로 내린다.
- * 쓰는 곳: PC-LPO-0202 중요공지사항
- */
-.lp-notes-fill {
-  display: flex;
-  align-items: stretch;
-  gap: 1.2rem;
-  flex: 1;
-  min-height: 0;
-}
-.lp-notes-save {
-  align-self: flex-end;
-}
 
 .lp-split-popup-sm {
   --split-height: min(42.8rem, 85dvh - 12rem);

@@ -63,7 +63,6 @@
     <Button type="button" variant="tertiary2" size="sm" @click="scheduleCopyOpen = true">교대복구</Button>
     <Button type="button" variant="tertiary2" size="sm" @click="timeManageOpen = true">시간관리</Button>
     <Button type="button" variant="secondary" size="sm" @click="workManageOpen = true">근무관리</Button>
-    <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
   </div>
 
   <!-- 근무자(30) : 근무표(70) 비율 고정 — 스플릿 바 드래그·더블클릭 최대화 없음 -->
@@ -147,44 +146,40 @@
     </template>
 
     <template #layout-2>
-      <!--
-        시안(13404:130871)은 오른쪽을 다시 위아래로 나눈다 — 근무지정표 430 / 핸들 6 / 중요공지사항 232 (668 기준 ≈ 65:35).
-        가로 구분선을 드래그해 두 패널 높이를 조절한다(사용자 지정). 중첩 분할이라 .lp-split-nested 로 pane 을 꽉 채운다.
-      -->
-      <LayoutSplite class="lp-split-nested" :count="2" horizontal :widths="[65, 35]" :min-widths="[30, 20]">
-        <template #layout-1>
-          <LayoutPanel title="근무지정표">
-            <template #actions>
-              <Button type="button" variant="tertiary" size="sm" @click="onLoadSchedule">근무지정표 불러오기</Button>
-              <Button type="button" variant="tertiary" size="sm" @click="onLoadWorkType">근무형태 불러오기</Button>
-            </template>
+      <LayoutPanel title="근무지정표">
+        <template #actions>
+          <Button type="button" variant="tertiary" size="sm" @click="onLoadSchedule">근무지정표 불러오기</Button>
+          <Button type="button" variant="tertiary" size="sm" @click="onLoadWorkType">근무형태 불러오기</Button>
+        </template>
 
-            <TabulatorGrid
-              ref="incidentGridRef"
-              class="flex-1"
-              :columns="scheduleColumns"
-              :data="scheduleRows"
-              height="100%"
-              min-height="20rem"
-              placeholder="등록된 근무지정표가 없습니다."
-              @row-click="onScheduleCellClick"
+        <TabulatorGrid
+          ref="incidentGridRef"
+          class="flex-1"
+          :columns="scheduleColumns"
+          :data="scheduleRows"
+          height="100%"
+          min-height="20rem"
+          placeholder="등록된 근무지정표가 없습니다."
+          @row-click="onScheduleCellClick"
+        />
+
+        <!--
+          시안 15605:117494 — 표 아래에 라벨 칸(140) + 값 칸 한 줄. 값 칸(높이 200) 안에서
+          입력칸이 폭을 채우고 저장 버튼(100x40)이 오른쪽 아래에 붙는다.
+        -->
+        <div class="lp-notes-row">
+          <span id="important-notes-label" class="lp-notes-label">중요지시사항</span>
+          <div class="lp-notes-body">
+            <TextareaField
+              v-model="importantNotes"
+              :height="192"
+              class="lp-notes-input"
+              aria-labelledby="important-notes-label"
             />
-          </LayoutPanel>
-        </template>
-
-        <template #layout-2>
-          <LayoutPanel title="중요공지사항">
-            <!--
-              시안 15605:117494 — 저장은 패널 제목줄이 아니라 값 칸 안, 입력칸 오른쪽에 아래 정렬이다
-              (입력칸 flex 1 + 간격 12 + 버튼 100x40). 입력칸은 칸 높이를 꽉 채운다.
-            -->
-            <div class="lp-notes-fill">
-              <TextareaField v-model="importantNotes" aria-label="중요공지사항" class="lp-textarea-fill" />
-              <Button type="button" variant="primary" size="sm" class="lp-notes-save" @click="onSaveImportantNotes">저장</Button>
-            </div>
-          </LayoutPanel>
-        </template>
-      </LayoutSplite>
+            <Button type="button" variant="primary" size="sm" @click="onSaveImportantNotes">저장</Button>
+          </div>
+        </div>
+      </LayoutPanel>
     </template>
   </LayoutSplite>
 
