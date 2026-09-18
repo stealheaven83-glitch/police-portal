@@ -185,16 +185,16 @@ export const statisticsMenu: SideMenuConfig = {
  * 게시판 LNB.
  * 게시판 화면들은 아직 views/com/composable/board.ts(boardMenu) · notice.ts(bulletinMenu) 의 인라인 구성을
  * 쓰고 있다 — 그쪽 openIndex 가 항목 순서를 가리키고 있어 여기로 갈아타는 건 별도 배치로 남겨 둔다.
- * path 는 실제로 만들어진 화면 폴더 기준이다.
+ * path 는 실제로 만들어진 화면 폴더 기준이다(2026-09-17: 공지사항 1001 · Q&A 1101 · 지역경찰 시책 1201 로 폴더가 바뀜. 현장조치는 아직 0601 폴더).
  */
 export const boardMenu: SideMenuConfig = {
   title: "게시판",
   openIndex: 0,
   activeChild: "공지사항",
   items: [
-    { name: "공지사항", path: "/views/com/PM-COM-0301" },
-    { name: "Q&A", path: "/views/com/PM-COM-0401" },
-    { name: "지역경찰 시책 우수사례", path: "/views/com/PM-COM-0501" },
+    { name: "공지사항", path: "/views/com/PM-COM-1001" },
+    { name: "Q&A", path: "/views/com/PM-COM-1101" },
+    { name: "지역경찰 시책 우수사례", path: "/views/com/PM-COM-1201" },
     { name: "현장조치 우수사례", path: "/views/com/PM-COM-0601" },
     {
       name: "교육자료 나눔터",

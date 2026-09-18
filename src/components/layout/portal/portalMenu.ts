@@ -186,11 +186,11 @@ export const portalMenu: PortalMenuDepth1[] = [
   {
     title: '게시판',
     groupTitle: '게시판',
-    path: '/views/com/PM-COM-0301',
+    path: '/views/com/PM-COM-1001',
     children: [
-      { title: '공지사항', path: '/views/com/PM-COM-0301' },
-      { title: 'Q&A', path: '/views/com/PM-COM-0401' },
-      { title: '지역경찰 시책 우수사례', path: '/views/com/PM-COM-0501' },
+      { title: '공지사항', path: '/views/com/PM-COM-1001' },
+      { title: 'Q&A', path: '/views/com/PM-COM-1101' },
+      { title: '지역경찰 시책 우수사례', path: '/views/com/PM-COM-1201' },
       { title: '현장조치 우수사례', path: '/views/com/PM-COM-0601' },
       {
         title: '교육자료 나눔터',

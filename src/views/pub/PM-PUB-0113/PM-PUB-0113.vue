@@ -85,13 +85,7 @@
               <span class="readonly-text">{{ checklist.address }}</span>
             </InfoField>
             <InfoField label="시설물명" for="cert-facility-name">
-              <InputField2
-                id="cert-facility-name"
-                v-model="checklist.facilityName"
-                size="sm"
-                class="!space-y-0 flex-1"
-                input-class="w-full"
-              />
+              
             </InfoField>
             <InfoField label="이용 · 규모" for="cert-usage-scale">
               <InputField2
@@ -231,7 +225,7 @@
           <div class="lp-cert-scroll">
             <table class="lp-cert-table" aria-label="기본 항목 평가">
               <colgroup>
-                <col width="65"/>
+                <col width="60"/>
                 <col width="100"/>
                 <col/>
                 <col />
