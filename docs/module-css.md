@@ -46,18 +46,22 @@ find src/components -name "*.module.css"
 
 | 파일 | 쓰는 컴포넌트 | 클래스 | 노출 변수 |
 |---|---|---|---|
-| `custom/info-table/InfoTable.module.css` | `InfoTable` · `InfoField` | 46개 | `--info-label-w`(기본 `14rem`) |
+| `custom/info-table/InfoTable.module.css` | `InfoTable` · `InfoField` | 37개 | `--info-label-w`(기본 `14rem`) |
 | `custom/flex-grid/FlexGrid.module.css` | `FlexRow` · `FlexCol` | 2개(`.row` `.col`) | `--flex-col-min-w`(기본 `20rem`) |
 
 ### `InfoTable.module.css` — 라벨-값 표
-클래스 46개가 역할별로 이렇게 나뉜다. **이름만 보고 짐작하지 말고 파일을 열어 확인한다**:
+클래스 **37개**(이름 기준)가 역할별로 이렇게 나뉜다. 선언 줄은 46개인데 같은 선택자가 두 번
+나오는 자리가 있어서다(아래 ⚠ 참고). **이름만 보고 짐작하지 말고 파일을 열어 확인한다**:
 ```bash
 grep -nE "^\.[a-zA-Z-]" src/components/custom/info-table/InfoTable.module.css
 ```
+⚠ 이 grep 은 줄 맨 앞만 보므로 **미디어쿼리 안의 클래스가 안 잡힌다**(`.grid-mo-*` `.field-mo-col`).
+반응형까지 보려면 `grep -nE "^\s*\.[a-zA-Z-]"` 로 훑는다.
 
 | 묶음 | 클래스 |
 |---|---|
 | 표 틀 | `.grid` `.cols1` `.cols2` `.cols3` `.cols4` |
+| 모바일(<1600) | `.grid-mo-cols1` ~ `.grid-mo-cols4` `.field-mo-col` — 컴포넌트가 prop 으로 붙인다(`mo-columns` / `mo`). 화면에서 직접 쓰지 않는다 |
 | 칸 | `.field` `.fieldFull` `.fieldRowSpan2` |
 | 칸 안 | `.label` `.control` `.controlColumn` |
 | 필수·안내 | `.requiredDot` `.legend` `.hint` `.hintSuccess` |
@@ -65,11 +69,11 @@ grep -nE "^\.[a-zA-Z-]" src/components/custom/info-table/InfoTable.module.css
 | 팝업 안 표 | `.popTable` `.tempVehicleRow` `.searchRow` `.searchInput` |
 | 값 표현 | `.info-table-txt` `.info-table-radio` `.info-table-divided` `.flex-wrap` `.disclaimerStrong` `.info-table-value-row` `.info-table-hyphen` `.info-table-unit` |
 
-**⚠ 이 파일은 컴포넌트 전용이 아니다.** 화면 33곳이 직접 import 해서 쓴다:
+**⚠ 이 파일은 컴포넌트 전용이 아니다.** 화면 40곳이 직접 import 해서 쓴다:
 ```ts
 import styles from '@/components/custom/info-table/InfoTable.module.css'
 ```
-`styles.requiredDot` 만 60곳이다. 그래서 **여기 있는 클래스를 고치면 33개 화면이 같이 바뀐다** —
+`styles.requiredDot` 만 61곳이다. 그래서 **여기 있는 클래스를 고치면 40개 화면이 같이 바뀐다** —
 값을 바꾸지 말고 `CLAUDE.md` §2 ① 의 "부분 일치" 처럼 **차이나는 선언만** 새 클래스로 덧붙인다.
 
 ### `FlexGrid.module.css` — 범용 행/열
@@ -114,7 +118,7 @@ import styles from '@/components/custom/info-table/InfoTable.module.css'
 ### 지금 상태 — 카멜케이스가 섞여 있다
 `InfoTable.module.css` 는 카멜(`.fieldFull` `.controlColumn` `.requiredDot` `.hintSuccess`
 `.popTable` …)과 케밥(`.info-table-txt` `.list-actions` …)이 섞여 있다. **개명하지 않는다** —
-33개 화면이 `styles.requiredDot` 로 꺼내 쓰고 있어 얻는 것보다 충돌 비용이 크다(`CLAUDE.md` §1).
+40개 화면이 `styles.requiredDot` 로 꺼내 쓰고 있어 얻는 것보다 충돌 비용이 크다(`CLAUDE.md` §1).
 **새로 추가하는 줄만 케밥으로 쓴다.**
 
 같은 선택자가 두 번 나오는 자리도 있다(`.toolbar` `.deptGroup` `.toggleButton` `.popTable`
