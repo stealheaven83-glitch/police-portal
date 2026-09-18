@@ -243,6 +243,17 @@ const router = createRouter({
             }
         },
         {
+            // 112사건조회 팝업 — 임의등록(0502) 위에 겹쳐 연다
+            path: '/views/lpo/PC-LPO-0503',
+            name: 'PC-LPO-0503',
+            component: () => import('../views/lpo/PC-LPO-0501/PC-LPO-0501.vue'),
+            meta: {
+                layout: 'WorkLayout',
+                title: '출동수당조회',
+                screenGroup: 'PC-LPO-0501',
+            }
+        },
+        {
             path: '/views/lpo/PC-LPO-0504',
             name: 'PC-LPO-0504',
             component: () => import('../views/lpo/PC-LPO-0501/PC-LPO-0501.vue'),

@@ -62,11 +62,13 @@
           size="sm"
           triggerClass="w-30"
         />
-        <div class="group-gap2">
-          <DatePicker label="진단일자" labelPosition="left" size="sm" inputClass="w-40" />
-          <span aria-hidden="true">~</span>
-          <DatePicker size="sm" inputClass="w-40" label="진단일자 종료일" labelClass="sr-only" />
-        </div>
+        <DateRangePicker
+          label="진단일자"
+          from-label="진단일자 시작일"
+          to-label="진단일자 종료일"
+          size="sm"
+          input-class="w-40"
+        />
 
         <SelectField
           v-model="searchForm.reason"
@@ -238,7 +240,7 @@ import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
-import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import { DateRangePicker } from '@/components/custom/datepicker'
 import { Button, HelpButton } from '@/components/custom/button'
 import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'

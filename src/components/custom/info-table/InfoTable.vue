@@ -14,6 +14,15 @@ defineOptions({ inheritAttrs: false })
 
 interface Props {
   columns?: 1 | 2 | 3 | 4
+  /**
+   * 모바일(폭 1600 미만)에서의 열 수. PC 는 `columns` 로 2단이어도 `mo-columns="1"` 을 주면
+   * 모바일에서 한 줄에 한 칸씩 선다.
+   *
+   * 안 주면 기존 동작 그대로다 — 1000px 미만에서만 1단으로 접힌다. 즉 1600~1000 구간은
+   * 페이지가 모바일인데 표만 2단으로 남는데, 그게 싫은 표에서 이걸 준다.
+   * 칸 안에서 라벨을 값 위로 올리는 건 `InfoField` 의 `mo="col"` 이다(다른 축).
+   */
+  moColumns?: 1 | 2 | 3
   /** 팝업(다이얼로그) 안에 놓일 때 위쪽 여백을 준다 */
   popup?: boolean
   /**
@@ -38,7 +47,18 @@ const COLUMN_CLASS = {
   4: styles.cols4,
 } as const
 
+const MO_COLUMN_CLASS = {
+  1: styles['grid-mo-cols1'],
+  2: styles['grid-mo-cols2'],
+  3: styles['grid-mo-cols3'],
+} as const
+
 const columnsClass = computed(() => COLUMN_CLASS[props.columns] ?? styles.cols2)
+
+/** 안 주면 undefined — 아무 클래스도 안 붙어 기존 동작(1000px 에서 1단)이 그대로다 */
+const moColumnsClass = computed(() =>
+  props.moColumns ? MO_COLUMN_CLASS[props.moColumns] : undefined,
+)
 
 /**
  * 라벨 열 폭은 InfoField(.field)가 var(--info-label-w) 로 읽는다.
@@ -56,7 +76,7 @@ const rootStyle = computed(() => {
 
 <template>
   <div
-    :class="cn(styles.grid, columnsClass, { [styles.popTable]: popup })"
+    :class="cn(styles.grid, columnsClass, moColumnsClass, { [styles.popTable]: popup })"
     v-bind="$attrs"
     :style="rootStyle"
   >

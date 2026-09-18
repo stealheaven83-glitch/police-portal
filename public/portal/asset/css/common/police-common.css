@@ -2863,6 +2863,9 @@
 
 .lp-stat-value {
   flex: 1 1 0;
+  height: calc(100% + 0.8rem);
+  position: relative;
+  top: -0.4rem;
   min-width: 0;
   border-left: 1px solid var(--Border_gray03);
 }
@@ -4098,6 +4101,26 @@ header .header-in .header-container .main-menu .inner .gnb-menu .depth1-list .de
 
 .lp-split-popup {
   --split-height: calc(85dvh - 12rem);
+}
+
+/* 팝업 본문을 [검색줄 + 분할]로 세로 배치 — 분할이 검색줄을 뺀 나머지 높이를 가져간다.
+   **팝업에 height 를 준 경우에만 쓴다** — 높이가 내용에 따라 정해지는 팝업에서는 서로를 기준 삼아
+   납작해진다(그때는 분할이나 그리드에 최소 높이를 준다). 쓰는 곳: custom/common/Incident112SearchDialog(PC-LPO-0503) */
+.lp-popup-split-fill {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+/* .lp-popup-split-fill 안의 LayoutSplite — 남은 공간을 차지하고 높이를 그만큼 쓴다.
+   테두리·모서리는 그대로 둔다(시안에 목록·상세를 감싸는 선이 있다 — 그걸 없애는 건 .lp-split-nested 다).
+   쓰는 곳: PC-LPO-0503 */
+.lp-split-fill {
+  flex: 1;
+  min-height: 0;
+  --split-height: 100%;
+  --split-height-stacked: 100%;
 }
 
 /*

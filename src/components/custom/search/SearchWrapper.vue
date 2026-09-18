@@ -35,6 +35,7 @@ import type { HTMLAttributes } from 'vue'
 import { computed, useSlots } from 'vue'
 import { ChevronDown } from 'lucide-vue-next'
 import { cn } from '@/lib/utils'
+import { deviceStyle } from "@/lib/deviceStyle"
 
 interface Props {
   /** 래퍼 전체에 적용할 클래스 (기본 스타일을 덮어쓰고 싶을 때) */
@@ -70,7 +71,12 @@ function toggle() {
 
 /** 배경은 noBackground 로 뺄 수 있게 따로 붙인다 */
 const defaultClass = computed(() =>
-  cn('w-full flex justify-between items-stretch rounded-[12px]', !props.noBackground && 'bg-[var(--Background-gray01)]'),
+  cn(deviceStyle(
+    {
+      pc: `w-full flex justify-between items-stretch rounded-[12px] ${!props.noBackground && 'bg-[var(--Background-gray01)]'}`,
+      mobile: 'search-mo bg-[white]',
+    }
+  )),
 )
 </script>
 

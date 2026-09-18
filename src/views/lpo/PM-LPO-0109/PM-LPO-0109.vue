@@ -13,11 +13,15 @@
 
   <SearchWrapper>
     <template #form>
-      <div class="group-gap2" role="group" aria-label="검색기간">
-        <DatePicker v-model="dateFrom" label="검색기간" size="sm" input-class="w-40" />
-        <span aria-hidden="true">~</span>
-        <DatePicker v-model="dateTo" size="sm" input-class="w-40" />
-      </div>
+      <DateRangePicker
+        v-model:from="dateFrom"
+        v-model:to="dateTo"
+        label="검색기간"
+        from-label="검색기간 시작일"
+        to-label="검색기간 종료일"
+        size="sm"
+        input-class="w-40"
+      />
     </template>
     <template #btns>
       <Button type="button" variant="secondary" size="sm" @click="onSearch">조회</Button>
@@ -55,7 +59,7 @@ import PageTitle from '@/components/custom/title/PageTitle.vue'
 import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import HelpButton from '@/components/custom/button/HelpButton.vue'
 import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
-import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import { DateRangePicker } from '@/components/custom/datepicker'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'

@@ -619,6 +619,61 @@ tbody .row-total > td:first-child {
   padding-bottom: 0;
 }
 
+/*
+ * 팝업 안 LayoutPanel — 화면 본문용 기본값보다 한 단계 작다.
+ * 제목줄은 시안(15203:141271) 높이 48 · 좌우 여백 20 · 제목 17px(컴포넌트 기본 60 · 24 · 19px),
+ * 본문 여백은 16(컴포넌트 기본 20).
+ * LayoutHeader 는 테일윈드, 본문(.layoutPanelBody)은 scoped 라 둘 다 이 파일이어야 이긴다.
+ * class 는 LayoutPanel 루트(section)로 흘러가고, 제목줄이 첫 자식·본문이 마지막 자식이다.
+ * 쓰는 곳: PC-LPO-0503
+ */
+.lp-popup-panel > div:first-child {
+  height: 4.8rem;
+  padding-inline: 2rem;
+}
+.lp-popup-panel > div:first-child > :first-child {
+  font-size: 1.7rem;
+}
+/*
+ * 그 패널 본문 안쪽 — 시안 여백은 목록 16 · 상세 12 인데, LayoutPanel 본문(.layoutPanelBody)의
+ * 기본 여백 20 은 scoped(=레이어 밖) 라 이 파일로는 못 덮는다. 그래서 LayoutPanel 에 no-padding 을
+ * 주고 그 안을 감싸는 이 칸이 여백을 낸다. 세로 flex 는 안쪽 그리드가 높이를 받게 하려는 것.
+ */
+.lp-popup-panel-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 1.6rem;
+}
+/* .lp-popup-panel-body 와 함께 — 한 단계 좁은 여백. 쓰는 곳: PC-LPO-0503 사건상세 */
+.lp-popup-panel-body-tight {
+  padding: 1.2rem;
+}
+/*
+ * 그 패널 안 그리드의 페이지네이션 — 시안은 표 ↔ 회색 선 4, 선 ↔ '총 N건' 16 이다.
+ * 그 회색 선은 Pagination 자신의 위 테두리이고, 간격은 컴포넌트가 테일윈드(mt-20 · pt-5)로 준다.
+ * Pagination 은 TabulatorGrid 루트의 마지막 칸이다.
+ */
+.lp-popup-panel-body .tabulator-root > :last-child {
+  margin-top: 0.4rem;
+  padding-top: 1.6rem;
+}
+
+/*
+ * 그 패널 본문의 구역 제목 — 앞 구역과 24 를 띄운다(시안). .pop-title-lv2 의 기본 위 여백은 8 이라
+ * 여기서 키운다. 제목 바로 뒤에 표가 오는 [제목+내용] 반복 구조여서 감싸개 없이 제목이 간격을 낸다.
+ */
+.lp-popup-panel-body > .pop-title-lv2 {
+  margin-top: 2.4rem;
+}
+/* 첫 구역 제목의 위 여백(.pop-title-lv2 의 8)을 없애 본문 여백만 남긴다 — 구역 사이 간격은 그대로 둔다
+   (원본 .dialog-wrap .pop-title-sub:first-child 와 같은 취지). 자식 결합자로 안쪽 묶음의 첫 구역은 건드리지 않는다 */
+.lp-popup-panel-body > .pop-title-lv2:first-of-type {
+  margin-top: 0;
+}
+
 /* 근무일정 달력 툴바(연·월 선택) — 시안(13312:71297)은 24px bold + 24px 화살표다.
    TextSelect 의 xlarge 는 19px/20px 이라 이 화면에서만 키운다.
    TextSelect 가 테일윈드로 크기를 먹이므로 common 이 아니라 이 파일이어야 이긴다(CLAUDE.md §2). */

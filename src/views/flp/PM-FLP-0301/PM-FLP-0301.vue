@@ -18,11 +18,15 @@
     </template>
     <template #form>
       <div class="search-area">
-        <div class="group-gap2">
-          <DatePicker v-model="dateFrom" label="탄력순찰일" size="sm" inputClass="w-40" />
-          <span aria-hidden="true">~</span>
-          <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
-        </div>
+        <DateRangePicker
+          v-model:from="dateFrom"
+          v-model:to="dateTo"
+          label="탄력순찰일"
+          from-label="탄력순찰일 시작일"
+          to-label="탄력순찰일 종료일"
+          size="sm"
+          input-class="w-40"
+        />
         <SelectField
           v-model="compliance"
           label="이행여부"
@@ -67,7 +71,7 @@ import HelpButton from '@/components/custom/button/HelpButton.vue'
 import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
-import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import { DateRangePicker } from '@/components/custom/datepicker'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { usePatrolCompliance, complianceOptions } from './composable/PM-FLP-0301'

@@ -61,6 +61,7 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | ㄴ 부서 선택 | `custom/select/DepartmentCascadeSelect.vue` (20개 화면, 3단 종속) |
 | ㄴ "상세조회" 접기/펴기 | `SearchWrapper`의 `collapsible` prop — 직접 만들지 않는다 |
 | ㄴ 조회/초기화 버튼 | `SearchWrapper`의 `#btns` 슬롯 |
+| ㄴ 기간 조건(등록일·검색기간 등) | `custom/datepicker/DateRangePicker.vue` **하나** — `DatePicker` 두 개를 `~` 로 잇지 않는다(§4) |
 | 목록을 값으로 걸러내는 토글(개수 표시) | `custom/filter-chip/FilterChipGroup.vue` |
 | 화면 가운데 놓는 **대형 검색바**(통합검색·사건대응) | `custom/search/SearchBar.vue` (3개 화면) |
 | ㄴ 왼쪽 상태 뱃지("검색 원활") | `SearchBar`의 `status`/`statusTone` prop |
@@ -117,15 +118,56 @@ LNB·하단탭·헤더/푸터는 화면에서 만들지 않는다 — `Layout.vu
 | 셀렉트 | `custom/select/SelectField.vue` (37개 화면) |
 | 날짜 하나 | `custom/datepicker/DatePicker.vue` (27개 화면) |
 | 버튼을 눌러 날짜 선택 | `DatePicker` 의 `#trigger` 슬롯에 `Button` 배치 — `PC-LPO-0202` 불러오기 버튼 참고 |
-| 기간(시작~종료) | `custom/datepicker/DateRangePicker.vue` |
+| 기간(시작~종료) | `custom/datepicker/DateRangePicker.vue` — **`DatePicker` 두 개를 `~` 로 잇지 않는다**(아래) |
 | 숫자 증감(-/+) | `custom/input/Stepper.vue` |
 | 주소 입력 | `custom/address/AddressInput.vue` — `@search`로 팝업 연결 |
 | 사용자 찾기 팝업(부서 트리 + 사용자 목록에서 한 명 고르기) | `custom/common/UserFindDialog.vue` — `v-model:open` + `@select`(계급·성명·소속). 공통 팝업 PC-COM-0701 |
+| 112신고 사건 찾기 팝업(조회 + 사건목록/사건상세 2분할에서 한 건 고르기) | `custom/common/Case112Dialog.vue` — `v-model:open` + `@assign`(고른 행·상세). 목록·상세 목업은 컴포넌트가 들고 있다(연동 시 `case112.ts` 교체). 공통 팝업 PC-LPO-0503. 접수번호 한 줄만 찾는 화면 전용 팝업은 PUB-0201·0202 의 `Report112Dialog` |
 | 리치 텍스트 본문 | `custom/editor/Editor.vue` (TOAST UI) |
 | 파일 첨부 | `custom/file-upload/FileUpload.vue` |
 | 첨부파일 **필드 전체**(라벨 + 드롭존 + 파일선택 + 건수 + 목록) | `custom/common/AttachmentField.vue` — `:files` `:accept` `@select`(FileList → composable 의 addFiles) `@remove`(id → removeFile). 게시판 등록/수정 20개 화면이 쓴다. `FileUpload` 는 이 안의 파일 한 줄 |
 
 스타일은 `custom/info-table/InfoTable.module.css`가 공통이다 — 화면에서 다시 만들지 않는다.
+
+### 기간(시작 ~ 종료) — `DateRangePicker` **하나**다 (2026-09-18 정리)
+
+Figma 에는 `date_input` 이 **두 개** 그려져 있어서 §10 역인덱스만 따라가면 `DatePicker` 를 두 개
+놓게 된다. 그렇게 만든 화면이 25곳까지 늘었고 2026-09-18 에 21곳을 치환했다. **시안에 `~` 가
+보이면 컴포넌트는 하나다.**
+
+```vue
+<!-- ❌ 이렇게 하지 않는다 -->
+<div class="group-gap2">
+  <DatePicker v-model="dateFrom" label="등록일" size="sm" input-class="w-40" />
+  <span aria-hidden="true">~</span>
+  <DatePicker v-model="dateTo" size="sm" input-class="w-40" />
+</div>
+
+<!-- ✅ -->
+<DateRangePicker
+  v-model:from="dateFrom"
+  v-model:to="dateTo"
+  label="등록일"
+  from-label="등록일 시작일"
+  to-label="등록일 종료일"
+  size="sm"
+  input-class="w-40"
+/>
+```
+- 감싸는 `<div class="group-gap2">` 도 `~` 도 필요 없다 — 컴포넌트가 같은 간격(0.8rem)으로 갖고 있다.
+- **`from-label`·`to-label` 을 항상 준다.** 화면에는 안 보이지만(`sr-only`) 이게 없으면 종료일
+  입력에 이름이 없어 스크린리더가 "무슨 날짜"인지 못 읽는다. 수동으로 두 개 놓던 화면들이
+  대부분 이 상태였다.
+- 보이는 `label` 은 `InputField2`·`SelectField` 의 왼쪽 라벨과 **같은 값**으로 맞춰져 있다
+  (`1.5rem` / `--Text-body_1` / 간격 1.2rem). 검색영역 한 줄에 나란히 서기 때문이다.
+
+**그래도 `DatePicker` 두 개여야 하는 경우** — `DateRangePicker` 가 통과시키는 건
+`from`/`to`/`label`/`fromLabel`/`toLabel`/`size`/`inputClass`/`disabled`/`class` 뿐이다.
+| 이럴 땐 두 개 | 실제 화면 |
+|---|---|
+| 보이는 라벨이 **둘**("시작일" / "종료일") | PC-COM-2402 |
+| 각 입력에 `placeholder`·`id`·`min-date`·`format` 을 따로 줘야 한다 | PM-PUB-0101, PC-PUB-0419 |
+| 두 입력 사이 간격이 0.8rem 이 아니다(`group-gap3` 등) | PM-PUB-0304 |
 
 ### DatePicker — 버튼으로 달력 열기
 
@@ -445,6 +487,7 @@ await dialog.confirm({
 | `date_selectbox` | `custom/select/TextSelect.vue` `size="xlarge"` 둘(연·월) + `class="lp-date-select"`, 묶음은 `.lp-date-select-row` — 전용 컴포넌트 없음(LPO-0216) |
 | `text_area` | `custom/textarea/TextareaField.vue` |
 | `date_input` | `custom/datepicker/DatePicker.vue` |
+| `date_input` **두 개가 `~` 로 이어진 것** | `custom/datepicker/DateRangePicker.vue` **하나**다 — instance 가 두 개라고 `DatePicker` 를 두 개 놓지 않는다(§4) |
 | `checkbox`, `checkbox__item/list` | `custom/checkbox/Checkbox.vue` |
 | `radio_button`, `radio_button__list/item` | `custom/radio-group/` |
 | `toggle_switch` | `custom/switch/Switch.vue` |
@@ -472,6 +515,7 @@ await dialog.confirm({
 | `top_button` | `custom/top-button/TopButton.vue` |
 | `Adress input` | `custom/address/AddressInput.vue` |
 | `공통 > 사용자 찾기`(12875:101668) | `custom/common/UserFindDialog.vue` |
+| `112사건조회` 팝업(15203:139960) | `custom/common/Case112Dialog.vue` |
 | `file_upload__atomic__pc` | `custom/file-upload/FileUpload.vue` |
 | `pagination bar`, `pagination__pc` | `custom/pagination/Pagination.vue` |
 | `Page Title` | `custom/title/PageTitle.vue` |
@@ -656,6 +700,8 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-score-box` | 설문 합계 점수 줄(가운데 정렬 회색 띠) | PUB-0201 |
 | `.lp-status-done` | 결재선 등에서 '완료' 상태만 색으로 구분 | PUB-0702 |
 | `.lp-search-flush` | **`SearchWrapper` 에 건다** — `#form`·`#btns` 줄의 상하 여백(py-5)을 없앤다. 조회조건 한 줄만 있고 `no-background` 라 띄울 면이 없는 화면용. 좌우 여백과 아래 간격은 그대로 (override) | PUB-0401, PUB-0404 |
+| `.lp-popup-panel` | **팝업 안 `LayoutPanel` 에 건다** — 제목줄을 화면 본문용(60·좌우 24·19px)에서 시안 팝업용(48·좌우 20·17px)으로 줄인다. `LayoutHeader` 가 테일윈드로 먹여 이 파일이다 | `Case112Dialog` |
+| `.lp-popup-panel-body` (+ `-tight`) | 그 패널 본문 안쪽 칸 — 여백 16, `-tight` 는 12. **`LayoutPanel` 에 `no-padding` 을 같이 준다**: 본문 기본 여백 20 은 scoped(레이어 밖)라 못 덮어서, 여백을 이 칸이 대신 낸다. 첫 구역 제목의 위 여백 8 도 여기서 없앤다 | `Case112Dialog` |
 
 #### 아이콘 버튼
 
@@ -673,6 +719,7 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-pane-title-text` / `.lp-pane-title-count` | `.lp-pane-title` h3 에 `.lp-row-between` 을 더해 **제목 왼쪽 + 건수 오른쪽**으로 펼 때 양쪽을 감싼다(숫자는 `.lp-em-primary`). reset 이 span 에 다시 주는 line-height 1.5 를 제목바 줄 높이로 되돌려 옆 칸 제목바와 높이가 같아진다 | `UserFindDialog` |
 | `.lp-pane-box-fill` | **높이를 고정한 팝업**(`GenericDialog2 :height`)의 `.pop-body` 안에서 `.lp-pane-box` 가 남는 높이를 다 가져간다(스크롤은 칸 안에서만). 상자 높이를 못 박는 `.lp-pane-box-tall` 과는 별개 | `UserFindDialog` |
 | `.lp-pane-fill` | 칸 제목 아래를 **그리드가 다 채우는** 칸 본문(세로 flex, 여백 12/24/24). 안쪽 그리드는 `height="100%" class="flex-1"`. 그리드 높이를 고정하는 `.lp-pane-wrap`(12/12/20) 과는 별개 | `UserFindDialog` |
+| `.lp-popup-split-fill` (+ `.lp-split-fill`) | **높이를 고정한 팝업**(`GenericDialog2 :height`) 본문을 [검색줄 + 분할]로 세로 배치하고, 그 안 `LayoutSplite` 가 남는 높이를 가져간다(`--split-height:100%`). 높이가 내용에 따라 정해지는 팝업에는 쓰지 않는다 — 서로를 기준 삼아 납작해진다. 팝업 전체 높이를 쓰는 `.lp-split-popup` 과는 별개 | `Case112Dialog` |
 | `.lp-selected-bar` | 선택한 항목을 칩으로 늘어놓는 회색 바 | 2204 |
 | `.lp-dialog-head` / `.lp-dialog-head-title` / `.lp-dialog-head-label` | 팝업 본문 위쪽 제목줄(`.lp-row-between` 과 함께). `-label`+`-title` 은 "권한명: 범죄예방대응국" 처럼 **크기·굵기는 같고 색만 다른** 라벨·값 짝(1.9rem/600). 줄 배치는 `.group-gap3`. 페이지 액션바의 `.list-actions-title`/`.list-actions-part`(2rem/700)와는 별개다 | 2204 |
 | `.lp-grid-title` `-label` `-count` `-num` | 그리드 위에 얹는 회색 제목 바(왼쪽 표 이름 + 오른쪽 건수, 숫자만 포인트색). 면이 채워진 한 줄이라 `LayoutPanel` 의 `.lp-pane-title` 과는 별개 | 2207 전체 사용자 팝업 |

@@ -19,16 +19,15 @@
       </template>
       <template #form>
         <div class="search-area">
-          <div class="group-gap2">
-            <DatePicker
-              v-model="dateFrom"
-              label="접수일"
-              size="sm"
-              inputClass="w-40"
-            />
-            <span aria-hidden="true">~</span>
-            <DatePicker v-model="dateTo" size="sm" inputClass="w-40" />
-          </div>
+          <DateRangePicker
+            v-model:from="dateFrom"
+            v-model:to="dateTo"
+            label="접수일"
+            from-label="접수일 시작일"
+            to-label="접수일 종료일"
+            size="sm"
+            input-class="w-40"
+          />
           <InputField2
             v-model="keyword"
             label="목록검색"
@@ -98,7 +97,9 @@
     v-model:open="manualRegisterOpen"
     :form="manualForm"
     @save="saveManualRegistration"
+    @open-112="case112Open = true"
   />
+  <Case112Dialog v-model:open="case112Open" @assign="onAssign112" />
   <DispatchAllowanceDetailDialog
     v-model:open="detailDialogOpen"
     :detail="detail"
@@ -114,7 +115,7 @@ import Breadcrumb from "@/components/custom/breadcrumb/Breadcrumb.vue";
 import SearchWrapper from "@/components/custom/search/SearchWrapper.vue";
 import DepartmentCascadeSelect from "@/components/custom/select/DepartmentCascadeSelect.vue";
 import InputField2 from "@/components/custom/input/InputField2.vue";
-import DatePicker from "@/components/custom/datepicker/DatePicker.vue";
+import { DateRangePicker } from "@/components/custom/datepicker";
 import { Button } from "@/components/custom/button";
 import {
   TabulatorGrid,
@@ -133,6 +134,11 @@ import {
 } from "./composable/PC-LPO-0501";
 import ManualRegisterDialog from "./components/ManualRegisterDialog.vue";
 import DispatchAllowanceDetailDialog from "./components/DispatchAllowanceDetailDialog.vue";
+import {
+  Case112Dialog,
+  type Case112Detail,
+  type Case112Row,
+} from "@/components/custom/common";
 import HelpButton from "@/components/custom/button/HelpButton.vue";
 import { useDialog } from "@/composable/dialog/dialog.ts";
 defineOptions({ name: "PcLpo0501" });
@@ -164,11 +170,29 @@ const {
   openManualRegister,
   openDetail,
   saveManualRegistration,
+  applyReport112,
 } = useDispatchAllowanceList();
+
+/** 112사건조회 팝업(PC-LPO-0503) — 임의등록 위에 겹쳐 연다 */
+const case112Open = ref(false);
+
+/** 사건지정 — 고른 112사건을 임의등록 폼에 채운다(기획서 4) */
+function onAssign112(row: Case112Row, detail: Case112Detail) {
+  applyReport112({
+    receiptNo: detail.receiptNo,
+    caseNo: row.caseNo,
+    reportType: row.caseType,
+    reportContent: detail.summary,
+    onSiteAction: "",
+    receivedAt: `${row.receivedDate} ${row.receivedTime}`,
+    arrivedAt: "",
+  });
+}
 
 const screenTriggers: ScreenTriggerMap = {
   "PC-LPO-0501": [],
   "PC-LPO-0502": [[manualRegisterOpen, true]],
+  "PC-LPO-0503": [[manualRegisterOpen, true], [case112Open, true]],
   "PC-LPO-0504": [[detailDialogOpen, true]],
 };
 useAutoTrigger(screenTriggers);
