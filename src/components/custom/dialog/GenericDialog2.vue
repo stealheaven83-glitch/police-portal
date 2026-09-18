@@ -81,7 +81,6 @@ const props = withDefaults(
   },
 )
 
-const maxHeight = 800;
 
 /** 모양·범위는 police-override.css 의 .lp-popup-* 가 들고 있다. type 이 없으면 빈 배열 */
 const shapeClass = computed(() => dialogShapeClass(props.type, props.device))
@@ -164,7 +163,7 @@ function handleCancel() {
     <DialogContent
       :show-close-button="showCloseButton"
       class="dialog-wrap px-[3.9rem] py-6 gap-0 flex flex-col"
-      :class="[`max-h-[${maxHeight}px]`, (hasList ? 'h-200' : ''), sizeClass, shapeClass]"
+      :class="[`max-h-[800px]`, (hasList ? 'h-200' : ''), sizeClass, shapeClass]"
       :style="[sizeStyle, heightStyle]"
       @pointer-down-outside="(e: Event) => persistent && e.preventDefault()"
       @escape-key-down="(e: Event) => persistent && e.preventDefault()"
