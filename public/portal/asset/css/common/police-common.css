@@ -3014,6 +3014,15 @@
   flex: 1;
   min-width: 0;
 }
+/* 분할 pane 안에 둘 때 — 상자가 pane 높이를 채우고(위 여백은 그대로) 입력칸이 세로로 늘어난다(.lp-textarea-fill 과 함께).
+   저장 버튼은 오른쪽 아래 그대로. 쓰는 곳: PC-LPO-0202 중요지시사항 */
+.lp-notes-row-fill {
+  height: calc(100% - 1.6rem);
+  min-height: 0;
+}
+.lp-notes-row-fill .lp-notes-input {
+  align-self: stretch;
+}
 
 /* 여러 줄 값 — 줄바꿈을 그대로 보여준다 (출동사건정보 팝업의 신고내용 등).
    InfoField 기본은 한 줄 가운데 정렬이라 위쪽 정렬로 되돌린다. */
@@ -3145,7 +3154,7 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1.2rem;
+  gap: 3rem;
   margin-right: auto;
 }
 .calendar-area-date,

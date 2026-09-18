@@ -65,25 +65,25 @@
     <Button type="button" variant="secondary" size="sm" @click="workManageOpen = true">근무관리</Button>
   </div>
 
-  <!-- 근무자(30) : 근무표(70) 비율 고정 — 스플릿 바 드래그·더블클릭 최대화 없음 -->
-  <LayoutSplite class="lp-table-gap" :count="2" :widths="[30, 70]" :min-widths="[22, 40]" :resizable="false">
+  <!-- 근무자(30) : 근무표(70) 로 시작하고, 구분선을 끌어 두 패널 폭을 조절한다(사용자 지정 2026-09-18). 최소 22% / 40% -->
+  <LayoutSplite class="lp-table-gap" :count="2" :widths="[30, 70]" :min-widths="[22, 40]">
     <template #layout-1>
-      <LayoutPanel title="근무자">
-        <Tabs v-model="workerTab">
-          <TabsList variant="fill" tone="primary" size="sm">
-            <TabsTrigger value="regular">일반근무자 ({{ tabCount(regularWorkers) }})</TabsTrigger>
-            <TabsTrigger value="volunteer">자원근무자 ({{ tabCount(volunteerWorkers) }})</TabsTrigger>
-            <TabsTrigger value="incident">사고자 ({{ tabCount(incidentWorkers) }})</TabsTrigger>
-          </TabsList>
+      <!--
+        시안(13404:130871 G 01·G 2·G 3) — 근무자 / 자원근무자 / 사고자가 탭이 아니라 패널 셋으로 위아래에 놓이고
+        사이의 Grid Handler(6)를 끌어 높이를 조절한다(사용자 지정 2026-09-18). 시안은 셋이 같은 높이(184).
+        중첩 분할이라 .lp-split-nested 로 pane 을 꽉 채운다. 각 패널의 버튼은 시안대로 제목 줄(#actions)에 둔다.
+      -->
+      <LayoutSplite class="lp-split-nested" :count="3" horizontal :widths="[34, 33, 33]" :min-widths="[20, 20, 20]">
+        <!-- 일반근무자 — 조(순번)만 화면에서 고칠 수 있고 나머지는 인사정보 그대로다 -->
+        <template #layout-1>
+          <LayoutPanel title="근무자">
+            <template #actions>
+              <Button type="button" variant="secondary" size="sm" padding="27" @click="openWorkerAddDialog('regular')">추가</Button>
+              <Button type="button" variant="primary" size="sm" padding="27" @click="onSave">저장</Button>
+            </template>
 
-          <!-- 일반근무자 — 조(순번)만 화면에서 고칠 수 있고 나머지는 인사정보 그대로다 -->
-          <TabsContent value="regular">
             <div class="lp-roster-toolbar">
               <SelectField v-model="regularTeam" :options="teamOptions" size="sm" trigger-class="w-25" aria-label="팀 선택" />
-              <span class="group-gap2">
-                <Button type="button" variant="secondary" size="xs" padding="19" @click="openWorkerAddDialog('regular')">추가</Button>
-                <Button type="button" variant="primary" size="xs" padding="19" @click="onSave">저장</Button>
-              </span>
             </div>
 
             <TabulatorGrid
@@ -92,57 +92,53 @@
               :columns="regularColumns"
               :data="regularWorkers"
               height="100%"
-              min-height="30rem"
               placeholder="등록된 일반근무자가 없습니다."
             />
-          </TabsContent>
+          </LayoutPanel>
+        </template>
 
-          <!-- 자원근무자 -->
-          <TabsContent value="volunteer">
-            <div class="lp-roster-toolbar">
-              <h3 class="lp-roster-title">자원근무자</h3>
-              <span class="group-gap2">
-                <Button type="button" variant="tertiary2" size="xs" padding="19" @click="removeSelectedVolunteers">삭제</Button>
-                <Button type="button" variant="secondary" size="xs" padding="19" @click="volunteerAddOpen = true">추가</Button>
-              </span>
-            </div>
-             <TabulatorGrid
+        <!-- 자원근무자 -->
+        <template #layout-2>
+          <LayoutPanel title="자원근무자">
+            <template #actions>
+              <Button type="button" variant="tertiary2" size="sm" padding="12" @click="removeSelectedVolunteers">선택삭제</Button>
+              <Button type="button" variant="secondary" size="sm" padding="27" @click="volunteerAddOpen = true">추가</Button>
+            </template>
+
+            <TabulatorGrid
               ref="volunteerGridRef"
               class="flex-1"
               :columns="volunteerColumns"
               :data="volunteerWorkers"
               select-mode="checkbox"
               height="100%"
-              min-height="30rem"
               placeholder="등록된 자원근무자가 없습니다."
               @row-selection-changed="onVolunteerSelectionChanged"
             />
-          </TabsContent>
+          </LayoutPanel>
+        </template>
 
-          <!-- 사고자 -->
-          <TabsContent value="incident">
-            <div class="lp-roster-toolbar">
-              <h3 class="lp-roster-title">사고자</h3>
-              <span class="group-gap2">
-                <Button type="button" variant="tertiary2" size="xs" padding="19" @click="removeSelectedIncidents">삭제</Button>
-                <Button type="button" variant="secondary" size="xs" padding="19" @click="incidentAddOpen = true">추가</Button>
-              </span>
-            </div>
-    
-             <TabulatorGrid
+        <!-- 사고자 -->
+        <template #layout-3>
+          <LayoutPanel title="사고자">
+            <template #actions>
+              <Button type="button" variant="tertiary2" size="sm" padding="12" @click="removeSelectedIncidents">선택삭제</Button>
+              <Button type="button" variant="secondary" size="sm" padding="27" @click="incidentAddOpen = true">추가</Button>
+            </template>
+
+            <TabulatorGrid
               ref="incidentGridRef"
               class="flex-1"
               :columns="incidentColumns"
               :data="incidentWorkers"
               select-mode="checkbox"
               height="100%"
-              min-height="30rem"
               placeholder="등록된 사고자가 없습니다."
               @row-selection-changed="onIncidentSelectionChanged"
             />
-          </TabsContent>
-        </Tabs>
-      </LayoutPanel>
+          </LayoutPanel>
+        </template>
+      </LayoutSplite>
     </template>
 
     <template #layout-2>
@@ -161,33 +157,43 @@
           </DatePicker>
         </template>
 
-        <TabulatorGrid
-          ref="incidentGridRef"
-          class="flex-1"
-          :columns="scheduleColumns"
-          :data="scheduleRows"
-          height="100%"
-          min-height="20rem"
-          placeholder="등록된 근무지정표가 없습니다."
-          @row-click="onScheduleCellClick"
-        />
-
         <!--
-          시안 15605:117494 — 표 아래에 라벨 칸(140) + 값 칸 한 줄. 값 칸(높이 200) 안에서
-          입력칸이 폭을 채우고 저장 버튼(100x40)이 오른쪽 아래에 붙는다.
+          표 | 중요지시사항 을 위아래로 나누고 구분선을 끌어 높이를 조절한다(사용자 지정 2026-09-18).
+          시안 15605:117494 는 값 칸 200 고정이라 시작 비율만 그 근처(65:35)로 두고, 끌면 입력칸이 pane 높이를 따라간다.
+          중첩 분할이라 .lp-split-nested 로 pane 을 꽉 채운다.
         -->
-        <div class="lp-notes-row">
-          <span id="important-notes-label" class="lp-notes-label">중요지시사항</span>
-          <div class="lp-notes-body">
-            <TextareaField
-              v-model="importantNotes"
-              :height="192"
-              class="lp-notes-input"
-              aria-labelledby="important-notes-label"
+        <LayoutSplite class="lp-split-nested" :count="2" horizontal :widths="[65, 35]" :min-widths="[30, 20]">
+          <template #layout-1>
+            <TabulatorGrid
+              ref="scheduleGridRef"
+              class="flex-1"
+              :columns="scheduleColumns"
+              :data="scheduleRows"
+              height="100%"
+              min-height="20rem"
+              placeholder="등록된 근무지정표가 없습니다."
+              @row-click="onScheduleCellClick"
             />
-            <Button type="button" variant="primary" size="sm" @click="onSaveImportantNotes">저장</Button>
-          </div>
-        </div>
+          </template>
+
+          <template #layout-2>
+            <!--
+              시안 15605:117494 — 표 아래에 라벨 칸(140) + 값 칸 한 줄. 값 칸 안에서 입력칸이 폭을 채우고
+              저장 버튼(100x40)이 오른쪽 아래에 붙는다. pane 안이라 상자가 pane 높이를 채운다(.lp-notes-row-fill).
+            -->
+            <div class="lp-notes-row lp-notes-row-fill">
+              <span id="important-notes-label" class="lp-notes-label">중요지시사항</span>
+              <div class="lp-notes-body">
+                <TextareaField
+                  v-model="importantNotes"
+                  class="lp-notes-input lp-textarea-fill"
+                  aria-labelledby="important-notes-label"
+                />
+                <Button type="button" variant="primary" size="sm" @click="onSaveImportantNotes">저장</Button>
+              </div>
+            </div>
+          </template>
+        </LayoutSplite>
       </LayoutPanel>
     </template>
   </LayoutSplite>
@@ -222,7 +228,6 @@ import {
 } from "@/components/custom/tabulator";
 import { Button } from '@/components/custom/button'
 import Icon from '@/components/custom/icon/Icon.vue'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/custom/tabs'
 import LayoutSplite from '@/components/custom/content-layout/layoutSplit.vue'
 import LayoutPanel from '@/components/custom/content-layout/layoutPanel.vue'
 import { useAutoTrigger, type ScreenTriggerMap } from '@/composables/useAutoTrigger'
@@ -265,11 +270,6 @@ const navItems = [
   { label: '근무지정표작성' },
 ]
 
-/** 탭 라벨의 인원수 — 시안(13404:130929)이 "자원근무자 (00)" 처럼 두 자리로 채운다 */
-function tabCount(rows: unknown[]) {
-  return String(rows.length).padStart(2, '0')
-}
-
 const workSchedule = useWorkSchedule()
 provide(WorkScheduleKey, workSchedule)
 
@@ -303,9 +303,6 @@ const {
 } = workSchedule
 
 const department4Search = ref<DepartmentValue>({ level1: 'hq', level2: 'all', level3: 'all' })
-
-/** 근무자 패널 탭 — 일반근무자 / 자원근무자(PC-LPO-0205) / 사고자(PC-LPO-0206) */
-const workerTab = ref<'regular' | 'volunteer' | 'incident'>('regular')
 
 /** 근무일의 요일 표시. 목업 날짜 문자열(2026.08.11.)에서 계산한다 */
 const weekdayLabel = computed(() => {
