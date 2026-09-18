@@ -19,11 +19,15 @@
           <SelectField v-model="authorFilter" label="성명" :options="authorFilterOptions" size="sm" trigger-class="w-40" />
           <InputField2 v-model="authorKeyword" size="sm" placeholder="이름을 검색해주세요." />
         </div>
-        <div class="group-gap2">
-          <DatePicker v-model="dateFrom" label="등록일" size="sm" input-class="w-40" />
-          <span aria-hidden="true">~</span>
-          <DatePicker v-model="dateTo" size="sm" input-class="w-40" />
-        </div>
+        <DateRangePicker
+          v-model:from="dateFrom"
+          v-model:to="dateTo"
+          label="등록일"
+          from-label="등록일 시작일"
+          to-label="등록일 종료일"
+          size="sm"
+          input-class="w-40"
+        />
         <div class="group-gap2">
           <SelectField v-model="searchField" label="검색어" :options="searchFieldOptions" size="sm" trigger-class="w-40" />
           <InputField2 v-model="keyword" size="sm" placeholder="검색어를 입력하세요." trigger-class="w-60" />
@@ -69,7 +73,7 @@ import HelpButton from '@/components/custom/button/HelpButton.vue'
 import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
 import InputField2 from '@/components/custom/input/InputField2.vue'
-import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import { DateRangePicker } from '@/components/custom/datepicker'
 import { Button } from '@/components/custom/button'
 import { badgeVariants } from '@/components/custom/badge'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'

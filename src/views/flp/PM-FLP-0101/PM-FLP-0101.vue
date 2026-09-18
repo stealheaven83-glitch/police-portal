@@ -27,17 +27,15 @@
           trigger-class="w-37"
         />
 
-        <div class="group-gap2">
-          <DatePicker v-model="dateFrom" label="기간" size="sm" input-class="w-40" />
-          <span aria-hidden="true">~</span>
-          <DatePicker
-            v-model="dateTo"
-            label="기간 종료일"
-            label-class="sr-only"
-            size="sm"
-            input-class="w-40"
-          />
-        </div>
+        <DateRangePicker
+          v-model:from="dateFrom"
+          v-model:to="dateTo"
+          label="기간"
+          from-label="기간 시작일"
+          to-label="기간 종료일"
+          size="sm"
+          input-class="w-40"
+        />
 
         <SelectField
           v-model="receiptType"
@@ -87,7 +85,7 @@ import Breadcrumb from '@/components/custom/breadcrumb/Breadcrumb.vue'
 import SearchWrapper from '@/components/custom/search/SearchWrapper.vue'
 import DepartmentCascadeSelect from '@/components/custom/select/DepartmentCascadeSelect.vue'
 import SelectField from '@/components/custom/select/SelectField.vue'
-import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import { DateRangePicker } from '@/components/custom/datepicker'
 import { Button } from '@/components/custom/button'
 import { TabulatorGrid, type TabulatorGridColumn } from '@/components/custom/tabulator'
 import { useSideMenuSetup } from '@/composable/menu/useSideMenuSetup'

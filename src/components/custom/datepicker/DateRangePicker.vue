@@ -51,8 +51,8 @@ function onToChange(value: unknown) {
 </script>
 
 <template>
-  <div :class="cn('dateRange', props.class)">
-    <span v-if="label" class="dateRangeLabel">{{ label }}</span>
+  <div :class="cn('date-range', props.class)">
+    <span v-if="label" class="date-range-label">{{ label }}</span>
 
     <DatePicker
       :model-value="from"
@@ -81,16 +81,24 @@ function onToChange(value: unknown) {
 </template>
 
 <style scoped>
-.dateRange {
+.date-range {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  /* 시작일 ~ 종료일 사이 8px. 공통 .group-gap2(--spacing 0.4rem × 2)와 같은 값이다 */
   gap: 0.8rem;
 }
 
-.dateRangeLabel {
+/*
+ * 보이는 라벨은 InputField2·SelectField 의 왼쪽 라벨과 같은 값이어야 한다 —
+ * 검색영역 한 줄에 [기간구분 ▾][기간 ○~○][성명 ___] 이 나란히 서기 때문이다.
+ * 그쪽은 text-[1.5rem] text-[var(--Text-body_1)] + mr-3(1.2rem).
+ * 여기서는 컨테이너 gap 이 0.8rem 이라 0.4rem 만 더해 1.2rem 을 맞춘다.
+ */
+.date-range-label {
   flex-shrink: 0;
   font-size: 1.5rem;
-  color: var(--Text-body_0);
+  color: var(--Text-body_1);
+  margin-right: 0.4rem;
 }
 </style>

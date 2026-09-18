@@ -10,23 +10,14 @@
     <InfoTable :columns="1">
       <InfoField>
         <template #label>공개기간<span :class="infoStyles.requiredDot" /></template>
-        <span class="group-gap2">
-          <DatePicker
-            v-model="detailForm.openFrom"
-            size="sm"
-            input-class="w-40"
-            label="공개 시작일"
-            label-class="sr-only"
-          />
-          <span aria-hidden="true">~</span>
-          <DatePicker
-            v-model="detailForm.openTo"
-            size="sm"
-            input-class="w-40"
-            label="공개 종료일"
-            label-class="sr-only"
-          />
-        </span>
+        <DateRangePicker
+          v-model:from="detailForm.openFrom"
+          v-model:to="detailForm.openTo"
+          from-label="공개 시작일"
+          to-label="공개 종료일"
+          size="sm"
+          input-class="w-40"
+        />
       </InfoField>
 
       <InfoField>
@@ -171,7 +162,7 @@ import GenericDialog2 from '@/components/custom/dialog/GenericDialog2.vue'
 import { InfoTable, InfoField } from '@/components/custom/info-table'
 import { Button } from '@/components/custom/button'
 import InputField2 from '@/components/custom/input/InputField2.vue'
-import DatePicker from '@/components/custom/datepicker/DatePicker.vue'
+import { DateRangePicker } from '@/components/custom/datepicker'
 import { RadioGroup, RadioGroupItem } from '@/components/custom/radio-group'
 import { Editor } from '@/components/custom/editor'
 import { useDialog } from '@/composable/dialog/dialog'
