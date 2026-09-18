@@ -47,7 +47,10 @@ interface Props {
   minWidthsPx?: (number | 'auto' | undefined)[]
   /** 각 pane의 최대 width(%). minWidths와 같은 값을 주면 해당 pane만 사이즈가 고정됩니다 */
   maxWidths?: (number | undefined)[]
-  /** false면 스플리터 드래그/더블클릭 최대화가 막혀 모든 pane 사이즈가 고정됩니다 */
+  /**
+   * true 면 스플리터 드래그/더블클릭 최대화로 pane 사이즈를 바꿀 수 있습니다. 기본은 false(고정) —
+   * 사이즈 조절이 필요한 화면만 `resizable` 을 켭니다(2026-09-18 기본값 true → false).
+   */
   resizable?: boolean
   /**
    * true 면 화면 폭과 무관하게 pane 을 위아래로 쌓고 구분선을 상하로 드래그해 높이를 조절합니다.
@@ -56,7 +59,7 @@ interface Props {
    */
   horizontal?: boolean
 }
-const props = withDefaults(defineProps<Props>(), { count: 1, resizable: true, horizontal: false })
+const props = withDefaults(defineProps<Props>(), { count: 1, resizable: false, horizontal: false })
 
 /*
  * 좁은 화면에서는 pane 을 좌우로 두면 각 pane 이 글자 몇 자 폭밖에 안 남는다.

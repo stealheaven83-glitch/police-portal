@@ -66,14 +66,14 @@
   </div>
 
   <!-- 근무자(30) : 근무표(70) 로 시작하고, 구분선을 끌어 두 패널 폭을 조절한다(사용자 지정 2026-09-18). 최소 22% / 40% -->
-  <LayoutSplite class="lp-table-gap" :count="2" :widths="[30, 70]" :min-widths="[22, 40]">
+  <LayoutSplite class="lp-table-gap" :count="2" :widths="[30, 70]" :min-widths="[22, 40]" resizable>
     <template #layout-1>
       <!--
         시안(13404:130871 G 01·G 2·G 3) — 근무자 / 자원근무자 / 사고자가 탭이 아니라 패널 셋으로 위아래에 놓이고
         사이의 Grid Handler(6)를 끌어 높이를 조절한다(사용자 지정 2026-09-18). 시안은 셋이 같은 높이(184).
         중첩 분할이라 .lp-split-nested 로 pane 을 꽉 채운다. 각 패널의 버튼은 시안대로 제목 줄(#actions)에 둔다.
       -->
-      <LayoutSplite class="lp-split-nested" :count="3" horizontal :widths="[34, 33, 33]" :min-widths="[20, 20, 20]">
+      <LayoutSplite class="lp-split-nested" :count="3" horizontal resizable :widths="[34, 33, 33]" :min-widths="[20, 20, 20]">
         <!-- 일반근무자 — 조(순번)만 화면에서 고칠 수 있고 나머지는 인사정보 그대로다 -->
         <template #layout-1>
           <LayoutPanel title="근무자">
@@ -162,7 +162,7 @@
           시안 15605:117494 는 값 칸 200 고정이라 시작 비율만 그 근처(65:35)로 두고, 끌면 입력칸이 pane 높이를 따라간다.
           중첩 분할이라 .lp-split-nested 로 pane 을 꽉 채운다.
         -->
-        <LayoutSplite class="lp-split-nested" :count="2" horizontal :widths="[65, 35]" :min-widths="[30, 20]">
+        <LayoutSplite class="lp-split-nested" :count="2" horizontal resizable :widths="[65, 35]" :min-widths="[30, 20]">
           <template #layout-1>
             <TabulatorGrid
               ref="scheduleGridRef"
