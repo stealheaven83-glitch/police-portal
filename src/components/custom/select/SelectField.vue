@@ -54,7 +54,13 @@ interface Props {
   /** 레이블에 적용할 클래스 (sr-only 로 감출 때 등). InputField2·DatePicker 와 동일 */
   labelClass?: HTMLAttributes['class']
 
+  /** PC(폭 1600 이상) 크기. `mo-size` 없이 혼자 주면 모든 폭에서 이 크기다 */
   size?: 'lg' | 'md' | 'sm' | 'xs'
+  /**
+   * 모바일(폭 1600 미만) 크기. 어떻게 동작할지는 **`size` 와 같이 줬는지가 정한다** —
+   * `size` 만 = 모든 폭 / `mo-size` 만 = 모든 폭(모바일 전용 화면) / 둘 다 = 반응형.
+   */
+  moSize?: 'lg' | 'md' | 'sm' | 'xs'
 
   //메세지 관련(select 아래)
   message?: string
@@ -69,7 +75,8 @@ const props = withDefaults(defineProps<Props>(), {
   labelPosition: 'left',
   required: false,
   disabled: false,
-  size: 'lg',
+  // size 기본값을 여기 두지 않는다 — 'lg' 를 박아 두면 "안 줬다"와 "lg 를 줬다"가 구분되지 않아
+  // mo-size 만 준 경우(모바일 전용)가 반응형으로 잘못 걸린다. baseSize 가 맡는다
   messageType: 'complete',
 })
 
@@ -107,19 +114,55 @@ const borderStyleCss = computed(() => {
   return undefined
 })
 
-/** 사이즈별 트리거 스타일 (Input 과 동일한 기준) */
-const sizeClass = computed(() => {
-  if (props.size === 'md') return 'h-12 text-[1.5rem] pl-4 pr-3 rounded-sm'
-  if (props.size === 'sm') return 'h-10 text-[1.5rem] pl-4 pr-3 rounded-sm'
-  if (props.size === 'xs') return 'h-9 text-[1.3rem] px-3 rounded-sm'
-  return 'h-14 text-[1.9rem] pl-4 pr-3 rounded-md'
-})
+/** size 가 없으면 moSize 가 그 자리를 대신한다(= 모든 폭에서 모바일 크기) */
+const baseSize = computed(() => props.size ?? props.moSize ?? 'lg')
 
-const iconSizeClass = computed(() => {
-  if (props.size === 'lg') return 'size-6'
-  if (props.size === 'xs') return 'size-4'
+/** 반응형인가 — 둘 다 주고 값이 다를 때만 mo: 한 벌이 필요하다 */
+const isResponsiveSize = computed(() => Boolean(props.size && props.moSize && props.size !== props.moSize))
+
+/** 사이즈별 트리거 스타일 (Input 과 동일한 기준) */
+function triggerSizeClass(size: Props['size']) {
+  if (size === 'md') return 'h-12 text-[1.5rem] pl-4 pr-3 rounded-sm'
+  if (size === 'sm') return 'h-10 text-[1.5rem] pl-4 pr-3 rounded-sm'
+  if (size === 'xs') return 'h-9 text-[1.3rem] px-3 rounded-sm'
+  return 'h-14 text-[1.9rem] pl-4 pr-3 rounded-md'
+}
+
+/**
+ * 위와 **같은 값을 `mo:` 변형으로 한 벌 더** 갖고 있는 것뿐이다.
+ * ⚠ `mo:` 를 런타임에 이어 붙이면 Tailwind 가 규칙을 안 만들어 조용히 죽는다 — 박아서 적는다
+ * (`lib/deviceStyle.ts` 주석의 실제 사고). 줄이려 하지 말 것.
+ */
+function triggerMoSizeClass(moSize: Props['moSize']) {
+  if (moSize === 'md') return 'mo:h-12 mo:text-[1.5rem] mo:pl-4 mo:pr-3 mo:rounded-sm'
+  if (moSize === 'sm') return 'mo:h-10 mo:text-[1.5rem] mo:pl-4 mo:pr-3 mo:rounded-sm'
+  if (moSize === 'xs') return 'mo:h-9 mo:text-[1.3rem] mo:px-3 mo:rounded-sm'
+  return 'mo:h-14 mo:text-[1.9rem] mo:pl-4 mo:pr-3 mo:rounded-md'
+}
+
+const sizeClass = computed(() =>
+  isResponsiveSize.value
+    ? `${triggerSizeClass(baseSize.value)} ${triggerMoSizeClass(props.moSize)}`
+    : triggerSizeClass(baseSize.value),
+)
+
+function chevronSizeClass(size: Props['size']) {
+  if (size === 'lg') return 'size-6'
+  if (size === 'xs') return 'size-4'
   return 'size-5'
-})
+}
+
+function chevronMoSizeClass(moSize: Props['moSize']) {
+  if (moSize === 'lg') return 'mo:size-6'
+  if (moSize === 'xs') return 'mo:size-4'
+  return 'mo:size-5'
+}
+
+const iconSizeClass = computed(() =>
+  isResponsiveSize.value
+    ? `${chevronSizeClass(baseSize.value)} ${chevronMoSizeClass(props.moSize)}`
+    : chevronSizeClass(baseSize.value),
+)
 </script>
 
 <template>

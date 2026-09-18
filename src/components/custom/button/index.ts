@@ -84,3 +84,40 @@ export const buttonVariants = cva(
   },
 )
 export type ButtonVariants = VariantProps<typeof buttonVariants>
+
+/**
+ * 모바일(폭 1600 미만)에서의 크기 — `Button` 의 `mo-size` 가 쓴다.
+ * 위 `size` 와 **같은 값을 `mo:` 변형으로 한 벌 더** 갖고 있는 것뿐이다.
+ *
+ * ── 왜 JS 가 아니라 CSS 인가 ────────────────────────────────────────────
+ * `style.css` 의 `@custom-variant mo`(= `not all and (min-width:1600px)`)를 쓴다.
+ * 폭을 JS 로 재면 버튼 726개에 반응형 구독이 붙고 첫 프레임이 깜빡인다.
+ *
+ * ⚠ **`mo:` 를 런타임에 이어 붙이면 안 된다**(`lib/deviceStyle.ts` 주석의 사고).
+ * Tailwind 는 소스를 글자로 훑어 거기 있는 클래스만 CSS 로 만든다 — 붙여 만든 조합은
+ * 소스에 없으므로 규칙이 생성되지 않고 **조용히 아무 일도 안 일어난다.**
+ * 그래서 여기 값은 전부 `mo:` 가 박힌 채로 적혀 있다. 줄이려 하지 말 것.
+ */
+export const buttonMoSizeVariants = cva("", {
+  variants: {
+    moSize: {
+      "default": "mo:h-9 mo:px-4 mo:py-2 mo:has-[>svg]:px-3",
+      "icon": "mo:size-9",
+      "icon-xs": "mo:size-6 mo:rounded-md mo:[&_svg:not([class*='size-'])]:size-3",
+      "icon-sm": "mo:size-8",
+      "icon-lg": "mo:size-10",
+
+      // 아이콘 버튼 클릭 영역(px) — variant="icon" 과 함께
+      "20": "mo:size-5",
+      "24": "mo:size-6",
+      "32": "mo:size-8",
+
+      // Figma size-height/radius 스케일
+      lg: "mo:h-14 mo:px-5 mo:text-[1.9rem] mo:rounded-[var(--Radius-medium3)]",
+      md: "mo:h-12 mo:px-4 mo:text-[1.7rem] mo:rounded-[var(--Radius-medium2)]",
+      sm: "mo:h-10 mo:px-4 mo:text-[1.5rem] mo:rounded-[var(--Radius-medium1)]",
+      xs: "mo:h-8 mo:px-3 mo:text-[1.5rem] mo:rounded-[var(--Radius-small3)]",
+      xxs: "mo:h-6 mo:px-2 mo:text-[1.5rem] mo:rounded-[var(--Radius-small3)]",
+    },
+  },
+})

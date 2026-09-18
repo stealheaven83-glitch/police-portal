@@ -50,7 +50,14 @@ interface Props {
 
   labelClass?: HTMLAttributes['class']
 
+  /** PC(폭 1600 이상) 크기. `mo-size` 없이 혼자 주면 모든 폭에서 이 크기다 */
   size?: 'lg' | 'md' | 'sm'
+  /**
+   * 모바일(폭 1600 미만) 크기. `size` 와 같이 줬는지가 동작을 정한다 —
+   * `size` 만 = 모든 폭 / `mo-size` 만 = 모든 폭(모바일 전용) / 둘 다 = 반응형.
+   * 트리거가 InputField2 라 그쪽으로 그대로 넘긴다.
+   */
+  moSize?: 'lg' | 'md' | 'sm'
 
   //메세지 관련(input 아래)
   message?: string
@@ -84,7 +91,8 @@ const props = withDefaults(defineProps<Props>(), {
   required: false,
   disabled: false,
   readonly: false,
-  size: 'lg',
+  // size 기본값을 두지 않는다 — 'lg' 를 박으면 "안 줬다"와 "lg 를 줬다"가 구분되지 않아
+  // mo-size 만 준 경우(모바일 전용)가 반응형으로 잘못 걸린다. InputField2 의 baseSize 가 맡는다
   messageType: 'complete',
   clearable: false,
   valueType: 'string',
@@ -161,6 +169,7 @@ const iconCalendar = '/portal/asset/images/icon/ico_calendar.svg'
         :input-class="cn(inputClass, isMenuOpen ? 'border-[var(--Base-primary)] border-2' : undefined)"
         :label-class="labelClass"
         :size="size"
+        :mo-size="moSize"
         :icon="iconCalendar"
         :disabled="disabled"
         :border-style="borderStyle"

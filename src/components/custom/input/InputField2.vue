@@ -55,7 +55,14 @@ interface Props {
 
   labelClass?: HTMLAttributes['class']
 
+  /** PC(폭 1600 이상) 크기. `mo-size` 없이 혼자 주면 모든 폭에서 이 크기다 */
   size?: 'lg' | 'md' | 'sm'
+  /**
+   * 모바일(폭 1600 미만) 크기. 어떻게 동작할지는 **`size` 와 같이 줬는지가 정한다** —
+   * `size` 만 = 모든 폭 / `mo-size` 만 = 모든 폭(모바일 전용 화면) / 둘 다 = 반응형.
+   * 폭 판단은 CSS(`style.css` 의 `mo:` 변형)라 첫 프레임부터 정확하고 깜빡임이 없다.
+   */
+  moSize?: 'lg' | 'md' | 'sm'
 
 
   //아이콘 관련
@@ -81,7 +88,8 @@ const props = withDefaults(defineProps<Props>(), {
   clearable: true,
   disabled: false,
   readonly: false,
-  size: 'lg',
+  // size 기본값을 여기 두지 않는다 — 'lg' 를 박아 두면 "size 를 안 줬다"와 "lg 를 줬다"가
+  // 구분되지 않아 mo-size 만 준 경우(모바일 전용)가 반응형으로 잘못 걸린다. baseSize 가 맡는다
   messageType: 'complete',
   search: false,
   iconLabel: '검색',
@@ -141,9 +149,37 @@ function onFocusOut(e: FocusEvent) {
 const iconAreaRef = ref<HTMLElement | null>(null)
 const { width: iconAreaWidth } = useElementSize(iconAreaRef)
 
+/** size 가 없으면 moSize 가 그 자리를 대신한다(= 모든 폭에서 모바일 크기) */
+const baseSize = computed(() => props.size ?? props.moSize ?? 'lg')
+
+/** 반응형인가 — 둘 다 주고 값이 다를 때만 mo: 한 벌이 필요하다 */
+const isResponsiveSize = computed(() => Boolean(props.size && props.moSize && props.size !== props.moSize))
+
+/**
+ * 아이콘 영역의 오른쪽 오프셋. lg 만 16px(right-4), 나머지는 12px(right-3).
+ * 반응형이면 `mo:` 한 벌을 덧붙인다 — 값은 박아서 적는다(런타임 접두사 금지, Input.vue 주석).
+ */
+const iconOffsetClass = computed(() => {
+  const pc = baseSize.value === 'lg' ? 'right-4' : 'right-3'
+  if (!isResponsiveSize.value) return pc
+  return `${pc} ${props.moSize === 'lg' ? 'mo:right-4' : 'mo:right-3'}`
+})
+
+/** 지우기(X) 버튼 크기. 위와 같은 규칙 */
+const clearIconSizeClass = computed(() => {
+  const pc = baseSize.value === 'lg' ? 'size-6' : 'size-5'
+  if (!isResponsiveSize.value) return pc
+  return `${pc} ${props.moSize === 'lg' ? 'mo:size-6' : 'mo:size-5'}`
+})
+
+/*
+ * ⚠ 여기만 인라인 style 이라 반응형이 안 걸린다 — 아이콘 영역 **실측 폭**에 오프셋을 더한
+ * 픽셀 값이라 CSS 로 못 옮긴다. 반응형일 때는 PC 쪽(baseSize) 오프셋을 쓴다.
+ * lg 와 그 외의 차이가 4px 뿐이라 그대로 뒀다.
+ */
 const inputPaddingRight = computed(() => {
   if (!iconAreaWidth.value) return undefined
-  const rightOffset = props.size === 'lg' ? 16 : 12 // right-4 / right-3
+  const rightOffset = baseSize.value === 'lg' ? 16 : 12 // right-4 / right-3
   return iconAreaWidth.value + rightOffset + 8 // 텍스트와의 여유 간격
 })
 
@@ -204,12 +240,13 @@ const borderStyleCss = computed(() => {
               :aria-invalid="isInvalid || undefined"
               :aria-describedby="describedBy"
               v-bind="$attrs"
-              :size="size"
+              :size="baseSize"
+              :mo-size="isResponsiveSize ? moSize : undefined"
             />
             <div
               ref="iconAreaRef"
               class="flex items-center absolute top-1/2 -translate-y-1/2 gap-2"
-              :class="size === 'lg' ? 'right-4' : 'right-3'"
+              :class="iconOffsetClass"
             >
               <!--
                 포커스가 없을 때는 DOM 에서 빼야 한다 — visibility 로만 감추면 위 useElementSize 가
@@ -222,7 +259,7 @@ const borderStyleCss = computed(() => {
                 v-if="clearable && modelValue && isFocused"
                 type="button"
                 class="flex flex-shrink"
-                :class="size === 'lg' ? 'size-6' : 'size-5'"
+                :class="clearIconSizeClass"
                 aria-label="입력값 지우기"
                 @mousedown.prevent
                 @click="clear"

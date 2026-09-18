@@ -217,12 +217,6 @@ function handleCancel() {
 </template>
 <style scoped>
 
-/* .lp-popup-body.has-scroll {
-  width: calc(100% + 30px);
-  padding-right: 15px;
-} */
-
-
 .has-scroll{
   padding-right: 1.3rem;
   width: calc(100% + 2.7rem);

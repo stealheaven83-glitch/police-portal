@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
+import { computed } from 'vue'
 import { cn } from '@/lib/utils'
 import DatePicker from './DatePicker.vue'
 
@@ -19,7 +20,10 @@ interface Props {
   /** 각 입력의 접근성 이름 (화면에는 보이지 않는다) */
   fromLabel?: string
   toLabel?: string
+  /** PC(폭 1600 이상) 크기. 기본 `sm` */
   size?: 'lg' | 'md' | 'sm'
+  /** 모바일(폭 1600 미만) 크기. 두 DatePicker 에 그대로 넘긴다 */
+  moSize?: 'lg' | 'md' | 'sm'
   /** 각 DatePicker 입력에 적용할 클래스 */
   inputClass?: HTMLAttributes['class']
   disabled?: boolean
@@ -31,9 +35,20 @@ const props = withDefaults(defineProps<Props>(), {
   to: '',
   fromLabel: '시작일',
   toLabel: '종료일',
-  size: 'sm',
+  // size 기본값('sm')은 withDefaults 가 아니라 아래 pcSize 가 준다 — 여기서 채워 버리면
+  // "size 를 안 줬다"와 "sm 을 줬다"가 구분되지 않아 mo-size 만 준 경우(모바일 전용)가
+  // 반응형으로 잘못 걸린다
   inputClass: 'w-40',
 })
+
+/**
+ * DatePicker 로 넘길 PC 크기.
+ * - `size` 를 줬으면 그대로
+ * - 안 줬는데 `mo-size` 만 있으면 **undefined 로 넘긴다** — 그래야 DatePicker 쪽에서
+ *   "mo-size 만 준 경우 = 모든 폭에서 그 크기" 로 걸린다
+ * - 둘 다 없으면 기존 기본값 'sm'
+ */
+const pcSize = computed(() => props.size ?? (props.moSize ? undefined : 'sm'))
 
 const emit = defineEmits<{
   (e: 'update:from', value: string): void
@@ -56,7 +71,8 @@ function onToChange(value: unknown) {
 
     <DatePicker
       :model-value="from"
-      :size="size"
+      :size="pcSize"
+      :mo-size="moSize"
       :input-class="inputClass"
       :disabled="disabled"
       :label="fromLabel"
@@ -69,7 +85,8 @@ function onToChange(value: unknown) {
 
     <DatePicker
       :model-value="to"
-      :size="size"
+      :size="pcSize"
+      :mo-size="moSize"
       :input-class="inputClass"
       :disabled="disabled"
       :label="toLabel"
