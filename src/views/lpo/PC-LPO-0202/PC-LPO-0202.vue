@@ -63,7 +63,6 @@
     <Button type="button" variant="tertiary2" size="sm" @click="scheduleCopyOpen = true">교대복구</Button>
     <Button type="button" variant="tertiary2" size="sm" @click="timeManageOpen = true">시간관리</Button>
     <Button type="button" variant="secondary" size="sm" @click="workManageOpen = true">근무관리</Button>
-    <Button type="button" variant="primary" size="sm" @click="onSave">저장</Button>
   </div>
 
   <!-- 근무자(30) : 근무표(70) 비율 고정 — 스플릿 바 드래그·더블클릭 최대화 없음 -->
@@ -155,8 +154,16 @@
         <template #layout-1>
           <LayoutPanel title="근무지정표">
             <template #actions>
-              <Button type="button" variant="tertiary" size="sm" @click="onLoadSchedule">근무지정표 불러오기</Button>
-              <Button type="button" variant="tertiary" size="sm" @click="onLoadWorkType">근무형태 불러오기</Button>
+              <DatePicker v-model="workDate" format="yyyy.MM.dd." value-format="yyyy.MM.dd.">
+                <template #trigger>
+                  <Button type="button" variant="tertiary2" size="sm">근무지정표 불러오기</Button>
+                </template>
+              </DatePicker>
+              <DatePicker v-model="workDate" format="yyyy.MM.dd." value-format="yyyy.MM.dd.">
+                <template #trigger>
+                  <Button type="button" variant="tertiary2" size="sm">근무형태 불러오기</Button>
+                </template>
+              </DatePicker>
             </template>
 
             <TabulatorGrid
@@ -365,14 +372,6 @@ async function resetScheduleGrid() {
     row.type === 'variable' ? { ...row, cells: row.cells.map((): string[] => []) } : row,
   )
   await dialog.alert({ title: '甲지가 초기화되었습니다.', btnCancel: '확인' })
-}
-
-async function onLoadSchedule() {
-  await dialog.alert({ title: '근무지정표를 불러왔습니다.', btnCancel: '확인' })
-}
-
-async function onLoadWorkType() {
-  await dialog.alert({ title: '근무형태를 불러왔습니다.', btnCancel: '확인' })
 }
 
 function onPrint() {

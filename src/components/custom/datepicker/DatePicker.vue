@@ -17,6 +17,11 @@ import './DatePicker.css'
  * - 닫혀있을 때는 InputField2 와 완전히 동일한 모양/동작 (label/description/message/borderStyle 등 그대로 전달)
  * - 달력 아이콘 클릭 시에만 팝업이 열림 (openMenu)
  * - class 는 래퍼(필드 컨테이너), inputClass 는 입력 요소에 적용됩니다.
+ * - #trigger 슬롯에 Button 을 넣으면 기본 입력창 대신 해당 버튼 클릭으로 달력이 열린다.
+ *   사용 예: PC-LPO-0202 의 '근무지정표 불러오기' / '근무형태 불러오기'.
+ *   날짜를 고른 뒤 '선택'을 눌러야 v-model 이 갱신되며, '취소'는 기존 값을 유지한다.
+ *   해당 화면은 v-model 을 workDate 에 연결하고 요일은 화면의 computed 로 계산한다.
+ *   날짜별 근무 데이터 조회는 이 컴포넌트가 처리하지 않는다. 예시는 component-guide.md §4 참고.
  */
 defineOptions({ inheritAttrs: false })
 
@@ -124,6 +129,7 @@ const iconCalendar = '/portal/asset/images/icon/ico_calendar.svg'
 <template>
   <VueDatePicker
     ref="vueDatePickerRef"
+    :class="{ 'dp--button-trigger': $slots.trigger }"
     v-model="pickerValue"
     :teleport="true"
     :formats="{ input: format || 'yyyy-MM-dd' }"
@@ -138,7 +144,10 @@ const iconCalendar = '/portal/asset/images/icon/ico_calendar.svg'
     :min-date="minDate"
     :max-date="maxDate"
   >
-    <template #dp-input="{ value, isMenuOpen }">
+    <template v-if="$slots.trigger" #trigger>
+      <slot name="trigger" />
+    </template>
+    <template v-if="!$slots.trigger" #dp-input="{ value, isMenuOpen }">
       <InputField2
         :id="fieldId"
         :model-value="value"
