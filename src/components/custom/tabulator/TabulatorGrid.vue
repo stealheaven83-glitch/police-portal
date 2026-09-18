@@ -77,7 +77,12 @@ interface Props {
   /** 표시할 데이터. 배열을 새로 넘기면 그리드가 갱신.
    *  주의: 내부에서 JSON 직렬화로 복제하므로 JSON-safe 한 값이어야 한다(Date 객체는 문자열이 됨) */
   data: any[]
-  /** 그리드 높이 */
+  /**
+   * 그리드 높이. 값을 주면 그 높이에 맞춰 표 안쪽에 세로 스크롤이 생긴다.
+   *
+   * **`"auto"` 는 높이를 고정하지 않는다** — 행이 늘어나는 만큼 표가 그대로 길어지고
+   * 안쪽 스크롤이 생기지 않는다. 스크롤은 바깥(`.lp-page-scroll` 등)이 받는다.
+   */
   height?: string
   /**
    * 그리드 전체(표 + 페이지네이션)의 최소 높이. CSS 길이 문자열.
@@ -1232,7 +1237,10 @@ function buildTable() {
     selectableRows: selectableRows.value,
     columnDefaults: { headerSort: props.headerSort },
     tooltip: true,
-    height: props.height,
+    // height="auto" 는 Tabulator 에 높이를 아예 안 넘기는 것과 같다.
+    // Tabulator 는 options.height 가 falsy 면 element 에 height 를 걸지 않아서
+    // 표가 내용만큼 길어지고 tableholder 에 스크롤이 생기지 않는다(tabulator 6.5.2 기준).
+    height: props.height === 'auto' ? false : props.height,
     placeholder: props.placeholder,
     // CSS 로 행 높이를 조절하므로 가상 렌더링 대신 기본 렌더링 사용(행 겹침 방지)
     renderVertical: 'basic',

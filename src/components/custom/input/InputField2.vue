@@ -212,17 +212,17 @@ const borderStyleCss = computed(() => {
               :class="size === 'lg' ? 'right-4' : 'right-3'"
             >
               <!--
-                포커스가 나가면 visibility 로만 감춘다(v-if 로 빼지 않는다) — DOM 에서 빠지면
-                아래 useElementSize 가 잰 아이콘 영역 폭이 달라져 입력 글자가 좌우로 움찔한다.
-                visibility:hidden 이라 감춰진 동안은 tab 순서·접근성 트리에서도 빠진다.
-                @mousedown.prevent 가 없으면 누르는 순간 입력창이 blur → 버튼이 감춰져 click 이
+                포커스가 없을 때는 DOM 에서 빼야 한다 — visibility 로만 감추면 위 useElementSize 가
+                안 보이는 버튼 폭까지 재서 padding-right 를 계속 잡아 두고, 좁은 입력(w-20 80px)에서는
+                그 빈자리가 칸을 반이나 먹는다.
+                @mousedown.prevent 가 없으면 누르는 순간 입력창이 blur → 버튼이 사라져 click 이
                 아예 발생하지 않는다.
               -->
               <button
-                v-if="clearable && modelValue"
+                v-if="clearable && modelValue && isFocused"
                 type="button"
                 class="flex flex-shrink"
-                :class="[size === 'lg' ? 'size-6' : 'size-5', { invisible: !isFocused }]"
+                :class="size === 'lg' ? 'size-6' : 'size-5'"
                 aria-label="입력값 지우기"
                 @mousedown.prevent
                 @click="clear"
