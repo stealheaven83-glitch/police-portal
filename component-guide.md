@@ -611,6 +611,8 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-flex-fill` | 남는 가로폭을 채우되 내용이 넘치지 않게(flex 1 / min-width 0) | 2204, IRC-0101 |
 | `.lp-row-end` | `flex-wrap` 으로 흐르는 줄(`.search-area` 등)에서 **이 항목으로 줄을 끝낸다** — 줄을 통째로 차지해 뒤 항목들을 다음 줄로 함께 내린다 | COM-0301 조회영역(성명) |
 | `.lp-row-between` | 한 줄에 좌우로 벌려 놓기 | 2204, 0601, 0802 |
+| `.lp-filter-row` | 회색 상자 없이 조회조건만 늘어놓는 줄(`police-style` 의 `.search-area` 와 배치는 같고 배경이 없다). 항목 사이 36 | LPO-0202, 0214, 0223 |
+| `.lp-filter-row-tight` | `.lp-filter-row` 와 **함께** — 같은 조회조건 줄인데 항목 사이가 20 인 시안. 조건 뒤에 `＊` 안내 문구가 같은 줄로 붙을 때 36 이면 문구가 떨어져 보인다 | LPO-0214 |
 | `.lp-date-actions` | `police-common.css` — 날짜 선택이 있는 `.list-actions`에 추가하여 세로 가운데 정렬하고 폭이 부족하면 줄바꿈 | LPO-0202 |
 | `.calendar-area` `-date` `-date-value` `-divider` `-group` `-options` | 근무일 선택 줄. **`.list-actions` 안 왼쪽**에 놓고(`margin-right:auto`) 오른쪽은 그대로 버튼. 구역 사이는 `-divider` 세로선(그룹 간격 36px). `-date-value` 는 날짜+달력아이콘(19px/600), `-options` 는 라디오 묶음(16px — `.lp-icon-row` 2rem 과 값이 다르다). **사용자 지정 이름이라 `lp-` 접두사가 없다** | LPO-0202 |
 | `.lp-unit-row` | 한 값을 여러 칸으로 쪼갠 줄 — 작은 입력 + 단위 글자('시' '분' '세' '~') | PUB-0405 |
@@ -623,6 +625,8 @@ PC-LPO-0801 에서 올렸고 **PC-STT-0103 도 같은 것을 쓴다.**
 | `.lp-section` / `.lp-section-title` | 구역 사이 간격 / 구역 제목 여백(`.lp-heading-lg` 와 함께) | 0601 |
 | `.lp-section-head` | 제목줄 아래 실선(`.lp-row-between` 과 함께) | 0802 |
 | `.lp-table-gap` | 표 위 여백 | 0601 |
+| `.lp-bar-gap` | `.section-bar` 구역 머리띠 **위** 여백(3.6rem) — 앞 구역(조회조건 줄·표)과 띄운다. `.lp-table-gap`(12)·`.lp-section` 끼리의 32 와 다른 값 | LPO-0214 |
+| `.lp-bar-body-gap` | 그 구역 **안쪽** 요소의 위 여백(1.6rem) — 머리띠 아래 조건줄·표, 조건줄 아래 표. 구역 바깥 `.lp-bar-gap`(36)·표 위 기본 `.lp-table-gap`(12) 과 다른 값. `police-style` 의 `.grid-wrap`(20) 자리를 대체한다 | LPO-0214 |
 | `.lp-note-gap` | 표 바로 위 안내 문구의 **아래** 여백(2rem). 위는 앞 요소에 붙는다 — `.lp-table-gap` 과 반대라 같이 쓰지 않는다 | LPO-0223 |
 | `.lp-info-row-tall` | **`InfoField` 에 건다** — 값이 짧아도 칸이 높아야 하는 줄(여러 줄 입력 자리, 12rem). 행 병합 `rowSpan` 과 달리 옆 칸 배치를 안 건드린다 | LPO-0223 팝업 |
 | `.lp-info-blank-cell` | `InfoTable` 에서 옆 칸이 두 행을 차지(row-span)해 비는 칸. 표 테두리만 이어 주는 자리라 1열로 접히면 감춘다 | PUB-0302/0303 |
