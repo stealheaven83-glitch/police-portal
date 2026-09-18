@@ -2844,6 +2844,9 @@
 
 .lp-stat-value {
   flex: 1 1 0;
+  height: calc(100% + 0.8rem);
+  position: relative;
+  top: -0.4rem;
   min-width: 0;
   border-left: 1px solid var(--Border_gray03);
 }

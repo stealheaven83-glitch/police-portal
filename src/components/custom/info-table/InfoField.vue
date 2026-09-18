@@ -23,6 +23,14 @@ interface Props {
    */
   rowSpan?: 2
   layout?: 'row' | 'column'
+  /**
+   * 모바일(폭 1600 미만)에서의 라벨 자리. `"col"` 이면 라벨이 값 **위로** 올라간다.
+   * 안 주면 PC 와 같이 라벨-값이 한 줄에 나란히 선다(기존 동작).
+   *
+   * `layout` 과 다른 축이다 — `layout` 은 **값 영역 안쪽**을 세로로 쌓는 것이고(폭과 무관),
+   * 이건 **라벨과 값 사이**를 가른다(모바일에서만). 둘을 같이 줘도 된다.
+   */
+  mo?: 'row' | 'col'
   /** 칸 전체(라벨+값을 감싸는 바깥) */
   class?: string
   /** 라벨(제목) 쪽. `for` 유무로 <label>/<span> 이 갈리는데 양쪽 다 붙는다 */
@@ -55,7 +63,15 @@ function isTextOnly() {
 </script>
 
 <template>
-  <div :class="cn(styles.field, props.full && styles.fieldFull, props.rowSpan === 2 && styles.fieldRowSpan2, props.class)">
+  <div
+    :class="cn(
+      styles.field,
+      props.full && styles.fieldFull,
+      props.rowSpan === 2 && styles.fieldRowSpan2,
+      props.mo === 'col' && styles['field-mo-col'],
+      props.class,
+    )"
+  >
     <label v-if="props.for" :class="cn(styles.label, props.labelClass)" :for="props.for">
       <slot name="label">{{ label }}</slot>
     </label>
